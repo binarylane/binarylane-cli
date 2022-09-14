@@ -2,3 +2,7 @@ __pycache__
 *.pyc
 dist
 .idea
+
+# Generated client is not versioned during initial development
+src/blcli/client
+scripts/openapi.json

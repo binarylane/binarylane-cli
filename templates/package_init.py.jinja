@@ -1,0 +1,24 @@
+""" {{ package_description }} """
+from .client import AuthenticatedClient, Client
+from .. import cli
+
+{% for key, value in openapi.endpoint_collections_by_tag | dictsort %}
+@cli.add_command('{{ key }}', help='Acess {{ key }} commands')
+def {{ key }}(client):
+    return False  # display help
+
+{% for endpoint in value.endpoints %}
+### {{ endpoint }}
+@{{key}}.add_command('{{ endpoint.name }}', help='{{ endpoint.summary }}')
+def {{ python_identifier(endpoint.name) }}(client):
+    print('endpoint {{ endpoint.name }}:')
+
+    from .api.{{ key }}.{{ python_identifier(endpoint.name) }} import sync
+    result = sync(client = client)
+    print (result)
+    return True
+
+
+{% endfor %}
+
+{% endfor %}
