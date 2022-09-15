@@ -9,7 +9,7 @@ from argparse import ArgumentParser
 {% from "endpoint_macros.py.jinja" import header_params, cookie_params, query_params, json_body, multipart_body,
     arguments, client, kwargs, parse_response, docstring %}
 
-{% for key, value in openapi.endpoint_collections_by_tag | dictsort if key in ('keys') %}
+{% for key, value in openapi.endpoint_collections_by_tag | dictsort if True or key in ('accounts', 'actions', 'customers', 'data_usages', 'domains', 'failover_ips', 'keys') %}
 @cli.add_group('{{ key }}', help='Acess {{ key }} commands')
 def {{ key }}(client):
     return False  # display help
@@ -30,12 +30,25 @@ def {{ python_identifier(endpoint.name) }}(
     #print('endpoint {{ endpoint.name }}:')
     {% for parameter in endpoint.path_parameters.values() %}
     # {{ parameter }}
-    parser.add_argument('{{ parameter.name }}')
+    parser.add_argument('{{ parameter.name }}',
+        {% if parameter.description %}help="""{{ parameter.description }}""", {% endif %}
+        )
     {% endfor %}
 
-    {% if endpoint.json_body %}
+    {% set json_body = endpoint.json_body %}
+    {% if json_body %}
+    {% if json_body.class_info %}
     from .models.{{ endpoint.json_body.class_info.module_name }} import {{ endpoint.json_body.class_info.name }}
-        {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+    {% endif %}
+    {%  if json_body.get_instance_type_string() == 'list' %}
+    {% set property = json_body.inner_property %}
+    # {{ json_body }}, {{ property }}
+    parser.add_argument('{{ key }}',
+            nargs='*',
+            {% if json_body.description %}help="""{{ json_body.description  }}""",{% endif %}
+            )
+    {% else %}
+    {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
     #property: {{  property }}
     #type: {{ property.get_instance_type_string() }}
 
@@ -48,23 +61,28 @@ def {{ python_identifier(endpoint.name) }}(
             {%  endif %}
             )
         {% endfor %}
+        {% endif %}
     {% endif %}
 
 
     def request(
 {% for parameter in endpoint.path_parameters.values() %}
-    {{ parameter.to_string() }},
-    {% endfor %}
+{{ parameter.to_string() }},
+{% endfor %}
 {% if endpoint.requires_security %}
 client: AuthenticatedClient,
 {% else %}
 client: Client,
 {% endif %}
-    {% if endpoint.json_body %}
-        {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
-            {{ property.to_string() }},
-            {%  endfor %}
-    {% endif %}
+{% if json_body %}
+{% if json_body.get_instance_type_string() == 'list' %}
+{{ key }}: {{ json_body.get_type_string() }}
+{% else %}
+{% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+{{ property.to_string() }},
+{% endfor %}
+{% endif %}
+{% endif %}
         ):
             from .api.{{ key }}.{{ python_identifier(endpoint.name) }} import sync
             return sync(
@@ -72,14 +90,17 @@ client: Client,
                     {{ parameter.python_name }} = {{ parameter.python_name }},
                     {% endfor %}
                 client = client,
-                {% if endpoint.json_body %}
-                # {{  endpoint.json_body }}
-                json_body = {{ endpoint.json_body.class_info.name }}(
-                    {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
-                    {{ property.python_name }} = {{ property.python_name }},
-            {%  endfor %}
-                    ),
-                {% endif %}
+{% if json_body %}
+{% if json_body.get_instance_type_string() == 'list' %}
+json_body = {{ key }},
+{% else %}
+json_body = {{ endpoint.json_body.class_info.name }}(
+{% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+{{ property.python_name }} = {{ property.python_name }},
+{%  endfor %}
+),
+{% endif %}
+{% endif %}
             )
     return request
 
