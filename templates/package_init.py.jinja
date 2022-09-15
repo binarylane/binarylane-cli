@@ -2,21 +2,64 @@
 from .client import AuthenticatedClient, Client
 from .. import cli
 
-{% for key, value in openapi.endpoint_collections_by_tag | dictsort %}
-@cli.add_command('{{ key }}', help='Acess {{ key }} commands')
+from argparse import ArgumentParser
+
+{% from "endpoint_macros.py.jinja" import header_params, cookie_params, query_params, json_body, multipart_body,
+    arguments, client, kwargs, parse_response, docstring %}
+
+{% for key, value in openapi.endpoint_collections_by_tag | dictsort if key == 'keys' %}
+@cli.add_group('{{ key }}', help='Acess {{ key }} commands')
 def {{ key }}(client):
     return False  # display help
 
 {% for endpoint in value.endpoints %}
-### {{ endpoint }}
-@{{key}}.add_command('{{ endpoint.name }}', help='{{ endpoint.summary }}')
-def {{ python_identifier(endpoint.name) }}(client):
-    print('endpoint {{ endpoint.name }}:')
 
-    from .api.{{ key }}.{{ python_identifier(endpoint.name) }} import sync
-    result = sync(client = client)
-    print (result)
-    return True
+    {% for relative in endpoint.relative_imports %}
+{{ relative.replace("...",".") }}
+{% endfor %}
+
+
+## endpoint:
+@{{key}}.add_command('{{ endpoint.name }}', help='{{ endpoint.summary }}')
+def {{ python_identifier(endpoint.name) }}(
+     {#  arguments(endpoint) | indent(4) #}
+    parser: ArgumentParser
+    ):
+    #print('endpoint {{ endpoint.name }}:')
+    {% for parameter in endpoint.path_parameters.values() %}
+    # {{ parameter }}
+    parser.add_argument('{{ parameter.name }}')
+    {% endfor %}
+
+
+    def request(
+{% for parameter in endpoint.path_parameters.values() %}
+    {{ parameter.to_string() }},
+    {% endfor %}
+{% if endpoint.requires_security %}
+client: AuthenticatedClient,
+{% else %}
+client: Client,
+{% endif %}
+        ):
+            from .api.{{ key }}.{{ python_identifier(endpoint.name) }} import sync
+            return sync(
+                {% for parameter in endpoint.path_parameters.values() %}
+                    {{ parameter.name }} = {{ parameter.name }},
+                    {% endfor %}
+                client = client,
+            )
+    return request
+
+    # {{endpoint.json_body}}
+    #print(sync.__annotations__)
+    #import inspect
+    #for key, value in inspect.getmembers(sync):
+     #   print(key, value)
+
+    #result = sync(client = client)
+    #print (result)
+    #return True
 
 
 {% endfor %}
