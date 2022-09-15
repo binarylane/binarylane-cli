@@ -1,13 +1,15 @@
 """ {{ package_description }} """
 from .client import AuthenticatedClient, Client
 from .. import cli
+from typing import Union
+from .types import Unset, UNSET
 
 from argparse import ArgumentParser
 
 {% from "endpoint_macros.py.jinja" import header_params, cookie_params, query_params, json_body, multipart_body,
     arguments, client, kwargs, parse_response, docstring %}
 
-{% for key, value in openapi.endpoint_collections_by_tag | dictsort if key == 'keys' %}
+{% for key, value in openapi.endpoint_collections_by_tag | dictsort if key in ('keys') %}
 @cli.add_group('{{ key }}', help='Acess {{ key }} commands')
 def {{ key }}(client):
     return False  # display help
@@ -31,6 +33,23 @@ def {{ python_identifier(endpoint.name) }}(
     parser.add_argument('{{ parameter.name }}')
     {% endfor %}
 
+    {% if endpoint.json_body %}
+    from .models.{{ endpoint.json_body.class_info.module_name }} import {{ endpoint.json_body.class_info.name }}
+        {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+    #property: {{  property }}
+    #type: {{ property.get_instance_type_string() }}
+
+    parser.add_argument('--{{  property.name.replace('_','-') }}',
+            dest='{{  property.python_name }}',
+            required={{ property.required }},
+            help="""{{  property.description }}""",
+            {%  if property.get_instance_type_string() == 'bool' %}
+            action=cli.BooleanOptionalAction,
+            {%  endif %}
+            )
+        {% endfor %}
+    {% endif %}
+
 
     def request(
 {% for parameter in endpoint.path_parameters.values() %}
@@ -41,13 +60,26 @@ client: AuthenticatedClient,
 {% else %}
 client: Client,
 {% endif %}
+    {% if endpoint.json_body %}
+        {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+            {{ property.to_string() }},
+            {%  endfor %}
+    {% endif %}
         ):
             from .api.{{ key }}.{{ python_identifier(endpoint.name) }} import sync
             return sync(
                 {% for parameter in endpoint.path_parameters.values() %}
-                    {{ parameter.name }} = {{ parameter.name }},
+                    {{ parameter.python_name }} = {{ parameter.python_name }},
                     {% endfor %}
                 client = client,
+                {% if endpoint.json_body %}
+                # {{  endpoint.json_body }}
+                json_body = {{ endpoint.json_body.class_info.name }}(
+                    {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+                    {{ property.python_name }} = {{ property.python_name }},
+            {%  endfor %}
+                    ),
+                {% endif %}
             )
     return request
 
