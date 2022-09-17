@@ -11,7 +11,7 @@ from argparse import ArgumentParser
 
 {% for key, value in openapi.endpoint_collections_by_tag | dictsort %}
 
-@cli.add_group('{{ key.replace('_','-') }}', help='Acess {{ key.replace('_',' ') }} commands')
+@cli.add_group('{{ key.replace('_','-') }}', description='Acess {{ key.replace('_',' ') }} commands')
 def {{ key }}(client):
     return False  # display help
 
@@ -23,7 +23,7 @@ def {{ key }}(client):
 
 
 ## endpoint:
-@{{key}}.add_command('{{ endpoint.name }}', help='{{ endpoint.summary }}')
+@{{key}}.add_command('{{ endpoint.name }}', description='{{ endpoint.summary }}')
 def {{ python_identifier(endpoint.name) }}(
      {#  arguments(endpoint) | indent(4) #}
     parser: ArgumentParser
@@ -31,8 +31,8 @@ def {{ python_identifier(endpoint.name) }}(
     #print('endpoint {{ endpoint.name }}:')
     {% for parameter in endpoint.path_parameters.values() %}
     # {{ parameter }}
-    parser.add_argument('{{ parameter.name }}',
-        {% if parameter.description %}help="""{{ parameter.description }}""", {% endif %}
+    parser.cli_argument('{{ parameter.name }}',
+        {% if parameter.description %}description="""{{ parameter.description }}""", {% endif %}
         )
     {% endfor %}
 
@@ -48,20 +48,19 @@ def {{ python_identifier(endpoint.name) }}(
     {%  if json_body.get_instance_type_string() == 'list' %}
     {% set property = json_body.inner_property %}
     # {{ json_body }}, {{ property }}
-    parser.add_argument('{{ key }}',
+    parser.cli_argument('{{ key }}',
             nargs='*',
-            {% if json_body.description %}help="""{{ json_body.description  }}""",{% endif %}
+            {% if json_body.description %}description="""{{ json_body.description  }}""",{% endif %}
             )
     {% else %}
     {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
-    #property: {{  property }}
-    #type: {{ property.get_instance_type_string() }}
+    # property {{ property }} has type {{ property.get_instance_type_string() }}
 
-    parser.add_argument('--{{  property.name.replace('_','-') }}',
+    parser.cli_argument('--{{  property.name.replace('_','-') }}',
             dest='{{  property.python_name }}',
             type={{ property.get_type_string() }},
             required={{ property.required }},
-            help="""{{  property.description }}""",
+            description="""{{  property.description }}""",
             {%  if property.get_instance_type_string() == 'bool' %}
             action=cli.BooleanOptionalAction,
             {%  endif %}

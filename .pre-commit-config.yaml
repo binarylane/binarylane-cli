@@ -1,0 +1,38 @@
+---
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 8fe62d14e0b4d7d845a7022c5c2c3ae41bdd3f26  # frozen: v4.1.0 - last version with python3.6 support
+    hooks:
+      - id: check-case-conflict
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+        exclude: '/files/'
+      - id: check-yaml
+      - id: detect-private-key
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: isort
+        name: check imports are sorted
+        entry: poetry run task isort
+        pass_filenames: false
+        language: system
+      - id: black
+        name: check code is correctly formatted
+        entry: poetry run task black
+        pass_filenames: false
+        language: system
+      - id: mypy
+        name: check code passes static type analysis
+        entry: poetry run task mypy
+        pass_filenames: false
+        language: system
+      - id: pylint
+        name: check code passes static analyser
+        entry: poetry run task pylint
+        pass_filenames: false
+        language: system
