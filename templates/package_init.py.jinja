@@ -9,12 +9,13 @@ from argparse import ArgumentParser
 {% from "endpoint_macros.py.jinja" import header_params, cookie_params, query_params, json_body, multipart_body,
     arguments, client, kwargs, parse_response, docstring %}
 
-{% for key, value in openapi.endpoint_collections_by_tag | dictsort if True or key in ('accounts', 'actions', 'customers', 'data_usages', 'domains', 'failover_ips', 'keys') %}
-@cli.add_group('{{ key }}', help='Acess {{ key }} commands')
+{% for key, value in openapi.endpoint_collections_by_tag | dictsort %}
+
+@cli.add_group('{{ key.replace('_','-') }}', help='Acess {{ key.replace('_',' ') }} commands')
 def {{ key }}(client):
     return False  # display help
 
-{% for endpoint in value.endpoints %}
+{% for endpoint in value.endpoints if not (endpoint.json_body and endpoint.json_body.get_type_string().startswith('Union[')) %}
 
     {% for relative in endpoint.relative_imports %}
 {{ relative.replace("...",".") }}
@@ -38,8 +39,12 @@ def {{ python_identifier(endpoint.name) }}(
     {% set json_body = endpoint.json_body %}
     {% if json_body %}
     {% if json_body.class_info %}
+    # {{ json_body.class_info.relative_imports }}
     from .models.{{ endpoint.json_body.class_info.module_name }} import {{ endpoint.json_body.class_info.name }}
     {% endif %}
+    {% for relative in json_body.relative_imports %}
+    {{ relative.replace("..",".") }}
+    {% endfor %}
     {%  if json_body.get_instance_type_string() == 'list' %}
     {% set property = json_body.inner_property %}
     # {{ json_body }}, {{ property }}
@@ -54,6 +59,7 @@ def {{ python_identifier(endpoint.name) }}(
 
     parser.add_argument('--{{  property.name.replace('_','-') }}',
             dest='{{  property.python_name }}',
+            type={{ property.get_type_string() }},
             required={{ property.required }},
             help="""{{  property.description }}""",
             {%  if property.get_instance_type_string() == 'bool' %}
