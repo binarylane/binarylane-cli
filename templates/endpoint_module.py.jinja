@@ -1,0 +1,113 @@
+from typing import Any, Dict, List, Optional, Union, cast
+
+import httpx
+
+
+from ... import cli
+
+from ...client.client import AuthenticatedClient, Client
+from ...client.types import Response, UNSET, Unset
+
+from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync
+
+{% for relative in endpoint.relative_imports %}
+{{ relative.replace('...', '...client.') }}
+{% endfor %}
+
+{% from "endpoint_macros.py.jinja" import header_params, cookie_params, query_params, json_body, multipart_body,
+    arguments, client, kwargs, parse_response, docstring %}
+
+{% set return_string = endpoint.response_type() %}
+{% set parsed_responses = (endpoint.responses | length > 0) and return_string != "Any" %}
+
+from ...runner import CommandRunner
+
+class Command(CommandRunner):
+
+    @property
+    def name(self):
+        return '{{ endpoint.name }}'
+
+    @property
+    def description(self):
+        return """{{ endpoint.summary }}"""
+
+    def configure(self, parser):
+        """Add arguments for {{ endpoint.name }}"""
+        {% for parameter in endpoint.path_parameters.values() %}
+        parser.cli_argument('{{ parameter.name }}',
+            {% if parameter.description %}description="""{{ parameter.description }}""", {% endif %}
+            )
+        {% endfor %}
+
+        {% if endpoint.json_body %}
+        {% if endpoint.json_body.class_info %}
+        from ...client.models.{{ endpoint.json_body.class_info.module_name }} import {{ endpoint.json_body.class_info.name }}
+        {% endif %}
+
+        {%  if endpoint.json_body.get_instance_type_string() == 'list' %}
+        {% set property = endpoint.json_body.inner_property %}
+        parser.cli_argument('{{ key }}',
+                nargs='*',
+                {% if endpoint.json_body.description %}description="""{{ endpoint.json_body.description  }}""",{% endif %}
+                )
+
+        {% elif endpoint.json_body.class_info %}
+        {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+
+        parser.cli_argument('--{{  property.name.replace('_','-') }}',
+                dest='{{  property.python_name }}',
+                type={{ property.get_type_string() }},
+                required={{ property.required }},
+                description="""{{  property.description }}""",
+                {%  if property.get_instance_type_string() == 'bool' %}
+                action=cli.BooleanOptionalAction,
+                {%  endif %}
+                )
+        {% endfor %}
+        {% else %}
+        # Unknown {{ endpoint.json_body.get_instance_type_string() }} {{ endpoint.json_body.template }}
+        {% endif %}
+        {% endif %}
+
+    def request(self,
+        {% for parameter in endpoint.path_parameters.values() %}
+        {{ parameter.to_string() }},
+        {% endfor %}
+
+        {% if endpoint.requires_security %}
+        client: AuthenticatedClient,
+        {% else %}
+        client: Client,
+        {% endif %}
+
+        {% if endpoint.json_body %}
+        {% if endpoint.json_body.get_instance_type_string() == 'list' %}
+        {{ endpoint.tag }}: {{ endpoint.json_body.get_type_string() }}
+        {% elif endpoint.json_body.class_info %}
+        {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+        {{ property.to_string() }},
+        {% endfor %}
+        {% endif %}
+        {% endif %}
+        ):
+            return sync(
+                {% for parameter in endpoint.path_parameters.values() %}
+                {{ parameter.python_name }} = {{ parameter.python_name }},
+                {% endfor %}
+                client = client,
+
+                {% if endpoint.json_body %}
+                {% if endpoint.json_body.get_instance_type_string() == 'list' %}
+                json_body = {{ endpoint.tag }},
+
+                {% elif endpoint.json_body.class_info %}
+                json_body = {{ endpoint.json_body.class_info.name }}(
+                    {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
+                    {{ property.python_name }} = {{ property.python_name }},
+                    {% endfor %}
+                ),
+                {% endif %}
+
+                {% endif %}
+            )

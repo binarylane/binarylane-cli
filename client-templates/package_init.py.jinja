@@ -45,7 +45,7 @@ def {{ python_identifier(endpoint.name) }}(
     {% for relative in json_body.relative_imports %}
     {{ relative.replace("..",".") }}
     {% endfor %}
-    {%  if json_body.get_instance_type_string() == 'list' %}
+    {%  if endpoint.json_body.get_instance_type_string() == 'list' %}
     {% set property = json_body.inner_property %}
     # {{ json_body }}, {{ property }}
     parser.cli_argument('{{ key }}',

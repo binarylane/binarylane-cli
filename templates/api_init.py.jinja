@@ -1,0 +1,34 @@
+""" Contains methods for accessing the API """
+from __future__ import annotations
+
+from typing import List, Type
+import importlib
+
+from ..runner import Runner, PackageRunner
+
+
+__all__ = ['commands']
+commands : List[Type[Runner]] = []
+
+def register_command(cls: Type[Runner]) -> Type[Runner]:
+    commands.append(cls)
+    return cls
+
+{% for key, value in endpoint_collections_by_tag | dictsort %}
+@register_command
+class {{ class_name(key) }}(PackageRunner):
+    """Runner for {{key}} API operations"""
+
+    @property
+    def name(self) -> str:
+        return '{{ value.endpoints[0].name.split('_')[0] }}'
+
+    @property
+    def description(self) -> str:
+        return f'Access {self.name} commands'
+
+    @property
+    def package_path(self) -> str:
+        return f'.commands.{{ key }}'
+
+{% endfor %}

@@ -1,0 +1,31 @@
+""" Contains methods for accessing {{ endpoint_collection.tag }} endpoints """
+from __future__ import annotations
+
+from typing import List, Type
+from ...runner import Runner, ModuleRunner
+
+__all__ = ['commands']
+commands : List[Type[Runner]] = []
+
+def register_command(cls):
+    commands.append(cls)
+    return cls
+
+{% for endpoint in endpoint_collection.endpoints %}
+@register_command
+class {{ class_name(endpoint.name) }}(ModuleRunner):
+    """Runner for {{ endpoint.name }} API operation"""
+
+    @property
+    def name(self) -> str:
+        return '{{ endpoint.name.split('_', 1)[1] }}'
+
+    @property
+    def description(self) -> str:
+        return '{{ endpoint.summary }}'
+
+    @property
+    def module_path(self) -> str:
+        return '.commands.{{ endpoint_collection.tag }}.{{ python_identifier(endpoint.name) }}'
+
+{% endfor %}

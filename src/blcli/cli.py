@@ -24,6 +24,11 @@ def debug(*args: str) -> None:
         print(*args, file=sys.stderr)
 
 
+def warn(*args: str) -> None:
+    """Wrapper for print() that prefixes output with WARN:"""
+    print("WARN: ", *args, file=sys.stderr)
+
+
 class CommandParser(argparse.ArgumentParser):
     """Enhanced ArgumentParser with support for generic types"""
 
@@ -73,7 +78,7 @@ class CommandParser(argparse.ArgumentParser):
             inner_type = _type.__args__[0]
 
             if inner_type not in (int, str):
-                debug(f"WARN: ignoring {self.prog} {dest} type={_type}")
+                warn(f"unsupported type {self.prog} {dest} type={_type} inner_type={inner_type}")
                 return None
 
             _type = inner_type
@@ -82,7 +87,7 @@ class CommandParser(argparse.ArgumentParser):
 
         # Check we have handled all generic types:
         if getattr(_type, "__origin__", None):
-            debug(f"WARN: ignoring {self.prog} {dest} type={_type}")
+            warn(f"unsupported {self.prog} {dest} type={_type}")
             return None
 
         kwargs["type"] = _type
@@ -99,6 +104,7 @@ class CommandParser(argparse.ArgumentParser):
             kwargs["choices"] = enum_options
             # print('Need to add enum!', enum_options)
 
+        debug(f"Adding: {kwargs}")
         return self.add_argument(*args, **kwargs)
 
 
@@ -143,37 +149,6 @@ def _add_group(
 
 
 add_group = functools.partial(_add_group, add_command_parser, "")
-
-
-def run(args: List[str]) -> None:
-    """CLI runner: parse command line input, make an API request and display the response"""
-    parsed = prog_parser.parse_args(args)
-
-    # Haven't reached a command
-    if not "func" in parsed:
-        prog_parser.parse_args(args + ["--help"])
-        return
-
-    # Run the command's handler
-    handler = parsed.func
-    del parsed.func
-
-    # FIXME: avoid circular dependency by late import
-    authenticated_client = importlib.import_module(".client", __package__).AuthenticatedClient
-    client = authenticated_client(
-        "https://api.binarylane.com.au",
-        get_api_token(),
-    )
-
-    parsed.client = client
-    response = handler(**vars(parsed))
-    if not response:
-        prog_parser.parse_args(args + ["--help"])
-        return
-
-    # display response
-    display(response)
-    return
 
 
 def get_api_token() -> str:

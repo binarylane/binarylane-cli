@@ -4,7 +4,7 @@ import sys
 import time
 from typing import Any, Callable
 
-from . import cli
+from . import app, cli
 
 
 def debug_time(func: Callable[[], Any], msg: str = None) -> None:
@@ -17,12 +17,3 @@ def debug_time(func: Callable[[], Any], msg: str = None) -> None:
     func()
     end = time.time()
     cli.debug(f"DEBUG: {int(1000 * (end - start))}ms for '{msg or repr(func)}'")
-
-
-def main() -> None:
-    """
-    Entrypoint for blcli
-    """
-    # Currently this is what triggers all the argparse construction, so its slow:
-    debug_time(lambda: importlib.import_module(".client", package=__package__), "import .client")
-    debug_time(lambda: cli.run(sys.argv[1:]), "cli.run()")

@@ -11,7 +11,7 @@ python = "^3.8"
 terminaltables = "^3.1.10"
 
 [tool.poetry.scripts]
-bl = "blcli:main"
+bl = "blcli:app.main"
 
 [tool.poetry.group.dev.dependencies]
 openapi-python-client = "^0.11.6"
@@ -41,12 +41,13 @@ target_version = ['py37', 'py38', 'py39']
 
 [tool.pylint.format]
 max-line-length = 120
-ignore-paths = ['src/blcli/client']
+ignore-paths = ['src/blcli/client/', 'src/blcli/commands/*/']
 
 [tool.pylint.messages_control]
 disable = [
     # Initial impl still in progress:
     "fixme",
+    "too-few-public-methods",
 ]
 
 [tool.mypy]
@@ -58,7 +59,7 @@ strict_equality = true
 ignore_missing_imports = true
 exclude = [
     'src/blcli/actions\.py$',  # from python 3.9
-    'src/blcli/client/__init__\.py$',  # FIXME
+    'src/blcli/commands/.*/.*\.py$',  # FIXME
 ]
 
 [build-system]
