@@ -4,6 +4,4 @@ dist
 .idea
 
 # Generated client + commands is not versioned during initial development
-src/blcli/client
-src/blcli/commands
 scripts/openapi.json

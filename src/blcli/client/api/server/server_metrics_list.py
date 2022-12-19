@@ -1,0 +1,283 @@
+import datetime
+from typing import Any, Dict, Optional, Union, cast
+
+import httpx
+
+from ...client import Client
+from ...models.data_interval import DataInterval
+from ...models.problem_details import ProblemDetails
+from ...models.sample_sets_response import SampleSetsResponse
+from ...models.validation_problem_details import ValidationProblemDetails
+from ...types import UNSET, Response, Unset
+
+
+def _get_kwargs(
+    server_id: int,
+    *,
+    client: Client,
+    data_interval: Union[Unset, None, DataInterval] = UNSET,
+    start: Union[Unset, None, datetime.datetime] = UNSET,
+    end: Union[Unset, None, datetime.datetime] = UNSET,
+    page: Union[Unset, None, int] = 1,
+    per_page: Union[Unset, None, int] = 20,
+) -> Dict[str, Any]:
+    url = "{}/v2/samplesets/{server_id}".format(client.base_url, server_id=server_id)
+
+    headers: Dict[str, str] = client.get_headers()
+    cookies: Dict[str, Any] = client.get_cookies()
+
+    params: Dict[str, Any] = {}
+    json_data_interval: Union[Unset, None, str] = UNSET
+    if not isinstance(data_interval, Unset):
+        json_data_interval = data_interval.value if data_interval else None
+
+    params["data_interval"] = json_data_interval
+
+    json_start: Union[Unset, None, str] = UNSET
+    if not isinstance(start, Unset):
+        json_start = start.isoformat() if start else None
+
+    params["start"] = json_start
+
+    json_end: Union[Unset, None, str] = UNSET
+    if not isinstance(end, Unset):
+        json_end = end.isoformat() if end else None
+
+    params["end"] = json_end
+
+    params["page"] = page
+
+    params["per_page"] = per_page
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
+
+    return {
+        "method": "get",
+        "url": url,
+        "headers": headers,
+        "cookies": cookies,
+        "timeout": client.get_timeout(),
+        "params": params,
+    }
+
+
+def _parse_response(
+    *, response: httpx.Response
+) -> Optional[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]:
+    if response.status_code == 200:
+        response_200 = SampleSetsResponse.from_dict(response.json())
+
+        return response_200
+    if response.status_code == 400:
+        response_400 = ValidationProblemDetails.from_dict(response.json())
+
+        return response_400
+    if response.status_code == 404:
+        response_404 = ProblemDetails.from_dict(response.json())
+
+        return response_404
+    if response.status_code == 401:
+        response_401 = cast(Any, None)
+        return response_401
+    return None
+
+
+def _build_response(
+    *, response: httpx.Response
+) -> Response[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]:
+    return Response(
+        status_code=response.status_code,
+        content=response.content,
+        headers=response.headers,
+        parsed=_parse_response(response=response),
+    )
+
+
+def sync_detailed(
+    server_id: int,
+    *,
+    client: Client,
+    data_interval: Union[Unset, None, DataInterval] = UNSET,
+    start: Union[Unset, None, datetime.datetime] = UNSET,
+    end: Union[Unset, None, datetime.datetime] = UNSET,
+    page: Union[Unset, None, int] = 1,
+    per_page: Union[Unset, None, int] = 20,
+) -> Response[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]:
+    """Fetch all of the Performance and Usage Data Sample Sets for a Server
+
+    Args:
+        server_id (int): The target server id.
+        data_interval (Union[Unset, None, DataInterval]):
+            | Value | Description |
+            | ----- | ----------- |
+            | five-minute | 5 Minutes |
+            | half-hour | 30 Minutes |
+            | four-hour | 4 Hours |
+            | day | 1 Day |
+            | week | 7 Days |
+            | month | 1 Month |
+
+        start (Union[Unset, None, datetime.datetime]):
+        end (Union[Unset, None, datetime.datetime]):
+        page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
+        per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
+
+    Returns:
+        Response[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]
+    """
+
+    kwargs = _get_kwargs(
+        server_id=server_id,
+        client=client,
+        data_interval=data_interval,
+        start=start,
+        end=end,
+        page=page,
+        per_page=per_page,
+    )
+
+    response = httpx.request(
+        verify=client.verify_ssl,
+        **kwargs,
+    )
+
+    return _build_response(response=response)
+
+
+def sync(
+    server_id: int,
+    *,
+    client: Client,
+    data_interval: Union[Unset, None, DataInterval] = UNSET,
+    start: Union[Unset, None, datetime.datetime] = UNSET,
+    end: Union[Unset, None, datetime.datetime] = UNSET,
+    page: Union[Unset, None, int] = 1,
+    per_page: Union[Unset, None, int] = 20,
+) -> Optional[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]:
+    """Fetch all of the Performance and Usage Data Sample Sets for a Server
+
+    Args:
+        server_id (int): The target server id.
+        data_interval (Union[Unset, None, DataInterval]):
+            | Value | Description |
+            | ----- | ----------- |
+            | five-minute | 5 Minutes |
+            | half-hour | 30 Minutes |
+            | four-hour | 4 Hours |
+            | day | 1 Day |
+            | week | 7 Days |
+            | month | 1 Month |
+
+        start (Union[Unset, None, datetime.datetime]):
+        end (Union[Unset, None, datetime.datetime]):
+        page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
+        per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
+
+    Returns:
+        Response[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]
+    """
+
+    return sync_detailed(
+        server_id=server_id,
+        client=client,
+        data_interval=data_interval,
+        start=start,
+        end=end,
+        page=page,
+        per_page=per_page,
+    ).parsed
+
+
+async def asyncio_detailed(
+    server_id: int,
+    *,
+    client: Client,
+    data_interval: Union[Unset, None, DataInterval] = UNSET,
+    start: Union[Unset, None, datetime.datetime] = UNSET,
+    end: Union[Unset, None, datetime.datetime] = UNSET,
+    page: Union[Unset, None, int] = 1,
+    per_page: Union[Unset, None, int] = 20,
+) -> Response[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]:
+    """Fetch all of the Performance and Usage Data Sample Sets for a Server
+
+    Args:
+        server_id (int): The target server id.
+        data_interval (Union[Unset, None, DataInterval]):
+            | Value | Description |
+            | ----- | ----------- |
+            | five-minute | 5 Minutes |
+            | half-hour | 30 Minutes |
+            | four-hour | 4 Hours |
+            | day | 1 Day |
+            | week | 7 Days |
+            | month | 1 Month |
+
+        start (Union[Unset, None, datetime.datetime]):
+        end (Union[Unset, None, datetime.datetime]):
+        page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
+        per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
+
+    Returns:
+        Response[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]
+    """
+
+    kwargs = _get_kwargs(
+        server_id=server_id,
+        client=client,
+        data_interval=data_interval,
+        start=start,
+        end=end,
+        page=page,
+        per_page=per_page,
+    )
+
+    async with httpx.AsyncClient(verify=client.verify_ssl) as _client:
+        response = await _client.request(**kwargs)
+
+    return _build_response(response=response)
+
+
+async def asyncio(
+    server_id: int,
+    *,
+    client: Client,
+    data_interval: Union[Unset, None, DataInterval] = UNSET,
+    start: Union[Unset, None, datetime.datetime] = UNSET,
+    end: Union[Unset, None, datetime.datetime] = UNSET,
+    page: Union[Unset, None, int] = 1,
+    per_page: Union[Unset, None, int] = 20,
+) -> Optional[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]:
+    """Fetch all of the Performance and Usage Data Sample Sets for a Server
+
+    Args:
+        server_id (int): The target server id.
+        data_interval (Union[Unset, None, DataInterval]):
+            | Value | Description |
+            | ----- | ----------- |
+            | five-minute | 5 Minutes |
+            | half-hour | 30 Minutes |
+            | four-hour | 4 Hours |
+            | day | 1 Day |
+            | week | 7 Days |
+            | month | 1 Month |
+
+        start (Union[Unset, None, datetime.datetime]):
+        end (Union[Unset, None, datetime.datetime]):
+        page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
+        per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
+
+    Returns:
+        Response[Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]
+    """
+
+    return (
+        await asyncio_detailed(
+            server_id=server_id,
+            client=client,
+            data_interval=data_interval,
+            start=start,
+            end=end,
+            page=page,
+            per_page=per_page,
+        )
+    ).parsed
