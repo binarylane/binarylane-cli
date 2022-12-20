@@ -85,7 +85,7 @@ class ModuleRunner(Runner):
     def run(self, args: List[str]) -> None:
         debug(f"ModuleRunner for {self.name} ({self.module_path}). Received arguments: {args}")
         cls = importlib.import_module(self.module_path, package=__package__).Command
-        command = cls()
+        command = cls(self)
         command.run(args)
 
 
@@ -93,11 +93,16 @@ class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
 
     parser: CommandParser
+    parent: Runner
 
-    def __init__(self, parent: Optional[Runner] = None) -> None:
+    def __init__(self, parent: Runner) -> None:
         super().__init__(parent)
-        self.parser = CommandParser()
+        self.parser = CommandParser(prog=self.prog)
         self.configure(self.parser)
+
+    @property
+    def prog(self) -> str:
+        return self.parent.prog
 
     @abstractmethod
     def configure(self, parser: CommandParser) -> None:
