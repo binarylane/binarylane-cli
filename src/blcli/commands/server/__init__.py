@@ -202,12 +202,12 @@ class ServerActionCreate(ModuleRunner):
 
 
 @register_command
-class ServerActionList(ModuleRunner):
-    """Runner for server_action_list API operation"""
+class ServerTaggedAction(ModuleRunner):
+    """Runner for server_tagged-action API operation"""
 
     @property
     def name(self) -> str:
-        return "action_list"
+        return "tagged-action"
 
     @property
     def description(self) -> str:
@@ -215,7 +215,7 @@ class ServerActionList(ModuleRunner):
 
     @property
     def module_path(self) -> str:
-        return ".commands.server.server_action_list"
+        return ".commands.server.server_tagged_action"
 
 
 @register_command
