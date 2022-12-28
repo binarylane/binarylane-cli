@@ -186,10 +186,20 @@ def display(response: Any) -> None:
 
     response = getattr(response, primary)
     if isinstance(response, list):
+        for key, value in getattr(primary_type, "__annotations__", {"item": "value"}).items():
+            debug(f'{key}: {value} dict?{hasattr(value, "to_dict")} origin:{getattr(value, "__origin__", None)}')
+
         header = [
-            key for key in getattr(primary_type, "__annotations__", {"item": "value"}) if key != "additional_properties"
+            key
+            for key, value in getattr(primary_type, "__annotations__", {"item": "value"}).items()
+            if key != "additional_properties"
+            and not hasattr(value, "to_dict")
+            and not getattr(value, "__origin__", None) in (Union, list)
         ]
-        data = [header] + [flatten(item if item is str else item.to_dict().values()) for item in response]
+        data = [header] + [
+            flatten(item if item is str else [value for key, value in item.to_dict().items() if key in header])
+            for item in response
+        ]
     elif isinstance(response, str):
         data = []
         print(response)
