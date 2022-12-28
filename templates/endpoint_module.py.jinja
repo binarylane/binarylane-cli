@@ -76,6 +76,18 @@ class Command(CommandRunner):
         {% endif %}
         {% endif %}
 
+        {% if endpoint.query_parameters %}
+        {% for property in endpoint.query_parameters.values() %}
+        parser.cli_argument('--{{  property.name.replace('_','-') }}',
+                dest='{{  property.python_name }}',
+                type={{ property.get_type_string() }},
+                required=False,
+                description="""{{  property.description }}""",
+                )
+        {% endfor %}
+        {% endif %}
+
+
     def request(self,
         {% for parameter in endpoint.path_parameters.values() %}
         {{ parameter.to_string() }},
@@ -96,6 +108,12 @@ class Command(CommandRunner):
         {% endfor %}
         {% endif %}
         {% endif %}
+
+        {% if endpoint.query_parameters %}
+        {% for property in endpoint.query_parameters.values() %}
+        {{ property.to_string() }},
+        {% endfor %}
+        {% endif %}
         ):
             return sync(
                 {% for parameter in endpoint.path_parameters.values() %}
@@ -114,6 +132,12 @@ class Command(CommandRunner):
                     {% endfor %}
                 ),
                 {% endif %}
-
                 {% endif %}
+
+                {% if endpoint.query_parameters %}
+                {% for property in endpoint.query_parameters.values() %}
+                    {{ property.python_name }} = {{ property.python_name }},
+                {% endfor %}
+                {% endif %}
+
             )
