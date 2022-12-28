@@ -1,8 +1,11 @@
-from typing import List, Union
+from typing import Any, List, Union
 
-from ...client.api.server.server_ipv6_ptr_ns_update import sync
+from ...client.api.server.server_ipv6_ptr_ns_update import sync_detailed
 from ...client.client import Client
+from ...client.models.action import Action
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.reverse_nameservers_request import ReverseNameserversRequest
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -31,10 +34,11 @@ class Command(CommandRunner):
         self,
         client: Client,
         reverse_nameservers: Union[Unset, None, List[str]] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Action, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             client=client,
             json_body=ReverseNameserversRequest(
                 reverse_nameservers=reverse_nameservers,
             ),
-        )
+        ).parsed

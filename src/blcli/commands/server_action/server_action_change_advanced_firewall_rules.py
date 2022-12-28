@@ -1,10 +1,13 @@
-from typing import List
+from typing import Any, List, Union
 
-from ...client.api.server_action.server_action_change_advanced_firewall_rules import sync
+from ...client.api.server_action.server_action_change_advanced_firewall_rules import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.advanced_firewall_rule import AdvancedFirewallRule
 from ...client.models.change_advanced_firewall_rules import ChangeAdvancedFirewallRules
 from ...client.models.change_advanced_firewall_rules_type import ChangeAdvancedFirewallRulesType
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...runner import CommandRunner
 
 
@@ -46,12 +49,13 @@ class Command(CommandRunner):
         client: Client,
         type: ChangeAdvancedFirewallRulesType,
         firewall_rules: List[AdvancedFirewallRule],
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeAdvancedFirewallRules(
                 type=type,
                 firewall_rules=firewall_rules,
             ),
-        )
+        ).parsed

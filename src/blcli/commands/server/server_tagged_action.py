@@ -1,7 +1,10 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.server.server_tagged_action import sync
+from ...client.api.server.server_tagged_action import sync_detailed
 from ...client.client import Client
+from ...client.models.actions_response import ActionsResponse
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -32,8 +35,9 @@ class Command(CommandRunner):
         self,
         client: Client,
         tag_name: Union[Unset, None, str] = UNSET,
-    ):
-        return sync(
+    ) -> Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             client=client,
             tag_name=tag_name,
-        )
+        ).parsed

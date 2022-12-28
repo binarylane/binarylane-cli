@@ -1,11 +1,14 @@
-from typing import List, Union
+from typing import Any, List, Union
 
 from ... import cli
-from ...client.api.server_action.server_action_change_advanced_features import sync
+from ...client.api.server_action.server_action_change_advanced_features import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.advanced_feature import AdvancedFeature
 from ...client.models.change_advanced_features import ChangeAdvancedFeatures
 from ...client.models.change_advanced_features_type import ChangeAdvancedFeaturesType
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.models.video_device import VideoDevice
 from ...client.models.vm_machine_type import VmMachineType
 from ...client.types import UNSET, Unset
@@ -115,8 +118,9 @@ class Command(CommandRunner):
         machine_type: Union[Unset, None, VmMachineType] = UNSET,
         automatic_machine_type: Union[Unset, None, bool] = UNSET,
         video_device: Union[Unset, None, VideoDevice] = UNSET,
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeAdvancedFeatures(
@@ -128,4 +132,4 @@ class Command(CommandRunner):
                 automatic_machine_type=automatic_machine_type,
                 video_device=video_device,
             ),
-        )
+        ).parsed

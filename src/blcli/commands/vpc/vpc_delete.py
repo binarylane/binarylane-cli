@@ -1,5 +1,8 @@
-from ...client.api.vpc.vpc_delete import sync
+from typing import Any, Union
+
+from ...client.api.vpc.vpc_delete import sync_detailed
 from ...client.client import Client
+from ...client.models.problem_details import ProblemDetails
 from ...runner import CommandRunner
 
 
@@ -23,8 +26,9 @@ class Command(CommandRunner):
         self,
         vpc_id: int,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, ProblemDetails]:
+
+        return sync_detailed(
             vpc_id=vpc_id,
             client=client,
-        )
+        ).parsed

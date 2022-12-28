@@ -1,5 +1,9 @@
-from ...client.api.server.server_alert_list import sync
+from typing import Any, Union
+
+from ...client.api.server.server_alert_list import sync_detailed
 from ...client.client import Client
+from ...client.models.current_server_alerts_response import CurrentServerAlertsResponse
+from ...client.models.problem_details import ProblemDetails
 from ...runner import CommandRunner
 
 
@@ -18,7 +22,8 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, CurrentServerAlertsResponse, ProblemDetails]:
+
+        return sync_detailed(
             client=client,
-        )
+        ).parsed

@@ -1,8 +1,10 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.vpc.vpc_members import sync
+from ...client.api.vpc.vpc_members import sync_detailed
 from ...client.client import Client
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.resource_type import ResourceType
+from ...client.models.vpc_members_response import VpcMembersResponse
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -40,33 +42,36 @@ class Command(CommandRunner):
 
 """,
         )
-        parser.cli_argument(
-            "--page",
-            dest="page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The selected page. Page numbering starts at 1""",
-        )
-        parser.cli_argument(
-            "--per-page",
-            dest="per_page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The number of results to show per page.""",
-        )
 
     def request(
         self,
         vpc_id: int,
         client: Client,
         resource_type: Union[Unset, None, ResourceType] = UNSET,
-        page: Union[Unset, None, int] = 1,
-        per_page: Union[Unset, None, int] = 20,
-    ):
-        return sync(
-            vpc_id=vpc_id,
-            client=client,
-            resource_type=resource_type,
-            page=page,
-            per_page=per_page,
-        )
+    ) -> Union[Any, ProblemDetails, VpcMembersResponse]:
+
+        page = 0
+        per_page = 25
+        has_next = True
+        response: VpcMembersResponse = None
+
+        while has_next:
+            page += 1
+            page_response = sync_detailed(
+                vpc_id=vpc_id,
+                client=client,
+                resource_type=resource_type,
+                page=page,
+                per_page=per_page,
+            )
+
+            if page_response.status_code != 200:
+                return page_response.parsed
+
+            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            if not response:
+                response = page_response.parsed
+            else:
+                response.members += page_response.parsed.members
+
+        return response

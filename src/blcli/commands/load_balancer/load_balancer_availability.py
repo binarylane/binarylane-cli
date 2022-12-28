@@ -1,5 +1,8 @@
-from ...client.api.load_balancer.load_balancer_availability import sync
+from typing import Any, Union
+
+from ...client.api.load_balancer.load_balancer_availability import sync_detailed
 from ...client.client import Client
+from ...client.models.load_balancer_availability_response import LoadBalancerAvailabilityResponse
 from ...runner import CommandRunner
 
 
@@ -18,7 +21,8 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, LoadBalancerAvailabilityResponse]:
+
+        return sync_detailed(
             client=client,
-        )
+        ).parsed

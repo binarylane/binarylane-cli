@@ -1,9 +1,12 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.server_action.server_action_change_offsite_backup_location import sync
+from ...client.api.server_action.server_action_change_offsite_backup_location import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.change_offsite_backup_location import ChangeOffsiteBackupLocation
 from ...client.models.change_offsite_backup_location_type import ChangeOffsiteBackupLocationType
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -46,12 +49,13 @@ class Command(CommandRunner):
         client: Client,
         type: ChangeOffsiteBackupLocationType,
         offsite_backup_location: Union[Unset, None, str] = UNSET,
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeOffsiteBackupLocation(
                 type=type,
                 offsite_backup_location=offsite_backup_location,
             ),
-        )
+        ).parsed

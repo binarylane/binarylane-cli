@@ -1,9 +1,11 @@
-from typing import Union
+from typing import Any, Union
 
 from ... import cli
-from ...client.api.ssh_key.ssh_key_create import sync
+from ...client.api.ssh_key.ssh_key_create import sync_detailed
 from ...client.client import Client
 from ...client.models.ssh_key_request import SshKeyRequest
+from ...client.models.ssh_key_response import SshKeyResponse
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -51,12 +53,13 @@ class Command(CommandRunner):
         public_key: str,
         name: str,
         default: Union[Unset, None, bool] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, SshKeyResponse, ValidationProblemDetails]:
+
+        return sync_detailed(
             client=client,
             json_body=SshKeyRequest(
                 public_key=public_key,
                 name=name,
                 default=default,
             ),
-        )
+        ).parsed

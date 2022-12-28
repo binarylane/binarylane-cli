@@ -1,5 +1,8 @@
-from ...client.api.domain.domain_nameservers_list import sync
+from typing import Any, Union
+
+from ...client.api.domain.domain_nameservers_list import sync_detailed
 from ...client.client import Client
+from ...client.models.local_nameservers_response import LocalNameserversResponse
 from ...runner import CommandRunner
 
 
@@ -18,7 +21,8 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, LocalNameserversResponse]:
+
+        return sync_detailed(
             client=client,
-        )
+        ).parsed

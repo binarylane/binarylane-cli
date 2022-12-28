@@ -1,8 +1,10 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.domain.domain_create import sync
+from ...client.api.domain.domain_create import sync_detailed
 from ...client.client import Client
 from ...client.models.domain_request import DomainRequest
+from ...client.models.domain_response import DomainResponse
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -40,11 +42,12 @@ class Command(CommandRunner):
         client: Client,
         name: str,
         ip_address: Union[Unset, None, str] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, DomainResponse, ValidationProblemDetails]:
+
+        return sync_detailed(
             client=client,
             json_body=DomainRequest(
                 name=name,
                 ip_address=ip_address,
             ),
-        )
+        ).parsed

@@ -1,8 +1,8 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.vpc.vpc_list import sync
+from ...client.api.vpc.vpc_list import sync_detailed
 from ...client.client import Client
-from ...client.types import Unset
+from ...client.models.vpcs_response import VpcsResponse
 from ...runner import CommandRunner
 
 
@@ -18,29 +18,31 @@ class Command(CommandRunner):
     def configure(self, parser):
         """Add arguments for vpc_list"""
 
-        parser.cli_argument(
-            "--page",
-            dest="page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The selected page. Page numbering starts at 1""",
-        )
-        parser.cli_argument(
-            "--per-page",
-            dest="per_page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The number of results to show per page.""",
-        )
-
     def request(
         self,
         client: Client,
-        page: Union[Unset, None, int] = 1,
-        per_page: Union[Unset, None, int] = 20,
-    ):
-        return sync(
-            client=client,
-            page=page,
-            per_page=per_page,
-        )
+    ) -> Union[Any, VpcsResponse]:
+
+        page = 0
+        per_page = 25
+        has_next = True
+        response: VpcsResponse = None
+
+        while has_next:
+            page += 1
+            page_response = sync_detailed(
+                client=client,
+                page=page,
+                per_page=per_page,
+            )
+
+            if page_response.status_code != 200:
+                return page_response.parsed
+
+            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            if not response:
+                response = page_response.parsed
+            else:
+                response.vpcs += page_response.parsed.vpcs
+
+        return response

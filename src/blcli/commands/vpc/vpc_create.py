@@ -1,9 +1,11 @@
-from typing import List, Union
+from typing import Any, List, Union
 
-from ...client.api.vpc.vpc_create import sync
+from ...client.api.vpc.vpc_create import sync_detailed
 from ...client.client import Client
 from ...client.models.create_vpc_request import CreateVpcRequest
 from ...client.models.route_entry_request import RouteEntryRequest
+from ...client.models.validation_problem_details import ValidationProblemDetails
+from ...client.models.vpc_response import VpcResponse
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -50,12 +52,13 @@ class Command(CommandRunner):
         name: str,
         route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET,
         ip_range: Union[Unset, None, str] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, ValidationProblemDetails, VpcResponse]:
+
+        return sync_detailed(
             client=client,
             json_body=CreateVpcRequest(
                 name=name,
                 route_entries=route_entries,
                 ip_range=ip_range,
             ),
-        )
+        ).parsed

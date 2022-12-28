@@ -1,7 +1,12 @@
-from ...client.api.server_action.server_action_resize_disk import sync
+from typing import Any, Union
+
+from ...client.api.server_action.server_action_resize_disk import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.resize_disk import ResizeDisk
 from ...client.models.resize_disk_type import ResizeDiskType
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...runner import CommandRunner
 
 
@@ -52,8 +57,9 @@ class Command(CommandRunner):
         type: ResizeDiskType,
         disk_id: str,
         size_gigabytes: int,
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ResizeDisk(
@@ -61,4 +67,4 @@ class Command(CommandRunner):
                 disk_id=disk_id,
                 size_gigabytes=size_gigabytes,
             ),
-        )
+        ).parsed

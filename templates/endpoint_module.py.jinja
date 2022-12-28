@@ -8,7 +8,7 @@ from ... import cli
 from ...client.client import AuthenticatedClient, Client
 from ...client.types import Response, UNSET, Unset
 
-from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync
+from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync_detailed
 
 {% for relative in endpoint.relative_imports %}
 {{ relative.replace('...', '...client.') }}
@@ -77,7 +77,7 @@ class Command(CommandRunner):
         {% endif %}
 
         {% if endpoint.query_parameters %}
-        {% for property in endpoint.query_parameters.values() %}
+        {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
         parser.cli_argument('--{{  property.name.replace('_','-') }}',
                 dest='{{  property.python_name }}',
                 type={{ property.get_type_string() }},
@@ -109,13 +109,29 @@ class Command(CommandRunner):
         {% endif %}
         {% endif %}
 
+        {% set paginated=False %}
         {% if endpoint.query_parameters %}
-        {% for property in endpoint.query_parameters.values() %}
+        {% set paginated='page' in endpoint.query_parameters.keys() and 'per_page' in endpoint.query_parameters.keys() %}
+        {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
         {{ property.to_string() }},
         {% endfor %}
         {% endif %}
-        ):
-            return sync(
+        ) -> {{ endpoint.response_type() }}:
+
+            {% if paginated %}
+            page = 0
+            per_page = 25
+            has_next = True
+            {% for response_type in endpoint.responses if response_type.status_code == 200 %}
+            response: {{ response_type.prop.class_info.name }} = None
+            {% endfor %}
+
+            while has_next:
+                page += 1
+                page_response = sync_detailed(
+            {% else %}
+            return sync_detailed(
+            {% endif %}
                 {% for parameter in endpoint.path_parameters.values() %}
                 {{ parameter.python_name }} = {{ parameter.python_name }},
                 {% endfor %}
@@ -135,9 +151,33 @@ class Command(CommandRunner):
                 {% endif %}
 
                 {% if endpoint.query_parameters %}
-                {% for property in endpoint.query_parameters.values() %}
+                {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
                     {{ property.python_name }} = {{ property.python_name }},
                 {% endfor %}
                 {% endif %}
+            {% if not paginated %}
+            ).parsed
+            {% else %}
+                page = page,
+                per_page = per_page,
+                )
 
-            )
+                if page_response.status_code != 200:
+                    return page_response.parsed
+
+                has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+                if not response:
+                    response = page_response.parsed
+                else:
+                {% for response_type in endpoint.responses if response_type.status_code == 200 %}
+                {% for prop in response_type.prop.required_properties if prop.name not in ('meta') %}
+                {% if prop.get_instance_type_string() == 'list' %}
+                    response.{{ prop.python_name }} += page_response.parsed.{{ prop.python_name }}
+                {% else %}
+                    {{ fail('unsupported', prop.prop.get_instance_type_string()) }}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+
+            return response
+            {% endif %}

@@ -1,9 +1,11 @@
-from typing import List
+from typing import Any, List, Union
 
-from ...client.api.load_balancer.load_balancer_rule_delete import sync
+from ...client.api.load_balancer.load_balancer_rule_delete import sync_detailed
 from ...client.client import Client
 from ...client.models.forwarding_rule import ForwardingRule
 from ...client.models.forwarding_rules_request import ForwardingRulesRequest
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...runner import CommandRunner
 
 
@@ -35,11 +37,12 @@ class Command(CommandRunner):
         load_balancer_id: int,
         client: Client,
         forwarding_rules: List[ForwardingRule],
-    ):
-        return sync(
+    ) -> Union[Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             load_balancer_id=load_balancer_id,
             client=client,
             json_body=ForwardingRulesRequest(
                 forwarding_rules=forwarding_rules,
             ),
-        )
+        ).parsed

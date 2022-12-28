@@ -1,5 +1,9 @@
-from ...client.api.software.software_get import sync
+from typing import Union
+
+from ...client.api.software.software_get import sync_detailed
 from ...client.client import Client
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.software_response import SoftwareResponse
 from ...runner import CommandRunner
 
 
@@ -22,8 +26,9 @@ class Command(CommandRunner):
         self,
         software_id: str,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[ProblemDetails, SoftwareResponse]:
+
+        return sync_detailed(
             software_id=software_id,
             client=client,
-        )
+        ).parsed

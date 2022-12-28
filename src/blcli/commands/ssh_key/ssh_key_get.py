@@ -1,5 +1,9 @@
-from ...client.api.ssh_key.ssh_key_get import sync
+from typing import Any, Union
+
+from ...client.api.ssh_key.ssh_key_get import sync_detailed
 from ...client.client import Client
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.ssh_key_response import SshKeyResponse
 from ...runner import CommandRunner
 
 
@@ -22,8 +26,9 @@ class Command(CommandRunner):
         self,
         key_id: str,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, ProblemDetails, SshKeyResponse]:
+
+        return sync_detailed(
             key_id=key_id,
             client=client,
-        )
+        ).parsed

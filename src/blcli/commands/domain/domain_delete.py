@@ -1,5 +1,8 @@
-from ...client.api.domain.domain_delete import sync
+from typing import Any, Union
+
+from ...client.api.domain.domain_delete import sync_detailed
 from ...client.client import Client
+from ...client.models.problem_details import ProblemDetails
 from ...runner import CommandRunner
 
 
@@ -22,8 +25,9 @@ class Command(CommandRunner):
         self,
         domain_name: str,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, ProblemDetails]:
+
+        return sync_detailed(
             domain_name=domain_name,
             client=client,
-        )
+        ).parsed

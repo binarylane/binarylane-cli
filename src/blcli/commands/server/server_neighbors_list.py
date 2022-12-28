@@ -1,5 +1,8 @@
-from ...client.api.server.server_neighbors_list import sync
+from typing import Any, Union
+
+from ...client.api.server.server_neighbors_list import sync_detailed
 from ...client.client import Client
+from ...client.models.neighbors_response import NeighborsResponse
 from ...runner import CommandRunner
 
 
@@ -18,7 +21,8 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, NeighborsResponse]:
+
+        return sync_detailed(
             client=client,
-        )
+        ).parsed

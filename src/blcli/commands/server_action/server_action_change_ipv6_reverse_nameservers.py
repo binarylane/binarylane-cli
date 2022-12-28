@@ -1,9 +1,12 @@
-from typing import List
+from typing import Any, List, Union
 
-from ...client.api.server_action.server_action_change_ipv6_reverse_nameservers import sync
+from ...client.api.server_action.server_action_change_ipv6_reverse_nameservers import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.change_ipv_6_reverse_nameservers import ChangeIpv6ReverseNameservers
 from ...client.models.change_ipv_6_reverse_nameservers_type import ChangeIpv6ReverseNameserversType
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...runner import CommandRunner
 
 
@@ -45,12 +48,13 @@ class Command(CommandRunner):
         client: Client,
         type: ChangeIpv6ReverseNameserversType,
         ipv6_reverse_nameservers: List[str],
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeIpv6ReverseNameservers(
                 type=type,
                 ipv6_reverse_nameservers=ipv6_reverse_nameservers,
             ),
-        )
+        ).parsed

@@ -1,9 +1,12 @@
-from typing import Union
+from typing import Any, Union
 
 from ... import cli
-from ...client.api.ssh_key.ssh_key_update import sync
+from ...client.api.ssh_key.ssh_key_update import sync_detailed
 from ...client.client import Client
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.ssh_key_response import SshKeyResponse
 from ...client.models.update_ssh_key_request import UpdateSshKeyRequest
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -47,12 +50,13 @@ Optional: If true this will be added to all new server installations (if we supp
         client: Client,
         name: str,
         default: Union[Unset, None, bool] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, ProblemDetails, SshKeyResponse, ValidationProblemDetails]:
+
+        return sync_detailed(
             key_id=key_id,
             client=client,
             json_body=UpdateSshKeyRequest(
                 name=name,
                 default=default,
             ),
-        )
+        ).parsed

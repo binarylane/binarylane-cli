@@ -1,8 +1,9 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.server.server_failover_ip_available import sync
+from ...client.api.server.server_failover_ip_available import sync_detailed
 from ...client.client import Client
-from ...client.types import Unset
+from ...client.models.failover_ips_response import FailoverIpsResponse
+from ...client.models.problem_details import ProblemDetails
 from ...runner import CommandRunner
 
 
@@ -22,31 +23,33 @@ class Command(CommandRunner):
             description="""The target server id.""",
         )
 
-        parser.cli_argument(
-            "--page",
-            dest="page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The selected page. Page numbering starts at 1""",
-        )
-        parser.cli_argument(
-            "--per-page",
-            dest="per_page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The number of results to show per page.""",
-        )
-
     def request(
         self,
         server_id: int,
         client: Client,
-        page: Union[Unset, None, int] = 1,
-        per_page: Union[Unset, None, int] = 20,
-    ):
-        return sync(
-            server_id=server_id,
-            client=client,
-            page=page,
-            per_page=per_page,
-        )
+    ) -> Union[Any, FailoverIpsResponse, ProblemDetails]:
+
+        page = 0
+        per_page = 25
+        has_next = True
+        response: FailoverIpsResponse = None
+
+        while has_next:
+            page += 1
+            page_response = sync_detailed(
+                server_id=server_id,
+                client=client,
+                page=page,
+                per_page=per_page,
+            )
+
+            if page_response.status_code != 200:
+                return page_response.parsed
+
+            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            if not response:
+                response = page_response.parsed
+            else:
+                response.failover_ips += page_response.parsed.failover_ips
+
+        return response

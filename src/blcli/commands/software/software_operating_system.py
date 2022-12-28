@@ -1,8 +1,9 @@
 from typing import Union
 
-from ...client.api.software.software_operating_system import sync
+from ...client.api.software.software_operating_system import sync_detailed
 from ...client.client import Client
-from ...client.types import Unset
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.softwares_response import SoftwaresResponse
 from ...runner import CommandRunner
 
 
@@ -21,31 +22,33 @@ class Command(CommandRunner):
             "operating_system_id_or_slug",
         )
 
-        parser.cli_argument(
-            "--page",
-            dest="page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The selected page. Page numbering starts at 1""",
-        )
-        parser.cli_argument(
-            "--per-page",
-            dest="per_page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The number of results to show per page.""",
-        )
-
     def request(
         self,
         operating_system_id_or_slug: str,
         client: Client,
-        page: Union[Unset, None, int] = 1,
-        per_page: Union[Unset, None, int] = 20,
-    ):
-        return sync(
-            operating_system_id_or_slug=operating_system_id_or_slug,
-            client=client,
-            page=page,
-            per_page=per_page,
-        )
+    ) -> Union[ProblemDetails, SoftwaresResponse]:
+
+        page = 0
+        per_page = 25
+        has_next = True
+        response: SoftwaresResponse = None
+
+        while has_next:
+            page += 1
+            page_response = sync_detailed(
+                operating_system_id_or_slug=operating_system_id_or_slug,
+                client=client,
+                page=page,
+                per_page=per_page,
+            )
+
+            if page_response.status_code != 200:
+                return page_response.parsed
+
+            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            if not response:
+                response = page_response.parsed
+            else:
+                response.software += page_response.parsed.software
+
+        return response

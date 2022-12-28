@@ -1,8 +1,10 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.server.server_metrics_get import sync
+from ...client.api.server.server_metrics_get import sync_detailed
 from ...client.client import Client
 from ...client.models.data_interval import DataInterval
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.sample_set_response import SampleSetResponse
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -46,9 +48,10 @@ class Command(CommandRunner):
         server_id: int,
         client: Client,
         data_interval: Union[Unset, None, DataInterval] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, ProblemDetails, SampleSetResponse]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             data_interval=data_interval,
-        )
+        ).parsed

@@ -1,9 +1,12 @@
 import datetime
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.server.server_metrics_list import sync
+from ...client.api.server.server_metrics_list import sync_detailed
 from ...client.client import Client
 from ...client.models.data_interval import DataInterval
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.sample_sets_response import SampleSetsResponse
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -55,20 +58,6 @@ class Command(CommandRunner):
             required=False,
             description="""None""",
         )
-        parser.cli_argument(
-            "--page",
-            dest="page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The selected page. Page numbering starts at 1""",
-        )
-        parser.cli_argument(
-            "--per-page",
-            dest="per_page",
-            type=Union[Unset, None, int],
-            required=False,
-            description="""The number of results to show per page.""",
-        )
 
     def request(
         self,
@@ -77,15 +66,32 @@ class Command(CommandRunner):
         data_interval: Union[Unset, None, DataInterval] = UNSET,
         start: Union[Unset, None, datetime.datetime] = UNSET,
         end: Union[Unset, None, datetime.datetime] = UNSET,
-        page: Union[Unset, None, int] = 1,
-        per_page: Union[Unset, None, int] = 20,
-    ):
-        return sync(
-            server_id=server_id,
-            client=client,
-            data_interval=data_interval,
-            start=start,
-            end=end,
-            page=page,
-            per_page=per_page,
-        )
+    ) -> Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]:
+
+        page = 0
+        per_page = 25
+        has_next = True
+        response: SampleSetsResponse = None
+
+        while has_next:
+            page += 1
+            page_response = sync_detailed(
+                server_id=server_id,
+                client=client,
+                data_interval=data_interval,
+                start=start,
+                end=end,
+                page=page,
+                per_page=per_page,
+            )
+
+            if page_response.status_code != 200:
+                return page_response.parsed
+
+            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            if not response:
+                response = page_response.parsed
+            else:
+                response.sample_sets += page_response.parsed.sample_sets
+
+        return response

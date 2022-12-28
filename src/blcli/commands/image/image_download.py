@@ -1,5 +1,9 @@
-from ...client.api.image.image_download import sync
+from typing import Any, Union
+
+from ...client.api.image.image_download import sync_detailed
 from ...client.client import Client
+from ...client.models.image_download_response import ImageDownloadResponse
+from ...client.models.problem_details import ProblemDetails
 from ...runner import CommandRunner
 
 
@@ -22,8 +26,9 @@ class Command(CommandRunner):
         self,
         image_id: int,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, ImageDownloadResponse, ProblemDetails]:
+
+        return sync_detailed(
             image_id=image_id,
             client=client,
-        )
+        ).parsed

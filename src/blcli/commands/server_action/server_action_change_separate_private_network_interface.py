@@ -1,8 +1,13 @@
+from typing import Any, Union
+
 from ... import cli
-from ...client.api.server_action.server_action_change_separate_private_network_interface import sync
+from ...client.api.server_action.server_action_change_separate_private_network_interface import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.change_separate_private_network_interface import ChangeSeparatePrivateNetworkInterface
 from ...client.models.change_separate_private_network_interface_type import ChangeSeparatePrivateNetworkInterfaceType
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...runner import CommandRunner
 
 
@@ -45,12 +50,13 @@ class Command(CommandRunner):
         client: Client,
         type: ChangeSeparatePrivateNetworkInterfaceType,
         enabled: bool,
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeSeparatePrivateNetworkInterface(
                 type=type,
                 enabled=enabled,
             ),
-        )
+        ).parsed

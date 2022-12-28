@@ -1,8 +1,13 @@
+from typing import Any, Union
+
 from ... import cli
-from ...client.api.server_action.server_action_change_manage_offsite_backup_copies import sync
+from ...client.api.server_action.server_action_change_manage_offsite_backup_copies import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.change_manage_offsite_backup_copies import ChangeManageOffsiteBackupCopies
 from ...client.models.change_manage_offsite_backup_copies_type import ChangeManageOffsiteBackupCopiesType
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...runner import CommandRunner
 
 
@@ -45,12 +50,13 @@ class Command(CommandRunner):
         client: Client,
         type: ChangeManageOffsiteBackupCopiesType,
         manage_offsite_backup_copies: bool,
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeManageOffsiteBackupCopies(
                 type=type,
                 manage_offsite_backup_copies=manage_offsite_backup_copies,
             ),
-        )
+        ).parsed

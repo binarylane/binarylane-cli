@@ -1,10 +1,13 @@
-from typing import Union
+from typing import Any, Union
 
 from ... import cli
-from ...client.api.server_action.server_action_password_reset import sync
+from ...client.api.server_action.server_action_password_reset import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.password_reset import PasswordReset
 from ...client.models.password_reset_type import PasswordResetType
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -59,8 +62,9 @@ If omitted and the server supports password change actions this will default to 
         type: PasswordResetType,
         username: Union[Unset, None, str] = UNSET,
         send_password_via_email: Union[Unset, None, bool] = UNSET,
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=PasswordReset(
@@ -68,4 +72,4 @@ If omitted and the server supports password change actions this will default to 
                 username=username,
                 send_password_via_email=send_password_via_email,
             ),
-        )
+        ).parsed

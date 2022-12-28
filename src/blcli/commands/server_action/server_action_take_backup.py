@@ -1,11 +1,14 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.server_action.server_action_take_backup import sync
+from ...client.api.server_action.server_action_take_backup import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.backup_replacement_strategy import BackupReplacementStrategy
 from ...client.models.backup_slot import BackupSlot
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.take_backup import TakeBackup
 from ...client.models.take_backup_type import TakeBackupType
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -91,8 +94,9 @@ class Command(CommandRunner):
         backup_type: Union[Unset, None, BackupSlot] = UNSET,
         backup_id_to_replace: Union[Unset, None, int] = UNSET,
         label: Union[Unset, None, str] = UNSET,
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=TakeBackup(
@@ -102,4 +106,4 @@ class Command(CommandRunner):
                 backup_id_to_replace=backup_id_to_replace,
                 label=label,
             ),
-        )
+        ).parsed

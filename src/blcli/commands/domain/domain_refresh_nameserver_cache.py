@@ -1,4 +1,6 @@
-from ...client.api.domain.domain_refresh_nameserver_cache import sync
+from typing import Any
+
+from ...client.api.domain.domain_refresh_nameserver_cache import sync_detailed
 from ...client.client import Client
 from ...runner import CommandRunner
 
@@ -18,7 +20,8 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-    ):
-        return sync(
+    ) -> Any:
+
+        return sync_detailed(
             client=client,
-        )
+        ).parsed

@@ -1,5 +1,8 @@
-from ...client.api.account.account_get import sync
+from typing import Any, Union
+
+from ...client.api.account.account_get import sync_detailed
 from ...client.client import Client
+from ...client.models.account_response import AccountResponse
 from ...runner import CommandRunner
 
 
@@ -18,7 +21,8 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[AccountResponse, Any]:
+
+        return sync_detailed(
             client=client,
-        )
+        ).parsed

@@ -1,10 +1,13 @@
-from typing import List
+from typing import Any, List, Union
 
-from ...client.api.server_action.server_action_change_threshold_alerts import sync
+from ...client.api.server_action.server_action_change_threshold_alerts import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.change_threshold_alerts import ChangeThresholdAlerts
 from ...client.models.change_threshold_alerts_type import ChangeThresholdAlertsType
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.threshold_alert_request import ThresholdAlertRequest
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...runner import CommandRunner
 
 
@@ -46,12 +49,13 @@ class Command(CommandRunner):
         client: Client,
         type: ChangeThresholdAlertsType,
         threshold_alerts: List[ThresholdAlertRequest],
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeThresholdAlerts(
                 type=type,
                 threshold_alerts=threshold_alerts,
             ),
-        )
+        ).parsed

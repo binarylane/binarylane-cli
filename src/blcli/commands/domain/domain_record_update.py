@@ -1,9 +1,12 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.domain.domain_record_update import sync
+from ...client.api.domain.domain_record_update import sync_detailed
 from ...client.client import Client
 from ...client.models.domain_record_request import DomainRecordRequest
+from ...client.models.domain_record_response import DomainRecordResponse
 from ...client.models.domain_record_type import DomainRecordType
+from ...client.models.problem_details import ProblemDetails
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -125,8 +128,9 @@ class Command(CommandRunner):
         weight: Union[Unset, None, int] = UNSET,
         flags: Union[Unset, None, int] = UNSET,
         tag: Union[Unset, None, str] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, DomainRecordResponse, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             domain_name=domain_name,
             record_id=record_id,
             client=client,
@@ -141,4 +145,4 @@ class Command(CommandRunner):
                 flags=flags,
                 tag=tag,
             ),
-        )
+        ).parsed

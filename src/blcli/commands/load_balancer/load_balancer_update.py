@@ -1,13 +1,16 @@
-from typing import List, Union
+from typing import Any, List, Union
 
 from ... import cli
-from ...client.api.load_balancer.load_balancer_update import sync
+from ...client.api.load_balancer.load_balancer_update import sync_detailed
 from ...client.client import Client
 from ...client.models.algorithm_type import AlgorithmType
 from ...client.models.forwarding_rule import ForwardingRule
 from ...client.models.health_check import HealthCheck
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.sticky_sessions import StickySessions
 from ...client.models.update_load_balancer_request import UpdateLoadBalancerRequest
+from ...client.models.update_load_balancer_response import UpdateLoadBalancerResponse
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -130,8 +133,9 @@ class Command(CommandRunner):
         enable_backend_keepalive: Union[Unset, None, bool] = UNSET,
         server_ids: Union[Unset, None, List[int]] = UNSET,
         tag: Union[Unset, None, str] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, ProblemDetails, UpdateLoadBalancerResponse, ValidationProblemDetails]:
+
+        return sync_detailed(
             load_balancer_id=load_balancer_id,
             client=client,
             json_body=UpdateLoadBalancerRequest(
@@ -146,4 +150,4 @@ class Command(CommandRunner):
                 server_ids=server_ids,
                 tag=tag,
             ),
-        )
+        ).parsed

@@ -1,6 +1,9 @@
+from typing import Any, Union
+
 from ... import cli
-from ...client.api.action.action_proceed import sync
+from ...client.api.action.action_proceed import sync_detailed
 from ...client.client import Client
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.proceed_request import ProceedRequest
 from ...runner import CommandRunner
 
@@ -34,11 +37,12 @@ class Command(CommandRunner):
         action_id: int,
         client: Client,
         proceed: bool,
-    ):
-        return sync(
+    ) -> Union[Any, ProblemDetails]:
+
+        return sync_detailed(
             action_id=action_id,
             client=client,
             json_body=ProceedRequest(
                 proceed=proceed,
             ),
-        )
+        ).parsed

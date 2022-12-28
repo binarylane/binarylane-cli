@@ -1,13 +1,16 @@
-from typing import List, Union
+from typing import Any, List, Union
 
 from ... import cli
-from ...client.api.load_balancer.load_balancer_create import sync
+from ...client.api.load_balancer.load_balancer_create import sync_detailed
 from ...client.client import Client
 from ...client.models.algorithm_type import AlgorithmType
 from ...client.models.create_load_balancer_request import CreateLoadBalancerRequest
+from ...client.models.create_load_balancer_response import CreateLoadBalancerResponse
 from ...client.models.forwarding_rule import ForwardingRule
 from ...client.models.health_check import HealthCheck
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.sticky_sessions import StickySessions
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -144,8 +147,9 @@ class Command(CommandRunner):
         tag: Union[Unset, None, str] = UNSET,
         region: Union[Unset, None, str] = UNSET,
         vpc_id: Union[Unset, None, int] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             client=client,
             json_body=CreateLoadBalancerRequest(
                 name=name,
@@ -161,4 +165,4 @@ class Command(CommandRunner):
                 region=region,
                 vpc_id=vpc_id,
             ),
-        )
+        ).parsed

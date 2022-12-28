@@ -1,5 +1,9 @@
-from ...client.api.server.server_firewall_list import sync
+from typing import Any, Union
+
+from ...client.api.server.server_firewall_list import sync_detailed
 from ...client.client import Client
+from ...client.models.advanced_firewall_rules_response import AdvancedFirewallRulesResponse
+from ...client.models.problem_details import ProblemDetails
 from ...runner import CommandRunner
 
 
@@ -23,8 +27,9 @@ class Command(CommandRunner):
         self,
         server_id: int,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[AdvancedFirewallRulesResponse, Any, ProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
-        )
+        ).parsed

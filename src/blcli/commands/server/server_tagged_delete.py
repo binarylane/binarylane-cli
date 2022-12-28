@@ -1,6 +1,6 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.server.server_tagged_delete import sync
+from ...client.api.server.server_tagged_delete import sync_detailed
 from ...client.client import Client
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
@@ -30,8 +30,9 @@ class Command(CommandRunner):
         self,
         client: Client,
         tag_name: Union[Unset, None, str] = UNSET,
-    ):
-        return sync(
+    ) -> Any:
+
+        return sync_detailed(
             client=client,
             tag_name=tag_name,
-        )
+        ).parsed

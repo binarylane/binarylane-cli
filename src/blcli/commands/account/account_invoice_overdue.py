@@ -1,5 +1,8 @@
-from ...client.api.account.account_invoice_overdue import sync
+from typing import Any, Union
+
+from ...client.api.account.account_invoice_overdue import sync_detailed
 from ...client.client import Client
+from ...client.models.unpaid_failed_invoices_response import UnpaidFailedInvoicesResponse
 from ...runner import CommandRunner
 
 
@@ -18,7 +21,8 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, UnpaidFailedInvoicesResponse]:
+
+        return sync_detailed(
             client=client,
-        )
+        ).parsed

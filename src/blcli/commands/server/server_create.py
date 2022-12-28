@@ -1,12 +1,14 @@
-from typing import List, Union
+from typing import Any, List, Union
 
 from ... import cli
-from ...client.api.server.server_create import sync
+from ...client.api.server.server_create import sync_detailed
 from ...client.client import Client
 from ...client.models.create_server_request import CreateServerRequest
+from ...client.models.create_server_response import CreateServerResponse
 from ...client.models.license_ import License
 from ...client.models.size_options_request import SizeOptionsRequest
 from ...client.models.ssh_key_request import SshKeyRequest
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -146,8 +148,9 @@ class Command(CommandRunner):
         licenses: Union[Unset, None, List[License]] = UNSET,
         user_data: Union[Unset, None, str] = UNSET,
         port_blocking: Union[Unset, None, bool] = UNSET,
-    ):
-        return sync(
+    ) -> Union[Any, CreateServerResponse, ValidationProblemDetails]:
+
+        return sync_detailed(
             client=client,
             json_body=CreateServerRequest(
                 size=size,
@@ -164,4 +167,4 @@ class Command(CommandRunner):
                 user_data=user_data,
                 port_blocking=port_blocking,
             ),
-        )
+        ).parsed

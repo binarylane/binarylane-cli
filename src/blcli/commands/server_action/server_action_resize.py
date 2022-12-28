@@ -1,13 +1,16 @@
-from typing import Union
+from typing import Any, Union
 
-from ...client.api.server_action.server_action_resize import sync
+from ...client.api.server_action.server_action_resize import sync_detailed
 from ...client.client import Client
+from ...client.models.action_response import ActionResponse
 from ...client.models.change_image import ChangeImage
 from ...client.models.change_licenses import ChangeLicenses
 from ...client.models.change_size_options_request import ChangeSizeOptionsRequest
+from ...client.models.problem_details import ProblemDetails
 from ...client.models.resize import Resize
 from ...client.models.resize_type import ResizeType
 from ...client.models.take_backup import TakeBackup
+from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 
@@ -86,8 +89,9 @@ class Command(CommandRunner):
         change_image: Union[Unset, None, ChangeImage] = UNSET,
         change_licenses: Union[Unset, None, ChangeLicenses] = UNSET,
         pre_action_backup: Union[Unset, None, TakeBackup] = UNSET,
-    ):
-        return sync(
+    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+
+        return sync_detailed(
             server_id=server_id,
             client=client,
             json_body=Resize(
@@ -98,4 +102,4 @@ class Command(CommandRunner):
                 change_licenses=change_licenses,
                 pre_action_backup=pre_action_backup,
             ),
-        )
+        ).parsed

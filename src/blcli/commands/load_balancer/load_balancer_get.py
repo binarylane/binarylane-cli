@@ -1,5 +1,9 @@
-from ...client.api.load_balancer.load_balancer_get import sync
+from typing import Any, Union
+
+from ...client.api.load_balancer.load_balancer_get import sync_detailed
 from ...client.client import Client
+from ...client.models.load_balancer_response import LoadBalancerResponse
+from ...client.models.problem_details import ProblemDetails
 from ...runner import CommandRunner
 
 
@@ -22,8 +26,9 @@ class Command(CommandRunner):
         self,
         load_balancer_id: int,
         client: Client,
-    ):
-        return sync(
+    ) -> Union[Any, LoadBalancerResponse, ProblemDetails]:
+
+        return sync_detailed(
             load_balancer_id=load_balancer_id,
             client=client,
-        )
+        ).parsed
