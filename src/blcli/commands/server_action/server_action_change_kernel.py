@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_change_kernel import sync
 from ...client.client import Client
 from ...client.models.change_kernel import ChangeKernel
+from ...client.models.change_kernel_type import ChangeKernelType
 from ...runner import CommandRunner
 
 

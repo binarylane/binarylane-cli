@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.server_action.server_action_add_disk import sync
 from ...client.client import Client
 from ...client.models.add_disk import AddDisk
+from ...client.models.add_disk_type import AddDiskType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

@@ -3,6 +3,10 @@ from typing import List, Union
 from ... import cli
 from ...client.api.load_balancer.load_balancer_update import sync
 from ...client.client import Client
+from ...client.models.algorithm_type import AlgorithmType
+from ...client.models.forwarding_rule import ForwardingRule
+from ...client.models.health_check import HealthCheck
+from ...client.models.sticky_sessions import StickySessions
 from ...client.models.update_load_balancer_request import UpdateLoadBalancerRequest
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner

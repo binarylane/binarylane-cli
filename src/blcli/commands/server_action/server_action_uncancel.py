@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_uncancel import sync
 from ...client.client import Client
 from ...client.models.uncancel import Uncancel
+from ...client.models.uncancel_type import UncancelType
 from ...runner import CommandRunner
 
 

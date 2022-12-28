@@ -2,7 +2,9 @@ from typing import Union
 
 from ...client.api.server_action.server_action_rebuild import sync
 from ...client.client import Client
+from ...client.models.image_options import ImageOptions
 from ...client.models.rebuild import Rebuild
+from ...client.models.rebuild_type import RebuildType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

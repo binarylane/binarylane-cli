@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_resize_disk import sync
 from ...client.client import Client
 from ...client.models.resize_disk import ResizeDisk
+from ...client.models.resize_disk_type import ResizeDiskType
 from ...runner import CommandRunner
 
 

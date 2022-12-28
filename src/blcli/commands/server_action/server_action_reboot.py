@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_reboot import sync
 from ...client.client import Client
 from ...client.models.reboot import Reboot
+from ...client.models.reboot_type import RebootType
 from ...runner import CommandRunner
 
 

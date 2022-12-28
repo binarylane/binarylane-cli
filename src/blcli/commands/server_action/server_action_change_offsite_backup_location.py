@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.server_action.server_action_change_offsite_backup_location import sync
 from ...client.client import Client
 from ...client.models.change_offsite_backup_location import ChangeOffsiteBackupLocation
+from ...client.models.change_offsite_backup_location_type import ChangeOffsiteBackupLocationType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

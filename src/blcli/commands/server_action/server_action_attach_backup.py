@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_attach_backup import sync
 from ...client.client import Client
 from ...client.models.attach_backup import AttachBackup
+from ...client.models.attach_backup_type import AttachBackupType
 from ...runner import CommandRunner
 
 

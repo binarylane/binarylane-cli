@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_detach_backup import sync
 from ...client.client import Client
 from ...client.models.detach_backup import DetachBackup
+from ...client.models.detach_backup_type import DetachBackupType
 from ...runner import CommandRunner
 
 

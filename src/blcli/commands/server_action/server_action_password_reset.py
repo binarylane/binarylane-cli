@@ -4,6 +4,7 @@ from ... import cli
 from ...client.api.server_action.server_action_password_reset import sync
 from ...client.client import Client
 from ...client.models.password_reset import PasswordReset
+from ...client.models.password_reset_type import PasswordResetType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

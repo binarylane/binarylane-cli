@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.server_action.server_action_clone_using_backup import sync
 from ...client.client import Client
 from ...client.models.clone_using_backup import CloneUsingBackup
+from ...client.models.clone_using_backup_type import CloneUsingBackupType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

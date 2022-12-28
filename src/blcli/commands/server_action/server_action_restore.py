@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.server_action.server_action_restore import sync
 from ...client.client import Client
 from ...client.models.restore import Restore
+from ...client.models.restore_type import RestoreType
 from ...runner import CommandRunner
 
 

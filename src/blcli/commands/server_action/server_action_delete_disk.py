@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_delete_disk import sync
 from ...client.client import Client
 from ...client.models.delete_disk import DeleteDisk
+from ...client.models.delete_disk_type import DeleteDiskType
 from ...runner import CommandRunner
 
 

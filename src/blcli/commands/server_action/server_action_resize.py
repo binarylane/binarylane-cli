@@ -2,7 +2,12 @@ from typing import Union
 
 from ...client.api.server_action.server_action_resize import sync
 from ...client.client import Client
+from ...client.models.change_image import ChangeImage
+from ...client.models.change_licenses import ChangeLicenses
+from ...client.models.change_size_options_request import ChangeSizeOptionsRequest
 from ...client.models.resize import Resize
+from ...client.models.resize_type import ResizeType
+from ...client.models.take_backup import TakeBackup
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_enable_ipv6 import sync
 from ...client.client import Client
 from ...client.models.enable_ipv_6 import EnableIpv6
+from ...client.models.enable_ipv_6_type import EnableIpv6Type
 from ...runner import CommandRunner
 
 

@@ -2,6 +2,7 @@ from ... import cli
 from ...client.api.server_action.server_action_change_port_blocking import sync
 from ...client.client import Client
 from ...client.models.change_port_blocking import ChangePortBlocking
+from ...client.models.change_port_blocking_type import ChangePortBlockingType
 from ...runner import CommandRunner
 
 

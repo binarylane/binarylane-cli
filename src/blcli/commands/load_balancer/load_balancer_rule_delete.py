@@ -2,6 +2,7 @@ from typing import List
 
 from ...client.api.load_balancer.load_balancer_rule_delete import sync
 from ...client.client import Client
+from ...client.models.forwarding_rule import ForwardingRule
 from ...client.models.forwarding_rules_request import ForwardingRulesRequest
 from ...runner import CommandRunner
 

@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_shutdown import sync
 from ...client.client import Client
 from ...client.models.shutdown import Shutdown
+from ...client.models.shutdown_type import ShutdownType
 from ...runner import CommandRunner
 
 

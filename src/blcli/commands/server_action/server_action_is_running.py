@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_is_running import sync
 from ...client.client import Client
 from ...client.models.is_running import IsRunning
+from ...client.models.is_running_type import IsRunningType
 from ...runner import CommandRunner
 
 

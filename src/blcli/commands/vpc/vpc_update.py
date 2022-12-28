@@ -2,6 +2,7 @@ from typing import List, Union
 
 from ...client.api.vpc.vpc_update import sync
 from ...client.client import Client
+from ...client.models.route_entry_request import RouteEntryRequest
 from ...client.models.update_vpc_request import UpdateVpcRequest
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner

@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_power_cycle import sync
 from ...client.client import Client
 from ...client.models.power_cycle import PowerCycle
+from ...client.models.power_cycle_type import PowerCycleType
 from ...runner import CommandRunner
 
 

@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_change_vpc_ipv4 import sync
 from ...client.client import Client
 from ...client.models.change_vpc_ipv_4 import ChangeVpcIpv4
+from ...client.models.change_vpc_ipv_4_type import ChangeVpcIpv4Type
 from ...runner import CommandRunner
 
 

@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_disable_selinux import sync
 from ...client.client import Client
 from ...client.models.disable_selinux import DisableSelinux
+from ...client.models.disable_selinux_type import DisableSelinuxType
 from ...runner import CommandRunner
 
 

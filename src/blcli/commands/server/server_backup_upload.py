@@ -2,6 +2,8 @@ from typing import Union
 
 from ...client.api.server.server_backup_upload import sync
 from ...client.client import Client
+from ...client.models.backup_replacement_strategy import BackupReplacementStrategy
+from ...client.models.backup_slot import BackupSlot
 from ...client.models.upload_image_request import UploadImageRequest
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner

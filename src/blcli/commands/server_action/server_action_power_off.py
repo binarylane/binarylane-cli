@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_power_off import sync
 from ...client.client import Client
 from ...client.models.power_off import PowerOff
+from ...client.models.power_off_type import PowerOffType
 from ...runner import CommandRunner
 
 

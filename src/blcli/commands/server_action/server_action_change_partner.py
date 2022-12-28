@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.server_action.server_action_change_partner import sync
 from ...client.client import Client
 from ...client.models.change_partner import ChangePartner
+from ...client.models.change_partner_type import ChangePartnerType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

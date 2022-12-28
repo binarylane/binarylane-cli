@@ -2,6 +2,7 @@ from ... import cli
 from ...client.api.server_action.server_action_change_source_and_destination_check import sync
 from ...client.client import Client
 from ...client.models.change_source_and_destination_check import ChangeSourceAndDestinationCheck
+from ...client.models.change_source_and_destination_check_type import ChangeSourceAndDestinationCheckType
 from ...runner import CommandRunner
 
 

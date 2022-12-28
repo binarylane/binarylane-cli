@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.domain.domain_record_update import sync
 from ...client.client import Client
 from ...client.models.domain_record_request import DomainRecordRequest
+from ...client.models.domain_record_type import DomainRecordType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

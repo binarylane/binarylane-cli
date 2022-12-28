@@ -3,6 +3,7 @@ from typing import List
 from ...client.api.server_action.server_action_change_ipv6_reverse_nameservers import sync
 from ...client.client import Client
 from ...client.models.change_ipv_6_reverse_nameservers import ChangeIpv6ReverseNameservers
+from ...client.models.change_ipv_6_reverse_nameservers_type import ChangeIpv6ReverseNameserversType
 from ...runner import CommandRunner
 
 

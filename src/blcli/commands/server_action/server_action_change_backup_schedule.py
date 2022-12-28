@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.server_action.server_action_change_backup_schedule import sync
 from ...client.client import Client
 from ...client.models.change_backup_schedule import ChangeBackupSchedule
+from ...client.models.change_backup_schedule_type import ChangeBackupScheduleType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

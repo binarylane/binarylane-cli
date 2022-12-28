@@ -4,6 +4,9 @@ from ... import cli
 from ...client.api.server.server_create import sync
 from ...client.client import Client
 from ...client.models.create_server_request import CreateServerRequest
+from ...client.models.license_ import License
+from ...client.models.size_options_request import SizeOptionsRequest
+from ...client.models.ssh_key_request import SshKeyRequest
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

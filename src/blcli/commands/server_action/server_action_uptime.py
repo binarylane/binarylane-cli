@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_uptime import sync
 from ...client.client import Client
 from ...client.models.uptime import Uptime
+from ...client.models.uptime_type import UptimeType
 from ...runner import CommandRunner
 
 

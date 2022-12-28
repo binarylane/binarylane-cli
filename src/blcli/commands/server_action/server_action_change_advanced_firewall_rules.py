@@ -2,7 +2,9 @@ from typing import List
 
 from ...client.api.server_action.server_action_change_advanced_firewall_rules import sync
 from ...client.client import Client
+from ...client.models.advanced_firewall_rule import AdvancedFirewallRule
 from ...client.models.change_advanced_firewall_rules import ChangeAdvancedFirewallRules
+from ...client.models.change_advanced_firewall_rules_type import ChangeAdvancedFirewallRulesType
 from ...runner import CommandRunner
 
 

@@ -2,6 +2,7 @@ from ... import cli
 from ...client.api.server_action.server_action_change_ipv6 import sync
 from ...client.client import Client
 from ...client.models.change_ipv_6 import ChangeIpv6
+from ...client.models.change_ipv_6_type import ChangeIpv6Type
 from ...runner import CommandRunner
 
 

@@ -2,6 +2,7 @@ from ... import cli
 from ...client.api.server_action.server_action_change_manage_offsite_backup_copies import sync
 from ...client.client import Client
 from ...client.models.change_manage_offsite_backup_copies import ChangeManageOffsiteBackupCopies
+from ...client.models.change_manage_offsite_backup_copies_type import ChangeManageOffsiteBackupCopiesType
 from ...runner import CommandRunner
 
 

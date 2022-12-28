@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.server_action.server_action_change_network import sync
 from ...client.client import Client
 from ...client.models.change_network import ChangeNetwork
+from ...client.models.change_network_type import ChangeNetworkType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

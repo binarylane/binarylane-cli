@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_disable_backups import sync
 from ...client.client import Client
 from ...client.models.disable_backups import DisableBackups
+from ...client.models.disable_backups_type import DisableBackupsType
 from ...runner import CommandRunner
 
 

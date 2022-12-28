@@ -3,6 +3,7 @@ from typing import Union
 from ...client.api.server_action.server_action_change_reverse_name import sync
 from ...client.client import Client
 from ...client.models.change_reverse_name import ChangeReverseName
+from ...client.models.change_reverse_name_type import ChangeReverseNameType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

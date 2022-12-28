@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_rename import sync
 from ...client.client import Client
 from ...client.models.rename import Rename
+from ...client.models.rename_type import RenameType
 from ...runner import CommandRunner
 
 

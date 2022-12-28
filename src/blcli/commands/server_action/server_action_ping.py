@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_ping import sync
 from ...client.client import Client
 from ...client.models.ping import Ping
+from ...client.models.ping_type import PingType
 from ...runner import CommandRunner
 
 

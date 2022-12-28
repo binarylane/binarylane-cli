@@ -3,7 +3,11 @@ from typing import List, Union
 from ... import cli
 from ...client.api.server_action.server_action_change_advanced_features import sync
 from ...client.client import Client
+from ...client.models.advanced_feature import AdvancedFeature
 from ...client.models.change_advanced_features import ChangeAdvancedFeatures
+from ...client.models.change_advanced_features_type import ChangeAdvancedFeaturesType
+from ...client.models.video_device import VideoDevice
+from ...client.models.vm_machine_type import VmMachineType
 from ...client.types import UNSET, Unset
 from ...runner import CommandRunner
 

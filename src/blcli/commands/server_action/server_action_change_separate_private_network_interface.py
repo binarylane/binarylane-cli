@@ -2,6 +2,7 @@ from ... import cli
 from ...client.api.server_action.server_action_change_separate_private_network_interface import sync
 from ...client.client import Client
 from ...client.models.change_separate_private_network_interface import ChangeSeparatePrivateNetworkInterface
+from ...client.models.change_separate_private_network_interface_type import ChangeSeparatePrivateNetworkInterfaceType
 from ...runner import CommandRunner
 
 

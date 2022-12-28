@@ -1,6 +1,7 @@
 from ...client.api.server_action.server_action_power_on import sync
 from ...client.client import Client
 from ...client.models.power_on import PowerOn
+from ...client.models.power_on_type import PowerOnType
 from ...runner import CommandRunner
 
 
