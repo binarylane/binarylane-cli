@@ -1,14 +1,29 @@
-from typing import Union
+from typing import List, Union
 
 from ...client.api.size.size_list import sync_detailed
 from ...client.client import Client
 from ...client.models.sizes_response import SizesResponse
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "slug",
+            "available",
+            "price_monthly",
+            "price_hourly",
+            "disk",
+            "memory",
+            "transfer",
+            "excess_transfer_cost_per_gigabyte",
+            "vcpus",
+            "vcpu_units",
+        ]
+
     @property
     def name(self):
         return "size_list"

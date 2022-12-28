@@ -25,10 +25,29 @@ from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} imp
 
 {% set return_string = endpoint.response_type() %}
 {% set parsed_responses = (endpoint.responses | length > 0) and return_string != "Any" %}
+{% set list_response = [] %}
+{% for response_type in endpoint.responses if response_type.status_code == 200 %}
+{% for prop in response_type.prop.required_properties if prop.name != 'meta' and prop.get_instance_type_string() == 'list' %}
+{# This is required because of jinja 'for' variable scope #}
+{% set _ = list_response.append(prop) %}
+{% endfor %}
+{% endfor %}
 
-from ...runner import CommandRunner
+{% if list_response %}
+from ...runners import ListRunner
+class Command(ListRunner):
 
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            {% for prop in list_response[0].inner_property.required_properties if not prop.required_properties and prop.get_instance_type_string() != 'list' %}
+            '{{ prop.name }}',
+            {% endfor %}
+        ]
+{% else %}
+from ...runners import CommandRunner
 class Command(CommandRunner):
+{% endif %}
 
     @property
     def name(self):

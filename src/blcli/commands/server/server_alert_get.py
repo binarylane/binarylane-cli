@@ -1,13 +1,21 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.server.server_alert_get import sync_detailed
 from ...client.client import Client
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.threshold_alerts_response import ThresholdAlertsResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "alert_type",
+            "enabled",
+            "value",
+        ]
+
     @property
     def name(self):
         return "server_alert_get"

@@ -1,13 +1,17 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.server.server_failover_ip_get import sync_detailed
 from ...client.client import Client
 from ...client.models.failover_ips_response import FailoverIpsResponse
 from ...client.models.problem_details import ProblemDetails
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return []
+
     @property
     def name(self):
         return "server_failover-ip_get"

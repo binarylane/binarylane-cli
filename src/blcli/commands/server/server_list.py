@@ -1,13 +1,28 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.server.server_list import sync_detailed
 from ...client.client import Client
 from ...client.models.servers_response import ServersResponse
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "name",
+            "memory",
+            "vcpus",
+            "disk",
+            "locked",
+            "created_at",
+            "status",
+            "size_slug",
+            "password_change_supported",
+        ]
+
     @property
     def name(self):
         return "server_list"

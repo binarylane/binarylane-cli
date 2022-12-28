@@ -7,7 +7,7 @@ from ...client.models.delete_disk import DeleteDisk
 from ...client.models.delete_disk_type import DeleteDiskType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

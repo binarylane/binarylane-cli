@@ -4,7 +4,7 @@ from ...client.api.server.server_action_get import sync_detailed
 from ...client.client import Client
 from ...client.models.action_response import ActionResponse
 from ...client.models.problem_details import ProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

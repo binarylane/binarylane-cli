@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from typing import List, Type
-from ...runner import Runner, ModuleRunner
+from ...runners import Runner, ModuleRunner
 
 __all__ = ['commands']
 commands : List[Type[Runner]] = []

@@ -7,7 +7,7 @@ from ...client.models.route_entry_request import RouteEntryRequest
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.models.vpc_response import VpcResponse
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

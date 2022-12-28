@@ -4,7 +4,7 @@ from ...client.api.server.server_feature_list import sync_detailed
 from ...client.client import Client
 from ...client.models.available_advanced_server_features_response import AvailableAdvancedServerFeaturesResponse
 from ...client.models.problem_details import ProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

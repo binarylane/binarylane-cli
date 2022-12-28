@@ -5,7 +5,7 @@ from ...client.api.action.action_proceed import sync_detailed
 from ...client.client import Client
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.proceed_request import ProceedRequest
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

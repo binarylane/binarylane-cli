@@ -4,7 +4,7 @@ from __future__ import annotations
 import importlib
 from typing import List, Type
 
-from ..runner import PackageRunner, Runner
+from ..runners import PackageRunner, Runner
 
 __all__ = ["commands"]
 commands: List[Type[Runner]] = []

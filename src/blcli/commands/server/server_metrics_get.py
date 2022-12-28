@@ -6,7 +6,7 @@ from ...client.models.data_interval import DataInterval
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.sample_set_response import SampleSetResponse
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

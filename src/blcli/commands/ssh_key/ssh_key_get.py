@@ -4,7 +4,7 @@ from ...client.api.ssh_key.ssh_key_get import sync_detailed
 from ...client.client import Client
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.ssh_key_response import SshKeyResponse
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

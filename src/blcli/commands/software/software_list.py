@@ -1,10 +1,25 @@
+from typing import List
+
 from ...client.api.software.software_list import sync_detailed
 from ...client.client import Client
 from ...client.models.softwares_response import SoftwaresResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "enabled",
+            "name",
+            "description",
+            "cost_per_licence_per_month",
+            "minimum_licence_count",
+            "maximum_licence_count",
+            "licence_step_count",
+        ]
+
     @property
     def name(self):
         return "software_list"

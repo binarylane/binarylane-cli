@@ -7,7 +7,7 @@ from ...client.models.detach_backup import DetachBackup
 from ...client.models.detach_backup_type import DetachBackupType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

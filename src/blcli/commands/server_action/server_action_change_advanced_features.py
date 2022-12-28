@@ -12,7 +12,7 @@ from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.models.video_device import VideoDevice
 from ...client.models.vm_machine_type import VmMachineType
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

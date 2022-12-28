@@ -1,12 +1,22 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.server.server_data_usage_list import sync_detailed
 from ...client.client import Client
 from ...client.models.data_usages_response import DataUsagesResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "server_id",
+            "expires",
+            "transfer_gigabytes",
+            "current_transfer_usage_gigabytes",
+            "transfer_period_end",
+        ]
+
     @property
     def name(self):
         return "server_data-usage_list"

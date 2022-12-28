@@ -8,7 +8,7 @@ from ...client.models.change_port_blocking import ChangePortBlocking
 from ...client.models.change_port_blocking_type import ChangePortBlockingType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

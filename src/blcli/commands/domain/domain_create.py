@@ -6,7 +6,7 @@ from ...client.models.domain_request import DomainRequest
 from ...client.models.domain_response import DomainResponse
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

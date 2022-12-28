@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.image.image_list import sync_detailed
 from ...client.client import Client
@@ -6,10 +6,22 @@ from ...client.models.image_query_type import ImageQueryType
 from ...client.models.images_response import ImagesResponse
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "name",
+            "type",
+            "public",
+            "min_disk_size",
+            "size_gigabytes",
+            "status",
+        ]
+
     @property
     def name(self):
         return "image_list"

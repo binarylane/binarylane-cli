@@ -1,13 +1,28 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.server.server_neighbors_get import sync_detailed
 from ...client.client import Client
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.server_neighbors_response import ServerNeighborsResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "name",
+            "memory",
+            "vcpus",
+            "disk",
+            "locked",
+            "created_at",
+            "status",
+            "size_slug",
+            "password_change_supported",
+        ]
+
     @property
     def name(self):
         return "server_neighbors_get"

@@ -8,7 +8,7 @@ from ...client.models.update_vpc_request import UpdateVpcRequest
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.models.vpc_response import VpcResponse
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

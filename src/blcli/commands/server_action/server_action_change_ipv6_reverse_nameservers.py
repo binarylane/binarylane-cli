@@ -7,7 +7,7 @@ from ...client.models.change_ipv_6_reverse_nameservers import ChangeIpv6ReverseN
 from ...client.models.change_ipv_6_reverse_nameservers_type import ChangeIpv6ReverseNameserversType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

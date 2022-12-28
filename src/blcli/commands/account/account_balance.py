@@ -1,12 +1,21 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.account.account_balance import sync_detailed
 from ...client.client import Client
 from ...client.models.balance import Balance
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "created",
+            "description",
+            "total",
+            "ongoing",
+        ]
+
     @property
     def name(self):
         return "account_balance"

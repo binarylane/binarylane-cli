@@ -1,12 +1,21 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.action.action_list import sync_detailed
 from ...client.client import Client
 from ...client.models.actions_response import ActionsResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "status",
+            "type",
+            "started_at",
+        ]
+
     @property
     def name(self):
         return "action_list"

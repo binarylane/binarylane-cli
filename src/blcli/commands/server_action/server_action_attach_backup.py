@@ -7,7 +7,7 @@ from ...client.models.attach_backup import AttachBackup
 from ...client.models.attach_backup_type import AttachBackupType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

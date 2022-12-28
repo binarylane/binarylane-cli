@@ -8,7 +8,7 @@ from ...client.models.change_ipv_6 import ChangeIpv6
 from ...client.models.change_ipv_6_type import ChangeIpv6Type
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

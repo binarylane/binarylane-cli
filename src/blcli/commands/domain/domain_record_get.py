@@ -4,7 +4,7 @@ from ...client.api.domain.domain_record_get import sync_detailed
 from ...client.client import Client
 from ...client.models.domain_record_response import DomainRecordResponse
 from ...client.models.problem_details import ProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

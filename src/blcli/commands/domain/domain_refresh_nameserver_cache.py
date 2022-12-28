@@ -2,7 +2,7 @@ from typing import Any
 
 from ...client.api.domain.domain_refresh_nameserver_cache import sync_detailed
 from ...client.client import Client
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

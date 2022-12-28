@@ -6,7 +6,7 @@ from ...client.models.forwarding_rule import ForwardingRule
 from ...client.models.forwarding_rules_request import ForwardingRulesRequest
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

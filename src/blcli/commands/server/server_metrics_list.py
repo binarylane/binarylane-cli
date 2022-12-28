@@ -1,5 +1,5 @@
 import datetime
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.server.server_metrics_list import sync_detailed
 from ...client.client import Client
@@ -8,10 +8,18 @@ from ...client.models.problem_details import ProblemDetails
 from ...client.models.sample_sets_response import SampleSetsResponse
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "server_id",
+            "maximum_memory_megabytes",
+            "maximum_storage_gigabytes",
+        ]
+
     @property
     def name(self):
         return "server_metrics_list"

@@ -8,7 +8,7 @@ from ...client.models.ssh_key_response import SshKeyResponse
 from ...client.models.update_ssh_key_request import UpdateSshKeyRequest
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

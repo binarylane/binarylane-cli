@@ -7,7 +7,7 @@ from ...client.models.change_vpc_ipv_4 import ChangeVpcIpv4
 from ...client.models.change_vpc_ipv_4_type import ChangeVpcIpv4Type
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

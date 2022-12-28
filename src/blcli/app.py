@@ -2,25 +2,37 @@
 import sys
 from typing import List
 
-from .runner import AppRunner
+from .runners import PackageRunner
 
 
-class App:
-    """Class representing the app as a whole"""
+class App(PackageRunner):
+    """
+    AppRunner is the 'root' runner for the application. In normal usage, all command line arguments are passed
+    directly to run(). Apart from global flags, the primary function of this class is to invoke the
+    appropriate runner for the supplied arguments.
+    """
 
-    def __init__(self) -> None:
-        self.runner = AppRunner()
+    @property
+    def name(self) -> str:
+        return "bl"
 
-    def __call__(self, args: List[str]) -> None:
-        self.runner(args)
+    @property
+    def description(self) -> str:
+        return "bl is a command-line interface for the BinaryLane API"
+
+    @property
+    def package_path(self) -> str:
+        return ".commands"
+
+    def run(self, args: List[str]) -> None:
+        # Allowing doing `bl help command [subcommand...]` instead of --help
+        if args and args[0] == "help":
+            args = args[1:] + [PackageRunner.HELP]
+
+        return super().run(args)
 
 
 def main() -> None:
     """CLI entrypoint"""
 
-    # Currently this is what triggers all the argparse construction, so its slow:
-    # debug_time(lambda: importlib.import_module(".client", package=__package__), "import .client")
-    # debug_time(lambda: cli.run(sys.argv[1:]), "cli.run()")
-
-    app = App()
-    app(sys.argv[1:])
+    App().run(sys.argv[1:])

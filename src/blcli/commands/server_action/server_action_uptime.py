@@ -7,7 +7,7 @@ from ...client.models.problem_details import ProblemDetails
 from ...client.models.uptime import Uptime
 from ...client.models.uptime_type import UptimeType
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

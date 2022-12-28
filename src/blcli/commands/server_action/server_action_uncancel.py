@@ -7,7 +7,7 @@ from ...client.models.problem_details import ProblemDetails
 from ...client.models.uncancel import Uncancel
 from ...client.models.uncancel_type import UncancelType
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

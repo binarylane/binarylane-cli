@@ -12,7 +12,7 @@ from ...client.models.update_load_balancer_request import UpdateLoadBalancerRequ
 from ...client.models.update_load_balancer_response import UpdateLoadBalancerResponse
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

@@ -7,7 +7,7 @@ from ...client.models.disable_selinux import DisableSelinux
 from ...client.models.disable_selinux_type import DisableSelinuxType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

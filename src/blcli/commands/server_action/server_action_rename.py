@@ -7,7 +7,7 @@ from ...client.models.problem_details import ProblemDetails
 from ...client.models.rename import Rename
 from ...client.models.rename_type import RenameType
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

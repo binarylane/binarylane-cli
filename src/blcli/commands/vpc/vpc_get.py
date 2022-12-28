@@ -4,7 +4,7 @@ from ...client.api.vpc.vpc_get import sync_detailed
 from ...client.client import Client
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.vpc_response import VpcResponse
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

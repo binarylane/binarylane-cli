@@ -1,12 +1,28 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.load_balancer.load_balancer_list import sync_detailed
 from ...client.client import Client
 from ...client.models.load_balancers_response import LoadBalancersResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "name",
+            "ip",
+            "status",
+            "created_at",
+            "health_check",
+            "sticky_sessions",
+            "algorithm",
+            "redirect_http_to_https",
+            "enable_proxy_protocol",
+            "enable_backend_keepalive",
+        ]
+
     @property
     def name(self):
         return "load-balancer_list"

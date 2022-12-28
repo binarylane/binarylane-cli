@@ -4,7 +4,7 @@ from ...client.api.account.account_invoice_get import sync_detailed
 from ...client.client import Client
 from ...client.models.invoice_response import InvoiceResponse
 from ...client.models.problem_details import ProblemDetails
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

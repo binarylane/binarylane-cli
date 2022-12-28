@@ -1,13 +1,19 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.server.server_software import sync_detailed
 from ...client.client import Client
 from ...client.models.licensed_softwares_response import LicensedSoftwaresResponse
 from ...client.models.problem_details import ProblemDetails
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "licence_count",
+        ]
+
     @property
     def name(self):
         return "server_software"

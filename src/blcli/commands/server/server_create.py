@@ -10,7 +10,7 @@ from ...client.models.size_options_request import SizeOptionsRequest
 from ...client.models.ssh_key_request import SshKeyRequest
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

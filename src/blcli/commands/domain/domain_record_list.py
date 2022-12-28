@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.domain.domain_record_list import sync_detailed
 from ...client.client import Client
@@ -6,10 +6,19 @@ from ...client.models.domain_record_type import DomainRecordType
 from ...client.models.domain_records_response import DomainRecordsResponse
 from ...client.models.problem_details import ProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "type",
+            "name",
+            "ttl",
+        ]
+
     @property
     def name(self):
         return "domain_record_list"

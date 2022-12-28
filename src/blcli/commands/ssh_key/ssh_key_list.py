@@ -1,12 +1,21 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.ssh_key.ssh_key_list import sync_detailed
 from ...client.client import Client
 from ...client.models.ssh_keys_response import SshKeysResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "fingerprint",
+            "public_key",
+            "default",
+        ]
+
     @property
     def name(self):
         return "ssh-key_list"

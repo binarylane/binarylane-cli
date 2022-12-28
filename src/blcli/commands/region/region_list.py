@@ -1,10 +1,20 @@
+from typing import List
+
 from ...client.api.region.region_list import sync_detailed
 from ...client.client import Client
 from ...client.models.regions_response import RegionsResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "slug",
+            "name",
+            "available",
+        ]
+
     @property
     def name(self):
         return "region_list"

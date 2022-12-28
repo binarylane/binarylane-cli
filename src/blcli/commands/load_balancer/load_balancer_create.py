@@ -12,7 +12,7 @@ from ...client.models.problem_details import ProblemDetails
 from ...client.models.sticky_sessions import StickySessions
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

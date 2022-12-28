@@ -9,7 +9,7 @@ from ...client.models.rebuild import Rebuild
 from ...client.models.rebuild_type import RebuildType
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runner import CommandRunner
+from ...runners import CommandRunner
 
 
 class Command(CommandRunner):

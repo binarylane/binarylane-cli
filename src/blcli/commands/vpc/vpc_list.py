@@ -1,12 +1,20 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.vpc.vpc_list import sync_detailed
 from ...client.client import Client
 from ...client.models.vpcs_response import VpcsResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "id",
+            "name",
+            "ip_range",
+        ]
+
     @property
     def name(self):
         return "vpc_list"

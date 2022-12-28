@@ -1,12 +1,26 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.account.account_invoice_list import sync_detailed
 from ...client.client import Client
 from ...client.models.invoices_response import InvoicesResponse
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "invoice_id",
+            "invoice_number",
+            "amount",
+            "tax",
+            "created",
+            "date_due",
+            "date_overdue",
+            "paid",
+            "refunded",
+        ]
+
     @property
     def name(self):
         return "account_invoice_list"

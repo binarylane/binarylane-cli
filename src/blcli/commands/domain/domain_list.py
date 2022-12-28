@@ -1,14 +1,21 @@
-from typing import Any, Union
+from typing import Any, List, Union
 
 from ...client.api.domain.domain_list import sync_detailed
 from ...client.client import Client
 from ...client.models.domains_response import DomainsResponse
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runner import CommandRunner
+from ...runners import ListRunner
 
 
-class Command(CommandRunner):
+class Command(ListRunner):
+    @property
+    def default_format(self) -> List[str]:
+        return [
+            "name",
+            "zone_file",
+        ]
+
     @property
     def name(self):
         return "domain_list"
