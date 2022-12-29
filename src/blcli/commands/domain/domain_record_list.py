@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.domain.domain_record_list import sync_detailed
 from ...client.client import Client
@@ -18,6 +18,34 @@ class Command(ListRunner):
             "name",
             "ttl",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "id": """The ID of this domain record.""",
+            "type": """
+| Value | Description |
+| ----- | ----------- |
+| A | Map an IPv4 address to a hostname. |
+| AAAA | Map an IPv6 address to a hostname. |
+| CAA | Restrict which certificate authorities are permitted to issue certificates for a domain. |
+| CNAME | Define an alias for your canonical hostname. |
+| MX | Define the mail exchanges that handle mail for the domain. |
+| NS | Define the nameservers that manage the domain. |
+| SOA | The Start of Authority record for the zone. |
+| SRV | Specify a server by hostname and port to handle a service or services. |
+| TXT | Define a string of text that is associated with a hostname. |
+
+""",
+            "name": """The subdomain, alias, or service defined by the record.""",
+            "ttl": """This value is the time to live for the record in seconds.""",
+            "data": """Variable data depending on record type.""",
+            "priority": """A priority value that is only relevant for SRV and MX records.""",
+            "port": """A port value that is only relevant for SRV records.""",
+            "weight": """The weight value that is only relevant for SRV records.""",
+            "flags": """An unsigned integer between 0-255 that is only relevant for CAA records.""",
+            "tag": """A parameter tag that is only relevant for CAA records.""",
+        }
 
     @property
     def name(self):

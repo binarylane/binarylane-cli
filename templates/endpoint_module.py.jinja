@@ -34,16 +34,28 @@ from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} imp
 {% endfor %}
 
 {% if list_response %}
+{% set list_response = list_response[0].inner_property %}
 from ...runners import ListRunner
 class Command(ListRunner):
 
     @property
     def default_format(self) -> List[str]:
         return [
-            {% for prop in list_response[0].inner_property.required_properties if not prop.required_properties and prop.get_instance_type_string() != 'list' %}
+            {% for prop in list_response.required_properties if not prop.required_properties and prop.get_instance_type_string() != 'list' %}
             '{{ prop.name }}',
             {% endfor %}
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            {% for prop in list_response.required_properties %}
+            '{{ prop.name }}': """{{ prop.description }}""",
+            {% endfor %}
+            {% for prop in list_response.optional_properties %}
+            '{{ prop.name }}': """{{ prop.description }}""",
+            {% endfor %}
+        }
 {% else %}
 from ...runners import CommandRunner
 class Command(CommandRunner):

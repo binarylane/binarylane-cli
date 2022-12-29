@@ -16,7 +16,10 @@ class CommandRunner(Runner):
 
     def __init__(self, parent: Runner) -> None:
         super().__init__(parent)
-        self.parser = CommandParser(prog=self.prog)
+        self.parser = CommandParser(prog=self.prog, add_help=False)
+        self.parser.add_argument(
+            "--help", dest="runner_print_help", action="store_true", help="Display command options and descriptions"
+        )
         self.configure(self.parser)
 
     @property
@@ -35,10 +38,23 @@ class CommandRunner(Runner):
         """Format and display response received from API operation"""
         display(received)
 
+    def print_help(self) -> None:
+        """Display help for this runner"""
+        self.parser.print_help()
+
+    def process(self, parsed: Any) -> None:
+        """Process runner-local arguments"""
+        if parsed.runner_print_help:
+            self.print_help()
+            raise SystemExit()
+        del parsed.runner_print_help
+
     def run(self, args: List[str]) -> None:
         debug(f"Command parser for {self.name}. args: {args}")
         parsed = self.parser.parse_args(args)
         debug(f"Parsing succeeded, have {parsed}")
+
+        self.process(parsed)
 
         authenticated_client = importlib.import_module("..client", __package__).AuthenticatedClient
         client = authenticated_client(

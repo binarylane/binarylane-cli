@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.server.server_data_usage_list import sync_detailed
 from ...client.client import Client
@@ -16,6 +16,17 @@ class Command(ListRunner):
             "current_transfer_usage_gigabytes",
             "transfer_period_end",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "server_id": """The ID of the server that this data transfer usage refers to.""",
+            "expires": """The date and time in ISO8601 format that the current billing period expires.""",
+            "transfer_gigabytes": """The included data transfer for this server in this period in GB.""",
+            "current_transfer_usage_gigabytes": """The used data transfer for this server in this period in GB.
+If you have more than one server, please see our data pooling policy: this value may include excess data transfer used by other servers or may have 'offloaded' excess data transfer to other servers with spare capacity.""",
+            "transfer_period_end": """The date and time in ISO8601 format that the data transfer limit period ended (if it is completed) or when it will end (if this is the current period).""",
+        }
 
     @property
     def name(self):

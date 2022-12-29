@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.server.server_action_list import sync_detailed
 from ...client.client import Client
@@ -16,6 +16,42 @@ class Command(ListRunner):
             "type",
             "started_at",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "id": """The ID of this action.""",
+            "status": """
+| Value | Description |
+| ----- | ----------- |
+| in-progress | This action is currently in progress. |
+| completed | This action has successfully completed. |
+| errored | An error was encountered while processing the action. |
+
+""",
+            "type": """The type of this action.""",
+            "started_at": """The timestamp in ISO8601 format of when processing of this action started.""",
+            "progress": """""",
+            "completed_at": """The timestamp in ISO8601 format of when processing of this action completed. If this value is null the action is currently in progress.""",
+            "resource_type": """
+| Value | Description |
+| ----- | ----------- |
+| server | Server |
+| load-balancer | Load Balancer |
+| ssh-key | SSH Key |
+| vpc | Virtual Private Network |
+| image | Backup or Operating System Image |
+| registered-domain-name | Registered Domain Name |
+
+""",
+            "resource_id": """The resource id of the resource (if any) associated with this action. This is only populated when the resource type has an integer identifier.""",
+            "resource_uuid": """The resource id of the resource (if any) associated with this action. This is only populated when the resource type has a UUID identifier.""",
+            "region": """""",
+            "region_slug": """The region slug (if any) of the resource associated with this action.""",
+            "result_data": """Returned information from a completed action. For example: a successful completed 'ping' action will have the ping value in ms in this field.""",
+            "blocking_invoice_id": """If this Action is currently blocked by an invoice that requires payment this property will be set.""",
+            "user_interaction_required": """""",
+        }
 
     @property
     def name(self):

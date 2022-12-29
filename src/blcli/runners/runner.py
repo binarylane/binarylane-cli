@@ -10,6 +10,7 @@ from typing import List, Optional
 class Runner(ABC):
     """Abstract base class for all Runner implementations"""
 
+    HELP = "--help"
     parent: Optional[Runner]
 
     def __init__(self, parent: Optional[Runner] = None) -> None:

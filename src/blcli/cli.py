@@ -38,6 +38,7 @@ class CommandParser(argparse.ArgumentParser):
             max_help_position=100,
             width=None,
         )
+        kwargs["add_help"] = False
 
         super().__init__(**kwargs)
 
@@ -161,6 +162,9 @@ def get_api_token() -> str:
         return config_file.read().strip()
 
 
+NULL_STR = ""
+
+
 def display(response: Any, fields: Optional[List[str]] = None) -> None:
     """Display an API response as a table"""
 
@@ -253,7 +257,7 @@ def flatten(values: Sequence[Any], single_object: bool = False) -> List[str]:
         if item_type is bool:
             item = "Yes" if item else "No"
 
-        item = str(item)
+        item = str(item) if item is not None else NULL_STR
         if len(item) > max_str + len(trunc):
             item = item[:max_str] + trunc
         result.append(item)

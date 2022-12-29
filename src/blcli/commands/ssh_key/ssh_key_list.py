@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.ssh_key.ssh_key_list import sync_detailed
 from ...client.client import Client
@@ -15,6 +15,16 @@ class Command(ListRunner):
             "public_key",
             "default",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "id": """The ID of this SSH key.""",
+            "fingerprint": """The fingerprint of this SSH key.""",
+            "public_key": """The public key of this SSH key.""",
+            "default": """If an SSH key is marked as default it will be deployed to all newly created servers that support SSH keys unless expressly overridden in the creation request.""",
+            "name": """The name of this SSH key. This is used only to aid in identification.""",
+        }
 
     @property
     def name(self):

@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.load_balancer.load_balancer_availability import sync_detailed
 from ...client.client import Client
@@ -14,6 +14,15 @@ class Command(ListRunner):
             "price_monthly",
             "price_hourly",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "anycast": """If true this is an Anycast load balancer option.""",
+            "price_monthly": """Monthly Price in AU$.""",
+            "price_hourly": """Hourly price in AU$.""",
+            "regions": """The slugs of regions where this load balancer option is available. If this is an Anycast load balancer option this will be null.""",
+        }
 
     @property
     def name(self):

@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.account.account_balance import sync_detailed
 from ...client.client import Client
@@ -15,6 +15,15 @@ class Command(ListRunner):
             "total",
             "ongoing",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "created": """The time when the charge was created.""",
+            "description": """A summary of the charge.""",
+            "total": """The cost in AU$.""",
+            "ongoing": """If this is true the charge is for an ongoing service. If this is false the charge is complete and awaiting invoicing.""",
+        }
 
     @property
     def name(self):

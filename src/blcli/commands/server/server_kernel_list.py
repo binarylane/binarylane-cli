@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.server.server_kernel_list import sync_detailed
 from ...client.client import Client
@@ -13,6 +13,14 @@ class Command(ListRunner):
         return [
             "id",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "id": """The ID of this kernel.""",
+            "name": """This name of this kernel.""",
+            "version": """The version (if any) of this kernel.""",
+        }
 
     @property
     def name(self):

@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.vpc.vpc_members import sync_detailed
 from ...client.client import Client
@@ -17,6 +17,25 @@ class Command(ListRunner):
             "resource_type",
             "resource_id",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "name": """The name of this VPC member.""",
+            "resource_type": """
+| Value | Description |
+| ----- | ----------- |
+| server | Server |
+| load-balancer | Load Balancer |
+| ssh-key | SSH Key |
+| vpc | Virtual Private Network |
+| image | Backup or Operating System Image |
+| registered-domain-name | Registered Domain Name |
+
+""",
+            "resource_id": """The resource ID of this VPC member.""",
+            "created_at": """The date and time in ISO8601 format of this resource's initial creation.""",
+        }
 
     @property
     def name(self):

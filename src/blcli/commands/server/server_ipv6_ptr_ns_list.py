@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.server.server_ipv6_ptr_ns_list import sync_detailed
 from ...client.client import Client
@@ -11,6 +11,10 @@ class Command(ListRunner):
     @property
     def default_format(self) -> List[str]:
         return []
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {}
 
     @property
     def name(self):

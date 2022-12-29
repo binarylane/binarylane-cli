@@ -27,7 +27,7 @@ class App(PackageRunner):
     def run(self, args: List[str]) -> None:
         # Allowing doing `bl help command [subcommand...]` instead of --help
         if args and args[0] == "help":
-            args = args[1:] + [PackageRunner.HELP]
+            args = args[1:] + [self.HELP]
 
         return super().run(args)
 

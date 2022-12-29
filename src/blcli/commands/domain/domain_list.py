@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.domain.domain_list import sync_detailed
 from ...client.client import Client
@@ -15,6 +15,15 @@ class Command(ListRunner):
             "name",
             "zone_file",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "name": """The name of the domain.""",
+            "current_nameservers": """The current authoritative name servers for this domain.""",
+            "zone_file": """The zone file for the selected domain. If the DNS records for this domain are not managed locally this is what the zone file would be if the authority was delegated to us.""",
+            "ttl": """The time to live for records in this domain in seconds. If the DNS records for this domain are not managed locally this will be what the TTL would be if the authority was delegated to us.""",
+        }
 
     @property
     def name(self):

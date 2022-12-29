@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.vpc.vpc_list import sync_detailed
 from ...client.client import Client
@@ -14,6 +14,15 @@ class Command(ListRunner):
             "name",
             "ip_range",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "id": """The ID of this VPC.""",
+            "name": """The name of this VPC.""",
+            "ip_range": """The IPv4 range for this VPC in CIDR format.""",
+            "route_entries": """The route entries that control how network traffic is directed through the VPC environment.""",
+        }
 
     @property
     def name(self):

@@ -12,8 +12,6 @@ from .runner import Runner
 class PackageRunner(Runner):
     """PackageRunner imports a list of runners from specified package."""
 
-    HELP = "--help"
-
     @property
     @abstractmethod
     def package_path(self) -> str:
@@ -25,9 +23,9 @@ class PackageRunner(Runner):
         # We need to hide the --help parameter from argparse, so that we can pass it to a subrunner
         # rather than displaying our own help.
         extra = []
-        if PackageRunner.HELP in args:
-            args.remove(PackageRunner.HELP)
-            extra += [PackageRunner.HELP]
+        if self.HELP in args:
+            args.remove(self.HELP)
+            extra += [self.HELP]
 
         root_parser = ArgumentParser(prog=f"{self.prog}", description=self.format_description())
         root_parser.format_usage()

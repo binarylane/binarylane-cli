@@ -1,5 +1,5 @@
 import datetime
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.server.server_metrics_list import sync_detailed
 from ...client.client import Client
@@ -19,6 +19,16 @@ class Command(ListRunner):
             "maximum_memory_megabytes",
             "maximum_storage_gigabytes",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "server_id": """The ID of the server that this sample set refers to.""",
+            "period": """""",
+            "average": """""",
+            "maximum_memory_megabytes": """The maximum memory used in MB at any point during this collection period.""",
+            "maximum_storage_gigabytes": """The maximum storage used in GB at any point during this collection period.""",
+        }
 
     @property
     def name(self):

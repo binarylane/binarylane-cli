@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from ...client.api.server.server_alert_get import sync_detailed
 from ...client.client import Client
@@ -15,6 +15,28 @@ class Command(ListRunner):
             "enabled",
             "value",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "alert_type": """
+| Value | Description |
+| ----- | ----------- |
+| cpu | The alert is based off the average percentage of all CPU; 100% is the maximum possible even with multiple processors. A high average will prevent the server from responding quickly. |
+| storage-requests | The alert is based off The average number of requests (combined read and write) received by the storage subsystem. A high number of requests often indicates swap usage (due to memory exhaustion) and is associated with poor performance. |
+| network-incoming | The alert is based off the amount of data going into the server (from the internet and the LAN). A sudden increase may indicate the server is the victim of a DOS attack. |
+| network-outgoing | The alert is based off the amount of data coming out of the server (to the internet and the LAN). A sudden increase may indicate the server has been hacked and is being used for spam delivery. |
+| data-transfer-used | The alert is based off the percentage of your monthly data transfer limit. |
+| storage-used | The alert is based off the disk space consumed as a percentage of your total disk space. If the server runs out of disk space programs may fail to execute or be unable to create new files, or the server may become unresponsive. |
+| memory-used | The alert is based off the virtual memory consumed as a percentage of your physical memory. Virtual memory includes the swap file so the percentage may exceed 100% indicating that the server has run out of physical memory and is relying on swap space, which will generally cause poor performance. |
+
+""",
+            "enabled": """If a threshold alert is not enabled it will not generate warnings for the user.""",
+            "value": """The threshold value of the alert. Refer to the documentation for each threshold alert type for what this value measures in the context of the alert type.""",
+            "current_value": """The last measured value for this alert type over the threshold alert period. Refer to the documentation for each threshold alert type for what this value measures in the context of the alert type. If there is no measured value in the threshold alert period this will be null.""",
+            "last_raised": """The date and time (if any) in ISO8601 format of the last time this alert was raised. An alert may not be raised again until it has been cleared.""",
+            "last_cleared": """The date and time (if any) in ISO8601 format of the last time this alert was cleared. An alert may not be raised again until a minimum duration has passed since it was last cleared.""",
+        }
 
     @property
     def name(self):

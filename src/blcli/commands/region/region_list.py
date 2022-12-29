@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from ...client.api.region.region_list import sync_detailed
 from ...client.client import Client
@@ -14,6 +14,17 @@ class Command(ListRunner):
             "name",
             "available",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "slug": """The unique slug for this region.""",
+            "name": """The name of this region.""",
+            "sizes": """The slugs of the sizes available in this region.""",
+            "available": """Whether this region is available for the allocation of new resources.""",
+            "features": """A list of features available for resources in this region.""",
+            "name_servers": """A list of nameservers available for resources in this region.""",
+        }
 
     @property
     def name(self):

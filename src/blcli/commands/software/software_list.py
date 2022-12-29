@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from ...client.api.software.software_list import sync_detailed
 from ...client.client import Client
@@ -19,6 +19,21 @@ class Command(ListRunner):
             "maximum_licence_count",
             "licence_step_count",
         ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            "id": """The ID of this software.""",
+            "enabled": """Software that is not enabled is not available to be added to servers but may be retained by servers that currently use it.""",
+            "name": """The name of this software.""",
+            "description": """The description of this software.""",
+            "cost_per_licence_per_month": """The cost for each licence of this software per month in AU$.""",
+            "minimum_licence_count": """The minimum licences permitted for this software.""",
+            "maximum_licence_count": """The maximum licences permitted for this software.""",
+            "licence_step_count": """Licences must be purchased in multiples of this value.""",
+            "supported_operating_systems": """A list of slugs of operating system images that support this software.""",
+            "group": """Software in the same group may not be licensed together.""",
+        }
 
     @property
     def name(self):
