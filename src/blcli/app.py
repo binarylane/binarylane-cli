@@ -1,8 +1,31 @@
 """CLI entrypoint"""
+import importlib.metadata
 import sys
 from typing import List
 
-from .runners import PackageRunner
+from .runners import PackageRunner, Runner
+
+
+class VersionRunner(Runner):
+    """Display blcli package version"""
+
+    @property
+    def name(self) -> str:
+        return "version"
+
+    @property
+    def description(self) -> str:
+        return "Show the current version"
+
+    def run(self, args: List[str]) -> None:
+        package = __package__
+        try:
+            version = importlib.metadata.distribution(package).version
+        except:
+            from ._version import __version__
+            version = __version__
+
+        print(package, version)
 
 
 class App(PackageRunner):
@@ -23,6 +46,12 @@ class App(PackageRunner):
     @property
     def package_path(self) -> str:
         return ".commands"
+
+    def configure(self) -> None:
+        super().configure()
+
+        runner = VersionRunner()
+        self.commands.add_parser(runner.name, help=runner.description).set_defaults(runner=runner)
 
     def run(self, args: List[str]) -> None:
         # Allowing doing `bl help command [subcommand...]` instead of --help
