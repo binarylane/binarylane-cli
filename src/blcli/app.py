@@ -1,7 +1,8 @@
 """CLI entrypoint"""
+import importlib
 import importlib.metadata
 import sys
-from typing import List
+from typing import List, Optional
 
 from .runners import PackageRunner, Runner
 
@@ -19,13 +20,21 @@ class VersionRunner(Runner):
 
     def run(self, args: List[str]) -> None:
         package = __package__
-        try:
-            version = importlib.metadata.distribution(package).version
-        except:
-            from ._version import __version__
-            version = __version__
+        version = self._distribution_version(package) or self._module_version(package) or "dev"
 
         print(package, version)
+
+    def _distribution_version(self, package: str) -> Optional[str]:
+        try:
+            return importlib.metadata.distribution(package).version
+        except importlib.metadata.PackageNotFoundError:
+            return None
+
+    def _module_version(self, package: str) -> Optional[str]:
+        try:
+            return importlib.import_module("._version", package).__version__
+        except ModuleNotFoundError:
+            return None
 
 
 class App(PackageRunner):
