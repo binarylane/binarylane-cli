@@ -1,0 +1,38 @@
+---
+stages:
+  - check
+  - publish
+
+pre-commit:
+  stage: check
+  tags:
+    - python
+  script:
+    - pre-commit run --all-files
+  variables:
+    PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
+  cache:
+    paths:
+      - ${PRE_COMMIT_HOME}
+  only:
+    - branches
+    - merge_requests
+
+windows:
+  stage: publish
+  tags:
+    - python
+    - windows
+  script:
+    - scripts\make-exe.cmd
+    - copy dist\bl.exe .
+  only:
+    - branches
+    - merge_requests
+    - tags
+  artifacts:
+    paths:
+      - bl.exe
+    name: 'blcli-$CI_COMMIT_REF_SLUG-win64'
+    public: true
+    expire_in: 7 days
