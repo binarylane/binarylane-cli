@@ -5,6 +5,7 @@ from abc import abstractmethod
 from typing import Any, Dict, List
 
 from ..cli import CommandParser, debug, display, get_api_token
+from .httpx_wrapper import CurlCommand
 from .runner import Runner
 
 
@@ -14,13 +15,19 @@ class CommandRunner(Runner):
     parser: CommandParser
     parent: Runner
 
+    print_curl: bool
+
     def __init__(self, parent: Runner) -> None:
         super().__init__(parent)
         self.parser = CommandParser(prog=self.prog, add_help=False)
+        self.configure(self.parser)
+
         self.parser.add_argument(
             "--help", dest="runner_print_help", action="store_true", help="Display command options and descriptions"
         )
-        self.configure(self.parser)
+        self.parser.add_argument(
+            "--curl", dest="runner_print_curl", action="store_true", help="Display API request as a 'curl' command-line"
+        )
 
     @property
     def prog(self) -> str:
@@ -47,7 +54,12 @@ class CommandRunner(Runner):
         if parsed.runner_print_help:
             self.print_help()
             raise SystemExit()
-        del parsed.runner_print_help
+
+        self.print_curl = parsed.runner_print_curl
+
+        for key in list(vars(parsed)):
+            if key.startswith("runner_"):
+                del parsed.__dict__[key]
 
     def run(self, args: List[str]) -> None:
         debug(f"Command parser for {self.name}. args: {args}")
@@ -61,7 +73,14 @@ class CommandRunner(Runner):
             "https://api.binarylane.com.au",
             get_api_token(),
         )
-
         parsed.client = client
 
-        self.response(self.request(**vars(parsed)))
+        request_args = vars(parsed)
+
+        # CurlCommand does not execute the request, so there is no response to display
+        if self.print_curl:
+            with CurlCommand() as curl:
+                self.request(**request_args)
+                return print(curl.shell)
+
+        return self.response(self.request(**vars(parsed)))

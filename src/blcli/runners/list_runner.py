@@ -42,10 +42,8 @@ class ListRunner(CommandRunner):
         super().run(args)
 
     def process(self, parsed: Any) -> None:
-        super().process(parsed)
-
         self.format = parsed.runner_format.split(",")
-        del parsed.runner_format
+        super().process(parsed)
 
     def response(self, received: Any) -> None:
         display(received, self.format)
