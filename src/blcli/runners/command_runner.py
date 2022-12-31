@@ -4,7 +4,8 @@ import importlib
 from abc import abstractmethod
 from typing import Any, Dict, List
 
-from ..cli import CommandParser, debug, display, get_api_token
+from ..cli import CommandParser, debug, get_api_token
+from ..printers import get_printer
 from .httpx_wrapper import CurlCommand
 from .runner import Runner
 
@@ -43,7 +44,7 @@ class CommandRunner(Runner):
 
     def response(self, received: Any) -> None:
         """Format and display response received from API operation"""
-        display(received)
+        get_printer("table").print_object(received)
 
     def print_help(self) -> None:
         """Display help for this runner"""
