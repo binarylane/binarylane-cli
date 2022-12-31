@@ -56,11 +56,9 @@ class App(PackageRunner):
     def package_path(self) -> str:
         return ".commands"
 
-    def configure(self) -> None:
-        super().configure()
-
-        runner = VersionRunner()
-        self.commands.add_parser(runner.name, help=runner.description).set_defaults(runner=runner)
+    @property
+    def _runners(self) -> List[Runner]:
+        return super()._runners + [VersionRunner()]
 
     def run(self, args: List[str]) -> None:
         # Allowing doing `bl help command [subcommand...]` instead of --help
