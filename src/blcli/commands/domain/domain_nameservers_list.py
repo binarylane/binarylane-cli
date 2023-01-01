@@ -1,20 +1,12 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 from ...client.api.domain.domain_nameservers_list import sync_detailed
 from ...client.client import Client
 from ...client.models.local_nameservers_response import LocalNameserversResponse
-from ...runners import ListRunner
+from ...runners import CommandRunner
 
 
-class Command(ListRunner):
-    @property
-    def default_format(self) -> List[str]:
-        return []
-
-    @property
-    def fields(self) -> Dict[str, str]:
-        return {}
-
+class Command(CommandRunner):
     @property
     def name(self):
         return "domain_nameservers_list"

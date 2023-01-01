@@ -1,30 +1,12 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 from ...client.api.account.account_balance import sync_detailed
 from ...client.client import Client
 from ...client.models.balance import Balance
-from ...runners import ListRunner
+from ...runners import CommandRunner
 
 
-class Command(ListRunner):
-    @property
-    def default_format(self) -> List[str]:
-        return [
-            "created",
-            "description",
-            "total",
-            "ongoing",
-        ]
-
-    @property
-    def fields(self) -> Dict[str, str]:
-        return {
-            "created": """The time when the charge was created.""",
-            "description": """A summary of the charge.""",
-            "total": """The cost in AU$.""",
-            "ongoing": """If this is true the charge is for an ongoing service. If this is false the charge is complete and awaiting invoicing.""",
-        }
-
+class Command(CommandRunner):
     @property
     def name(self):
         return "account_balance"

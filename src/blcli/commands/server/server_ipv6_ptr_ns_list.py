@@ -1,21 +1,13 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Union
 
 from ...client.api.server.server_ipv6_ptr_ns_list import sync_detailed
 from ...client.client import Client
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.reverse_name_servers_response import ReverseNameServersResponse
-from ...runners import ListRunner
+from ...runners import CommandRunner
 
 
-class Command(ListRunner):
-    @property
-    def default_format(self) -> List[str]:
-        return []
-
-    @property
-    def fields(self) -> Dict[str, str]:
-        return {}
-
+class Command(CommandRunner):
     @property
     def name(self):
         return "server_ipv6-ptr-ns_list"

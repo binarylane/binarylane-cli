@@ -1,6 +1,5 @@
 # pylint: disable=missing-module-docstring
 
-import sys
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Sequence, Union
 
@@ -54,10 +53,10 @@ class _TablePrinter(Printer):
                 primary_type = _type
 
         if not primary:
-            print(f"ERROR: unsure how to print {response_type} ({response})", file=sys.stderr)
-            return
+            primary_type = response_type
+        else:
+            response = getattr(response, primary)
 
-        response = getattr(response, primary)
         if isinstance(response, list):
             for key, value in getattr(primary_type, "__annotations__", {"item": "value"}).items():
                 debug(f'{key}: {value} dict?{hasattr(value, "to_dict")} origin:{getattr(value, "__origin__", None)}')
@@ -72,7 +71,11 @@ class _TablePrinter(Printer):
 
             data = [header] if self.header else []
             data += [
-                self.flatten(item if item is str else [value for key, value in item.to_dict().items() if key in header])
+                self.flatten(
+                    [item]
+                    if isinstance(item, str)
+                    else [value for key, value in item.to_dict().items() if key in header]
+                )
                 for item in response
             ]
         elif isinstance(response, str):
