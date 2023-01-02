@@ -48,7 +48,6 @@ ignore-paths = ['src/blcli/client/', 'src/blcli/commands/*/']
 disable = [
     # Initial impl still in progress:
     "fixme",
-    "too-few-public-methods",
 ]
 
 [tool.mypy]

@@ -36,7 +36,7 @@ class HttpxWrapper(ABC):
         httpx.request = self._httpx_request  # type: ignore
 
 
-class CurlCommand(HttpxWrapper):
+class CurlCommand(HttpxWrapper):  # pylint: disable=too-few-public-methods
     """Convert HTTP request to a curl command-line. The HTTP request is not performed."""
 
     shell: str
