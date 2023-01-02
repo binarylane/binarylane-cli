@@ -5,11 +5,12 @@ import functools
 import importlib
 import os
 import sys
+import typing
 from enum import Enum
 from typing import Any, Callable, Optional, Union
 
 try:
-    # FIXME: used generated code, parked here for now
+    # FIXME: Is there a more pythonic way of dealing with this backort ?
     # pylint: disable=unused-import
     from argparse import BooleanOptionalAction  # type: ignore
 except ImportError:
@@ -53,11 +54,13 @@ class CommandParser(argparse.ArgumentParser):
         dest = kwargs.get("dest", "?")
 
         # Handle unions:
-        if getattr(_type, "__origin__", None) is Union:
+        if typing.get_origin(_type) is Union:
             # delayed import to avoid circular reference
             unset = importlib.import_module(".client.types", __package__).Unset
 
-            inner_types = list(_type.__args__)
+            # Generally for optional parameters the API has Union[None,Unset,T]
+            # We strip Unset and None so that we can provide argument for T
+            inner_types = list(typing.get_args(_type))
             if unset in inner_types:
                 inner_types.remove(unset)
             if type(None) in inner_types and not kwargs.get("required", True):
@@ -73,8 +76,9 @@ class CommandParser(argparse.ArgumentParser):
                 raise NotImplementedError(f"Union of {_type.__args__}")
             _type = inner_types[0]
 
-        if getattr(_type, "__origin__", None) is list:
-            inner_type = _type.__args__[0]
+        # Note this intentionally includes Union[List[T], ...] after unwrapping the Union above
+        if typing.get_origin(_type) is list:
+            inner_type = typing.get_args(_type)[0]
 
             if inner_type not in (int, str):
                 warn(f"unsupported type {self.prog} {dest} type={_type} inner_type={inner_type}")
@@ -85,7 +89,7 @@ class CommandParser(argparse.ArgumentParser):
             kwargs["nargs"] = "*"
 
         # Check we have handled all generic types:
-        if getattr(_type, "__origin__", None):
+        if typing.get_origin(_type):
             warn(f"unsupported {self.prog} {dest} type={_type}")
             return None
 
