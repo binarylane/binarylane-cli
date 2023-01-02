@@ -15,12 +15,12 @@ class DataUsagesResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        data_usages (List[DataUsage]):
+        data_usages (List['DataUsage']):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    data_usages: List[DataUsage]
+    data_usages: List["DataUsage"]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

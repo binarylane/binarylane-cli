@@ -1,0 +1,25 @@
+{#
+
+This is a workaround for a bug (?) in openapi-python-client v0.12.0 and later. With
+the introduction of lazy imports, endpoint responses are not always processed correctly -
+specifically with something like our BackupsResponse the backups property does not have
+required_properties+optional_properties set when navigating via:
+
+endpoint.responses[n].prop.images  # where prop is BackupsResponse
+
+The same is not true when pulling BackupsResponse from openapi.models collection, which is
+why I assume its a bug. This only seems to be happen on a ListProperty.inner_property -
+though not always. Could be a bug in how it tries to resolve references in response objects?
+
+Note that `openapi.models` is a generator that would normally be consumed by
+openapi-python-client to create individual .py files for each model. We do no not need any
+model files, so we can consume the generator in package_init (before _build_models has executed,
+which is where they would normally be consumed) and persist the models into a dictionary for use
+by our custom endpoint_module template.
+
+{% set _ = ... %} is workaround for lack of {% do ... %}
+#}
+{% set _ = openapi.__setattr__('models_by_class', {}) %}
+{% for item in openapi.models %}
+{% set _ = openapi.models_by_class.__setitem__(item.class_info, item) %}
+{% endfor %}

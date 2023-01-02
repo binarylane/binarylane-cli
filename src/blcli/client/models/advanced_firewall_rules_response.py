@@ -11,12 +11,12 @@ T = TypeVar("T", bound="AdvancedFirewallRulesResponse")
 class AdvancedFirewallRulesResponse:
     """
     Attributes:
-        firewall_rules (List[AdvancedFirewallRule]): The advanced firewall rules for the selected server. Please note
+        firewall_rules (List['AdvancedFirewallRule']): The advanced firewall rules for the selected server. Please note
             that the order of the rules is critical as the first matching rule is applied, and if no rules match the traffic
             is permitted.
     """
 
-    firewall_rules: List[AdvancedFirewallRule]
+    firewall_rules: List["AdvancedFirewallRule"]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

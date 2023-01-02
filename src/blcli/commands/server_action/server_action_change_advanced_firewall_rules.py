@@ -38,7 +38,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "--firewall-rules",
             dest="firewall_rules",
-            type=List[AdvancedFirewallRule],
+            type=List["AdvancedFirewallRule"],
             required=True,
             description="""A list of rules for the server. NB: that any existing rules that are not included will be removed. Submit an empty list to clear all rules.""",
         )
@@ -48,7 +48,7 @@ class Command(CommandRunner):
         server_id: int,
         client: Client,
         type: ChangeAdvancedFirewallRulesType,
-        firewall_rules: List[AdvancedFirewallRule],
+        firewall_rules: List["AdvancedFirewallRule"],
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
         return sync_detailed(

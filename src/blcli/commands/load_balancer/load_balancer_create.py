@@ -52,7 +52,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "--forwarding-rules",
             dest="forwarding_rules",
-            type=Union[Unset, None, List[ForwardingRule]],
+            type=Union[Unset, None, List["ForwardingRule"]],
             required=False,
             description="""The rules that control which traffic the load balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.""",
         )
@@ -137,7 +137,7 @@ class Command(CommandRunner):
         client: Client,
         name: str,
         algorithm: Union[Unset, None, AlgorithmType] = UNSET,
-        forwarding_rules: Union[Unset, None, List[ForwardingRule]] = UNSET,
+        forwarding_rules: Union[Unset, None, List["ForwardingRule"]] = UNSET,
         health_check: Union[Unset, None, HealthCheck] = UNSET,
         sticky_sessions: Union[Unset, None, StickySessions] = UNSET,
         redirect_http_to_https: Union[Unset, None, bool] = UNSET,

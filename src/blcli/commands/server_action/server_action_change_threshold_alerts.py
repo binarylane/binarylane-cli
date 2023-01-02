@@ -38,7 +38,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "--threshold-alerts",
             dest="threshold_alerts",
-            type=List[ThresholdAlertRequest],
+            type=List["ThresholdAlertRequest"],
             required=True,
             description="""Any alert type not listed will not be updated.""",
         )
@@ -48,7 +48,7 @@ class Command(CommandRunner):
         server_id: int,
         client: Client,
         type: ChangeThresholdAlertsType,
-        threshold_alerts: List[ThresholdAlertRequest],
+        threshold_alerts: List["ThresholdAlertRequest"],
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
         return sync_detailed(

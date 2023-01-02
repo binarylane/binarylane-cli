@@ -13,12 +13,12 @@ T = TypeVar("T", bound="AvailableAdvancedServerFeatures")
 class AvailableAdvancedServerFeatures:
     """
     Attributes:
-        processor_models (List[CpuModel]): A list of the processor models available for this server.
+        processor_models (List['CpuModel']): A list of the processor models available for this server.
         machine_types (List[VmMachineType]): A list of the machine types available for this server.
         advanced_features (List[AdvancedFeature]): A list of the advanced features available for this server.
     """
 
-    processor_models: List[CpuModel]
+    processor_models: List["CpuModel"]
     machine_types: List[VmMachineType]
     advanced_features: List[AdvancedFeature]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)

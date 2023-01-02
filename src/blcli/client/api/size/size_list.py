@@ -1,7 +1,9 @@
+from http import HTTPStatus
 from typing import Any, Dict, Optional, Union
 
 import httpx
 
+from ... import errors
 from ...client import Client
 from ...models.sizes_response import SizesResponse
 from ...models.validation_problem_details import ValidationProblemDetails
@@ -42,24 +44,31 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, response: httpx.Response) -> Optional[Union[SizesResponse, ValidationProblemDetails]]:
-    if response.status_code == 200:
+def _parse_response(
+    *, client: Client, response: httpx.Response
+) -> Optional[Union[SizesResponse, ValidationProblemDetails]]:
+    if response.status_code == HTTPStatus.OK:
         response_200 = SizesResponse.from_dict(response.json())
 
         return response_200
-    if response.status_code == 400:
+    if response.status_code == HTTPStatus.BAD_REQUEST:
         response_400 = ValidationProblemDetails.from_dict(response.json())
 
         return response_400
-    return None
+    if client.raise_on_unexpected_status:
+        raise errors.UnexpectedStatus(f"Unexpected status code: {response.status_code}")
+    else:
+        return None
 
 
-def _build_response(*, response: httpx.Response) -> Response[Union[SizesResponse, ValidationProblemDetails]]:
+def _build_response(
+    *, client: Client, response: httpx.Response
+) -> Response[Union[SizesResponse, ValidationProblemDetails]]:
     return Response(
-        status_code=response.status_code,
+        status_code=HTTPStatus(response.status_code),
         content=response.content,
         headers=response.headers,
-        parsed=_parse_response(response=response),
+        parsed=_parse_response(client=client, response=response),
     )
 
 
@@ -79,6 +88,10 @@ def sync_detailed(
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
     Returns:
         Response[Union[SizesResponse, ValidationProblemDetails]]
     """
@@ -96,7 +109,7 @@ def sync_detailed(
         **kwargs,
     )
 
-    return _build_response(response=response)
+    return _build_response(client=client, response=response)
 
 
 def sync(
@@ -114,6 +127,10 @@ def sync(
         image (Union[Unset, None, str]):
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
         Response[Union[SizesResponse, ValidationProblemDetails]]
@@ -144,6 +161,10 @@ async def asyncio_detailed(
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
+
     Returns:
         Response[Union[SizesResponse, ValidationProblemDetails]]
     """
@@ -159,7 +180,7 @@ async def asyncio_detailed(
     async with httpx.AsyncClient(verify=client.verify_ssl) as _client:
         response = await _client.request(**kwargs)
 
-    return _build_response(response=response)
+    return _build_response(client=client, response=response)
 
 
 async def asyncio(
@@ -177,6 +198,10 @@ async def asyncio(
         image (Union[Unset, None, str]):
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
         Response[Union[SizesResponse, ValidationProblemDetails]]

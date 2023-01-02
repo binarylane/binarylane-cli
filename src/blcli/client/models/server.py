@@ -52,7 +52,7 @@ class Server:
         networks (Networks):
         tags (List[str]): Tags are not currently supported and this will always be an empty array.
         volume_ids (List[str]): Volumes are not currently supported and this will always be an empty array.
-        disks (List[Disk]): A list of the disks that are currently attached to the server.
+        disks (List['Disk']): A list of the disks that are currently attached to the server.
         backup_settings (BackupSettings):
         rescue_console (RescueConsole):
         failover_ips (List[str]): A list of any assigned failover IP addresses for this server.
@@ -92,7 +92,7 @@ class Server:
     networks: Networks
     tags: List[str]
     volume_ids: List[str]
-    disks: List[Disk]
+    disks: List["Disk"]
     backup_settings: BackupSettings
     rescue_console: RescueConsole
     failover_ips: List[str]

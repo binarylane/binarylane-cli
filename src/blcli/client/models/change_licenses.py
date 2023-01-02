@@ -11,10 +11,10 @@ T = TypeVar("T", bound="ChangeLicenses")
 class ChangeLicenses:
     """
     Attributes:
-        licenses (List[License]):
+        licenses (List['License']):
     """
 
-    licenses: List[License]
+    licenses: List["License"]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

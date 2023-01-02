@@ -110,7 +110,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "--licenses",
             dest="licenses",
-            type=Union[Unset, None, List[License]],
+            type=Union[Unset, None, List["License"]],
             required=False,
             description="""None""",
         )
@@ -145,7 +145,7 @@ class Command(CommandRunner):
         ssh_keys: Union[Unset, None, List[Union[int, str]]] = UNSET,
         new_ssh_key: Union[Unset, None, SshKeyRequest] = UNSET,
         options: Union[Unset, None, SizeOptionsRequest] = UNSET,
-        licenses: Union[Unset, None, List[License]] = UNSET,
+        licenses: Union[Unset, None, List["License"]] = UNSET,
         user_data: Union[Unset, None, str] = UNSET,
         port_blocking: Union[Unset, None, bool] = UNSET,
     ) -> Union[Any, CreateServerResponse, ValidationProblemDetails]:

@@ -27,7 +27,7 @@ class CreateServerRequest:
             system supports SSH keys). Submit an empty array to disable deployment of default keys.
         new_ssh_key (Union[Unset, None, SshKeyRequest]):
         options (Union[Unset, None, SizeOptionsRequest]):
-        licenses (Union[Unset, None, List[License]]):
+        licenses (Union[Unset, None, List['License']]):
         user_data (Union[Unset, None, str]): If provided this will be used to initialise the new server. This must be
             left null if the Image does not support UserData, see DistributionInfo.Features for more information.
         port_blocking (Union[Unset, None, bool]): Port blocking of outgoing connections for email, SSH and Remote
@@ -45,7 +45,7 @@ class CreateServerRequest:
     ssh_keys: Union[Unset, None, List[Union[int, str]]] = UNSET
     new_ssh_key: Union[Unset, None, SshKeyRequest] = UNSET
     options: Union[Unset, None, SizeOptionsRequest] = UNSET
-    licenses: Union[Unset, None, List[License]] = UNSET
+    licenses: Union[Unset, None, List["License"]] = UNSET
     user_data: Union[Unset, None, str] = UNSET
     port_blocking: Union[Unset, None, bool] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)

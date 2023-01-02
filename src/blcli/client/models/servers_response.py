@@ -15,12 +15,12 @@ class ServersResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        servers (List[Server]):
+        servers (List['Server']):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    servers: List[Server]
+    servers: List["Server"]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

@@ -1,7 +1,7 @@
 # pylint: disable=missing-module-docstring
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional, Sequence, Union
+from typing import Any, List, Optional, Sequence, Union, get_type_hints
 
 from ..cli import debug
 
@@ -41,7 +41,7 @@ class _TablePrinter(Printer):
         primary = None
         primary_type = None
 
-        for name, _type in response_type.__annotations__.items():
+        for name, _type in get_type_hints(response_type).items():
             if name == "additional_properties":
                 continue
             # get inner type if it is generic

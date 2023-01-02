@@ -15,12 +15,12 @@ class SoftwaresResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        software (List[Software]):
+        software (List['Software']):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    software: List[Software]
+    software: List["Software"]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

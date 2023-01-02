@@ -15,12 +15,12 @@ class SshKeysResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        ssh_keys (List[SshKey]):
+        ssh_keys (List['SshKey']):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    ssh_keys: List[SshKey]
+    ssh_keys: List["SshKey"]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

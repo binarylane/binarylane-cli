@@ -38,7 +38,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "--route-entries",
             dest="route_entries",
-            type=Union[Unset, None, List[RouteEntryRequest]],
+            type=Union[Unset, None, List["RouteEntryRequest"]],
             required=False,
             description="""Submit null to leave unaltered, submit an empty list to clear all route entries. It is not possible to PATCH individual route entries, to alter a route entry submit the entire list of route entries you wish to save.""",
         )
@@ -48,7 +48,7 @@ class Command(CommandRunner):
         vpc_id: int,
         client: Client,
         name: Union[Unset, None, str] = UNSET,
-        route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET,
+        route_entries: Union[Unset, None, List["RouteEntryRequest"]] = UNSET,
     ) -> Union[Any, ProblemDetails, ValidationProblemDetails, VpcResponse]:
 
         return sync_detailed(

@@ -15,12 +15,12 @@ class LoadBalancersResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        load_balancers (List[LoadBalancer]):
+        load_balancers (List['LoadBalancer']):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    load_balancers: List[LoadBalancer]
+    load_balancers: List["LoadBalancer"]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

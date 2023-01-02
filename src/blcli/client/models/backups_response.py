@@ -15,12 +15,12 @@ class BackupsResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        backups (List[Image]):
+        backups (List['Image']):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    backups: List[Image]
+    backups: List["Image"]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

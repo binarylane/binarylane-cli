@@ -1,7 +1,9 @@
+from http import HTTPStatus
 from typing import Any, Dict, Optional, Union, cast
 
 import httpx
 
+from ... import errors
 from ...client import Client
 from ...models.actions_response import ActionsResponse
 from ...models.add_disk import AddDisk
@@ -54,47 +56,47 @@ def _get_kwargs(
     *,
     client: Client,
     json_body: Union[
-        AddDisk,
-        AttachBackup,
-        ChangeAdvancedFeatures,
-        ChangeAdvancedFirewallRules,
-        ChangeBackupSchedule,
-        ChangeIpv6,
-        ChangeIpv6ReverseNameservers,
-        ChangeKernel,
-        ChangeManageOffsiteBackupCopies,
-        ChangeNetwork,
-        ChangeOffsiteBackupLocation,
-        ChangePartner,
-        ChangePortBlocking,
-        ChangeReverseName,
-        ChangeSeparatePrivateNetworkInterface,
-        ChangeSourceAndDestinationCheck,
-        ChangeThresholdAlerts,
-        ChangeVpcIpv4,
-        CloneUsingBackup,
-        DeleteDisk,
-        DetachBackup,
-        DisableBackups,
-        DisableSelinux,
-        EnableBackups,
-        EnableIpv6,
-        IsRunning,
-        PasswordReset,
-        Ping,
-        PowerCycle,
-        PowerOff,
-        PowerOn,
-        Reboot,
-        Rebuild,
-        Rename,
-        Resize,
-        ResizeDisk,
-        Restore,
-        Shutdown,
-        TakeBackup,
-        Uncancel,
-        Uptime,
+        "AddDisk",
+        "AttachBackup",
+        "ChangeAdvancedFeatures",
+        "ChangeAdvancedFirewallRules",
+        "ChangeBackupSchedule",
+        "ChangeIpv6",
+        "ChangeIpv6ReverseNameservers",
+        "ChangeKernel",
+        "ChangeManageOffsiteBackupCopies",
+        "ChangeNetwork",
+        "ChangeOffsiteBackupLocation",
+        "ChangePartner",
+        "ChangePortBlocking",
+        "ChangeReverseName",
+        "ChangeSeparatePrivateNetworkInterface",
+        "ChangeSourceAndDestinationCheck",
+        "ChangeThresholdAlerts",
+        "ChangeVpcIpv4",
+        "CloneUsingBackup",
+        "DeleteDisk",
+        "DetachBackup",
+        "DisableBackups",
+        "DisableSelinux",
+        "EnableBackups",
+        "EnableIpv6",
+        "IsRunning",
+        "PasswordReset",
+        "Ping",
+        "PowerCycle",
+        "PowerOff",
+        "PowerOn",
+        "Reboot",
+        "Rebuild",
+        "Rename",
+        "Resize",
+        "ResizeDisk",
+        "Restore",
+        "Shutdown",
+        "TakeBackup",
+        "Uncancel",
+        "Uptime",
     ],
     tag_name: Union[Unset, None, str] = UNSET,
 ) -> Dict[str, Any]:
@@ -245,41 +247,44 @@ def _get_kwargs(
 
 
 def _parse_response(
-    *, response: httpx.Response
+    *, client: Client, response: httpx.Response
 ) -> Optional[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]:
-    if response.status_code == 201:
+    if response.status_code == HTTPStatus.CREATED:
         response_201 = ActionsResponse.from_dict(response.json())
 
         return response_201
-    if response.status_code == 204:
+    if response.status_code == HTTPStatus.NO_CONTENT:
         response_204 = cast(Any, None)
         return response_204
-    if response.status_code == 400:
+    if response.status_code == HTTPStatus.BAD_REQUEST:
         response_400 = ValidationProblemDetails.from_dict(response.json())
 
         return response_400
-    if response.status_code == 404:
+    if response.status_code == HTTPStatus.NOT_FOUND:
         response_404 = ProblemDetails.from_dict(response.json())
 
         return response_404
-    if response.status_code == 422:
+    if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
         response_422 = ProblemDetails.from_dict(response.json())
 
         return response_422
-    if response.status_code == 401:
+    if response.status_code == HTTPStatus.UNAUTHORIZED:
         response_401 = cast(Any, None)
         return response_401
-    return None
+    if client.raise_on_unexpected_status:
+        raise errors.UnexpectedStatus(f"Unexpected status code: {response.status_code}")
+    else:
+        return None
 
 
 def _build_response(
-    *, response: httpx.Response
+    *, client: Client, response: httpx.Response
 ) -> Response[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     return Response(
-        status_code=response.status_code,
+        status_code=HTTPStatus(response.status_code),
         content=response.content,
         headers=response.headers,
-        parsed=_parse_response(response=response),
+        parsed=_parse_response(client=client, response=response),
     )
 
 
@@ -287,47 +292,47 @@ def sync_detailed(
     *,
     client: Client,
     json_body: Union[
-        AddDisk,
-        AttachBackup,
-        ChangeAdvancedFeatures,
-        ChangeAdvancedFirewallRules,
-        ChangeBackupSchedule,
-        ChangeIpv6,
-        ChangeIpv6ReverseNameservers,
-        ChangeKernel,
-        ChangeManageOffsiteBackupCopies,
-        ChangeNetwork,
-        ChangeOffsiteBackupLocation,
-        ChangePartner,
-        ChangePortBlocking,
-        ChangeReverseName,
-        ChangeSeparatePrivateNetworkInterface,
-        ChangeSourceAndDestinationCheck,
-        ChangeThresholdAlerts,
-        ChangeVpcIpv4,
-        CloneUsingBackup,
-        DeleteDisk,
-        DetachBackup,
-        DisableBackups,
-        DisableSelinux,
-        EnableBackups,
-        EnableIpv6,
-        IsRunning,
-        PasswordReset,
-        Ping,
-        PowerCycle,
-        PowerOff,
-        PowerOn,
-        Reboot,
-        Rebuild,
-        Rename,
-        Resize,
-        ResizeDisk,
-        Restore,
-        Shutdown,
-        TakeBackup,
-        Uncancel,
-        Uptime,
+        "AddDisk",
+        "AttachBackup",
+        "ChangeAdvancedFeatures",
+        "ChangeAdvancedFirewallRules",
+        "ChangeBackupSchedule",
+        "ChangeIpv6",
+        "ChangeIpv6ReverseNameservers",
+        "ChangeKernel",
+        "ChangeManageOffsiteBackupCopies",
+        "ChangeNetwork",
+        "ChangeOffsiteBackupLocation",
+        "ChangePartner",
+        "ChangePortBlocking",
+        "ChangeReverseName",
+        "ChangeSeparatePrivateNetworkInterface",
+        "ChangeSourceAndDestinationCheck",
+        "ChangeThresholdAlerts",
+        "ChangeVpcIpv4",
+        "CloneUsingBackup",
+        "DeleteDisk",
+        "DetachBackup",
+        "DisableBackups",
+        "DisableSelinux",
+        "EnableBackups",
+        "EnableIpv6",
+        "IsRunning",
+        "PasswordReset",
+        "Ping",
+        "PowerCycle",
+        "PowerOff",
+        "PowerOn",
+        "Reboot",
+        "Rebuild",
+        "Rename",
+        "Resize",
+        "ResizeDisk",
+        "Restore",
+        "Shutdown",
+        "TakeBackup",
+        "Uncancel",
+        "Uptime",
     ],
     tag_name: Union[Unset, None, str] = UNSET,
 ) -> Response[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]:
@@ -337,15 +342,20 @@ def sync_detailed(
 
     Args:
         tag_name (Union[Unset, None, str]):
-        json_body (Union[AddDisk, AttachBackup, ChangeAdvancedFeatures,
-            ChangeAdvancedFirewallRules, ChangeBackupSchedule, ChangeIpv6,
-            ChangeIpv6ReverseNameservers, ChangeKernel, ChangeManageOffsiteBackupCopies,
-            ChangeNetwork, ChangeOffsiteBackupLocation, ChangePartner, ChangePortBlocking,
-            ChangeReverseName, ChangeSeparatePrivateNetworkInterface, ChangeSourceAndDestinationCheck,
-            ChangeThresholdAlerts, ChangeVpcIpv4, CloneUsingBackup, DeleteDisk, DetachBackup,
-            DisableBackups, DisableSelinux, EnableBackups, EnableIpv6, IsRunning, PasswordReset, Ping,
-            PowerCycle, PowerOff, PowerOn, Reboot, Rebuild, Rename, Resize, ResizeDisk, Restore,
-            Shutdown, TakeBackup, Uncancel, Uptime]):
+        json_body (Union['AddDisk', 'AttachBackup', 'ChangeAdvancedFeatures',
+            'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
+            'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
+            'ChangeNetwork', 'ChangeOffsiteBackupLocation', 'ChangePartner', 'ChangePortBlocking',
+            'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
+            'ChangeSourceAndDestinationCheck', 'ChangeThresholdAlerts', 'ChangeVpcIpv4',
+            'CloneUsingBackup', 'DeleteDisk', 'DetachBackup', 'DisableBackups', 'DisableSelinux',
+            'EnableBackups', 'EnableIpv6', 'IsRunning', 'PasswordReset', 'Ping', 'PowerCycle',
+            'PowerOff', 'PowerOn', 'Reboot', 'Rebuild', 'Rename', 'Resize', 'ResizeDisk', 'Restore',
+            'Shutdown', 'TakeBackup', 'Uncancel', 'Uptime']):
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
         Response[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]
@@ -362,54 +372,54 @@ def sync_detailed(
         **kwargs,
     )
 
-    return _build_response(response=response)
+    return _build_response(client=client, response=response)
 
 
 def sync(
     *,
     client: Client,
     json_body: Union[
-        AddDisk,
-        AttachBackup,
-        ChangeAdvancedFeatures,
-        ChangeAdvancedFirewallRules,
-        ChangeBackupSchedule,
-        ChangeIpv6,
-        ChangeIpv6ReverseNameservers,
-        ChangeKernel,
-        ChangeManageOffsiteBackupCopies,
-        ChangeNetwork,
-        ChangeOffsiteBackupLocation,
-        ChangePartner,
-        ChangePortBlocking,
-        ChangeReverseName,
-        ChangeSeparatePrivateNetworkInterface,
-        ChangeSourceAndDestinationCheck,
-        ChangeThresholdAlerts,
-        ChangeVpcIpv4,
-        CloneUsingBackup,
-        DeleteDisk,
-        DetachBackup,
-        DisableBackups,
-        DisableSelinux,
-        EnableBackups,
-        EnableIpv6,
-        IsRunning,
-        PasswordReset,
-        Ping,
-        PowerCycle,
-        PowerOff,
-        PowerOn,
-        Reboot,
-        Rebuild,
-        Rename,
-        Resize,
-        ResizeDisk,
-        Restore,
-        Shutdown,
-        TakeBackup,
-        Uncancel,
-        Uptime,
+        "AddDisk",
+        "AttachBackup",
+        "ChangeAdvancedFeatures",
+        "ChangeAdvancedFirewallRules",
+        "ChangeBackupSchedule",
+        "ChangeIpv6",
+        "ChangeIpv6ReverseNameservers",
+        "ChangeKernel",
+        "ChangeManageOffsiteBackupCopies",
+        "ChangeNetwork",
+        "ChangeOffsiteBackupLocation",
+        "ChangePartner",
+        "ChangePortBlocking",
+        "ChangeReverseName",
+        "ChangeSeparatePrivateNetworkInterface",
+        "ChangeSourceAndDestinationCheck",
+        "ChangeThresholdAlerts",
+        "ChangeVpcIpv4",
+        "CloneUsingBackup",
+        "DeleteDisk",
+        "DetachBackup",
+        "DisableBackups",
+        "DisableSelinux",
+        "EnableBackups",
+        "EnableIpv6",
+        "IsRunning",
+        "PasswordReset",
+        "Ping",
+        "PowerCycle",
+        "PowerOff",
+        "PowerOn",
+        "Reboot",
+        "Rebuild",
+        "Rename",
+        "Resize",
+        "ResizeDisk",
+        "Restore",
+        "Shutdown",
+        "TakeBackup",
+        "Uncancel",
+        "Uptime",
     ],
     tag_name: Union[Unset, None, str] = UNSET,
 ) -> Optional[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]:
@@ -419,15 +429,20 @@ def sync(
 
     Args:
         tag_name (Union[Unset, None, str]):
-        json_body (Union[AddDisk, AttachBackup, ChangeAdvancedFeatures,
-            ChangeAdvancedFirewallRules, ChangeBackupSchedule, ChangeIpv6,
-            ChangeIpv6ReverseNameservers, ChangeKernel, ChangeManageOffsiteBackupCopies,
-            ChangeNetwork, ChangeOffsiteBackupLocation, ChangePartner, ChangePortBlocking,
-            ChangeReverseName, ChangeSeparatePrivateNetworkInterface, ChangeSourceAndDestinationCheck,
-            ChangeThresholdAlerts, ChangeVpcIpv4, CloneUsingBackup, DeleteDisk, DetachBackup,
-            DisableBackups, DisableSelinux, EnableBackups, EnableIpv6, IsRunning, PasswordReset, Ping,
-            PowerCycle, PowerOff, PowerOn, Reboot, Rebuild, Rename, Resize, ResizeDisk, Restore,
-            Shutdown, TakeBackup, Uncancel, Uptime]):
+        json_body (Union['AddDisk', 'AttachBackup', 'ChangeAdvancedFeatures',
+            'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
+            'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
+            'ChangeNetwork', 'ChangeOffsiteBackupLocation', 'ChangePartner', 'ChangePortBlocking',
+            'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
+            'ChangeSourceAndDestinationCheck', 'ChangeThresholdAlerts', 'ChangeVpcIpv4',
+            'CloneUsingBackup', 'DeleteDisk', 'DetachBackup', 'DisableBackups', 'DisableSelinux',
+            'EnableBackups', 'EnableIpv6', 'IsRunning', 'PasswordReset', 'Ping', 'PowerCycle',
+            'PowerOff', 'PowerOn', 'Reboot', 'Rebuild', 'Rename', 'Resize', 'ResizeDisk', 'Restore',
+            'Shutdown', 'TakeBackup', 'Uncancel', 'Uptime']):
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
         Response[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]
@@ -444,47 +459,47 @@ async def asyncio_detailed(
     *,
     client: Client,
     json_body: Union[
-        AddDisk,
-        AttachBackup,
-        ChangeAdvancedFeatures,
-        ChangeAdvancedFirewallRules,
-        ChangeBackupSchedule,
-        ChangeIpv6,
-        ChangeIpv6ReverseNameservers,
-        ChangeKernel,
-        ChangeManageOffsiteBackupCopies,
-        ChangeNetwork,
-        ChangeOffsiteBackupLocation,
-        ChangePartner,
-        ChangePortBlocking,
-        ChangeReverseName,
-        ChangeSeparatePrivateNetworkInterface,
-        ChangeSourceAndDestinationCheck,
-        ChangeThresholdAlerts,
-        ChangeVpcIpv4,
-        CloneUsingBackup,
-        DeleteDisk,
-        DetachBackup,
-        DisableBackups,
-        DisableSelinux,
-        EnableBackups,
-        EnableIpv6,
-        IsRunning,
-        PasswordReset,
-        Ping,
-        PowerCycle,
-        PowerOff,
-        PowerOn,
-        Reboot,
-        Rebuild,
-        Rename,
-        Resize,
-        ResizeDisk,
-        Restore,
-        Shutdown,
-        TakeBackup,
-        Uncancel,
-        Uptime,
+        "AddDisk",
+        "AttachBackup",
+        "ChangeAdvancedFeatures",
+        "ChangeAdvancedFirewallRules",
+        "ChangeBackupSchedule",
+        "ChangeIpv6",
+        "ChangeIpv6ReverseNameservers",
+        "ChangeKernel",
+        "ChangeManageOffsiteBackupCopies",
+        "ChangeNetwork",
+        "ChangeOffsiteBackupLocation",
+        "ChangePartner",
+        "ChangePortBlocking",
+        "ChangeReverseName",
+        "ChangeSeparatePrivateNetworkInterface",
+        "ChangeSourceAndDestinationCheck",
+        "ChangeThresholdAlerts",
+        "ChangeVpcIpv4",
+        "CloneUsingBackup",
+        "DeleteDisk",
+        "DetachBackup",
+        "DisableBackups",
+        "DisableSelinux",
+        "EnableBackups",
+        "EnableIpv6",
+        "IsRunning",
+        "PasswordReset",
+        "Ping",
+        "PowerCycle",
+        "PowerOff",
+        "PowerOn",
+        "Reboot",
+        "Rebuild",
+        "Rename",
+        "Resize",
+        "ResizeDisk",
+        "Restore",
+        "Shutdown",
+        "TakeBackup",
+        "Uncancel",
+        "Uptime",
     ],
     tag_name: Union[Unset, None, str] = UNSET,
 ) -> Response[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]:
@@ -494,15 +509,20 @@ async def asyncio_detailed(
 
     Args:
         tag_name (Union[Unset, None, str]):
-        json_body (Union[AddDisk, AttachBackup, ChangeAdvancedFeatures,
-            ChangeAdvancedFirewallRules, ChangeBackupSchedule, ChangeIpv6,
-            ChangeIpv6ReverseNameservers, ChangeKernel, ChangeManageOffsiteBackupCopies,
-            ChangeNetwork, ChangeOffsiteBackupLocation, ChangePartner, ChangePortBlocking,
-            ChangeReverseName, ChangeSeparatePrivateNetworkInterface, ChangeSourceAndDestinationCheck,
-            ChangeThresholdAlerts, ChangeVpcIpv4, CloneUsingBackup, DeleteDisk, DetachBackup,
-            DisableBackups, DisableSelinux, EnableBackups, EnableIpv6, IsRunning, PasswordReset, Ping,
-            PowerCycle, PowerOff, PowerOn, Reboot, Rebuild, Rename, Resize, ResizeDisk, Restore,
-            Shutdown, TakeBackup, Uncancel, Uptime]):
+        json_body (Union['AddDisk', 'AttachBackup', 'ChangeAdvancedFeatures',
+            'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
+            'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
+            'ChangeNetwork', 'ChangeOffsiteBackupLocation', 'ChangePartner', 'ChangePortBlocking',
+            'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
+            'ChangeSourceAndDestinationCheck', 'ChangeThresholdAlerts', 'ChangeVpcIpv4',
+            'CloneUsingBackup', 'DeleteDisk', 'DetachBackup', 'DisableBackups', 'DisableSelinux',
+            'EnableBackups', 'EnableIpv6', 'IsRunning', 'PasswordReset', 'Ping', 'PowerCycle',
+            'PowerOff', 'PowerOn', 'Reboot', 'Rebuild', 'Rename', 'Resize', 'ResizeDisk', 'Restore',
+            'Shutdown', 'TakeBackup', 'Uncancel', 'Uptime']):
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
         Response[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]
@@ -517,54 +537,54 @@ async def asyncio_detailed(
     async with httpx.AsyncClient(verify=client.verify_ssl) as _client:
         response = await _client.request(**kwargs)
 
-    return _build_response(response=response)
+    return _build_response(client=client, response=response)
 
 
 async def asyncio(
     *,
     client: Client,
     json_body: Union[
-        AddDisk,
-        AttachBackup,
-        ChangeAdvancedFeatures,
-        ChangeAdvancedFirewallRules,
-        ChangeBackupSchedule,
-        ChangeIpv6,
-        ChangeIpv6ReverseNameservers,
-        ChangeKernel,
-        ChangeManageOffsiteBackupCopies,
-        ChangeNetwork,
-        ChangeOffsiteBackupLocation,
-        ChangePartner,
-        ChangePortBlocking,
-        ChangeReverseName,
-        ChangeSeparatePrivateNetworkInterface,
-        ChangeSourceAndDestinationCheck,
-        ChangeThresholdAlerts,
-        ChangeVpcIpv4,
-        CloneUsingBackup,
-        DeleteDisk,
-        DetachBackup,
-        DisableBackups,
-        DisableSelinux,
-        EnableBackups,
-        EnableIpv6,
-        IsRunning,
-        PasswordReset,
-        Ping,
-        PowerCycle,
-        PowerOff,
-        PowerOn,
-        Reboot,
-        Rebuild,
-        Rename,
-        Resize,
-        ResizeDisk,
-        Restore,
-        Shutdown,
-        TakeBackup,
-        Uncancel,
-        Uptime,
+        "AddDisk",
+        "AttachBackup",
+        "ChangeAdvancedFeatures",
+        "ChangeAdvancedFirewallRules",
+        "ChangeBackupSchedule",
+        "ChangeIpv6",
+        "ChangeIpv6ReverseNameservers",
+        "ChangeKernel",
+        "ChangeManageOffsiteBackupCopies",
+        "ChangeNetwork",
+        "ChangeOffsiteBackupLocation",
+        "ChangePartner",
+        "ChangePortBlocking",
+        "ChangeReverseName",
+        "ChangeSeparatePrivateNetworkInterface",
+        "ChangeSourceAndDestinationCheck",
+        "ChangeThresholdAlerts",
+        "ChangeVpcIpv4",
+        "CloneUsingBackup",
+        "DeleteDisk",
+        "DetachBackup",
+        "DisableBackups",
+        "DisableSelinux",
+        "EnableBackups",
+        "EnableIpv6",
+        "IsRunning",
+        "PasswordReset",
+        "Ping",
+        "PowerCycle",
+        "PowerOff",
+        "PowerOn",
+        "Reboot",
+        "Rebuild",
+        "Rename",
+        "Resize",
+        "ResizeDisk",
+        "Restore",
+        "Shutdown",
+        "TakeBackup",
+        "Uncancel",
+        "Uptime",
     ],
     tag_name: Union[Unset, None, str] = UNSET,
 ) -> Optional[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]:
@@ -574,15 +594,20 @@ async def asyncio(
 
     Args:
         tag_name (Union[Unset, None, str]):
-        json_body (Union[AddDisk, AttachBackup, ChangeAdvancedFeatures,
-            ChangeAdvancedFirewallRules, ChangeBackupSchedule, ChangeIpv6,
-            ChangeIpv6ReverseNameservers, ChangeKernel, ChangeManageOffsiteBackupCopies,
-            ChangeNetwork, ChangeOffsiteBackupLocation, ChangePartner, ChangePortBlocking,
-            ChangeReverseName, ChangeSeparatePrivateNetworkInterface, ChangeSourceAndDestinationCheck,
-            ChangeThresholdAlerts, ChangeVpcIpv4, CloneUsingBackup, DeleteDisk, DetachBackup,
-            DisableBackups, DisableSelinux, EnableBackups, EnableIpv6, IsRunning, PasswordReset, Ping,
-            PowerCycle, PowerOff, PowerOn, Reboot, Rebuild, Rename, Resize, ResizeDisk, Restore,
-            Shutdown, TakeBackup, Uncancel, Uptime]):
+        json_body (Union['AddDisk', 'AttachBackup', 'ChangeAdvancedFeatures',
+            'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
+            'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
+            'ChangeNetwork', 'ChangeOffsiteBackupLocation', 'ChangePartner', 'ChangePortBlocking',
+            'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
+            'ChangeSourceAndDestinationCheck', 'ChangeThresholdAlerts', 'ChangeVpcIpv4',
+            'CloneUsingBackup', 'DeleteDisk', 'DetachBackup', 'DisableBackups', 'DisableSelinux',
+            'EnableBackups', 'EnableIpv6', 'IsRunning', 'PasswordReset', 'Ping', 'PowerCycle',
+            'PowerOff', 'PowerOn', 'Reboot', 'Rebuild', 'Rename', 'Resize', 'ResizeDisk', 'Restore',
+            'Shutdown', 'TakeBackup', 'Uncancel', 'Uptime']):
+
+    Raises:
+        errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
+        httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
         Response[Union[ActionsResponse, Any, ProblemDetails, ValidationProblemDetails]]

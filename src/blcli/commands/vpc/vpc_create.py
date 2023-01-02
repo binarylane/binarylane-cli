@@ -33,7 +33,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "--route-entries",
             dest="route_entries",
-            type=Union[Unset, None, List[RouteEntryRequest]],
+            type=Union[Unset, None, List["RouteEntryRequest"]],
             required=False,
             description="""The route entries that control how network traffic is directed through the VPC environment.""",
         )
@@ -50,7 +50,7 @@ class Command(CommandRunner):
         self,
         client: Client,
         name: str,
-        route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET,
+        route_entries: Union[Unset, None, List["RouteEntryRequest"]] = UNSET,
         ip_range: Union[Unset, None, str] = UNSET,
     ) -> Union[Any, ValidationProblemDetails, VpcResponse]:
 

@@ -18,19 +18,20 @@ from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} imp
 {% for relative in endpoint.json_body.relative_imports %}
 {{ relative.replace('..', '...client.') }}
 {% endfor %}
+{% for relative in endpoint.json_body.lazy_imports %}
+{{ relative.replace('..', '...client.') }}
+{% endfor %}
 {% endif %}
-
-{% from "endpoint_macros.py.jinja" import header_params, cookie_params, query_params, json_body, multipart_body,
-    arguments, client, kwargs, parse_response, docstring %}
 
 {% set return_string = endpoint.response_type() %}
 {% set parsed_responses = (endpoint.responses | length > 0) and return_string != "Any" %}
 {% set list_response = [] %}
 {% for response_type in endpoint.responses if response_type.status_code == 200 %}
 {# First check if response contains a list property; and store it in list_response for later #}
-{% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() == 'list' and prop.inner_property.required_properties %}
-{# This is required because of jinja 'for' variable scope #}
-{% set _ = list_response.append(prop) %}
+{% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() == 'list' and prop.inner_property.class_info %}
+{# mutating existing object via list.append() is required because of jinja 'for' variable scope - cannot set into global scope #}
+{# see package_init.py.jinja for explanation of why we need to use models_by_class #}
+{% set _ = list_response.append(openapi.models_by_class[prop.inner_property.class_info]) %}
 {% endfor %}
 {# Second check if there are any non-list values, which means this isnt a list response #}
 {% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() != 'list' %}
@@ -40,14 +41,14 @@ from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} imp
 {% endfor %}
 
 {% if list_response %}
-{% set list_response = list_response[0].inner_property %}
+{% set list_response = list_response[0] %}
 from ...runners import ListRunner
 class Command(ListRunner):
 
     @property
     def default_format(self) -> List[str]:
         return [
-            {% for prop in list_response.required_properties if not prop.required_properties and prop.get_instance_type_string() != 'list' %}
+            {% for prop in list_response.required_properties if prop.is_base_type %}
             '{{ prop.name }}',
             {% endfor %}
         ]

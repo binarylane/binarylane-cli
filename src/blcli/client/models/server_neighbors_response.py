@@ -11,10 +11,10 @@ T = TypeVar("T", bound="ServerNeighborsResponse")
 class ServerNeighborsResponse:
     """
     Attributes:
-        servers (List[Server]):
+        servers (List['Server']):
     """
 
-    servers: List[Server]
+    servers: List["Server"]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

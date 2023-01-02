@@ -15,8 +15,6 @@ class Command(ListRunner):
             "ip",
             "status",
             "created_at",
-            "health_check",
-            "sticky_sessions",
             "algorithm",
             "redirect_http_to_https",
             "enable_proxy_protocol",
