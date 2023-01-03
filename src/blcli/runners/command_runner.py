@@ -2,10 +2,10 @@
 
 import importlib
 from abc import abstractmethod
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from ..cli import CommandParser, debug, get_api_token
-from ..printers import get_printer
+from ..printers import Printer, PrinterType, create_printer
 from .httpx_wrapper import CurlCommand
 from .runner import Runner
 
@@ -16,7 +16,9 @@ class CommandRunner(Runner):
     parser: CommandParser
     parent: Runner
 
-    print_curl: bool
+    _print_curl: Optional[bool]
+    _output: Optional[str]
+    _header: Optional[bool]
 
     def __init__(self, parent: Runner) -> None:
         super().__init__(parent)
@@ -29,6 +31,24 @@ class CommandRunner(Runner):
         self.parser.add_argument(
             "--curl", dest="runner_print_curl", action="store_true", help="Display API request as a 'curl' command-line"
         )
+        self.parser.add_argument(
+            "--no-header",
+            dest="runner_header",
+            action="store_false",
+            default=True,
+            help="Display columns without field labels",
+        )
+        printers = tuple(item.name.lower() for item in PrinterType)
+        self.parser.add_argument(
+            "--output",
+            dest="runner_output",
+            default="table",
+            metavar="OUTPUT",
+            choices=printers,
+            help='Desired output format [%(choices)s] (Default: "%(default)s")',
+        )
+        self._output = None
+        self._header = None
 
     @property
     def prog(self) -> str:
@@ -42,9 +62,18 @@ class CommandRunner(Runner):
     def request(self, **kwargs: Dict[str, Any]) -> Any:
         """Perform API operation and return response"""
 
+    @property
+    def _printer(self) -> Printer:
+        """Create printer of requested type"""
+        if self._output is None or self._header is None:
+            raise ValueError(f"output={self._output} header={self._header}")
+        printer = create_printer(self._output)
+        printer.header = self._header
+        return printer
+
     def response(self, received: Any) -> None:
         """Format and display response received from API operation"""
-        get_printer("table").print_object(received)
+        self._printer.print(received)
 
     def print_help(self) -> None:
         """Display help for this runner"""
@@ -56,7 +85,11 @@ class CommandRunner(Runner):
             self.print_help()
             raise SystemExit()
 
-        self.print_curl = parsed.runner_print_curl
+        self._print_curl = parsed.runner_print_curl
+        if self._output is None:
+            self._output = parsed.runner_output
+        if self._header is None:
+            self._header = parsed.runner_header
 
         for key in list(vars(parsed)):
             if key.startswith("runner_"):
@@ -79,7 +112,7 @@ class CommandRunner(Runner):
         request_args = vars(parsed)
 
         # CurlCommand does not execute the request, so there is no response to display
-        if self.print_curl:
+        if self._print_curl:
             with CurlCommand() as curl:
                 self.request(**request_args)
                 return print(curl.shell)

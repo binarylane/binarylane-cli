@@ -10,4 +10,4 @@ class TsvPrinter(_TablePrinter):
 
     def _print(self, data: Any) -> None:
         for item in data:
-            print("\t".join(item))
+            print("\t".join(item).replace("\n", "\\n"))

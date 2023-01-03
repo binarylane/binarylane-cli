@@ -26,18 +26,13 @@ class Printer(ABC):
         self._header = value
 
     @abstractmethod
-    def print_list(self, response: List[Any], fields: Optional[List[str]] = None) -> None:
+    def print(self, response: Any, fields: Optional[List[str]] = None) -> None:
         """Format response and print to stdout"""
-
-    def print_object(self, response: Any) -> None:
-        """Format structured API response object and print to stdout"""
-        self.print_list(response)
 
 
 class _TablePrinter(Printer):
-    def print_list(self, response: List[Any], fields: Optional[List[str]] = None) -> None:
+    def print(self, response: Any, fields: Optional[List[str]] = None) -> None:
         response_type = type(response)
-        # print(f"-- {response_type} ({response_type.__module__}) --")
         primary = None
         primary_type = None
 
@@ -71,7 +66,7 @@ class _TablePrinter(Printer):
 
             data = [header] if self.header else []
             data += [
-                self.flatten(
+                self._flatten(
                     [item]
                     if isinstance(item, str)
                     else [value for key, value in item.to_dict().items() if key in header]
@@ -82,7 +77,8 @@ class _TablePrinter(Printer):
             data = []
             print(response)
         else:
-            data = [["Name", "Value"]] + [self.flatten(item, True) for item in response.to_dict().items()]
+            data = [["name", "value"]] if self.header else []
+            data += [self._flatten(item, True) for item in response.to_dict().items()]
 
         if len(data) > 1:
             self._print(data)
@@ -91,7 +87,7 @@ class _TablePrinter(Printer):
     def _print(self, data: Any) -> None:
         """Class-specific printer behaviour"""
 
-    def flatten(self, values: Sequence[Any], single_object: bool = False) -> List[str]:
+    def _flatten(self, values: Sequence[Any], single_object: bool = False) -> List[str]:
         """Transform each item in values into a format more suitable for displaying"""
 
         result: List[str] = []

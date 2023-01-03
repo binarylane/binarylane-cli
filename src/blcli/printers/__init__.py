@@ -17,7 +17,7 @@ class PrinterType(Enum):
     JSON = JsonPrinter
 
 
-def get_printer(name: str) -> Printer:
+def create_printer(name: str) -> Printer:
     """Returns Printer object of the requested type"""
     try:
         return PrinterType[name.upper()].value()

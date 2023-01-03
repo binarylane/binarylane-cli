@@ -9,8 +9,5 @@ from .printer import Printer
 class JsonPrinter(Printer):
     """Output an API response as 'raw' JSON"""
 
-    def print_list(self, response: List[Any], fields: Optional[List[str]] = None) -> None:
-        print(json.dumps(response))
-
-    def _print(self, data: Any) -> None:
-        pass
+    def print(self, response: Any, fields: Optional[List[str]] = None) -> None:
+        print(json.dumps(response.to_dict()))

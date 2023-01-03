@@ -3,14 +3,13 @@
 from abc import abstractmethod
 from typing import Any, Dict, List
 
-from ..printers import PrinterType, get_printer
 from .command_runner import CommandRunner
 
 
 class ListRunner(CommandRunner):
     """ListRunner displays a received list with user-customisable field list"""
 
-    format: List[str]
+    _format: List[str]
     output: str
     header: bool
 
@@ -42,15 +41,6 @@ class ListRunner(CommandRunner):
             default=",".join(self.default_format),
         )
 
-        printers = tuple(item.name.lower() for item in PrinterType)
-        self.parser.add_argument(
-            "--output",
-            dest="runner_output",
-            default="table",
-            metavar="OUTPUT",
-            choices=printers,
-            help='Desired output format [%(choices)s] (Default: "%(default)s")',
-        )
         self.parser.add_argument(
             "-1",
             "--single-column",
@@ -58,27 +48,18 @@ class ListRunner(CommandRunner):
             action="store_true",
             help=f"List one {self.default_format[0]} per line.",
         )
-        self.parser.add_argument(
-            "--no-header",
-            dest="runner_no_header",
-            action="store_true",
-            help="Display columns without field labels",
-        )
+
         super().run(args)
 
     def process(self, parsed: Any) -> None:
-        self.output = parsed.runner_output
-        self.format = parsed.runner_format.split(",")
-        self.header = not parsed.runner_no_header
+        self._format = parsed.runner_format.split(",")
 
         if parsed.runner_single_column:
-            self.format = self.default_format[:1]
-            self.output = "plain"
-            self.header = False
+            self._format = self.default_format[:1]
+            self._output = "tsv"
+            self._header = False
 
         super().process(parsed)
 
     def response(self, received: Any) -> None:
-        printer = get_printer(self.output)
-        printer.header = self.header
-        printer.print_list(received, self.format)
+        self._printer.print(received, self._format)
