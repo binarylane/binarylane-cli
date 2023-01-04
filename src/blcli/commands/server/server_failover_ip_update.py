@@ -26,7 +26,7 @@ class Command(CommandRunner):
         )
 
         parser.cli_argument(
-            "",
+            "--value",
             nargs="*",
         )
 

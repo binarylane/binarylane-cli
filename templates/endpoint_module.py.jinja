@@ -90,9 +90,12 @@ class Command(CommandRunner):
         from ...client.models.{{ endpoint.json_body.class_info.module_name }} import {{ endpoint.json_body.class_info.name }}
         {% endif %}
 
-        {%  if endpoint.json_body.get_instance_type_string() == 'list' %}
-        {% set property = endpoint.json_body.inner_property %}
-        parser.cli_argument('{{ key }}',
+        {#
+            FIXME: BL API is not supposed to have any of these, but currently failover-ip update uses it.
+            type= is intentionally missing to trigger a warning in cli_argument()
+        #}
+        {% if endpoint.json_body.get_instance_type_string() == 'list' %}
+        parser.cli_argument('--value',
                 nargs='*',
                 {% if endpoint.json_body.description %}description="""{{ endpoint.json_body.description  }}""",{% endif %}
                 )
