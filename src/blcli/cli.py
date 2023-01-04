@@ -69,21 +69,19 @@ class CommandParser(argparse.ArgumentParser):
     def cli_argument(self, *args: str, **kwargs: Any) -> Optional[argparse.Action]:
         """Add CLI argument to parser"""
 
-        dest = kwargs.get("dest", "?")
+        # used in warning messages
+        dest = kwargs.get("dest") or (args[0] if args else "?")
 
+        # description can be used to avoid warning due to help() being a global function
         if "description" in kwargs:
             kwargs["help"] = kwargs["description"]
             del kwargs["description"]
 
-        if kwargs.get("help") in {None, str(None)}:
-            warn(f"{self.prog} - missing help for {dest}")
-
+        # type is required for rest of the method
         _type = kwargs.get("type")
         if _type is None:
             warn(f"{self.prog} - missing type for {dest}")
             return self.add_argument(*args, **kwargs)
-
-        dest = kwargs.get("dest", "?")
 
         # Handle unions:
         if typing.get_origin(_type) is Union:
@@ -143,6 +141,10 @@ class CommandParser(argparse.ArgumentParser):
         elif kwargs["type"] not in PRIMITIVE_TYPES:
             warn(f"{self.prog} - unsupported type for {dest}: type={_type}")
             return None
+
+        # This argument is going to be displayed, warn if a description is not available
+        if kwargs.get("help") in {None, str(None)}:
+            warn(f"{self.prog} - missing help for {dest}")
 
         # If this is a positional argument, give it an uppercase metavar
         if args[0][0] not in self.prefix_chars and not kwargs.get("metavar"):
