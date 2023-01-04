@@ -11,6 +11,7 @@ class Runner(ABC):
     """Abstract base class for all Runner implementations"""
 
     HELP = "--help"
+    CHECK = "--blcli-check"
     parent: Optional[Runner]
 
     def __init__(self, parent: Optional[Runner] = None) -> None:

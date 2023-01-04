@@ -89,6 +89,10 @@ class CommandRunner(Runner):
                 del parsed.__dict__[key]
 
     def run(self, args: List[str]) -> None:
+        # Checks have already been performed during __init__
+        if args == [Runner.CHECK]:
+            return None
+
         debug(f"Command parser for {self.name}. args: {args}")
         parsed = self.parser.parse_args(args)
         debug(f"Parsing succeeded, have {parsed}")

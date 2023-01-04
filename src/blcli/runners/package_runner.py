@@ -100,5 +100,10 @@ class PackageRunner(Runner):
         if "runner" in parsed:
             return parsed.runner.run(left + extra)
 
+        if Runner.CHECK in left:
+            for runner in self._runners:
+                runner.run([Runner.CHECK])
+            return None
+
         # If not, display help
         return self.parser.print_help()

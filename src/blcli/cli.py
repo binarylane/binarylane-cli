@@ -17,7 +17,7 @@ except ImportError:
     from .actions import BooleanOptionalAction
 
 
-PRIMITIVE_TPES = {int, str, bool, float}
+PRIMITIVE_TYPES = {int, str, bool, float}
 
 
 def debug(*args: str) -> None:
@@ -133,16 +133,15 @@ class CommandParser(argparse.ArgumentParser):
                 return None
             kwargs["choices"] = enum_options
             kwargs["metavar"] = kwargs["dest"].upper()
-            # print('Need to add enum!', enum_options)
+
+        # Check we haven't ended up with Request object
+        elif kwargs["type"] not in PRIMITIVE_TYPES:
+            warn(f"unsupported {self.prog} {dest} type={_type}")
+            return None
 
         # If this is a positional argument, give it an uppercase metavar
         if args[0][0] not in self.prefix_chars and not kwargs.get("metavar"):
             kwargs["metavar"] = args[0].upper()
-
-        # Check we haven't ended up with Request object
-        if kwargs["type"] not in PRIMITIVE_TPES:
-            warn(f"unsupported {self.prog} {dest} type={_type}")
-            return None
 
         # Place argument in appropriate group:
         group = self._command_require if kwargs.get("required", True) else self._command_options
