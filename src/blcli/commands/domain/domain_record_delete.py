@@ -19,9 +19,11 @@ class Command(CommandRunner):
         """Add arguments for domain_record_delete"""
         parser.cli_argument(
             "domain_name",
+            type=str,
         )
         parser.cli_argument(
             "record_id",
+            type=int,
         )
 
     def request(

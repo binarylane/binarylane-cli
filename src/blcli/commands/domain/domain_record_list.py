@@ -59,6 +59,7 @@ class Command(ListRunner):
         """Add arguments for domain_record_list"""
         parser.cli_argument(
             "domain_name",
+            type=str,
         )
 
         parser.cli_argument(

@@ -21,6 +21,7 @@ class Command(CommandRunner):
         """Add arguments for action_proceed"""
         parser.cli_argument(
             "action_id",
+            type=int,
         )
 
         parser.cli_argument(

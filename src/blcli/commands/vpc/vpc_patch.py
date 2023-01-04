@@ -24,6 +24,7 @@ class Command(CommandRunner):
         """Add arguments for vpc_patch"""
         parser.cli_argument(
             "vpc_id",
+            type=int,
             description="""The target vpc id.""",
         )
 

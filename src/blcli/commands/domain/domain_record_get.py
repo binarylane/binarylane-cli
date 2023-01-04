@@ -20,9 +20,11 @@ class Command(CommandRunner):
         """Add arguments for domain_record_get"""
         parser.cli_argument(
             "domain_name",
+            type=str,
         )
         parser.cli_argument(
             "record_id",
+            type=int,
         )
 
     def request(

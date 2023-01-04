@@ -26,7 +26,7 @@ class CommandRunner(Runner):
         self.configure(self.parser)
 
         self.parser.add_argument(
-            "--help", dest="runner_print_help", action="store_true", help="Display command options and descriptions"
+            "--help", dest="runner_print_help", action="help", help="Display command options and descriptions"
         )
         self.parser.add_argument(
             "--curl", dest="runner_print_curl", action="store_true", help="Display API request as a 'curl' command-line"
@@ -75,15 +75,8 @@ class CommandRunner(Runner):
         """Format and display response received from API operation"""
         self._printer.print(received)
 
-    def print_help(self) -> None:
-        """Display help for this runner"""
-        self.parser.print_help()
-
     def process(self, parsed: Any) -> None:
         """Process runner-local arguments"""
-        if parsed.runner_print_help:
-            self.print_help()
-            raise SystemExit()
 
         self._print_curl = parsed.runner_print_curl
         if self._output is None:

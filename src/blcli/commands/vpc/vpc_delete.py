@@ -19,6 +19,7 @@ class Command(CommandRunner):
         """Add arguments for vpc_delete"""
         parser.cli_argument(
             "vpc_id",
+            type=int,
             description="""The target vpc id.""",
         )
 

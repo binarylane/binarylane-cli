@@ -20,6 +20,7 @@ class Command(CommandRunner):
         """Add arguments for ssh-key_get"""
         parser.cli_argument(
             "key_id",
+            type=str,
         )
 
     def request(

@@ -1,6 +1,6 @@
 # pylint: disable=missing-module-docstring
-
 from abc import abstractmethod
+from argparse import SUPPRESS
 from typing import Any, Dict, List
 
 from .command_runner import CommandRunner
@@ -23,16 +23,23 @@ class ListRunner(CommandRunner):
     def fields(self) -> Dict[str, str]:
         """Map of field name: description for all available fields"""
 
-    def print_help(self) -> None:
-        fields_help = self.parser.add_subparsers(metavar="", title="available fields")
-        for key, value in self.fields.items():
-            fields_help.add_parser(key, help=value)
-        # This is a workaround for python3.8 ArgumentParser unnecessarily crushing the first column width
-        fields_help.add_parser(" " * 24, help="")
+    def _add_fields_help(self) -> None:
+        """Add a list of available fields to displayed help"""
 
-        return super().print_help()
+        fields_help = self.parser.add_argument_group("Available fields")
+        for key, value in self.fields.items():
+            # FIXME: Use HelpFormatter to create an epilog instead
+            #
+            # NOTE: These group arguments will never parse, the group exists purely to provide argparse-formatted help -
+            # dest: starts with '_field_` so that it is cannot be same as as anther argument
+            # metavar: field name, displayed as-is in argument group's help
+            # nargs: SUPPRESS (since python 3.7) will cause it to accept no arguments nor be shown in usage
+            # default: SUPPRESS so that f'_field_{key}' is not added to parsed namespace object
+            # help: description of the field
+            fields_help.add_argument(f"_field_{key}", metavar=key, nargs=SUPPRESS, default=SUPPRESS, help=value)
 
     def run(self, args: List[str]) -> None:
+        self._add_fields_help()
         self.parser.add_argument(
             "--format",
             dest="runner_format",

@@ -80,6 +80,7 @@ class Command(CommandRunner):
         """Add arguments for {{ endpoint.name }}"""
         {% for parameter in endpoint.path_parameters.values() %}
         parser.cli_argument('{{ parameter.name }}',
+            type={{ parameter.get_type_string() }},
             {% if parameter.description %}description="""{{ parameter.description }}""", {% endif %}
             )
         {% endfor %}

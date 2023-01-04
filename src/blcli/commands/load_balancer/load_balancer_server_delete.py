@@ -21,6 +21,7 @@ class Command(CommandRunner):
         """Add arguments for load-balancer_server_delete"""
         parser.cli_argument(
             "load_balancer_id",
+            type=int,
         )
 
         parser.cli_argument(

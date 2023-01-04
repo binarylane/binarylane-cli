@@ -23,6 +23,7 @@ class Command(CommandRunner):
         """Add arguments for server-action_enable-ipv6"""
         parser.cli_argument(
             "server_id",
+            type=int,
             description="""The target server id.""",
         )
 

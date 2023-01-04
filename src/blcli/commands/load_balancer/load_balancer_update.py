@@ -28,6 +28,7 @@ class Command(CommandRunner):
         """Add arguments for load-balancer_update"""
         parser.cli_argument(
             "load_balancer_id",
+            type=int,
         )
 
         parser.cli_argument(

@@ -24,6 +24,7 @@ class Command(CommandRunner):
         """Add arguments for domain_record_create"""
         parser.cli_argument(
             "domain_name",
+            type=str,
         )
 
         parser.cli_argument(

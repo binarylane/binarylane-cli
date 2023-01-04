@@ -20,6 +20,7 @@ class Command(CommandRunner):
         """Add arguments for account_invoice_get"""
         parser.cli_argument(
             "invoice_id",
+            type=int,
         )
 
     def request(

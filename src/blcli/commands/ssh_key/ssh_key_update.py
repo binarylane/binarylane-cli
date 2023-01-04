@@ -24,6 +24,7 @@ class Command(CommandRunner):
         """Add arguments for ssh-key_update"""
         parser.cli_argument(
             "key_id",
+            type=str,
         )
 
         parser.cli_argument(

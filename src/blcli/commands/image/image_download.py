@@ -20,6 +20,7 @@ class Command(CommandRunner):
         """Add arguments for image_download"""
         parser.cli_argument(
             "image_id",
+            type=int,
         )
 
     def request(

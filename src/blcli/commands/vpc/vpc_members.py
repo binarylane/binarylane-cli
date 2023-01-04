@@ -49,6 +49,7 @@ class Command(ListRunner):
         """Add arguments for vpc_members"""
         parser.cli_argument(
             "vpc_id",
+            type=int,
             description="""The target vpc id.""",
         )
 

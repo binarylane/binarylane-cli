@@ -71,6 +71,7 @@ class Command(ListRunner):
         """Add arguments for server_snapshot_list"""
         parser.cli_argument(
             "server_id",
+            type=int,
             description="""The target server id.""",
         )
 

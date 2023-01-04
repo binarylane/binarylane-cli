@@ -19,6 +19,7 @@ class Command(CommandRunner):
         """Add arguments for ssh-key_delete"""
         parser.cli_argument(
             "key_id",
+            type=str,
         )
 
     def request(

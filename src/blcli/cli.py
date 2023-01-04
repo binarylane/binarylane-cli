@@ -7,7 +7,7 @@ import os
 import sys
 import typing
 from enum import Enum
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable, Iterable, Optional, Union
 
 try:
     # FIXME: Is there a more pythonic way of dealing with this backort ?
@@ -28,19 +28,42 @@ def warn(*args: str) -> None:
     print("WARN: ", *args, file=sys.stderr)
 
 
+def error(*args: str) -> None:
+    """Wrapper for print() that prefixes output with ERROR:"""
+    print("ERROR: ", *args, file=sys.stderr)
+
+
+class CommandHelpFormatter(argparse.HelpFormatter):
+    """Modified HelpFormatter that hides common options in displayed usage"""
+
+    def add_usage(
+        self,
+        usage: Optional[str],
+        actions: Iterable[argparse.Action],
+        groups: Iterable[argparse._ArgumentGroup],
+        prefix: Optional[str] = None,
+    ) -> None:
+        actions = [argparse.Action(["OPTIONS"], "")] + [
+            action for action in actions if not action.dest.startswith("runner_")
+        ]
+        super().add_usage(usage, actions, groups, prefix)
+
+
 class CommandParser(argparse.ArgumentParser):
     """Enhanced ArgumentParser with support for generic types"""
 
     def __init__(self, **kwargs: Any):
-        kwargs["formatter_class"] = lambda prog: argparse.HelpFormatter(
-            prog,
-            max_help_position=100,
-            width=None,
-        )
+        kwargs["formatter_class"] = CommandHelpFormatter
         kwargs["add_help"] = False
-
+        kwargs["allow_abbrev"] = False
         super().__init__(**kwargs)
 
+        self._command_require = self.add_argument_group(title="Arguments")
+        self._command_options = self.add_argument_group(title="Modifiers")
+        self._optionals.title = "Options"
+
+    # FIXME: refactor + remove usage of 'kwargs' as we know what our supported arguments are
+    # pylint: disable=too-many-branches
     def cli_argument(self, *args: str, **kwargs: Any) -> Optional[argparse.Action]:
         """Add CLI argument to parser"""
         if "description" in kwargs:
@@ -49,6 +72,7 @@ class CommandParser(argparse.ArgumentParser):
 
         _type = kwargs.get("type")
         if _type is None:
+            warn(f"cli_argument {args} does not have a type")
             return self.add_argument(*args, **kwargs)
 
         dest = kwargs.get("dest", "?")
@@ -108,8 +132,13 @@ class CommandParser(argparse.ArgumentParser):
             kwargs["metavar"] = kwargs["dest"].upper()
             # print('Need to add enum!', enum_options)
 
-        debug(f"Adding: {kwargs}")
-        return self.add_argument(*args, **kwargs)
+        # If this is a positional argument, give it an uppercase metavar
+        if args[0][0] not in self.prefix_chars and not kwargs.get("metavar"):
+            kwargs["metavar"] = args[0].upper()
+
+        # Place argument in appropriate group:
+        group = self._command_require if kwargs.get("required", True) else self._command_options
+        return group.add_argument(*args, **kwargs)
 
 
 prog_parser = CommandParser(prog="bl", description="bl is a command-line interface for the BinaryLane API")

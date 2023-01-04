@@ -24,6 +24,7 @@ class Command(CommandRunner):
         """Add arguments for image_update"""
         parser.cli_argument(
             "image_id",
+            type=int,
         )
 
         parser.cli_argument(

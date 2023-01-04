@@ -24,9 +24,11 @@ class Command(CommandRunner):
         """Add arguments for domain_record_update"""
         parser.cli_argument(
             "domain_name",
+            type=str,
         )
         parser.cli_argument(
             "record_id",
+            type=int,
         )
 
         parser.cli_argument(

@@ -23,6 +23,7 @@ class Command(CommandRunner):
         """Add arguments for server-action_change-ipv6-reverse-nameservers"""
         parser.cli_argument(
             "server_id",
+            type=int,
             description="""The target server id.""",
         )
 

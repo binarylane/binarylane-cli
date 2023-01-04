@@ -25,6 +25,7 @@ class Command(CommandRunner):
         """Add arguments for server-action_password-reset"""
         parser.cli_argument(
             "server_id",
+            type=int,
             description="""The target server id.""",
         )
 

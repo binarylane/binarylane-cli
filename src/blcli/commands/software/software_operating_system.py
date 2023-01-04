@@ -48,6 +48,7 @@ class Command(ListRunner):
         """Add arguments for software_operating-system"""
         parser.cli_argument(
             "operating_system_id_or_slug",
+            type=str,
         )
 
     def request(

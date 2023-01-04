@@ -20,6 +20,7 @@ class Command(CommandRunner):
         """Add arguments for action_get"""
         parser.cli_argument(
             "action_id",
+            type=int,
         )
 
     def request(
