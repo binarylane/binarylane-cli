@@ -13,7 +13,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-vpc-ipv4"
+        return "change-vpc-ipv4"
 
     @property
     def description(self):

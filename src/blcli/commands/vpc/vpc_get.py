@@ -10,7 +10,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "vpc_get"
+        return "get"
 
     @property
     def description(self):

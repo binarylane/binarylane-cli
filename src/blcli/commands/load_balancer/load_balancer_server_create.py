@@ -11,7 +11,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "load-balancer_server_create"
+        return "create"
 
     @property
     def description(self):

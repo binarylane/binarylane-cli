@@ -13,7 +13,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server_ipv6-ptr-ns_update"
+        return "update"
 
     @property
     def description(self):

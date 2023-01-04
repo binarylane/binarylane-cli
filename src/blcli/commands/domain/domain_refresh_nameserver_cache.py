@@ -8,7 +8,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "domain_refresh-nameserver-cache"
+        return "refresh-nameserver-cache"
 
     @property
     def description(self):

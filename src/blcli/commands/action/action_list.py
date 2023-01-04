@@ -54,7 +54,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "action_list"
+        return "list"
 
     @property
     def description(self):

@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-ipv6"
+        return "change-ipv6"
 
     @property
     def description(self):

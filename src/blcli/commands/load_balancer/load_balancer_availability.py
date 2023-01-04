@@ -26,7 +26,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "load-balancer_availability"
+        return "availability"
 
     @property
     def description(self):

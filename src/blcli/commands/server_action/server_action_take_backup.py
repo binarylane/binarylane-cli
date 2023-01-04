@@ -16,7 +16,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_take-backup"
+        return "take-backup"
 
     @property
     def description(self):

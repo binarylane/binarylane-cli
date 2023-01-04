@@ -10,7 +10,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server_failover-ip_get"
+        return "get"
 
     @property
     def description(self):

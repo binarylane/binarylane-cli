@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-partner"
+        return "change-partner"
 
     @property
     def description(self):

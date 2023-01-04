@@ -13,7 +13,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_power-cycle"
+        return "power-cycle"
 
     @property
     def description(self):

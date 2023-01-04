@@ -63,7 +63,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "image_list"
+        return "list"
 
     @property
     def description(self):

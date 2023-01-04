@@ -9,7 +9,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "ssh-key_delete"
+        return "delete"
 
     @property
     def description(self):

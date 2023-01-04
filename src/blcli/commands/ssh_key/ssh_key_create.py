@@ -13,7 +13,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "ssh-key_create"
+        return "create"
 
     @property
     def description(self):

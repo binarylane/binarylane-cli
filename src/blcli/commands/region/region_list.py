@@ -28,7 +28,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "region_list"
+        return "list"
 
     @property
     def description(self):

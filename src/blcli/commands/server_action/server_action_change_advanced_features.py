@@ -18,7 +18,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-advanced-features"
+        return "change-advanced-features"
 
     @property
     def description(self):

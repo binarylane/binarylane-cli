@@ -42,7 +42,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "account_invoice_list"
+        return "list"
 
     @property
     def description(self):

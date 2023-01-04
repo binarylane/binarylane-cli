@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-port-blocking"
+        return "change-port-blocking"
 
     @property
     def description(self):

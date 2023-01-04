@@ -28,7 +28,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "ssh-key_list"
+        return "list"
 
     @property
     def description(self):

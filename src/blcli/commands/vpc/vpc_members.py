@@ -39,7 +39,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "vpc_members"
+        return "members"
 
     @property
     def description(self):

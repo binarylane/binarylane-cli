@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-separate-private-network-interface"
+        return "change-separate-private-network-interface"
 
     @property
     def description(self):

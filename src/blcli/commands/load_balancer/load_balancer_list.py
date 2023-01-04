@@ -57,7 +57,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "load-balancer_list"
+        return "list"
 
     @property
     def description(self):

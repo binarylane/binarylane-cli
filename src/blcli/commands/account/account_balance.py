@@ -9,7 +9,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "account_balance"
+        return "balance"
 
     @property
     def description(self):

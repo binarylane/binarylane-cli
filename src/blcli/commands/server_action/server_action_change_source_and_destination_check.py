@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-source-and-destination-check"
+        return "change-source-and-destination-check"
 
     @property
     def description(self):

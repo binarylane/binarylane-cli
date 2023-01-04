@@ -50,7 +50,7 @@ otherwise not all regions listed will support all operating systems on this size
 
     @property
     def name(self):
-        return "size_list"
+        return "list"
 
     @property
     def description(self):

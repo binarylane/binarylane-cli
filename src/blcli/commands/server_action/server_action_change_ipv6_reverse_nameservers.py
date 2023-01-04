@@ -13,7 +13,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-ipv6-reverse-nameservers"
+        return "change-ipv6-reverse-nameservers"
 
     @property
     def description(self):

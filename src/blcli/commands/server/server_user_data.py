@@ -10,7 +10,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server_user-data"
+        return "user-data"
 
     @property
     def description(self):

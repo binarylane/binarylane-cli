@@ -18,7 +18,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "load-balancer_update"
+        return "update"
 
     @property
     def description(self):

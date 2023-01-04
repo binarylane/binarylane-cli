@@ -23,7 +23,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "server_software"
+        return "software"
 
     @property
     def description(self):

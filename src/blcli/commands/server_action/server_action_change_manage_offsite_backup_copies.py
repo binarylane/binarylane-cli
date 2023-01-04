@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-manage-offsite-backup-copies"
+        return "change-manage-offsite-backup-copies"
 
     @property
     def description(self):

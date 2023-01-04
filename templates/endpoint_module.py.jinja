@@ -70,7 +70,7 @@ class Command(CommandRunner):
 
     @property
     def name(self):
-        return '{{ endpoint.name }}'
+        return '{{ endpoint.name.split('_')[-1] }}'
 
     @property
     def description(self):

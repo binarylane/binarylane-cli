@@ -12,7 +12,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server_tagged-action"
+        return "tagged-action"
 
     @property
     def description(self):

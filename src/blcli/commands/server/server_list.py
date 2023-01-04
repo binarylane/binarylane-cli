@@ -71,7 +71,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "server_list"
+        return "list"
 
     @property
     def description(self):

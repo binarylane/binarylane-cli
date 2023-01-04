@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-reverse-name"
+        return "change-reverse-name"
 
     @property
     def description(self):

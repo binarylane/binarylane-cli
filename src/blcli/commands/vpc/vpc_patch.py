@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "vpc_patch"
+        return "patch"
 
     @property
     def description(self):

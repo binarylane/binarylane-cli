@@ -71,7 +71,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "server_neighbors_get"
+        return "get"
 
     @property
     def description(self):

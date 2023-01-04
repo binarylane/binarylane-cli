@@ -30,7 +30,7 @@ If you have more than one server, please see our data pooling policy: this value
 
     @property
     def name(self):
-        return "server_data-usage_list"
+        return "list"
 
     @property
     def description(self):

@@ -11,7 +11,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server_failover-ip_update"
+        return "update"
 
     @property
     def description(self):

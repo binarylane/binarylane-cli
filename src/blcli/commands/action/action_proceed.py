@@ -11,7 +11,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "action_proceed"
+        return "proceed"
 
     @property
     def description(self):

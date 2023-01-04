@@ -13,7 +13,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_delete-disk"
+        return "delete-disk"
 
     @property
     def description(self):

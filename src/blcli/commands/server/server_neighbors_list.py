@@ -9,7 +9,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server_neighbors_list"
+        return "list"
 
     @property
     def description(self):

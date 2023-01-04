@@ -40,7 +40,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "server_alert_get"
+        return "get"
 
     @property
     def description(self):

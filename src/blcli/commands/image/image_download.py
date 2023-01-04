@@ -10,7 +10,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "image_download"
+        return "download"
 
     @property
     def description(self):

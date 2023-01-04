@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "domain_record_create"
+        return "create"
 
     @property
     def description(self):

@@ -15,7 +15,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server_backup_upload"
+        return "upload"
 
     @property
     def description(self):

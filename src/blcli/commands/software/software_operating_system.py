@@ -38,7 +38,7 @@ class Command(ListRunner):
 
     @property
     def name(self):
-        return "software_operating-system"
+        return "operating-system"
 
     @property
     def description(self):

@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_clone-using-backup"
+        return "clone-using-backup"
 
     @property
     def description(self):

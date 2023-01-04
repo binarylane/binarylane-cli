@@ -14,7 +14,7 @@ from ...runners import CommandRunner
 class Command(CommandRunner):
     @property
     def name(self):
-        return "server-action_change-backup-schedule"
+        return "change-backup-schedule"
 
     @property
     def description(self):
