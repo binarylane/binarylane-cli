@@ -1,13 +1,12 @@
 """ CLI implementation """
 
 import argparse
-import functools
 import importlib
 import os
 import sys
 import typing
 from enum import Enum
-from typing import Any, Callable, Iterable, Optional, Union
+from typing import Any, Iterable, Optional, Union
 
 try:
     # FIXME: Is there a more pythonic way of dealing with this backort ?
@@ -152,49 +151,6 @@ class CommandParser(argparse.ArgumentParser):
         # Place argument in appropriate group:
         group = self._command_require if kwargs.get("required", True) else self._command_options
         return group.add_argument(*args, **kwargs)
-
-
-prog_parser = CommandParser(prog="bl", description="bl is a command-line interface for the BinaryLane API")
-
-AddCommandParser = Callable[..., CommandParser]
-add_command_parser: AddCommandParser = prog_parser.add_subparsers(title="Available Commands", metavar="").add_parser
-
-AddCommand = Callable[[CommandParser], None]
-
-
-def _add_command(
-    add_parser: AddCommandParser, prefix: str, name: str, description: str = None
-) -> Callable[[AddCommand], AddCommand]:
-    def wrap(func: AddCommand) -> AddCommand:
-        command_name = name[len(prefix) + 1 :] if name.startswith(prefix + "_") else name
-
-        command_parser = add_parser(command_name, help=description)
-        handler = func(command_parser)
-        command_parser.set_defaults(func=handler)
-        return func
-
-    return wrap
-
-
-AddGroup = Callable[[str, str], None]
-
-
-def _add_group(
-    add_parser: AddCommandParser, prefix: str, name: str, description: str = None
-) -> Callable[[AddGroup], AddGroup]:
-    def wrap(func: AddGroup) -> AddGroup:
-        command_name = name[len(prefix) + 1 :] if name.startswith(prefix + "_") else name
-
-        group_parser = add_parser(command_name, help=description)
-        group_action = group_parser.add_subparsers(title=f"{name.title()} commands", metavar="").add_parser
-        func.add_group = functools.partial(_add_group, group_action, command_name)  # type: ignore
-        func.add_command = functools.partial(_add_command, group_action, command_name)  # type: ignore
-        return func
-
-    return wrap
-
-
-add_group = functools.partial(_add_group, add_command_parser, "")
 
 
 def get_api_token() -> str:
