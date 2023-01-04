@@ -27,8 +27,7 @@ windows:
     - scripts\make-exe.cmd
     - copy dist\bl.exe .
   only:
-    - branches
-    - merge_requests
+    - main
     - tags
   artifacts:
     paths:
