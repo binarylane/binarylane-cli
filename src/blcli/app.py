@@ -20,7 +20,7 @@ class VersionRunner(Runner):
 
     def run(self, args: List[str]) -> None:
         package = __package__
-        version = self._distribution_version(package) or self._module_version(package) or "dev"
+        version = self._distribution_version("binarylane-cli") or self._module_version(package) or "dev"
 
         print(package, version)
 
