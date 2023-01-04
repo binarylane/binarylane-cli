@@ -17,6 +17,9 @@ except ImportError:
     from .actions import BooleanOptionalAction
 
 
+PRIMITIVE_TPES = {int, str, bool, float}
+
+
 def debug(*args: str) -> None:
     """Wrapper for print() that only produces output when DEBUG is enabled"""
     if os.getenv("DEBUG"):
@@ -135,6 +138,11 @@ class CommandParser(argparse.ArgumentParser):
         # If this is a positional argument, give it an uppercase metavar
         if args[0][0] not in self.prefix_chars and not kwargs.get("metavar"):
             kwargs["metavar"] = args[0].upper()
+
+        # Check we haven't ended up with Request object
+        if kwargs["type"] not in PRIMITIVE_TPES:
+            warn(f"unsupported {self.prog} {dest} type={_type}")
+            return None
 
         # Place argument in appropriate group:
         group = self._command_require if kwargs.get("required", True) else self._command_options
