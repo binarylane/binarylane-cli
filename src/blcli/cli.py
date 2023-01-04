@@ -69,13 +69,19 @@ class CommandParser(argparse.ArgumentParser):
     # pylint: disable=too-many-branches
     def cli_argument(self, *args: str, **kwargs: Any) -> Optional[argparse.Action]:
         """Add CLI argument to parser"""
+
+        dest = kwargs.get("dest", "?")
+
         if "description" in kwargs:
             kwargs["help"] = kwargs["description"]
             del kwargs["description"]
 
+        if kwargs.get("help") in {None, str(None)}:
+            warn(f"{self.prog} - missing help for {dest}")
+
         _type = kwargs.get("type")
         if _type is None:
-            warn(f"cli_argument {args} does not have a type")
+            warn(f"{self.prog} - missing type for {dest}")
             return self.add_argument(*args, **kwargs)
 
         dest = kwargs.get("dest", "?")
@@ -108,7 +114,7 @@ class CommandParser(argparse.ArgumentParser):
             inner_type = typing.get_args(_type)[0]
 
             if inner_type not in (int, str):
-                warn(f"unsupported type {self.prog} {dest} type={_type} inner_type={inner_type}")
+                warn(f"{self.prog} - unsupported list type for {dest}: type={_type} inner_type={inner_type}")
                 return None
 
             _type = inner_type
@@ -117,7 +123,7 @@ class CommandParser(argparse.ArgumentParser):
 
         # Check we have handled all generic types:
         if typing.get_origin(_type):
-            warn(f"unsupported {self.prog} {dest} type={_type}")
+            warn(f"{self.prog} - unsupported generic type {dest}: type={_type}")
             return None
 
         kwargs["type"] = _type
@@ -136,7 +142,7 @@ class CommandParser(argparse.ArgumentParser):
 
         # Check we haven't ended up with Request object
         elif kwargs["type"] not in PRIMITIVE_TYPES:
-            warn(f"unsupported {self.prog} {dest} type={_type}")
+            warn(f"{self.prog} - unsupported type for {dest}: type={_type}")
             return None
 
         # If this is a positional argument, give it an uppercase metavar
