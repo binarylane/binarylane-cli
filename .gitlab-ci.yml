@@ -8,6 +8,7 @@ pre-commit:
   tags:
     - python
   script:
+    - poetry install
     - pre-commit run --all-files
   variables:
     PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
