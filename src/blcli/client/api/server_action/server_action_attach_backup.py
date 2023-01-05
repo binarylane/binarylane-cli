@@ -89,7 +89,7 @@ def sync_detailed(
     server from an ISO image.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (AttachBackup): Attach a Backup to a Server
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     server from an ISO image.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (AttachBackup): Attach a Backup to a Server
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     server from an ISO image.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (AttachBackup): Attach a Backup to a Server
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     server from an ISO image.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (AttachBackup): Attach a Backup to a Server
 
     Raises:

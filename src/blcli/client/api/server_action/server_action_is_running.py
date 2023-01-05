@@ -89,7 +89,7 @@ def sync_detailed(
     server may be running but be unresponsive, rebooting etc.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (IsRunning): Check if a Server is Running
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     server may be running but be unresponsive, rebooting etc.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (IsRunning): Check if a Server is Running
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     server may be running but be unresponsive, rebooting etc.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (IsRunning): Check if a Server is Running
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     server may be running but be unresponsive, rebooting etc.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (IsRunning): Check if a Server is Running
 
     Raises:

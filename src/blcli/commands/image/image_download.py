@@ -21,6 +21,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "image_id",
             type=int,
+            description="""The ID of the image to download.""",
         )
 
     def request(

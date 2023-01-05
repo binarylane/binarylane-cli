@@ -50,8 +50,6 @@ class LoadBalancer:
         enable_backend_keepalive (bool): Whether to use HTTP keepalive connections to servers in the load balancer pool.
             This is not currently supported.
         region (Union[Unset, None, Region]):
-        tag (Union[Unset, None, str]): Adding servers by tag is currently not supported and this value will always be
-            null.
         vpc_id (Union[Unset, None, int]): The VPC ID of the VPC the load balancer is assigned to. This is not currently
             supported: all load balancers are either in the default (public) network for the region or are 'AnyCast' load
             balancers.
@@ -71,7 +69,6 @@ class LoadBalancer:
     enable_proxy_protocol: bool
     enable_backend_keepalive: bool
     region: Union[Unset, None, Region] = UNSET
-    tag: Union[Unset, None, str] = UNSET
     vpc_id: Union[Unset, None, int] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
@@ -104,7 +101,6 @@ class LoadBalancer:
         if not isinstance(self.region, Unset):
             region = self.region.to_dict() if self.region else None
 
-        tag = self.tag
         vpc_id = self.vpc_id
 
         field_dict: Dict[str, Any] = {}
@@ -128,8 +124,6 @@ class LoadBalancer:
         )
         if region is not UNSET:
             field_dict["region"] = region
-        if tag is not UNSET:
-            field_dict["tag"] = tag
         if vpc_id is not UNSET:
             field_dict["vpc_id"] = vpc_id
 
@@ -178,8 +172,6 @@ class LoadBalancer:
         else:
             region = Region.from_dict(_region)
 
-        tag = d.pop("tag", UNSET)
-
         vpc_id = d.pop("vpc_id", UNSET)
 
         load_balancer = cls(
@@ -197,7 +189,6 @@ class LoadBalancer:
             enable_proxy_protocol=enable_proxy_protocol,
             enable_backend_keepalive=enable_backend_keepalive,
             region=region,
-            tag=tag,
             vpc_id=vpc_id,
         )
 

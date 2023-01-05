@@ -68,7 +68,7 @@ def sync_detailed(
     """Respond to a UserInteractionRequired Action
 
     Args:
-        action_id (int):
+        action_id (int): The ID of the action for which this is a response.
         json_body (ProceedRequest):
 
     Raises:
@@ -102,7 +102,7 @@ def sync(
     """Respond to a UserInteractionRequired Action
 
     Args:
-        action_id (int):
+        action_id (int): The ID of the action for which this is a response.
         json_body (ProceedRequest):
 
     Raises:
@@ -129,7 +129,7 @@ async def asyncio_detailed(
     """Respond to a UserInteractionRequired Action
 
     Args:
-        action_id (int):
+        action_id (int): The ID of the action for which this is a response.
         json_body (ProceedRequest):
 
     Raises:
@@ -161,7 +161,7 @@ async def asyncio(
     """Respond to a UserInteractionRequired Action
 
     Args:
-        action_id (int):
+        action_id (int): The ID of the action for which this is a response.
         json_body (ProceedRequest):
 
     Raises:

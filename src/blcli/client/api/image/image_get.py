@@ -64,7 +64,7 @@ def sync_detailed(
     """Fetch an Existing Image
 
     Args:
-        image_id_or_slug (str):
+        image_id_or_slug (str): The ID or Slug (if an operating system) of the image to retrieve.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -95,7 +95,7 @@ def sync(
     """Fetch an Existing Image
 
     Args:
-        image_id_or_slug (str):
+        image_id_or_slug (str): The ID or Slug (if an operating system) of the image to retrieve.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -119,7 +119,7 @@ async def asyncio_detailed(
     """Fetch an Existing Image
 
     Args:
-        image_id_or_slug (str):
+        image_id_or_slug (str): The ID or Slug (if an operating system) of the image to retrieve.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -148,7 +148,7 @@ async def asyncio(
     """Fetch an Existing Image
 
     Args:
-        image_id_or_slug (str):
+        image_id_or_slug (str): The ID or Slug (if an operating system) of the image to retrieve.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

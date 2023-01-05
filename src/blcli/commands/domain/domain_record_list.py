@@ -60,6 +60,7 @@ class Command(ListRunner):
         parser.cli_argument(
             "domain_name",
             type=str,
+            description="""The domain name for which records should be listed.""",
         )
 
         parser.cli_argument(

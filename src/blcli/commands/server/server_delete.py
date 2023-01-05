@@ -21,7 +21,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "server_id",
             type=int,
-            description="""The target server id.""",
+            description="""The ID of the server to be cancelled.""",
         )
 
         parser.cli_argument(

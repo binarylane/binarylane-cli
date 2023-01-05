@@ -88,7 +88,7 @@ def sync_detailed(
      This is used to change the private IPv4 address for a server in a VPC.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeVpcIpv4): Change the IPv4 Address for a Server in a VPC
 
     Raises:
@@ -124,7 +124,7 @@ def sync(
      This is used to change the private IPv4 address for a server in a VPC.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeVpcIpv4): Change the IPv4 Address for a Server in a VPC
 
     Raises:
@@ -153,7 +153,7 @@ async def asyncio_detailed(
      This is used to change the private IPv4 address for a server in a VPC.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeVpcIpv4): Change the IPv4 Address for a Server in a VPC
 
     Raises:
@@ -187,7 +187,7 @@ async def asyncio(
      This is used to change the private IPv4 address for a server in a VPC.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeVpcIpv4): Change the IPv4 Address for a Server in a VPC
 
     Raises:

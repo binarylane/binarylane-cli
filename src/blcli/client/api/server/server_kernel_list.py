@@ -82,7 +82,7 @@ def sync_detailed(
      Only servers based on one of our Linux distribution images may change kernels.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which kernels should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -121,7 +121,7 @@ def sync(
      Only servers based on one of our Linux distribution images may change kernels.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which kernels should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -153,7 +153,7 @@ async def asyncio_detailed(
      Only servers based on one of our Linux distribution images may change kernels.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which kernels should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -190,7 +190,7 @@ async def asyncio(
      Only servers based on one of our Linux distribution images may change kernels.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which kernels should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 

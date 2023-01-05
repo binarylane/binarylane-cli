@@ -68,7 +68,7 @@ def sync_detailed(
     """List All Servers That Share a Host with a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which neighbours should be listed.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -99,7 +99,7 @@ def sync(
     """List All Servers That Share a Host with a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which neighbours should be listed.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -123,7 +123,7 @@ async def asyncio_detailed(
     """List All Servers That Share a Host with a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which neighbours should be listed.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -152,7 +152,7 @@ async def asyncio(
     """List All Servers That Share a Host with a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which neighbours should be listed.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

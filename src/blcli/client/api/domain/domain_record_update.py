@@ -83,8 +83,8 @@ def sync_detailed(
     """Update an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be updated.
+        record_id (int): The ID of the record to update.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -122,8 +122,8 @@ def sync(
     """Update an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be updated.
+        record_id (int): The ID of the record to update.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -154,8 +154,8 @@ async def asyncio_detailed(
     """Update an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be updated.
+        record_id (int): The ID of the record to update.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -191,8 +191,8 @@ async def asyncio(
     """Update an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be updated.
+        record_id (int): The ID of the record to update.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.

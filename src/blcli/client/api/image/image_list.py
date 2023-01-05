@@ -16,7 +16,6 @@ def _get_kwargs(
     client: Client,
     type: Union[Unset, None, ImageQueryType] = UNSET,
     private: Union[Unset, None, bool] = UNSET,
-    tag_name: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Dict[str, Any]:
@@ -33,8 +32,6 @@ def _get_kwargs(
     params["type"] = json_type
 
     params["private"] = private
-
-    params["tag_name"] = tag_name
 
     params["page"] = page
 
@@ -88,7 +85,6 @@ def sync_detailed(
     client: Client,
     type: Union[Unset, None, ImageQueryType] = UNSET,
     private: Union[Unset, None, bool] = UNSET,
-    tag_name: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Response[Union[Any, ImagesResponse, ValidationProblemDetails]]:
@@ -104,8 +100,8 @@ def sync_detailed(
             are listed under 'distribution'. |
             | backup | A backup image of a server. |
 
-        private (Union[Unset, None, bool]):
-        tag_name (Union[Unset, None, str]):
+        private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
+            has no effect.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -121,7 +117,6 @@ def sync_detailed(
         client=client,
         type=type,
         private=private,
-        tag_name=tag_name,
         page=page,
         per_page=per_page,
     )
@@ -139,7 +134,6 @@ def sync(
     client: Client,
     type: Union[Unset, None, ImageQueryType] = UNSET,
     private: Union[Unset, None, bool] = UNSET,
-    tag_name: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Optional[Union[Any, ImagesResponse, ValidationProblemDetails]]:
@@ -155,8 +149,8 @@ def sync(
             are listed under 'distribution'. |
             | backup | A backup image of a server. |
 
-        private (Union[Unset, None, bool]):
-        tag_name (Union[Unset, None, str]):
+        private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
+            has no effect.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -172,7 +166,6 @@ def sync(
         client=client,
         type=type,
         private=private,
-        tag_name=tag_name,
         page=page,
         per_page=per_page,
     ).parsed
@@ -183,7 +176,6 @@ async def asyncio_detailed(
     client: Client,
     type: Union[Unset, None, ImageQueryType] = UNSET,
     private: Union[Unset, None, bool] = UNSET,
-    tag_name: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Response[Union[Any, ImagesResponse, ValidationProblemDetails]]:
@@ -199,8 +191,8 @@ async def asyncio_detailed(
             are listed under 'distribution'. |
             | backup | A backup image of a server. |
 
-        private (Union[Unset, None, bool]):
-        tag_name (Union[Unset, None, str]):
+        private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
+            has no effect.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -216,7 +208,6 @@ async def asyncio_detailed(
         client=client,
         type=type,
         private=private,
-        tag_name=tag_name,
         page=page,
         per_page=per_page,
     )
@@ -232,7 +223,6 @@ async def asyncio(
     client: Client,
     type: Union[Unset, None, ImageQueryType] = UNSET,
     private: Union[Unset, None, bool] = UNSET,
-    tag_name: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Optional[Union[Any, ImagesResponse, ValidationProblemDetails]]:
@@ -248,8 +238,8 @@ async def asyncio(
             are listed under 'distribution'. |
             | backup | A backup image of a server. |
 
-        private (Union[Unset, None, bool]):
-        tag_name (Union[Unset, None, str]):
+        private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
+            has no effect.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -266,7 +256,6 @@ async def asyncio(
             client=client,
             type=type,
             private=private,
-            tag_name=tag_name,
             page=page,
             per_page=per_page,
         )

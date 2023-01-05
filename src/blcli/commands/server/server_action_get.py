@@ -21,11 +21,12 @@ class Command(CommandRunner):
         parser.cli_argument(
             "server_id",
             type=int,
-            description="""The target server id.""",
+            description="""The ID of the server for which the action should be fetched.""",
         )
         parser.cli_argument(
             "action_id",
             type=int,
+            description="""The ID of the action to fetch.""",
         )
 
     def request(

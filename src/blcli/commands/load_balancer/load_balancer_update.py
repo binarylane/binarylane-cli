@@ -29,6 +29,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "load_balancer_id",
             type=int,
+            description="""The ID of the load balancer to update.""",
         )
 
         parser.cli_argument(
@@ -109,15 +110,7 @@ class Command(CommandRunner):
             dest="server_ids",
             type=Union[Unset, None, List[int]],
             required=False,
-            description="""A list of server IDs to assign to this load balancer. This is mutually exclusive with 'tag'.""",
-        )
-
-        parser.cli_argument(
-            "--tag",
-            dest="tag",
-            type=Union[Unset, None, str],
-            required=False,
-            description="""Tags are not currently supported and attempting to add servers by tag will add no servers. This is mutually exclusive with 'server_ids'.""",
+            description="""A list of server IDs to assign to this load balancer.""",
         )
 
     def request(
@@ -133,7 +126,6 @@ class Command(CommandRunner):
         enable_proxy_protocol: Union[Unset, None, bool] = UNSET,
         enable_backend_keepalive: Union[Unset, None, bool] = UNSET,
         server_ids: Union[Unset, None, List[int]] = UNSET,
-        tag: Union[Unset, None, str] = UNSET,
     ) -> Union[Any, ProblemDetails, UpdateLoadBalancerResponse, ValidationProblemDetails]:
 
         return sync_detailed(
@@ -149,6 +141,5 @@ class Command(CommandRunner):
                 enable_proxy_protocol=enable_proxy_protocol,
                 enable_backend_keepalive=enable_backend_keepalive,
                 server_ids=server_ids,
-                tag=tag,
             ),
         ).parsed

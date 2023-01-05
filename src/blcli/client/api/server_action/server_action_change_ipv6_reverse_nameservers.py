@@ -88,7 +88,7 @@ def sync_detailed(
      This is used to alter the IPv6 reverse name servers for this server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeIpv6ReverseNameservers): Update the IPv6 Reverse Name Servers for a
             Server
 
@@ -125,7 +125,7 @@ def sync(
      This is used to alter the IPv6 reverse name servers for this server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeIpv6ReverseNameservers): Update the IPv6 Reverse Name Servers for a
             Server
 
@@ -155,7 +155,7 @@ async def asyncio_detailed(
      This is used to alter the IPv6 reverse name servers for this server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeIpv6ReverseNameservers): Update the IPv6 Reverse Name Servers for a
             Server
 
@@ -190,7 +190,7 @@ async def asyncio(
      This is used to alter the IPv6 reverse name servers for this server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeIpv6ReverseNameservers): Update the IPv6 Reverse Name Servers for a
             Server
 

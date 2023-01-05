@@ -91,7 +91,7 @@ def sync_detailed(
     complete if offsite backups have been selected and a custom offsite location is used.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeManageOffsiteBackupCopies): Change the Management of Offsite Backup
             Copies
 
@@ -129,7 +129,7 @@ def sync(
     complete if offsite backups have been selected and a custom offsite location is used.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeManageOffsiteBackupCopies): Change the Management of Offsite Backup
             Copies
 
@@ -160,7 +160,7 @@ async def asyncio_detailed(
     complete if offsite backups have been selected and a custom offsite location is used.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeManageOffsiteBackupCopies): Change the Management of Offsite Backup
             Copies
 
@@ -196,7 +196,7 @@ async def asyncio(
     complete if offsite backups have been selected and a custom offsite location is used.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeManageOffsiteBackupCopies): Change the Management of Offsite Backup
             Copies
 

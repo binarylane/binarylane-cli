@@ -39,7 +39,6 @@ class Command(ListRunner):
             "regions": """The slugs of the regions where the image is available for use.""",
             "min_disk_size": """For a distribution image this is the minimum disk size in GB required to install the operating system. For a backup image this is the minimum total disk size in GB required to restore the backup.""",
             "size_gigabytes": """For a distribution image this is the disk size used in GB by the operating system on initial install. For a backup image this is the size of the compressed backup image in GB.""",
-            "tags": """Tags are not currently supported and this will always be an empty array.""",
             "status": """
 | Value | Description |
 | ----- | ----------- |
@@ -91,14 +90,7 @@ class Command(ListRunner):
             dest="private",
             type=Union[Unset, None, bool],
             required=False,
-            description="""None""",
-        )
-        parser.cli_argument(
-            "--tag-name",
-            dest="tag_name",
-            type=Union[Unset, None, str],
-            required=False,
-            description="""None""",
+            description="""Provide 'true' to only list private images. 'false' has no effect.""",
         )
 
     def request(
@@ -106,7 +98,6 @@ class Command(ListRunner):
         client: Client,
         type: Union[Unset, None, ImageQueryType] = UNSET,
         private: Union[Unset, None, bool] = UNSET,
-        tag_name: Union[Unset, None, str] = UNSET,
     ) -> Union[Any, ImagesResponse, ValidationProblemDetails]:
 
         page = 0
@@ -120,7 +111,6 @@ class Command(ListRunner):
                 client=client,
                 type=type,
                 private=private,
-                tag_name=tag_name,
                 page=page,
                 per_page=per_page,
             )

@@ -33,10 +33,7 @@ class UpdateLoadBalancerRequest:
             currently supported.
         enable_backend_keepalive (Union[Unset, None, bool]): Use HTTP keepalive connections to servers in the load
             balancer pool. This is not currently supported.
-        server_ids (Union[Unset, None, List[int]]): A list of server IDs to assign to this load balancer. This is
-            mutually exclusive with 'tag'.
-        tag (Union[Unset, None, str]): Tags are not currently supported and attempting to add servers by tag will add no
-            servers. This is mutually exclusive with 'server_ids'.
+        server_ids (Union[Unset, None, List[int]]): A list of server IDs to assign to this load balancer.
     """
 
     name: str
@@ -48,7 +45,6 @@ class UpdateLoadBalancerRequest:
     enable_proxy_protocol: Union[Unset, None, bool] = UNSET
     enable_backend_keepalive: Union[Unset, None, bool] = UNSET
     server_ids: Union[Unset, None, List[int]] = UNSET
-    tag: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -86,8 +82,6 @@ class UpdateLoadBalancerRequest:
             else:
                 server_ids = self.server_ids
 
-        tag = self.tag
-
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
@@ -111,8 +105,6 @@ class UpdateLoadBalancerRequest:
             field_dict["enable_backend_keepalive"] = enable_backend_keepalive
         if server_ids is not UNSET:
             field_dict["server_ids"] = server_ids
-        if tag is not UNSET:
-            field_dict["tag"] = tag
 
         return field_dict
 
@@ -163,8 +155,6 @@ class UpdateLoadBalancerRequest:
 
         server_ids = cast(List[int], d.pop("server_ids", UNSET))
 
-        tag = d.pop("tag", UNSET)
-
         update_load_balancer_request = cls(
             name=name,
             algorithm=algorithm,
@@ -175,7 +165,6 @@ class UpdateLoadBalancerRequest:
             enable_proxy_protocol=enable_proxy_protocol,
             enable_backend_keepalive=enable_backend_keepalive,
             server_ids=server_ids,
-            tag=tag,
         )
 
         update_load_balancer_request.additional_properties = d

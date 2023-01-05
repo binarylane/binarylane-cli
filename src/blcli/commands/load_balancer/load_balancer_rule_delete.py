@@ -23,6 +23,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "load_balancer_id",
             type=int,
+            description="""The ID of the load balancer for which forwarding rules should be removed.""",
         )
 
         parser.cli_argument(

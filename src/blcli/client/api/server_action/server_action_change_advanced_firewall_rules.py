@@ -88,7 +88,7 @@ def sync_detailed(
      This is used to configure the external firewall. Please see our documentation for more information.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeAdvancedFirewallRules): Change the Advanced Firewall Rules for a Server
 
     Raises:
@@ -124,7 +124,7 @@ def sync(
      This is used to configure the external firewall. Please see our documentation for more information.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeAdvancedFirewallRules): Change the Advanced Firewall Rules for a Server
 
     Raises:
@@ -153,7 +153,7 @@ async def asyncio_detailed(
      This is used to configure the external firewall. Please see our documentation for more information.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeAdvancedFirewallRules): Change the Advanced Firewall Rules for a Server
 
     Raises:
@@ -187,7 +187,7 @@ async def asyncio(
      This is used to configure the external firewall. Please see our documentation for more information.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeAdvancedFirewallRules): Change the Advanced Firewall Rules for a Server
 
     Raises:

@@ -64,7 +64,7 @@ def sync_detailed(
     """Fetch the Currently Set UserData for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which userdata should be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -95,7 +95,7 @@ def sync(
     """Fetch the Currently Set UserData for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which userdata should be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -119,7 +119,7 @@ async def asyncio_detailed(
     """Fetch the Currently Set UserData for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which userdata should be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -148,7 +148,7 @@ async def asyncio(
     """Fetch the Currently Set UserData for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which userdata should be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

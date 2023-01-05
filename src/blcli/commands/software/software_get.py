@@ -21,6 +21,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "software_id",
             type=str,
+            description="""The ID of the software to fetch.""",
         )
 
     def request(

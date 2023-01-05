@@ -25,6 +25,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "domain_name",
             type=str,
+            description="""The domain name for which the record should be created.""",
         )
 
         parser.cli_argument(

@@ -81,7 +81,7 @@ def sync_detailed(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str):
+        key_id (str): The ID or fingerprint of the SSH Key to update.
         json_body (UpdateSshKeyRequest):
 
     Raises:
@@ -117,7 +117,7 @@ def sync(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str):
+        key_id (str): The ID or fingerprint of the SSH Key to update.
         json_body (UpdateSshKeyRequest):
 
     Raises:
@@ -146,7 +146,7 @@ async def asyncio_detailed(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str):
+        key_id (str): The ID or fingerprint of the SSH Key to update.
         json_body (UpdateSshKeyRequest):
 
     Raises:
@@ -180,7 +180,7 @@ async def asyncio(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str):
+        key_id (str): The ID or fingerprint of the SSH Key to update.
         json_body (UpdateSshKeyRequest):
 
     Raises:

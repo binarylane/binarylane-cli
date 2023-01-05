@@ -339,7 +339,7 @@ def sync_detailed(
     endpoint for the response.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Union['AddDisk', 'AttachBackup', 'ChangeAdvancedFeatures',
             'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
             'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
@@ -430,7 +430,7 @@ def sync(
     endpoint for the response.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Union['AddDisk', 'AttachBackup', 'ChangeAdvancedFeatures',
             'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
             'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
@@ -514,7 +514,7 @@ async def asyncio_detailed(
     endpoint for the response.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Union['AddDisk', 'AttachBackup', 'ChangeAdvancedFeatures',
             'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
             'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
@@ -603,7 +603,7 @@ async def asyncio(
     endpoint for the response.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Union['AddDisk', 'AttachBackup', 'ChangeAdvancedFeatures',
             'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
             'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',

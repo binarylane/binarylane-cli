@@ -89,7 +89,7 @@ def sync_detailed(
     cancellation is possible.**
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Uncancel): Revert the Cancellation of a Server
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     cancellation is possible.**
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Uncancel): Revert the Cancellation of a Server
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     cancellation is possible.**
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Uncancel): Revert the Cancellation of a Server
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     cancellation is possible.**
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Uncancel): Revert the Cancellation of a Server
 
     Raises:

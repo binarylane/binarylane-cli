@@ -79,7 +79,7 @@ def sync_detailed(
     """Create a New Domain Record
 
     Args:
-        domain_name (str):
+        domain_name (str): The domain name for which the record should be created.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -115,7 +115,7 @@ def sync(
     """Create a New Domain Record
 
     Args:
-        domain_name (str):
+        domain_name (str): The domain name for which the record should be created.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -144,7 +144,7 @@ async def asyncio_detailed(
     """Create a New Domain Record
 
     Args:
-        domain_name (str):
+        domain_name (str): The domain name for which the record should be created.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -178,7 +178,7 @@ async def asyncio(
     """Create a New Domain Record
 
     Args:
-        domain_name (str):
+        domain_name (str): The domain name for which the record should be created.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.

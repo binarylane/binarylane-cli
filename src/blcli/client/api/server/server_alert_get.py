@@ -70,7 +70,7 @@ def sync_detailed(
      Includes the current values for the most recent threshold alert period.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which threshold alerts should be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -103,7 +103,7 @@ def sync(
      Includes the current values for the most recent threshold alert period.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which threshold alerts should be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -129,7 +129,7 @@ async def asyncio_detailed(
      Includes the current values for the most recent threshold alert period.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which threshold alerts should be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -160,7 +160,7 @@ async def asyncio(
      Includes the current values for the most recent threshold alert period.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which threshold alerts should be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

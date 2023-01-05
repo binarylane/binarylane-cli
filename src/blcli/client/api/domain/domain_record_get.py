@@ -72,8 +72,8 @@ def sync_detailed(
     """Fetch an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be fetched.
+        record_id (int): The ID of the record to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -106,8 +106,8 @@ def sync(
     """Fetch an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be fetched.
+        record_id (int): The ID of the record to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -133,8 +133,8 @@ async def asyncio_detailed(
     """Fetch an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be fetched.
+        record_id (int): The ID of the record to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -165,8 +165,8 @@ async def asyncio(
     """Fetch an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be fetched.
+        record_id (int): The ID of the record to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

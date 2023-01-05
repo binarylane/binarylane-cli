@@ -21,6 +21,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "action_id",
             type=int,
+            description="""The ID of the action to fetch.""",
         )
 
     def request(

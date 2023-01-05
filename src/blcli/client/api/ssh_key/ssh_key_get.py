@@ -70,7 +70,7 @@ def sync_detailed(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str):
+        key_id (str): The ID or fingerprint of the SSH Key to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -103,7 +103,7 @@ def sync(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str):
+        key_id (str): The ID or fingerprint of the SSH Key to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -129,7 +129,7 @@ async def asyncio_detailed(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str):
+        key_id (str): The ID or fingerprint of the SSH Key to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -160,7 +160,7 @@ async def asyncio(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str):
+        key_id (str): The ID or fingerprint of the SSH Key to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

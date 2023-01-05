@@ -79,7 +79,8 @@ def sync_detailed(
     """Add Forwarding Rules to an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to which forwarding rules should be
+            added.
         json_body (ForwardingRulesRequest):
 
     Raises:
@@ -113,7 +114,8 @@ def sync(
     """Add Forwarding Rules to an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to which forwarding rules should be
+            added.
         json_body (ForwardingRulesRequest):
 
     Raises:
@@ -140,7 +142,8 @@ async def asyncio_detailed(
     """Add Forwarding Rules to an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to which forwarding rules should be
+            added.
         json_body (ForwardingRulesRequest):
 
     Raises:
@@ -172,7 +175,8 @@ async def asyncio(
     """Add Forwarding Rules to an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to which forwarding rules should be
+            added.
         json_body (ForwardingRulesRequest):
 
     Raises:

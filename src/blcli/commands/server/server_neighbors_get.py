@@ -50,7 +50,6 @@ class Command(ListRunner):
             "size": """""",
             "size_slug": """The slug of the currently selected size for this server.""",
             "networks": """""",
-            "tags": """Tags are not currently supported and this will always be an empty array.""",
             "volume_ids": """Volumes are not currently supported and this will always be an empty array.""",
             "disks": """A list of the disks that are currently attached to the server.""",
             "backup_settings": """""",
@@ -82,7 +81,7 @@ class Command(ListRunner):
         parser.cli_argument(
             "server_id",
             type=int,
-            description="""The target server id.""",
+            description="""The ID of the server for which neighbours should be listed.""",
         )
 
     def request(

@@ -68,7 +68,7 @@ def sync_detailed(
     """Fetch an Existing Domain
 
     Args:
-        domain_name (str):
+        domain_name (str): The name of the domain to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -99,7 +99,7 @@ def sync(
     """Fetch an Existing Domain
 
     Args:
-        domain_name (str):
+        domain_name (str): The name of the domain to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -123,7 +123,7 @@ async def asyncio_detailed(
     """Fetch an Existing Domain
 
     Args:
-        domain_name (str):
+        domain_name (str): The name of the domain to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -152,7 +152,7 @@ async def asyncio(
     """Fetch an Existing Domain
 
     Args:
-        domain_name (str):
+        domain_name (str): The name of the domain to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

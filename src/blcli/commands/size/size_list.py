@@ -64,14 +64,14 @@ otherwise not all regions listed will support all operating systems on this size
             dest="server_id",
             type=Union[Unset, None, int],
             required=False,
-            description="""None""",
+            description="""If supplied only sizes available for a resize the specified server will be returned. This parameter is only available when authenticated.""",
         )
         parser.cli_argument(
             "--image",
             dest="image",
             type=Union[Unset, None, str],
             required=False,
-            description="""None""",
+            description="""If null or not provided regions that support the size are included in the returned objects regardless of operating system. If this is provided it must be the id or slug of an operating system image and will cause only valid regions for the size and operating system to be included in the returned objects.""",
         )
 
     def request(

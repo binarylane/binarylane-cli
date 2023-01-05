@@ -89,7 +89,7 @@ def sync_detailed(
     public interface, so it may be blocked by your firewall settings etc.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Ping): Attempt to Ping a Server
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     public interface, so it may be blocked by your firewall settings etc.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Ping): Attempt to Ping a Server
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     public interface, so it may be blocked by your firewall settings etc.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Ping): Attempt to Ping a Server
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     public interface, so it may be blocked by your firewall settings etc.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Ping): Attempt to Ping a Server
 
     Raises:

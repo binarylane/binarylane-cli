@@ -89,7 +89,7 @@ def sync_detailed(
     your behalf) then SELinux may be preventing your system from working correctly.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (DisableSelinux): Disable SE Linux for a Server
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     your behalf) then SELinux may be preventing your system from working correctly.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (DisableSelinux): Disable SE Linux for a Server
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     your behalf) then SELinux may be preventing your system from working correctly.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (DisableSelinux): Disable SE Linux for a Server
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     your behalf) then SELinux may be preventing your system from working correctly.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (DisableSelinux): Disable SE Linux for a Server
 
     Raises:

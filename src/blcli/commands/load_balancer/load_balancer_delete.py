@@ -20,6 +20,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "load_balancer_id",
             type=int,
+            description="""The ID of the load balancer to cancel.""",
         )
 
     def request(

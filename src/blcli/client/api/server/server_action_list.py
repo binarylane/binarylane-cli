@@ -80,7 +80,7 @@ def sync_detailed(
     """List All Actions for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which actions should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -117,7 +117,7 @@ def sync(
     """List All Actions for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which actions should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -147,7 +147,7 @@ async def asyncio_detailed(
     """List All Actions for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which actions should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -182,7 +182,7 @@ async def asyncio(
     """List All Actions for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which actions should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 

@@ -93,7 +93,7 @@ def sync_detailed(
 
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Resize): Update the Size and Related Options for a Server
 
     Raises:
@@ -134,7 +134,7 @@ def sync(
 
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Resize): Update the Size and Related Options for a Server
 
     Raises:
@@ -168,7 +168,7 @@ async def asyncio_detailed(
 
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Resize): Update the Size and Related Options for a Server
 
     Raises:
@@ -207,7 +207,7 @@ async def asyncio(
 
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Resize): Update the Size and Related Options for a Server
 
     Raises:

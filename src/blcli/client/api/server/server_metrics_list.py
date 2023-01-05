@@ -122,8 +122,13 @@ def sync_detailed(
             | week | 7 Days |
             | month | 1 Month |
 
-        start (Union[Unset, None, datetime.datetime]):
-        end (Union[Unset, None, datetime.datetime]):
+        start (Union[Unset, None, datetime.datetime]): The start of the window of samples to
+            retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week before end for
+            intervals larger than 5 minutes, or 1 day for 5 minute intervals.
+        end (Union[Unset, None, datetime.datetime]): The start of the window of samples to
+            retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week or 1 day after
+            start date depending on the selected data interval (or the current time if start is not
+            provided). Can't be more than 1 year from start.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -177,8 +182,13 @@ def sync(
             | week | 7 Days |
             | month | 1 Month |
 
-        start (Union[Unset, None, datetime.datetime]):
-        end (Union[Unset, None, datetime.datetime]):
+        start (Union[Unset, None, datetime.datetime]): The start of the window of samples to
+            retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week before end for
+            intervals larger than 5 minutes, or 1 day for 5 minute intervals.
+        end (Union[Unset, None, datetime.datetime]): The start of the window of samples to
+            retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week or 1 day after
+            start date depending on the selected data interval (or the current time if start is not
+            provided). Can't be more than 1 year from start.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -225,8 +235,13 @@ async def asyncio_detailed(
             | week | 7 Days |
             | month | 1 Month |
 
-        start (Union[Unset, None, datetime.datetime]):
-        end (Union[Unset, None, datetime.datetime]):
+        start (Union[Unset, None, datetime.datetime]): The start of the window of samples to
+            retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week before end for
+            intervals larger than 5 minutes, or 1 day for 5 minute intervals.
+        end (Union[Unset, None, datetime.datetime]): The start of the window of samples to
+            retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week or 1 day after
+            start date depending on the selected data interval (or the current time if start is not
+            provided). Can't be more than 1 year from start.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -278,8 +293,13 @@ async def asyncio(
             | week | 7 Days |
             | month | 1 Month |
 
-        start (Union[Unset, None, datetime.datetime]):
-        end (Union[Unset, None, datetime.datetime]):
+        start (Union[Unset, None, datetime.datetime]): The start of the window of samples to
+            retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week before end for
+            intervals larger than 5 minutes, or 1 day for 5 minute intervals.
+        end (Union[Unset, None, datetime.datetime]): The start of the window of samples to
+            retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week or 1 day after
+            start date depending on the selected data interval (or the current time if start is not
+            provided). Can't be more than 1 year from start.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 

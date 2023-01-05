@@ -88,7 +88,7 @@ def sync_detailed(
      This is used to enable or disable IPv6 networking support for this server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeIpv6): Enable or Disable IPv6 for a Server
 
     Raises:
@@ -124,7 +124,7 @@ def sync(
      This is used to enable or disable IPv6 networking support for this server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeIpv6): Enable or Disable IPv6 for a Server
 
     Raises:
@@ -153,7 +153,7 @@ async def asyncio_detailed(
      This is used to enable or disable IPv6 networking support for this server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeIpv6): Enable or Disable IPv6 for a Server
 
     Raises:
@@ -187,7 +187,7 @@ async def asyncio(
      This is used to enable or disable IPv6 networking support for this server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeIpv6): Enable or Disable IPv6 for a Server
 
     Raises:

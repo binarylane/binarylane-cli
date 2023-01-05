@@ -70,7 +70,7 @@ def sync_detailed(
     """Cancel an Existing Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server to be cancelled.
         reason (Union[Unset, None, str]):
 
     Raises:
@@ -104,7 +104,7 @@ def sync(
     """Cancel an Existing Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server to be cancelled.
         reason (Union[Unset, None, str]):
 
     Raises:
@@ -131,7 +131,7 @@ async def asyncio_detailed(
     """Cancel an Existing Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server to be cancelled.
         reason (Union[Unset, None, str]):
 
     Raises:
@@ -163,7 +163,7 @@ async def asyncio(
     """Cancel an Existing Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server to be cancelled.
         reason (Union[Unset, None, str]):
 
     Raises:

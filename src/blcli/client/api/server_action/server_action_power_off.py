@@ -88,7 +88,7 @@ def sync_detailed(
      This is a 'hard' power off, equivalent to turning the server's power switch off.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerOff): Power a Server Off
 
     Raises:
@@ -124,7 +124,7 @@ def sync(
      This is a 'hard' power off, equivalent to turning the server's power switch off.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerOff): Power a Server Off
 
     Raises:
@@ -153,7 +153,7 @@ async def asyncio_detailed(
      This is a 'hard' power off, equivalent to turning the server's power switch off.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerOff): Power a Server Off
 
     Raises:
@@ -187,7 +187,7 @@ async def asyncio(
      This is a 'hard' power off, equivalent to turning the server's power switch off.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerOff): Power a Server Off
 
     Raises:

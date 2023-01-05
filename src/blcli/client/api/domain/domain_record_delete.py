@@ -66,8 +66,8 @@ def sync_detailed(
     """Delete an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be deleted.
+        record_id (int): The ID of the record to delete.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -100,8 +100,8 @@ def sync(
     """Delete an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be deleted.
+        record_id (int): The ID of the record to delete.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -127,8 +127,8 @@ async def asyncio_detailed(
     """Delete an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be deleted.
+        record_id (int): The ID of the record to delete.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -159,8 +159,8 @@ async def asyncio(
     """Delete an Existing Domain Record
 
     Args:
-        domain_name (str):
-        record_id (int):
+        domain_name (str): The domain name for which the record should be deleted.
+        record_id (int): The ID of the record to delete.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

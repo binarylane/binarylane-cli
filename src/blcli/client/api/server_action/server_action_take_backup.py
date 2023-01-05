@@ -88,7 +88,7 @@ def sync_detailed(
      This creates an immediate backup of the server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (TakeBackup): Take a Backup of a Server
 
     Raises:
@@ -124,7 +124,7 @@ def sync(
      This creates an immediate backup of the server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (TakeBackup): Take a Backup of a Server
 
     Raises:
@@ -153,7 +153,7 @@ async def asyncio_detailed(
      This creates an immediate backup of the server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (TakeBackup): Take a Backup of a Server
 
     Raises:
@@ -187,7 +187,7 @@ async def asyncio(
      This creates an immediate backup of the server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (TakeBackup): Take a Backup of a Server
 
     Raises:

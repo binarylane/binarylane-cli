@@ -83,7 +83,7 @@ def sync_detailed(
     """Upload a Backup for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which the backup is to be uploaded.
         json_body (UploadImageRequest):
 
     Raises:
@@ -117,7 +117,7 @@ def sync(
     """Upload a Backup for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which the backup is to be uploaded.
         json_body (UploadImageRequest):
 
     Raises:
@@ -144,7 +144,7 @@ async def asyncio_detailed(
     """Upload a Backup for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which the backup is to be uploaded.
         json_body (UploadImageRequest):
 
     Raises:
@@ -176,7 +176,7 @@ async def asyncio(
     """Upload a Backup for a Server
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which the backup is to be uploaded.
         json_body (UploadImageRequest):
 
     Raises:

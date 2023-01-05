@@ -35,7 +35,6 @@ class Image:
             operating system. For a backup image this is the minimum total disk size in GB required to restore the backup.
         size_gigabytes (float): For a distribution image this is the disk size used in GB by the operating system on
             initial install. For a backup image this is the size of the compressed backup image in GB.
-        tags (List[str]): Tags are not currently supported and this will always be an empty array.
         status (ImageStatus):
             | Value | Description |
             | ----- | ----------- |
@@ -69,7 +68,6 @@ class Image:
     regions: List[str]
     min_disk_size: int
     size_gigabytes: float
-    tags: List[str]
     status: ImageStatus
     distribution_info: DistributionInfo
     distribution: Union[Unset, None, str] = UNSET
@@ -93,8 +91,6 @@ class Image:
 
         min_disk_size = self.min_disk_size
         size_gigabytes = self.size_gigabytes
-        tags = self.tags
-
         status = self.status.value
 
         distribution_info = self.distribution_info.to_dict()
@@ -128,7 +124,6 @@ class Image:
                 "regions": regions,
                 "min_disk_size": min_disk_size,
                 "size_gigabytes": size_gigabytes,
-                "tags": tags,
                 "status": status,
                 "distribution_info": distribution_info,
             }
@@ -170,8 +165,6 @@ class Image:
         min_disk_size = d.pop("min_disk_size")
 
         size_gigabytes = d.pop("size_gigabytes")
-
-        tags = cast(List[str], d.pop("tags"))
 
         status = ImageStatus(d.pop("status"))
 
@@ -224,7 +217,6 @@ class Image:
             regions=regions,
             min_disk_size=min_disk_size,
             size_gigabytes=size_gigabytes,
-            tags=tags,
             status=status,
             distribution_info=distribution_info,
             distribution=distribution,

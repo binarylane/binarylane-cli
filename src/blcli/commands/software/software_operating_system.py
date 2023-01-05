@@ -49,6 +49,7 @@ class Command(ListRunner):
         parser.cli_argument(
             "operating_system_id_or_slug",
             type=str,
+            description="""The ID or slug of the operating system for which available software should be listed.""",
         )
 
     def request(

@@ -93,7 +93,7 @@ def sync_detailed(
     """List All Domain Records for a Domain
 
     Args:
-        domain_name (str):
+        domain_name (str): The domain name for which records should be listed.
         type (Union[Unset, None, DomainRecordType]):
             | Value | Description |
             | ----- | ----------- |
@@ -149,7 +149,7 @@ def sync(
     """List All Domain Records for a Domain
 
     Args:
-        domain_name (str):
+        domain_name (str): The domain name for which records should be listed.
         type (Union[Unset, None, DomainRecordType]):
             | Value | Description |
             | ----- | ----------- |
@@ -198,7 +198,7 @@ async def asyncio_detailed(
     """List All Domain Records for a Domain
 
     Args:
-        domain_name (str):
+        domain_name (str): The domain name for which records should be listed.
         type (Union[Unset, None, DomainRecordType]):
             | Value | Description |
             | ----- | ----------- |
@@ -252,7 +252,7 @@ async def asyncio(
     """List All Domain Records for a Domain
 
     Args:
-        domain_name (str):
+        domain_name (str): The domain name for which records should be listed.
         type (Union[Unset, None, DomainRecordType]):
             | Value | Description |
             | ----- | ----------- |

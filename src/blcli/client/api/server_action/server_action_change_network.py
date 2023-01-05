@@ -89,7 +89,7 @@ def sync_detailed(
     public network in the server's region.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeNetwork): Move a Server to an Existing Network
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     public network in the server's region.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeNetwork): Move a Server to an Existing Network
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     public network in the server's region.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeNetwork): Move a Server to an Existing Network
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     public network in the server's region.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeNetwork): Move a Server to an Existing Network
 
     Raises:

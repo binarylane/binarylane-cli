@@ -94,7 +94,7 @@ def sync_detailed(
 
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (DisableBackups): Disable Backups for an Existing Server
 
     Raises:
@@ -136,7 +136,7 @@ def sync(
 
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (DisableBackups): Disable Backups for an Existing Server
 
     Raises:
@@ -171,7 +171,7 @@ async def asyncio_detailed(
 
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (DisableBackups): Disable Backups for an Existing Server
 
     Raises:
@@ -211,7 +211,7 @@ async def asyncio(
 
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (DisableBackups): Disable Backups for an Existing Server
 
     Raises:

@@ -88,7 +88,7 @@ def sync_detailed(
      This changes when the backups are taken, not the frequency or retention of backups.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeBackupSchedule): Change the Backup Schedule of a Server
 
     Raises:
@@ -124,7 +124,7 @@ def sync(
      This changes when the backups are taken, not the frequency or retention of backups.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeBackupSchedule): Change the Backup Schedule of a Server
 
     Raises:
@@ -153,7 +153,7 @@ async def asyncio_detailed(
      This changes when the backups are taken, not the frequency or retention of backups.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeBackupSchedule): Change the Backup Schedule of a Server
 
     Raises:
@@ -187,7 +187,7 @@ async def asyncio(
      This changes when the backups are taken, not the frequency or retention of backups.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeBackupSchedule): Change the Backup Schedule of a Server
 
     Raises:

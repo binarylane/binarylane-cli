@@ -26,7 +26,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "server_id",
             type=int,
-            description="""The target server id.""",
+            description="""The ID of the server for which the backup is to be uploaded.""",
         )
 
         parser.cli_argument(

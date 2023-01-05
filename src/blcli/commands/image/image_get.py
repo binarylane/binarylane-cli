@@ -21,6 +21,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "image_id_or_slug",
             type=str,
+            description="""The ID or Slug (if an operating system) of the image to retrieve.""",
         )
 
     def request(

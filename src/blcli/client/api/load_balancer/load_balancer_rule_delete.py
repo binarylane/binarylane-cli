@@ -79,7 +79,8 @@ def sync_detailed(
     """Remove Forwarding Rules from an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer for which forwarding rules should be
+            removed.
         json_body (ForwardingRulesRequest):
 
     Raises:
@@ -113,7 +114,8 @@ def sync(
     """Remove Forwarding Rules from an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer for which forwarding rules should be
+            removed.
         json_body (ForwardingRulesRequest):
 
     Raises:
@@ -140,7 +142,8 @@ async def asyncio_detailed(
     """Remove Forwarding Rules from an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer for which forwarding rules should be
+            removed.
         json_body (ForwardingRulesRequest):
 
     Raises:
@@ -172,7 +175,8 @@ async def asyncio(
     """Remove Forwarding Rules from an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer for which forwarding rules should be
+            removed.
         json_body (ForwardingRulesRequest):
 
     Raises:

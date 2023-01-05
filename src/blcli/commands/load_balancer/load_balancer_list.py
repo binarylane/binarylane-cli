@@ -51,7 +51,6 @@ class Command(ListRunner):
             "enable_proxy_protocol": """Whether the PROXY protocol is enabled on the load balancer. This is not currently supported.""",
             "enable_backend_keepalive": """Whether to use HTTP keepalive connections to servers in the load balancer pool. This is not currently supported.""",
             "region": """""",
-            "tag": """Adding servers by tag is currently not supported and this value will always be null.""",
             "vpc_id": """The VPC ID of the VPC the load balancer is assigned to. This is not currently supported: all load balancers are either in the default (public) network for the region or are 'AnyCast' load balancers.""",
         }
 

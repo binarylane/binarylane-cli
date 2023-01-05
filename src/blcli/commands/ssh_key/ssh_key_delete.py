@@ -20,6 +20,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "key_id",
             type=str,
+            description="""The ID or fingerprint of the SSH Key to delete.""",
         )
 
     def request(

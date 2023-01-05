@@ -88,7 +88,7 @@ def sync_detailed(
      Making servers 'partners' prevents them from being co-located on the same hardware.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangePartner): Add, Update or Remove a Partner Server for a Server
 
     Raises:
@@ -124,7 +124,7 @@ def sync(
      Making servers 'partners' prevents them from being co-located on the same hardware.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangePartner): Add, Update or Remove a Partner Server for a Server
 
     Raises:
@@ -153,7 +153,7 @@ async def asyncio_detailed(
      Making servers 'partners' prevents them from being co-located on the same hardware.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangePartner): Add, Update or Remove a Partner Server for a Server
 
     Raises:
@@ -187,7 +187,7 @@ async def asyncio(
      Making servers 'partners' prevents them from being co-located on the same hardware.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangePartner): Add, Update or Remove a Partner Server for a Server
 
     Raises:

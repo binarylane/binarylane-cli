@@ -90,7 +90,7 @@ def sync_detailed(
     server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Reboot): Request a Server Perform a Reboot
 
     Raises:
@@ -128,7 +128,7 @@ def sync(
     server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Reboot): Request a Server Perform a Reboot
 
     Raises:
@@ -159,7 +159,7 @@ async def asyncio_detailed(
     server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Reboot): Request a Server Perform a Reboot
 
     Raises:
@@ -195,7 +195,7 @@ async def asyncio(
     server.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Reboot): Request a Server Perform a Reboot
 
     Raises:

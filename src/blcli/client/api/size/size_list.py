@@ -83,8 +83,12 @@ def sync_detailed(
     """List All Available Sizes
 
     Args:
-        server_id (Union[Unset, None, int]):
-        image (Union[Unset, None, str]):
+        server_id (Union[Unset, None, int]): If supplied only sizes available for a resize the
+            specified server will be returned. This parameter is only available when authenticated.
+        image (Union[Unset, None, str]): If null or not provided regions that support the size are
+            included in the returned objects regardless of operating system. If this is provided it
+            must be the id or slug of an operating system image and will cause only valid regions for
+            the size and operating system to be included in the returned objects.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -123,8 +127,12 @@ def sync(
     """List All Available Sizes
 
     Args:
-        server_id (Union[Unset, None, int]):
-        image (Union[Unset, None, str]):
+        server_id (Union[Unset, None, int]): If supplied only sizes available for a resize the
+            specified server will be returned. This parameter is only available when authenticated.
+        image (Union[Unset, None, str]): If null or not provided regions that support the size are
+            included in the returned objects regardless of operating system. If this is provided it
+            must be the id or slug of an operating system image and will cause only valid regions for
+            the size and operating system to be included in the returned objects.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -156,8 +164,12 @@ async def asyncio_detailed(
     """List All Available Sizes
 
     Args:
-        server_id (Union[Unset, None, int]):
-        image (Union[Unset, None, str]):
+        server_id (Union[Unset, None, int]): If supplied only sizes available for a resize the
+            specified server will be returned. This parameter is only available when authenticated.
+        image (Union[Unset, None, str]): If null or not provided regions that support the size are
+            included in the returned objects regardless of operating system. If this is provided it
+            must be the id or slug of an operating system image and will cause only valid regions for
+            the size and operating system to be included in the returned objects.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -194,8 +206,12 @@ async def asyncio(
     """List All Available Sizes
 
     Args:
-        server_id (Union[Unset, None, int]):
-        image (Union[Unset, None, str]):
+        server_id (Union[Unset, None, int]): If supplied only sizes available for a resize the
+            specified server will be returned. This parameter is only available when authenticated.
+        image (Union[Unset, None, str]): If null or not provided regions that support the size are
+            included in the returned objects regardless of operating system. If this is provided it
+            must be the id or slug of an operating system image and will cause only valid regions for
+            the size and operating system to be included in the returned objects.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 

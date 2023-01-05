@@ -75,7 +75,8 @@ def sync_detailed(
     """List All Available Software for an Existing Operating System
 
     Args:
-        operating_system_id_or_slug (str):
+        operating_system_id_or_slug (str): The ID or slug of the operating system for which
+            available software should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -112,7 +113,8 @@ def sync(
     """List All Available Software for an Existing Operating System
 
     Args:
-        operating_system_id_or_slug (str):
+        operating_system_id_or_slug (str): The ID or slug of the operating system for which
+            available software should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -142,7 +144,8 @@ async def asyncio_detailed(
     """List All Available Software for an Existing Operating System
 
     Args:
-        operating_system_id_or_slug (str):
+        operating_system_id_or_slug (str): The ID or slug of the operating system for which
+            available software should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -177,7 +180,8 @@ async def asyncio(
     """List All Available Software for an Existing Operating System
 
     Args:
-        operating_system_id_or_slug (str):
+        operating_system_id_or_slug (str): The ID or slug of the operating system for which
+            available software should be listed.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 

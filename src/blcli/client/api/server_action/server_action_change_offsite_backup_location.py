@@ -89,7 +89,7 @@ def sync_detailed(
     a valid Amazon S3 bucket or our internal offsite backup location.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeOffsiteBackupLocation): Change the Offsite Backup Location of a Server
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     a valid Amazon S3 bucket or our internal offsite backup location.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeOffsiteBackupLocation): Change the Offsite Backup Location of a Server
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     a valid Amazon S3 bucket or our internal offsite backup location.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeOffsiteBackupLocation): Change the Offsite Backup Location of a Server
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     a valid Amazon S3 bucket or our internal offsite backup location.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeOffsiteBackupLocation): Change the Offsite Backup Location of a Server
 
     Raises:

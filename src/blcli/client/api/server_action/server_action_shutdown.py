@@ -89,7 +89,7 @@ def sync_detailed(
     'shutdown' in the operating system to trigger an orderly shutdown, then waiting for that shutdown.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Shutdown): Request a Server Perform a Shutdown
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     'shutdown' in the operating system to trigger an orderly shutdown, then waiting for that shutdown.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Shutdown): Request a Server Perform a Shutdown
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     'shutdown' in the operating system to trigger an orderly shutdown, then waiting for that shutdown.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Shutdown): Request a Server Perform a Shutdown
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     'shutdown' in the operating system to trigger an orderly shutdown, then waiting for that shutdown.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (Shutdown): Request a Server Perform a Shutdown
 
     Raises:

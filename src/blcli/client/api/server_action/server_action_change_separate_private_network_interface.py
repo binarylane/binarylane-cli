@@ -91,7 +91,7 @@ def sync_detailed(
     the server is in a VPC).
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeSeparatePrivateNetworkInterface): Enable or Disable a Separate Private
             Network Interface for a Server in a VPC
 
@@ -129,7 +129,7 @@ def sync(
     the server is in a VPC).
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeSeparatePrivateNetworkInterface): Enable or Disable a Separate Private
             Network Interface for a Server in a VPC
 
@@ -160,7 +160,7 @@ async def asyncio_detailed(
     the server is in a VPC).
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeSeparatePrivateNetworkInterface): Enable or Disable a Separate Private
             Network Interface for a Server in a VPC
 
@@ -196,7 +196,7 @@ async def asyncio(
     the server is in a VPC).
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (ChangeSeparatePrivateNetworkInterface): Enable or Disable a Separate Private
             Network Interface for a Server in a VPC
 

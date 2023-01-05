@@ -21,6 +21,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "domain_name",
             type=str,
+            description="""The name of the domain to fetch.""",
         )
 
     def request(

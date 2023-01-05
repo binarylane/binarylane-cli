@@ -34,7 +34,7 @@ class Command(ListRunner):
         parser.cli_argument(
             "server_id",
             type=int,
-            description="""The target server id.""",
+            description="""The ID of the server for which software should be fetched.""",
         )
 
     def request(

@@ -89,7 +89,7 @@ def sync_detailed(
     derived operating systems) or clear the administrator password on Windows operating systems.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PasswordReset): Reset the Password of a Server
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     derived operating systems) or clear the administrator password on Windows operating systems.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PasswordReset): Reset the Password of a Server
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     derived operating systems) or clear the administrator password on Windows operating systems.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PasswordReset): Reset the Password of a Server
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     derived operating systems) or clear the administrator password on Windows operating systems.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PasswordReset): Reset the Password of a Server
 
     Raises:

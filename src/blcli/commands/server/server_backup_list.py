@@ -37,7 +37,6 @@ class Command(ListRunner):
             "regions": """The slugs of the regions where the image is available for use.""",
             "min_disk_size": """For a distribution image this is the minimum disk size in GB required to install the operating system. For a backup image this is the minimum total disk size in GB required to restore the backup.""",
             "size_gigabytes": """For a distribution image this is the disk size used in GB by the operating system on initial install. For a backup image this is the size of the compressed backup image in GB.""",
-            "tags": """Tags are not currently supported and this will always be an empty array.""",
             "status": """
 | Value | Description |
 | ----- | ----------- |
@@ -72,7 +71,7 @@ class Command(ListRunner):
         parser.cli_argument(
             "server_id",
             type=int,
-            description="""The target server id.""",
+            description="""The ID of the server for which backups should be listed.""",
         )
 
     def request(

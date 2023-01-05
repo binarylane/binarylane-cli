@@ -81,7 +81,7 @@ def sync_detailed(
      Any existing settings or servers that are not included will revert to default values.
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to update.
         json_body (UpdateLoadBalancerRequest):
 
     Raises:
@@ -117,7 +117,7 @@ def sync(
      Any existing settings or servers that are not included will revert to default values.
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to update.
         json_body (UpdateLoadBalancerRequest):
 
     Raises:
@@ -146,7 +146,7 @@ async def asyncio_detailed(
      Any existing settings or servers that are not included will revert to default values.
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to update.
         json_body (UpdateLoadBalancerRequest):
 
     Raises:
@@ -180,7 +180,7 @@ async def asyncio(
      Any existing settings or servers that are not included will revert to default values.
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to update.
         json_body (UpdateLoadBalancerRequest):
 
     Raises:

@@ -33,10 +33,7 @@ class CreateLoadBalancerRequest:
             currently supported.
         enable_backend_keepalive (Union[Unset, None, bool]): Use HTTP keepalive connections to servers in the load
             balancer pool. This is not currently supported.
-        server_ids (Union[Unset, None, List[int]]): A list of server IDs to assign to this load balancer. This is
-            mutually exclusive with 'tag'.
-        tag (Union[Unset, None, str]): Tags are not currently supported and attempting to add servers by tag will add no
-            servers. This is mutually exclusive with 'server_ids'.
+        server_ids (Union[Unset, None, List[int]]): A list of server IDs to assign to this load balancer.
         region (Union[Unset, None, str]): Leave null to create an anycast load balancer.
         vpc_id (Union[Unset, None, int]): Adding or assigning a load balancer to a VPC is not currently supported.
     """
@@ -50,7 +47,6 @@ class CreateLoadBalancerRequest:
     enable_proxy_protocol: Union[Unset, None, bool] = UNSET
     enable_backend_keepalive: Union[Unset, None, bool] = UNSET
     server_ids: Union[Unset, None, List[int]] = UNSET
-    tag: Union[Unset, None, str] = UNSET
     region: Union[Unset, None, str] = UNSET
     vpc_id: Union[Unset, None, int] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
@@ -90,7 +86,6 @@ class CreateLoadBalancerRequest:
             else:
                 server_ids = self.server_ids
 
-        tag = self.tag
         region = self.region
         vpc_id = self.vpc_id
 
@@ -117,8 +112,6 @@ class CreateLoadBalancerRequest:
             field_dict["enable_backend_keepalive"] = enable_backend_keepalive
         if server_ids is not UNSET:
             field_dict["server_ids"] = server_ids
-        if tag is not UNSET:
-            field_dict["tag"] = tag
         if region is not UNSET:
             field_dict["region"] = region
         if vpc_id is not UNSET:
@@ -173,8 +166,6 @@ class CreateLoadBalancerRequest:
 
         server_ids = cast(List[int], d.pop("server_ids", UNSET))
 
-        tag = d.pop("tag", UNSET)
-
         region = d.pop("region", UNSET)
 
         vpc_id = d.pop("vpc_id", UNSET)
@@ -189,7 +180,6 @@ class CreateLoadBalancerRequest:
             enable_proxy_protocol=enable_proxy_protocol,
             enable_backend_keepalive=enable_backend_keepalive,
             server_ids=server_ids,
-            tag=tag,
             region=region,
             vpc_id=vpc_id,
         )

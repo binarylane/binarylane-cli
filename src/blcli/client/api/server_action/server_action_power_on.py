@@ -89,7 +89,7 @@ def sync_detailed(
     operating system or via an action.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerOn): Power a Server On
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     operating system or via an action.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerOn): Power a Server On
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     operating system or via an action.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerOn): Power a Server On
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     operating system or via an action.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerOn): Power a Server On
 
     Raises:

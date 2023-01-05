@@ -62,7 +62,7 @@ def sync_detailed(
     """Cancel an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to cancel.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -93,7 +93,7 @@ def sync(
     """Cancel an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to cancel.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -117,7 +117,7 @@ async def asyncio_detailed(
     """Cancel an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to cancel.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -146,7 +146,7 @@ async def asyncio(
     """Cancel an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer to cancel.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

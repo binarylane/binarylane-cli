@@ -89,7 +89,7 @@ def sync_detailed(
     This should be used only if the server is unresponsive when the 'Reboot' action is attempted.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerCycle): Power a Server Off and then On
 
     Raises:
@@ -126,7 +126,7 @@ def sync(
     This should be used only if the server is unresponsive when the 'Reboot' action is attempted.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerCycle): Power a Server Off and then On
 
     Raises:
@@ -156,7 +156,7 @@ async def asyncio_detailed(
     This should be used only if the server is unresponsive when the 'Reboot' action is attempted.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerCycle): Power a Server Off and then On
 
     Raises:
@@ -191,7 +191,7 @@ async def asyncio(
     This should be used only if the server is unresponsive when the 'Reboot' action is attempted.
 
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server on which the action should be performed.
         json_body (PowerCycle): Power a Server Off and then On
 
     Raises:

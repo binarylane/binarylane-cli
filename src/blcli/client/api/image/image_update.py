@@ -81,7 +81,7 @@ def sync_detailed(
      Only updating of user created backups is currently supported.
 
     Args:
-        image_id (int):
+        image_id (int): The ID of the image to update.
         json_body (ImageRequest):
 
     Raises:
@@ -117,7 +117,7 @@ def sync(
      Only updating of user created backups is currently supported.
 
     Args:
-        image_id (int):
+        image_id (int): The ID of the image to update.
         json_body (ImageRequest):
 
     Raises:
@@ -146,7 +146,7 @@ async def asyncio_detailed(
      Only updating of user created backups is currently supported.
 
     Args:
-        image_id (int):
+        image_id (int): The ID of the image to update.
         json_body (ImageRequest):
 
     Raises:
@@ -180,7 +180,7 @@ async def asyncio(
      Only updating of user created backups is currently supported.
 
     Args:
-        image_id (int):
+        image_id (int): The ID of the image to update.
         json_body (ImageRequest):
 
     Raises:

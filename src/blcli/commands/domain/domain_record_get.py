@@ -21,10 +21,12 @@ class Command(CommandRunner):
         parser.cli_argument(
             "domain_name",
             type=str,
+            description="""The domain name for which the record should be fetched.""",
         )
         parser.cli_argument(
             "record_id",
             type=int,
+            description="""The ID of the record to fetch.""",
         )
 
     def request(

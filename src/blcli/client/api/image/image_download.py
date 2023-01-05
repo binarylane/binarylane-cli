@@ -70,7 +70,7 @@ def sync_detailed(
      Only user created backup images are currently available for download.
 
     Args:
-        image_id (int):
+        image_id (int): The ID of the image to download.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -103,7 +103,7 @@ def sync(
      Only user created backup images are currently available for download.
 
     Args:
-        image_id (int):
+        image_id (int): The ID of the image to download.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -129,7 +129,7 @@ async def asyncio_detailed(
      Only user created backup images are currently available for download.
 
     Args:
-        image_id (int):
+        image_id (int): The ID of the image to download.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -160,7 +160,7 @@ async def asyncio(
      Only user created backup images are currently available for download.
 
     Args:
-        image_id (int):
+        image_id (int): The ID of the image to download.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

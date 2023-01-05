@@ -202,23 +202,6 @@ class ServerActionCreate(ModuleRunner):
 
 
 @register_command
-class ServerTaggedAction(ModuleRunner):
-    """Runner for server_tagged-action API operation"""
-
-    @property
-    def name(self) -> str:
-        return "tagged-action"
-
-    @property
-    def description(self) -> str:
-        return "Perform an Action on Servers by Tag"
-
-    @property
-    def module_path(self) -> str:
-        return ".commands.server.server_tagged_action"
-
-
-@register_command
 class ServerGet(ModuleRunner):
     """Runner for server_get API operation"""
 
@@ -284,23 +267,6 @@ class ServerCreate(ModuleRunner):
     @property
     def module_path(self) -> str:
         return ".commands.server.server_create"
-
-
-@register_command
-class ServerTaggedDelete(ModuleRunner):
-    """Runner for server_tagged_delete API operation"""
-
-    @property
-    def name(self) -> str:
-        return "tagged_delete"
-
-    @property
-    def description(self) -> str:
-        return "Cancel Existing Servers by Tag"
-
-    @property
-    def module_path(self) -> str:
-        return ".commands.server.server_tagged_delete"
 
 
 @register_command

@@ -81,7 +81,7 @@ def sync_detailed(
     """Remove Servers from an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer for which servers should be removed.
         json_body (ServerIdsRequest):
 
     Raises:
@@ -115,7 +115,7 @@ def sync(
     """Remove Servers from an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer for which servers should be removed.
         json_body (ServerIdsRequest):
 
     Raises:
@@ -142,7 +142,7 @@ async def asyncio_detailed(
     """Remove Servers from an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer for which servers should be removed.
         json_body (ServerIdsRequest):
 
     Raises:
@@ -174,7 +174,7 @@ async def asyncio(
     """Remove Servers from an Existing Load Balancer
 
     Args:
-        load_balancer_id (int):
+        load_balancer_id (int): The ID of the load balancer for which servers should be removed.
         json_body (ServerIdsRequest):
 
     Raises:

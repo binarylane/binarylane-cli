@@ -50,7 +50,6 @@ class Server:
         size (Size):
         size_slug (str): The slug of the currently selected size for this server.
         networks (Networks):
-        tags (List[str]): Tags are not currently supported and this will always be an empty array.
         volume_ids (List[str]): Volumes are not currently supported and this will always be an empty array.
         disks (List['Disk']): A list of the disks that are currently attached to the server.
         backup_settings (BackupSettings):
@@ -90,7 +89,6 @@ class Server:
     size: Size
     size_slug: str
     networks: Networks
-    tags: List[str]
     volume_ids: List[str]
     disks: List["Disk"]
     backup_settings: BackupSettings
@@ -134,8 +132,6 @@ class Server:
 
         size_slug = self.size_slug
         networks = self.networks.to_dict()
-
-        tags = self.tags
 
         volume_ids = self.volume_ids
 
@@ -199,7 +195,6 @@ class Server:
                 "size": size,
                 "size_slug": size_slug,
                 "networks": networks,
-                "tags": tags,
                 "volume_ids": volume_ids,
                 "disks": disks,
                 "backup_settings": backup_settings,
@@ -263,8 +258,6 @@ class Server:
         size_slug = d.pop("size_slug")
 
         networks = Networks.from_dict(d.pop("networks"))
-
-        tags = cast(List[str], d.pop("tags"))
 
         volume_ids = cast(List[str], d.pop("volume_ids"))
 
@@ -355,7 +348,6 @@ class Server:
             size=size,
             size_slug=size_slug,
             networks=networks,
-            tags=tags,
             volume_ids=volume_ids,
             disks=disks,
             backup_settings=backup_settings,
