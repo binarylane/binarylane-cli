@@ -2,7 +2,8 @@
 import importlib
 from abc import abstractmethod
 from argparse import ArgumentParser, HelpFormatter
-from typing import List, Optional
+from functools import cached_property
+from typing import List, Optional, Sequence
 
 from ..cli import debug
 from .runner import Runner
@@ -22,55 +23,80 @@ class PackageRunner(Runner):
     """PackageRunner imports a list of runners from specified package."""
 
     parser: ArgumentParser
+    _prefix: Optional[str]
+    _runners: List[Runner]
 
     def __init__(self, parent: Optional[Runner] = None, prefix: str = None) -> None:
         super().__init__(parent)
         self._prefix = prefix
+        self._runners = []
 
     @property
     def prog(self) -> str:
         return f"{self.parent.prog} {self._prefix}" if self.parent and self._prefix else super().prog
 
     @property
+    def name(self) -> str:
+        return self.package_name if not self._prefix else self._prefix
+
+    @property
+    def description(self) -> str:
+        return f"Access {self.name} commands"
+
+    @property
+    @abstractmethod
+    def package_name(self) -> str:
+        """Unqualified name of python package"""
+
+    @property
     @abstractmethod
     def package_path(self) -> str:
         """Path of python package containing runners to import during run()"""
 
-    @property
-    def _runners(self) -> List[Runner]:
+    @cached_property
+    def package_runners(self) -> List[Runner]:
         """Runners to provide access to from this package"""
         return [cls(self) for cls in importlib.import_module(f".{self.package_path}", package=__package__).commands]
+
+    def _get_prefixes(self) -> Sequence[str]:
+        """Get unique set of prefixes for runners in this package.
+
+        A runner has a "prefix" if its name contains an underscore, in which case the prefix the leading string.
+        - runner for 'domain_list' has prefix of 'domain'
+        - runner for 'list' does not have a prefix
+
+        The resulting sequence may be empty if there are no runners with an underscore in the name.
+        """
+        return sorted({runner.name.split("_")[0] for runner in (self.package_runners) if "_" in runner.name})
+
+    def _get_unprefixed_runners(self) -> Sequence[Runner]:
+        """Return all runners from package_runners that do not have a prefix"""
+        return [runner for runner in self.package_runners if "_" not in runner.name]
+
+    def _get_prefix_runners(self, prefix: str) -> Sequence[Runner]:
+        """Filter package_runners by the supplied prefix."""
+        return [runner for runner in self.package_runners if "_" in runner.name and runner.name.split("_")[0] == prefix]
 
     def configure(self) -> None:
         """Configure argument parser"""
 
-        cmd_parser = self.parser.add_subparsers(metavar=PackageHelpFormatter.SUPPRESS, title="Commands")
-        runners = self._runners
-
-        # First, if we are not in a prefix show all prefix commands:
+        # If we are not in a prefix:
         if not self._prefix:
-            for prefix in {runner.name.split("_")[0] for runner in runners if "_" in runner.name}:
-                cmd_parser.add_parser(prefix, help=f"Access {prefix} commands", add_help=False).set_defaults(
-                    runner=self.__class__(self, prefix)
-                )
-
-            # And then add the un-prefixed commands:
-            for runner in runners:
-                if "_" in runner.name:
-                    continue
-                cmd_parser.add_parser(runner.name, help=runner.format_description(), add_help=False).set_defaults(
-                    runner=runner
-                )
-
-        # Otherwise, add commands from the selected prefix
+            # Add any required prefix runners:
+            for prefix in self._get_prefixes():
+                self._runners.append(self.__class__(self, prefix))
+            # And then the un-prefixed commands:
+            self._runners += self._get_unprefixed_runners()
+        # Otherwise, add commands from the selected prefix:
         else:
-            for runner in runners:
-                if "_" not in runner.name:
-                    continue
+            self._runners += self._get_prefix_runners(self._prefix)
 
-                prefix, name = runner.name.split("_")
-                if prefix == self._prefix:
-                    cmd_parser.add_parser(name, help=runner.format_description()).set_defaults(runner=runner)
+        # Add runners for this prefix to parser:
+        cmd_parser = self.parser.add_subparsers(metavar=PackageHelpFormatter.SUPPRESS, title="Commands")
+        for runner in self._runners:
+            cmd_parser.add_parser(
+                runner.name.split("_")[-1], help=runner.format_description(), add_help=False
+            ).set_defaults(runner=runner)
 
     def run(self, args: List[str]) -> None:
         self.parser = ArgumentParser(

@@ -20,12 +20,8 @@ class Account(PackageRunner):
     """Runner for account API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "account"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -37,12 +33,8 @@ class Action(PackageRunner):
     """Runner for action API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "action"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -54,12 +46,8 @@ class Domain(PackageRunner):
     """Runner for domain API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "domain"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -71,12 +59,8 @@ class Image(PackageRunner):
     """Runner for image API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "image"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -88,12 +72,8 @@ class LoadBalancer(PackageRunner):
     """Runner for load_balancer API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "load-balancer"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -105,12 +85,8 @@ class Region(PackageRunner):
     """Runner for region API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "region"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -122,12 +98,8 @@ class Server(PackageRunner):
     """Runner for server API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "server"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -139,12 +111,8 @@ class ServerAction(PackageRunner):
     """Runner for server_action API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "server-action"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -156,12 +124,8 @@ class Size(PackageRunner):
     """Runner for size API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "size"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -173,12 +137,8 @@ class Software(PackageRunner):
     """Runner for software API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "software"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -190,12 +150,8 @@ class SshKey(PackageRunner):
     """Runner for ssh_key API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "ssh-key"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:
@@ -207,12 +163,8 @@ class Vpc(PackageRunner):
     """Runner for vpc API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "vpc"
-
-    @property
-    def description(self) -> str:
-        return f"Access {self.name} commands"
 
     @property
     def package_path(self) -> str:

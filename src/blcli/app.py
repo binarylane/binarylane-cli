@@ -45,7 +45,7 @@ class App(PackageRunner):
     """
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return "bl"
 
     @property
@@ -57,8 +57,8 @@ class App(PackageRunner):
         return ".commands"
 
     @property
-    def _runners(self) -> List[Runner]:
-        return super()._runners + [VersionRunner()]
+    def package_runners(self) -> List[Runner]:
+        return super().package_runners + [VersionRunner()]
 
     def run(self, args: List[str]) -> None:
         # Allowing doing `bl help command [subcommand...]` instead of --help

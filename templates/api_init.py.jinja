@@ -20,12 +20,8 @@ class {{ class_name(key) }}(PackageRunner):
     """Runner for {{key}} API operations"""
 
     @property
-    def name(self) -> str:
+    def package_name(self) -> str:
         return '{{ value.endpoints[0].name.split('_')[0] }}'
-
-    @property
-    def description(self) -> str:
-        return f'Access {self.name} commands'
 
     @property
     def package_path(self) -> str:
