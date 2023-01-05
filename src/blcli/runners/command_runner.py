@@ -50,10 +50,6 @@ class CommandRunner(Runner):
         self._output = None
         self._header = None
 
-    @property
-    def prog(self) -> str:
-        return self.parent.prog
-
     @abstractmethod
     def configure(self, parser: CommandParser) -> None:
         """Add supported CLI arguments"""

@@ -12,6 +12,10 @@ class ModuleRunner(Runner):
     """ModuleRunner imports a runner from specified module."""
 
     @property
+    def prog(self) -> str:
+        return self.parent.prog if self.parent else ""
+
+    @property
     @abstractmethod
     def module_path(self) -> str:
         """Path of python module containing runner to import during run()"""

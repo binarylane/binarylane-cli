@@ -36,7 +36,9 @@ class ListRunner(CommandRunner):
             # nargs: SUPPRESS (since python 3.7) will cause it to accept no arguments nor be shown in usage
             # default: SUPPRESS so that f'_field_{key}' is not added to parsed namespace object
             # help: description of the field
-            fields_help.add_argument(f"_field_{key}", metavar=key, nargs=SUPPRESS, default=SUPPRESS, help=value)
+            fields_help.add_argument(
+                f"_field_{key}", metavar=key, nargs=SUPPRESS, default=SUPPRESS, help=value
+            ).required = False
 
     def run(self, args: List[str]) -> None:
         self._add_fields_help()
