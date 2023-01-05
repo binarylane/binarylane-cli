@@ -3,7 +3,9 @@
 import argparse
 import importlib
 import os
+import re
 import sys
+import textwrap
 import typing
 from enum import Enum
 from typing import Any, Iterable, Optional, Union
@@ -36,7 +38,24 @@ def error(*args: str) -> None:
 
 
 class CommandHelpFormatter(argparse.HelpFormatter):
-    """Modified HelpFormatter that hides common options in displayed usage"""
+    """Modified HelpFormatter with following changes:
+    - preserves newlines, with text wrapping on each line
+    - hides common options in displayed usage
+    - converts markdown enum table to something readable in terminal
+    """
+
+    _markdown_matcher = re.compile(r"^\n*(\|.*\|)\n(\| --.* \|)\n((\|.*\|\n)*)\s$")
+
+    def _split_lines(self, text: str, width: int) -> typing.List[str]:
+        """Returns the provided text, split into multiple lines of the specified width"""
+
+        markdown = self._markdown_matcher.match(text)
+        if markdown:
+            text = "One of the following values:\n" + "\n".join(
+                ["  " + item.strip(" |").replace(" | ", " - ") for item in markdown.group(3).splitlines()]
+            )
+
+        return [text for text in text.splitlines() for text in textwrap.wrap(text, width)]
 
     def add_usage(
         self,
