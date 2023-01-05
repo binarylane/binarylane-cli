@@ -88,7 +88,7 @@ class Command(ListRunner):
             dest="name",
             type=Union[Unset, None, str],
             required=False,
-            description="""None""",
+            description="""Only return records for this subdomain name.""",
         )
 
     def request(

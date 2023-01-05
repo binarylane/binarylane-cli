@@ -54,7 +54,7 @@ class Command(CommandRunner):
             dest="name",
             type=Union[Unset, None, str],
             required=False,
-            description="""None""",
+            description="""The hostname of your server, such as vps01.yourcompany.com. If not provided, the server will be created with a random name.""",
         )
 
         parser.cli_argument(

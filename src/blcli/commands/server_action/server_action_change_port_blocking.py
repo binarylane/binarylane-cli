@@ -41,7 +41,7 @@ class Command(CommandRunner):
             dest="enabled",
             type=bool,
             required=True,
-            description="""None""",
+            description="""The desired enabled status for port blocking.""",
             action=cli.BooleanOptionalAction,
         )
 

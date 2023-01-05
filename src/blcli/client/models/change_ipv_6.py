@@ -13,7 +13,7 @@ class ChangeIpv6:
 
     Attributes:
         type (ChangeIpv6Type):
-        enabled (bool):
+        enabled (bool): The desired enabled status of IPv6.
     """
 
     type: ChangeIpv6Type

@@ -13,7 +13,7 @@ class Rename:
 
     Attributes:
         type (RenameType):
-        name (str):
+        name (str): The new hostname of your server, such as vps01.yourcompany.com.
     """
 
     type: RenameType

@@ -29,7 +29,7 @@ class Command(CommandRunner):
             dest="reason",
             type=Union[Unset, None, str],
             required=False,
-            description="""None""",
+            description="""The reason for cancelling the server.""",
         )
 
     def request(

@@ -9,7 +9,7 @@ T = TypeVar("T", bound="ServerIdsRequest")
 class ServerIdsRequest:
     """
     Attributes:
-        server_ids (List[int]):
+        server_ids (List[int]): A list of server IDs.
     """
 
     server_ids: List[int]

@@ -40,7 +40,7 @@ class Command(CommandRunner):
             dest="name",
             type=str,
             required=True,
-            description="""None""",
+            description="""The new hostname of your server, such as vps01.yourcompany.com.""",
         )
 
     def request(

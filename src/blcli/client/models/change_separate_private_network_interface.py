@@ -13,7 +13,7 @@ class ChangeSeparatePrivateNetworkInterface:
 
     Attributes:
         type (ChangeSeparatePrivateNetworkInterfaceType):
-        enabled (bool):
+        enabled (bool): The desired enabled status of the separate second network interface.
     """
 
     type: ChangeSeparatePrivateNetworkInterfaceType

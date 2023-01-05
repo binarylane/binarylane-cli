@@ -21,6 +21,7 @@ class Command(CommandRunner):
         parser.cli_argument(
             "invoice_id",
             type=int,
+            description="""The ID of the invoice to fetch.""",
         )
 
     def request(

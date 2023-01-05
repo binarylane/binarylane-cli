@@ -17,7 +17,8 @@ class CreateServerRequest:
         size (str): The slug of the selected size.
         image (Union[int, str]): The slug or id of the selected operating system. Example: 5.
         region (str): The slug of the selected region.
-        name (Union[Unset, None, str]):
+        name (Union[Unset, None, str]): The hostname of your server, such as vps01.yourcompany.com. If not provided, the
+            server will be created with a random name.
         backups (Union[Unset, None, bool]): If true this will enable two daily backups for the server.
             Options.daily_backups will override this value if provided. Setting this to false has no effect.
         ipv6 (Union[Unset, None, bool]): If true this will enable IPv6 for this server.

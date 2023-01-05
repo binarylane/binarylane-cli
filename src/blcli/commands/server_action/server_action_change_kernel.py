@@ -40,7 +40,7 @@ class Command(CommandRunner):
             dest="kernel",
             type=int,
             required=True,
-            description="""None""",
+            description="""The ID of the kernel to use.""",
         )
 
     def request(

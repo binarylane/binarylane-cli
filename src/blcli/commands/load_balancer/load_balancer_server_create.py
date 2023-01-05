@@ -30,7 +30,7 @@ class Command(CommandRunner):
             dest="server_ids",
             type=List[int],
             required=True,
-            description="""None""",
+            description="""A list of server IDs.""",
         )
 
     def request(

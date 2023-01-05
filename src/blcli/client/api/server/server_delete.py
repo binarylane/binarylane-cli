@@ -71,7 +71,7 @@ def sync_detailed(
 
     Args:
         server_id (int): The ID of the server to be cancelled.
-        reason (Union[Unset, None, str]):
+        reason (Union[Unset, None, str]): The reason for cancelling the server.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -105,7 +105,7 @@ def sync(
 
     Args:
         server_id (int): The ID of the server to be cancelled.
-        reason (Union[Unset, None, str]):
+        reason (Union[Unset, None, str]): The reason for cancelling the server.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -132,7 +132,7 @@ async def asyncio_detailed(
 
     Args:
         server_id (int): The ID of the server to be cancelled.
-        reason (Union[Unset, None, str]):
+        reason (Union[Unset, None, str]): The reason for cancelling the server.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -164,7 +164,7 @@ async def asyncio(
 
     Args:
         server_id (int): The ID of the server to be cancelled.
-        reason (Union[Unset, None, str]):
+        reason (Union[Unset, None, str]): The reason for cancelling the server.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

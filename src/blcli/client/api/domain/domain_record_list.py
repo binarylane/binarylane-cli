@@ -108,7 +108,7 @@ def sync_detailed(
             | SRV | Specify a server by hostname and port to handle a service or services. |
             | TXT | Define a string of text that is associated with a hostname. |
 
-        name (Union[Unset, None, str]):
+        name (Union[Unset, None, str]): Only return records for this subdomain name.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -164,7 +164,7 @@ def sync(
             | SRV | Specify a server by hostname and port to handle a service or services. |
             | TXT | Define a string of text that is associated with a hostname. |
 
-        name (Union[Unset, None, str]):
+        name (Union[Unset, None, str]): Only return records for this subdomain name.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -213,7 +213,7 @@ async def asyncio_detailed(
             | SRV | Specify a server by hostname and port to handle a service or services. |
             | TXT | Define a string of text that is associated with a hostname. |
 
-        name (Union[Unset, None, str]):
+        name (Union[Unset, None, str]): Only return records for this subdomain name.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -267,7 +267,7 @@ async def asyncio(
             | SRV | Specify a server by hostname and port to handle a service or services. |
             | TXT | Define a string of text that is associated with a hostname. |
 
-        name (Union[Unset, None, str]):
+        name (Union[Unset, None, str]): Only return records for this subdomain name.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 

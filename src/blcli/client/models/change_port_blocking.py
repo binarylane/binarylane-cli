@@ -13,7 +13,7 @@ class ChangePortBlocking:
 
     Attributes:
         type (ChangePortBlockingType):
-        enabled (bool):
+        enabled (bool): The desired enabled status for port blocking.
     """
 
     type: ChangePortBlockingType

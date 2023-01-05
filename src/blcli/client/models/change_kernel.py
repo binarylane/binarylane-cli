@@ -13,7 +13,7 @@ class ChangeKernel:
 
     Attributes:
         type (ChangeKernelType):
-        kernel (int):
+        kernel (int): The ID of the kernel to use.
     """
 
     type: ChangeKernelType

@@ -13,7 +13,7 @@ class ChangeSourceAndDestinationCheck:
 
     Attributes:
         type (ChangeSourceAndDestinationCheckType):
-        enabled (bool):
+        enabled (bool): The desired enabled status of the source and destination checks for network packets.
     """
 
     type: ChangeSourceAndDestinationCheckType
