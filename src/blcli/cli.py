@@ -1,6 +1,7 @@
 """ CLI implementation """
 
 import argparse
+import datetime
 import importlib
 import os
 import re
@@ -18,7 +19,7 @@ except ImportError:
     from .actions import BooleanOptionalAction
 
 
-PRIMITIVE_TYPES = {int, str, bool, float}
+PRIMITIVE_TYPES = {int, str, bool, float, datetime.datetime}
 
 
 def debug(*args: str) -> None:
