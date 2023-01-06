@@ -26,7 +26,7 @@ class ListRunner(CommandRunner):
     def _add_fields_help(self) -> None:
         """Add a list of available fields to displayed help"""
 
-        fields_help = self.parser.add_argument_group("Available fields")
+        fields_help = self._parser.add_argument_group("Available fields")
         for key, value in self.fields.items():
             # FIXME: Use HelpFormatter to create an epilog instead
             #
@@ -42,7 +42,7 @@ class ListRunner(CommandRunner):
 
     def run(self, args: List[str]) -> None:
         self._add_fields_help()
-        self.parser.add_argument(
+        self._parser.add_argument(
             "--format",
             dest="runner_format",
             help="Comma-separated list of fields to display. (Default: %(default)s)",
@@ -50,7 +50,7 @@ class ListRunner(CommandRunner):
             default=",".join(self.default_format),
         )
 
-        self.parser.add_argument(
+        self._parser.add_argument(
             "-1",
             "--single-column",
             dest="runner_single_column",

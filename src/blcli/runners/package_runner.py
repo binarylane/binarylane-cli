@@ -33,7 +33,7 @@ class PackageRunner(Runner):
 
     @property
     def prog(self) -> str:
-        return f"{self.parent.prog} {self._prefix}" if self.parent and self._prefix else super().prog
+        return f"{self._parent.prog} {self._prefix}" if self._parent and self._prefix else super().prog
 
     @property
     def name(self) -> str:

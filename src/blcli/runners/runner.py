@@ -12,15 +12,15 @@ class Runner(ABC):
 
     HELP = "--help"
     CHECK = "--blcli-check"
-    parent: Optional[Runner]
+    _parent: Optional[Runner]
 
     def __init__(self, parent: Optional[Runner] = None) -> None:
-        self.parent = parent
+        self._parent = parent
 
     @property
     def prog(self) -> str:
         """The 'program' name is used in help output to identify this runner"""
-        return (self.parent.prog + " " if self.parent else "") + self.name
+        return (self._parent.prog + " " if self._parent else "") + self.name
 
     @property
     @abstractmethod

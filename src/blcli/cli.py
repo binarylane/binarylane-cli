@@ -173,13 +173,3 @@ class CommandParser(argparse.ArgumentParser):
         # Place argument in appropriate group:
         group = self._command_require if kwargs.get("required", True) else self._command_options
         return group.add_argument(*args, **kwargs)
-
-
-def get_api_token() -> str:
-    """Obtain user's API token from environment variable or configuration file"""
-    token = os.getenv("BL_CLI_TOKEN")
-    if token:
-        return token
-
-    with open(os.path.expanduser("~/.config/python-blcli"), encoding="utf-8") as config_file:
-        return config_file.read().strip()

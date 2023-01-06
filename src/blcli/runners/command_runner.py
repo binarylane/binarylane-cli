@@ -4,7 +4,8 @@ import importlib
 from abc import abstractmethod
 from typing import Any, Dict, List, Optional
 
-from ..cli import CommandParser, debug, get_api_token
+from ..cli import CommandParser, debug
+from ..config import Config
 from ..printers import Printer, PrinterType, create_printer
 from .httpx_wrapper import CurlCommand
 from .runner import Runner
@@ -13,8 +14,9 @@ from .runner import Runner
 class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
 
-    parser: CommandParser
-    parent: Runner
+    _parser: CommandParser
+    _parent: Runner
+    _config: Config
 
     _print_curl: Optional[bool]
     _output: Optional[str]
@@ -22,16 +24,17 @@ class CommandRunner(Runner):
 
     def __init__(self, parent: Runner) -> None:
         super().__init__(parent)
-        self.parser = CommandParser(prog=self.prog, add_help=False)
-        self.configure(self.parser)
+        self._config = Config.load()
+        self._parser = CommandParser(prog=self.prog, add_help=False)
+        self.configure(self._parser)
 
-        self.parser.add_argument(
+        self._parser.add_argument(
             "--help", dest="runner_print_help", action="help", help="Display command options and descriptions"
         )
-        self.parser.add_argument(
+        self._parser.add_argument(
             "--curl", dest="runner_print_curl", action="store_true", help="Display API request as a 'curl' command-line"
         )
-        self.parser.add_argument(
+        self._parser.add_argument(
             "--no-header",
             dest="runner_header",
             action="store_false",
@@ -39,7 +42,7 @@ class CommandRunner(Runner):
             help="Display columns without field labels",
         )
         printers = tuple(item.name.lower() for item in PrinterType)
-        self.parser.add_argument(
+        self._parser.add_argument(
             "--output",
             dest="runner_output",
             default="table",
@@ -90,7 +93,7 @@ class CommandRunner(Runner):
             return None
 
         debug(f"Command parser for {self.name}. args: {args}")
-        parsed = self.parser.parse_args(args)
+        parsed = self._parser.parse_args(args)
         debug(f"Parsing succeeded, have {parsed}")
 
         self.process(parsed)
@@ -98,7 +101,7 @@ class CommandRunner(Runner):
         authenticated_client = importlib.import_module("..client", __package__).AuthenticatedClient
         client = authenticated_client(
             "https://api.binarylane.com.au",
-            get_api_token(),
+            self._config.api_token,
         )
         parsed.client = client
 

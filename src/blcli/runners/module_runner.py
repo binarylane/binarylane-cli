@@ -13,7 +13,7 @@ class ModuleRunner(Runner):
 
     @property
     def prog(self) -> str:
-        return self.parent.prog if self.parent else ""
+        return self._parent.prog if self._parent else ""
 
     @property
     @abstractmethod
