@@ -7,10 +7,10 @@ from ...client.models.problem_details import ProblemDetails
 from ...client.models.restore import Restore
 from ...client.models.restore_type import RestoreType
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "restore"

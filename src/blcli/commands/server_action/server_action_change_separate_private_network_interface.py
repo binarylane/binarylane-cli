@@ -8,10 +8,10 @@ from ...client.models.change_separate_private_network_interface import ChangeSep
 from ...client.models.change_separate_private_network_interface_type import ChangeSeparatePrivateNetworkInterfaceType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "change-separate-private-network-interface"

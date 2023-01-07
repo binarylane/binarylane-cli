@@ -8,10 +8,10 @@ from ...client.models.change_backup_schedule_type import ChangeBackupScheduleTyp
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "change-backup-schedule"

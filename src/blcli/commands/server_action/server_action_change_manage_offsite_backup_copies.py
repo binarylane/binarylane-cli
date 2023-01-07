@@ -8,10 +8,10 @@ from ...client.models.change_manage_offsite_backup_copies import ChangeManageOff
 from ...client.models.change_manage_offsite_backup_copies_type import ChangeManageOffsiteBackupCopiesType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "change-manage-offsite-backup-copies"

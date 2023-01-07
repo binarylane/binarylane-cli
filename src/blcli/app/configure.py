@@ -22,6 +22,9 @@ class ConfigureRunner(Runner):
         return "Configure access to BinaryLane API"
 
     def run(self, args: List[str]) -> None:
+        if args == [Runner.CHECK]:
+            return
+
         print(
             """
 To get started with the BinaryLane CLI, you must obtain an API token for the CLI to authenticate with:

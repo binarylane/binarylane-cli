@@ -25,23 +25,25 @@ from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} imp
 
 {% set return_string = endpoint.response_type() %}
 {% set parsed_responses = (endpoint.responses | length > 0) and return_string != "Any" %}
-{% set list_response = [] %}
+{% set response_class = {} %}
 {% for response_type in endpoint.responses if response_type.status_code == 200 %}
-{# First check if response contains a list property; and store it in list_response for later #}
+{% if endpoint.method != 'get' and response_type.prop.class_info and response_type.prop.class_info.name == 'ActionResponse' %}
+{% set _ = response_class.update({'action': openapi.models_by_class[response_type.prop.class_info]}) %}
+{% endif %}
+{# Check if response contains a list[Model] property; and store it for later #}
 {% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() == 'list' and prop.inner_property.class_info %}
-{# mutating existing object via list.append() is required because of jinja 'for' variable scope - cannot set into global scope #}
 {# see package_init.py.jinja for explanation of why we need to use models_by_class #}
-{% set _ = list_response.append(openapi.models_by_class[prop.inner_property.class_info]) %}
+{% set _ = response_class.update({'list': openapi.models_by_class[prop.inner_property.class_info]}) %}
 {% endfor %}
 {# Second check if there are any non-list values, which means this isnt a list response #}
 {% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() != 'list' %}
 {# This is required because of jinja 'for' variable scope #}
-{% set _ = list_response.clear() %}
+{% set _ = response_class.update({'list':None}) %}
 {% endfor %}
 {% endfor %}
 
-{% if list_response %}
-{% set list_response = list_response[0] %}
+{% if response_class.get('list') %}
+{% set list_response = response_class.get('list') %}
 from ...runners import ListRunner
 class Command(ListRunner):
 
@@ -63,6 +65,9 @@ class Command(ListRunner):
             '{{ prop.name }}': """{{ prop.description }}""",
             {% endfor %}
         }
+{% elif response_class.get('action') %}
+from ...runners import ActionRunner
+class Command(ActionRunner):
 {% else %}
 from ...runners import CommandRunner
 class Command(CommandRunner):

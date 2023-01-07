@@ -7,10 +7,10 @@ from ...client.models.problem_details import ProblemDetails
 from ...client.models.rename import Rename
 from ...client.models.rename_type import RenameType
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "rename"

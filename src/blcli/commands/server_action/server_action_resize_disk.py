@@ -7,10 +7,10 @@ from ...client.models.problem_details import ProblemDetails
 from ...client.models.resize_disk import ResizeDisk
 from ...client.models.resize_disk_type import ResizeDiskType
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "resize-disk"

@@ -7,10 +7,10 @@ from ...client.models.power_cycle import PowerCycle
 from ...client.models.power_cycle_type import PowerCycleType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "power-cycle"

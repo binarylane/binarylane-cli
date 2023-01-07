@@ -7,10 +7,10 @@ from ...client.models.power_on import PowerOn
 from ...client.models.power_on_type import PowerOnType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "power-on"

@@ -8,10 +8,10 @@ from ...client.models.change_threshold_alerts_type import ChangeThresholdAlertsT
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.threshold_alert_request import ThresholdAlertRequest
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "change-threshold-alerts"

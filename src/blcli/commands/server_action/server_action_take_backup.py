@@ -10,10 +10,10 @@ from ...client.models.take_backup import TakeBackup
 from ...client.models.take_backup_type import TakeBackupType
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "take-backup"

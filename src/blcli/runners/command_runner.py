@@ -1,12 +1,16 @@
-import importlib
+from __future__ import annotations
+
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from ..cli import CommandParser, debug, error
 from ..config import Config
 from ..printers import Printer, PrinterType, create_printer
 from .httpx_wrapper import CurlCommand
 from .runner import Runner
+
+if TYPE_CHECKING:
+    from ..client import AuthenticatedClient
 
 
 class CommandRunner(Runner):
@@ -15,6 +19,7 @@ class CommandRunner(Runner):
     _parser: CommandParser
     _parent: Runner
     _config: Config
+    _client: "AuthenticatedClient"
 
     _print_curl: Optional[bool]
     _output: Optional[str]
@@ -74,7 +79,7 @@ class CommandRunner(Runner):
             error('Unable to authenticate with API - please run "bl configure" to get started.')
         elif received:
             self._printer.print(received)
-        else:
+        elif status_code != 204:
             error(f"HTTP {status_code}")
 
     def process(self, parsed: Any) -> None:
@@ -101,12 +106,14 @@ class CommandRunner(Runner):
 
         self.process(parsed)
 
-        authenticated_client = importlib.import_module("..client", __package__).AuthenticatedClient
-        client = authenticated_client(
-            "https://api.binarylane.com.au",
+        # pylint: disable=import-outside-toplevel
+        from ..client import AuthenticatedClient
+
+        self._client = AuthenticatedClient(
+            self._config.api_url,
             self._config.api_token,
         )
-        parsed.client = client
+        parsed.client = self._client
 
         request_args = vars(parsed)
 

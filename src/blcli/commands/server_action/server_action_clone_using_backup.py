@@ -8,10 +8,10 @@ from ...client.models.clone_using_backup_type import CloneUsingBackupType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "clone-using-backup"

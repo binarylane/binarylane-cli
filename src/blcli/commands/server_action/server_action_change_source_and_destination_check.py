@@ -8,10 +8,10 @@ from ...client.models.change_source_and_destination_check import ChangeSourceAnd
 from ...client.models.change_source_and_destination_check_type import ChangeSourceAndDestinationCheckType
 from ...client.models.problem_details import ProblemDetails
 from ...client.models.validation_problem_details import ValidationProblemDetails
-from ...runners import CommandRunner
+from ...runners import ActionRunner
 
 
-class Command(CommandRunner):
+class Command(ActionRunner):
     @property
     def name(self):
         return "change-source-and-destination-check"
