@@ -128,7 +128,7 @@ class Command(CommandRunner):
         server_ids: Union[Unset, None, List[int]] = UNSET,
     ) -> Union[Any, ProblemDetails, UpdateLoadBalancerResponse, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             load_balancer_id=load_balancer_id,
             client=client,
             json_body=UpdateLoadBalancerRequest(
@@ -142,4 +142,5 @@ class Command(CommandRunner):
                 enable_backend_keepalive=enable_backend_keepalive,
                 server_ids=server_ids,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

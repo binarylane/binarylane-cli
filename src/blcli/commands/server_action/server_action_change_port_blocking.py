@@ -53,11 +53,12 @@ class Command(CommandRunner):
         enabled: bool,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangePortBlocking(
                 type=type,
                 enabled=enabled,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

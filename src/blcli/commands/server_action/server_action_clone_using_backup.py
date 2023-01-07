@@ -70,7 +70,7 @@ class Command(CommandRunner):
         name: Union[Unset, None, str] = UNSET,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=CloneUsingBackup(
@@ -79,4 +79,5 @@ class Command(CommandRunner):
                 target_server_id=target_server_id,
                 name=name,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

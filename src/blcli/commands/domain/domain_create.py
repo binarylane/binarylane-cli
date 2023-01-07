@@ -44,10 +44,11 @@ class Command(CommandRunner):
         ip_address: Union[Unset, None, str] = UNSET,
     ) -> Union[Any, DomainResponse, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             client=client,
             json_body=DomainRequest(
                 name=name,
                 ip_address=ip_address,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

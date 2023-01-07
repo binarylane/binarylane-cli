@@ -1,4 +1,3 @@
-# pylint: disable=missing-module-docstring
 from abc import abstractmethod
 from argparse import SUPPRESS
 from typing import Any, Dict, List
@@ -70,5 +69,8 @@ class ListRunner(CommandRunner):
 
         super().process(parsed)
 
-    def response(self, received: Any) -> None:
-        self._printer.print(received, self._format)
+    def response(self, status_code: int, received: Any) -> None:
+        if status_code != 200:
+            super().response(status_code, received)
+        elif received:
+            self._printer.print(received, self._format)

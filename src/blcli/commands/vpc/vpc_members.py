@@ -93,8 +93,10 @@ class Command(ListRunner):
                 per_page=per_page,
             )
 
-            if page_response.status_code != 200:
-                return page_response.parsed
+            status_code = page_response.status_code
+            if status_code != 200:
+                response = page_response.parsed
+                break
 
             has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
             if not response:
@@ -102,4 +104,4 @@ class Command(ListRunner):
             else:
                 response.members += page_response.parsed.members
 
-        return response
+        return status_code, response

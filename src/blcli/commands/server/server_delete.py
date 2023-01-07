@@ -39,8 +39,9 @@ class Command(CommandRunner):
         reason: Union[Unset, None, str] = UNSET,
     ) -> Union[Any, ProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             reason=reason,
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

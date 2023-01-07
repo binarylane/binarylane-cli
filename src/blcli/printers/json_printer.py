@@ -1,5 +1,3 @@
-# pylint: disable=missing-module-docstring
-
 import json
 from typing import Any, List, Optional
 

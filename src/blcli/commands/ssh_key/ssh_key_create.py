@@ -55,11 +55,12 @@ class Command(CommandRunner):
         default: Union[Unset, None, bool] = UNSET,
     ) -> Union[Any, SshKeyResponse, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             client=client,
             json_body=SshKeyRequest(
                 public_key=public_key,
                 name=name,
                 default=default,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

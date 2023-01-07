@@ -121,7 +121,7 @@ class Command(CommandRunner):
         video_device: Union[Unset, None, VideoDevice] = UNSET,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeAdvancedFeatures(
@@ -133,4 +133,5 @@ class Command(CommandRunner):
                 automatic_machine_type=automatic_machine_type,
                 video_device=video_device,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

@@ -41,10 +41,11 @@ class Command(CommandRunner):
         forwarding_rules: List["ForwardingRule"],
     ) -> Union[Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             load_balancer_id=load_balancer_id,
             client=client,
             json_body=ForwardingRulesRequest(
                 forwarding_rules=forwarding_rules,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

@@ -42,10 +42,11 @@ class Command(CommandRunner):
         type: PowerOffType,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=PowerOff(
                 type=type,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

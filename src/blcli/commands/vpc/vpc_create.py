@@ -54,11 +54,12 @@ class Command(CommandRunner):
         ip_range: Union[Unset, None, str] = UNSET,
     ) -> Union[Any, ValidationProblemDetails, VpcResponse]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             client=client,
             json_body=CreateVpcRequest(
                 name=name,
                 route_entries=route_entries,
                 ip_range=ip_range,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

@@ -30,7 +30,8 @@ class Command(CommandRunner):
         client: Client,
     ) -> Union[Any, InvoiceResponse, ProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             invoice_id=invoice_id,
             client=client,
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

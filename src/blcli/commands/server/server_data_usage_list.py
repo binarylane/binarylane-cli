@@ -57,8 +57,10 @@ If you have more than one server, please see our data pooling policy: this value
                 per_page=per_page,
             )
 
-            if page_response.status_code != 200:
-                return page_response.parsed
+            status_code = page_response.status_code
+            if status_code != 200:
+                response = page_response.parsed
+                break
 
             has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
             if not response:
@@ -66,4 +68,4 @@ If you have more than one server, please see our data pooling policy: this value
             else:
                 response.data_usages += page_response.parsed.data_usages
 
-        return response
+        return status_code, response

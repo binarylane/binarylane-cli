@@ -150,7 +150,7 @@ class Command(CommandRunner):
         port_blocking: Union[Unset, None, bool] = UNSET,
     ) -> Union[Any, CreateServerResponse, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             client=client,
             json_body=CreateServerRequest(
                 size=size,
@@ -167,4 +167,5 @@ class Command(CommandRunner):
                 user_data=user_data,
                 port_blocking=port_blocking,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

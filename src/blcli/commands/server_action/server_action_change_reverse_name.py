@@ -61,7 +61,7 @@ class Command(CommandRunner):
         reverse_name: Union[Unset, None, str] = UNSET,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeReverseName(
@@ -69,4 +69,5 @@ class Command(CommandRunner):
                 ipv4_address=ipv4_address,
                 reverse_name=reverse_name,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

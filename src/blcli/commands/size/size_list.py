@@ -96,8 +96,10 @@ otherwise not all regions listed will support all operating systems on this size
                 per_page=per_page,
             )
 
-            if page_response.status_code != 200:
-                return page_response.parsed
+            status_code = page_response.status_code
+            if status_code != 200:
+                response = page_response.parsed
+                break
 
             has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
             if not response:
@@ -105,4 +107,4 @@ otherwise not all regions listed will support all operating systems on this size
             else:
                 response.sizes += page_response.parsed.sizes
 
-        return response
+        return status_code, response

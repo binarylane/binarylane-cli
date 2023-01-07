@@ -92,7 +92,7 @@ class Command(CommandRunner):
         pre_action_backup: Union[Unset, None, TakeBackup] = UNSET,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=Resize(
@@ -103,4 +103,5 @@ class Command(CommandRunner):
                 change_licenses=change_licenses,
                 pre_action_backup=pre_action_backup,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

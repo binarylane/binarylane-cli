@@ -29,7 +29,8 @@ class Command(CommandRunner):
         client: Client,
     ) -> Union[Any, ProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             vpc_id=vpc_id,
             client=client,
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

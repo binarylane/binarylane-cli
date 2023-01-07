@@ -51,11 +51,12 @@ class Command(CommandRunner):
         kernel: int,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeKernel(
                 type=type,
                 kernel=kernel,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

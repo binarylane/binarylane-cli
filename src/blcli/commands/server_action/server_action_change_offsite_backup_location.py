@@ -52,11 +52,12 @@ class Command(CommandRunner):
         offsite_backup_location: Union[Unset, None, str] = UNSET,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeOffsiteBackupLocation(
                 type=type,
                 offsite_backup_location=offsite_backup_location,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

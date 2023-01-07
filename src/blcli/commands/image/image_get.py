@@ -30,7 +30,8 @@ class Command(CommandRunner):
         client: Client,
     ) -> Union[Any, ImageResponse, ProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             image_id_or_slug=image_id_or_slug,
             client=client,
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

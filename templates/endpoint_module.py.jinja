@@ -172,7 +172,7 @@ class Command(CommandRunner):
                 page += 1
                 page_response = sync_detailed(
             {% else %}
-            return sync_detailed(
+            page_response = sync_detailed(
             {% endif %}
                 {% for parameter in endpoint.path_parameters.values() %}
                 {{ parameter.python_name }} = {{ parameter.python_name }},
@@ -198,14 +198,17 @@ class Command(CommandRunner):
                 {% endfor %}
                 {% endif %}
             {% if not paginated %}
-            ).parsed
+            )
+            return page_response.status_code, page_response.parsed
             {% else %}
                 page = page,
                 per_page = per_page,
                 )
 
-                if page_response.status_code != 200:
-                    return page_response.parsed
+                status_code = page_response.status_code
+                if status_code != 200:
+                    response = page_response.parsed
+                    break
 
                 has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
                 if not response:
@@ -221,5 +224,5 @@ class Command(CommandRunner):
                 {% endfor %}
                 {% endfor %}
 
-            return response
+            return status_code, response
             {% endif %}

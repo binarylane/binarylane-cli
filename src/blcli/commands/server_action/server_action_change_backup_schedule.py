@@ -70,7 +70,7 @@ class Command(CommandRunner):
         backup_day_of_month: Union[Unset, None, int] = UNSET,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeBackupSchedule(
@@ -79,4 +79,5 @@ class Command(CommandRunner):
                 backup_day_of_week=backup_day_of_week,
                 backup_day_of_month=backup_day_of_month,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

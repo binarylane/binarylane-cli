@@ -52,11 +52,12 @@ class Command(CommandRunner):
         firewall_rules: List["AdvancedFirewallRule"],
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeAdvancedFirewallRules(
                 type=type,
                 firewall_rules=firewall_rules,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

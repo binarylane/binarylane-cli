@@ -1,4 +1,3 @@
-# pylint: disable=missing-module-docstring
 import importlib
 from abc import abstractmethod
 from argparse import ArgumentParser, HelpFormatter

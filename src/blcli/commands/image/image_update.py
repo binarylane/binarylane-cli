@@ -53,11 +53,12 @@ class Command(CommandRunner):
         locked: Union[Unset, None, bool] = UNSET,
     ) -> Union[Any, ImageResponse, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             image_id=image_id,
             client=client,
             json_body=ImageRequest(
                 name=name,
                 locked=locked,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

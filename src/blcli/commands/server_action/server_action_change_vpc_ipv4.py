@@ -60,7 +60,7 @@ class Command(CommandRunner):
         new_ipv4_address: str,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeVpcIpv4(
@@ -68,4 +68,5 @@ class Command(CommandRunner):
                 current_ipv4_address=current_ipv4_address,
                 new_ipv4_address=new_ipv4_address,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

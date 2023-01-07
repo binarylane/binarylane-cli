@@ -52,11 +52,12 @@ class Command(CommandRunner):
         route_entries: Union[Unset, None, List["RouteEntryRequest"]] = UNSET,
     ) -> Union[Any, ProblemDetails, ValidationProblemDetails, VpcResponse]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             vpc_id=vpc_id,
             client=client,
             json_body=UpdateVpcRequest(
                 name=name,
                 route_entries=route_entries,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

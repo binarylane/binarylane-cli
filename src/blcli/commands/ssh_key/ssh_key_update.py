@@ -54,11 +54,12 @@ Optional: If true this will be added to all new server installations (if we supp
         default: Union[Unset, None, bool] = UNSET,
     ) -> Union[Any, ProblemDetails, SshKeyResponse, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             key_id=key_id,
             client=client,
             json_body=UpdateSshKeyRequest(
                 name=name,
                 default=default,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

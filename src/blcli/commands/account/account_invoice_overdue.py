@@ -56,6 +56,7 @@ class Command(ListRunner):
         client: Client,
     ) -> Union[Any, UnpaidFailedInvoicesResponse]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             client=client,
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

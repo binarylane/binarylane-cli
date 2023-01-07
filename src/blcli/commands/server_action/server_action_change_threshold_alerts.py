@@ -52,11 +52,12 @@ class Command(CommandRunner):
         threshold_alerts: List["ThresholdAlertRequest"],
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeThresholdAlerts(
                 type=type,
                 threshold_alerts=threshold_alerts,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

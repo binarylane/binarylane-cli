@@ -52,11 +52,12 @@ class Command(CommandRunner):
         vpc_id: Union[Unset, None, int] = UNSET,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeNetwork(
                 type=type,
                 vpc_id=vpc_id,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

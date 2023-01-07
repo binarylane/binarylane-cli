@@ -128,7 +128,7 @@ class Command(CommandRunner):
         tag: Union[Unset, None, str] = UNSET,
     ) -> Union[Any, DomainRecordResponse, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             domain_name=domain_name,
             client=client,
             json_body=DomainRecordRequest(
@@ -142,4 +142,5 @@ class Command(CommandRunner):
                 flags=flags,
                 tag=tag,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

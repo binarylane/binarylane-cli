@@ -33,9 +33,10 @@ def warn(*args: str) -> None:
     print("WARN: ", *args, file=sys.stderr)
 
 
-def error(*args: str) -> None:
+def error(*args: str) -> typing.NoReturn:
     """Wrapper for print() that prefixes output with ERROR:"""
     print("ERROR: ", *args, file=sys.stderr)
+    raise SystemExit(1)
 
 
 class CommandHelpFormatter(argparse.HelpFormatter):

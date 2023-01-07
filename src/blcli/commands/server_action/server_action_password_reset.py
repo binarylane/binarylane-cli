@@ -65,7 +65,7 @@ If omitted and the server supports password change actions this will default to 
         send_password_via_email: Union[Unset, None, bool] = UNSET,
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=PasswordReset(
@@ -73,4 +73,5 @@ If omitted and the server supports password change actions this will default to 
                 username=username,
                 send_password_via_email=send_password_via_email,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

@@ -51,11 +51,12 @@ class Command(CommandRunner):
         ipv6_reverse_nameservers: List[str],
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             json_body=ChangeIpv6ReverseNameservers(
                 type=type,
                 ipv6_reverse_nameservers=ipv6_reverse_nameservers,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

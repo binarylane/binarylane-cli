@@ -1,10 +1,8 @@
-# pylint: disable=missing-module-docstring
-
 import importlib
 from abc import abstractmethod
 from typing import Any, Dict, List, Optional
 
-from ..cli import CommandParser, debug
+from ..cli import CommandParser, debug, error
 from ..config import Config
 from ..printers import Printer, PrinterType, create_printer
 from .httpx_wrapper import CurlCommand
@@ -70,9 +68,14 @@ class CommandRunner(Runner):
         printer.header = self._header
         return printer
 
-    def response(self, received: Any) -> None:
+    def response(self, status_code: int, received: Any) -> None:
         """Format and display response received from API operation"""
-        self._printer.print(received)
+        if status_code == 401:
+            error('Unable to authenticate with API - please run "bl configure" to get started.')
+        elif received:
+            self._printer.print(received)
+        else:
+            error(f"HTTP {status_code}")
 
     def process(self, parsed: Any) -> None:
         """Process runner-local arguments"""
@@ -113,4 +116,4 @@ class CommandRunner(Runner):
                 self.request(**request_args)
                 return print(curl.shell)
 
-        return self.response(self.request(**vars(parsed)))
+        return self.response(*self.request(**vars(parsed)))

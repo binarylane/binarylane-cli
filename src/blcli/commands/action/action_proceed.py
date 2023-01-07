@@ -41,10 +41,11 @@ class Command(CommandRunner):
         proceed: bool,
     ) -> Union[Any, ProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             action_id=action_id,
             client=client,
             json_body=ProceedRequest(
                 proceed=proceed,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

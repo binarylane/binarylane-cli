@@ -30,7 +30,8 @@ class Command(CommandRunner):
         client: Client,
     ) -> Union[Any, LoadBalancerResponse, ProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             load_balancer_id=load_balancer_id,
             client=client,
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

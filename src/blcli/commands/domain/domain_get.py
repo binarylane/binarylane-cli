@@ -30,7 +30,8 @@ class Command(CommandRunner):
         client: Client,
     ) -> Union[Any, DomainResponse, ProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             domain_name=domain_name,
             client=client,
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

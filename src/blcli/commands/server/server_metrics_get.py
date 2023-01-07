@@ -51,8 +51,9 @@ class Command(CommandRunner):
         data_interval: Union[Unset, None, DataInterval] = UNSET,
     ) -> Union[Any, ProblemDetails, SampleSetResponse]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             server_id=server_id,
             client=client,
             data_interval=data_interval,
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

@@ -48,6 +48,9 @@ ignore-paths = ['src/blcli/client/', 'src/blcli/commands/*/']
 
 [tool.pylint.messages_control]
 disable = [
+    # Most modules contain a single class
+    "missing-module-docstring",
+
     # Initial impl still in progress:
     "fixme",
 ]

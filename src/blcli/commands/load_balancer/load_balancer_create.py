@@ -140,7 +140,7 @@ class Command(CommandRunner):
         vpc_id: Union[Unset, None, int] = UNSET,
     ) -> Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             client=client,
             json_body=CreateLoadBalancerRequest(
                 name=name,
@@ -155,4 +155,5 @@ class Command(CommandRunner):
                 region=region,
                 vpc_id=vpc_id,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

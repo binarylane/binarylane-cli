@@ -36,9 +36,10 @@ class Command(CommandRunner):
         reverse_nameservers: Union[Unset, None, List[str]] = UNSET,
     ) -> Union[Action, Any, ProblemDetails, ValidationProblemDetails]:
 
-        return sync_detailed(
+        page_response = sync_detailed(
             client=client,
             json_body=ReverseNameserversRequest(
                 reverse_nameservers=reverse_nameservers,
             ),
-        ).parsed
+        )
+        return page_response.status_code, page_response.parsed

@@ -1,5 +1,3 @@
-# pylint: disable=missing-module-docstring
-
 from typing import Any
 
 from terminaltables import SingleTable
