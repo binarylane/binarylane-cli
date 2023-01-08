@@ -25,14 +25,16 @@ pylint = "^2.15.2"
 mypy = "^0.971"
 pydantic = "^1.10.2"
 types-python-dateutil = "^2.8.19"
+pytest = "^7.2.0"
 
 [tool.taskipy.tasks]
 black = "black ."
 isort = "isort ."
-mypy = "mypy src"
+mypy = "mypy src tests"
 pylint = "pylint src"
 generate = "scripts/generate.sh"
 check = "task isort && task black && task mypy && task pylint"
+test = "pytest tests"
 
 [tool.isort]
 line_length = 120
