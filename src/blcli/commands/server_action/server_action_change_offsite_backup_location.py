@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server_action.server_action_change_offsite_backup_location import sync_detailed
 from ...client.client import Client
@@ -43,6 +43,10 @@ class Command(ActionRunner):
             required=False,
             description="""Do not provide or set to null to use the internal offsite backup location, otherwise this must be a valid Amazon S3 bucket address. If this is provided Amazon will charge your S3 account at their standard rate for every backup stored.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

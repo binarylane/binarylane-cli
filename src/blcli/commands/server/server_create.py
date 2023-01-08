@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ... import cli
 from ...client.api.server.server_create import sync_detailed
@@ -10,10 +10,10 @@ from ...client.models.size_options_request import SizeOptionsRequest
 from ...client.models.ssh_key_request import SshKeyRequest
 from ...client.models.validation_problem_details import ValidationProblemDetails
 from ...client.types import UNSET, Unset
-from ...runners import CommandRunner
+from ...runners import ActionLinkRunner
 
 
-class Command(CommandRunner):
+class Command(ActionLinkRunner):
     @property
     def name(self):
         return "create"
@@ -131,6 +131,10 @@ class Command(CommandRunner):
             description="""Port blocking of outgoing connections for email, SSH and Remote Desktop (TCP ports 22, 25, and 3389) is enabled by default for all new servers. If this is false port blocking will be disabled. Disabling port blocking is only available to reviewed accounts.""",
             action=cli.BooleanOptionalAction,
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return CreateServerResponse
 
     def request(
         self,

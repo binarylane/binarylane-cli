@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.domain.domain_record_list import sync_detailed
 from ...client.client import Client
@@ -90,6 +90,10 @@ class Command(ListRunner):
             required=False,
             description="""Only return records for this subdomain name.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return DomainRecordsResponse
 
     def request(
         self,

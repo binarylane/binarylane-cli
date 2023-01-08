@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ...client.api.server.server_ipv6_ptr_ns_update import sync_detailed
 from ...client.client import Client
@@ -29,6 +29,10 @@ class Command(CommandRunner):
             required=False,
             description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return Action
 
     def request(
         self,

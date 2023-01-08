@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server.server_data_usage_get import sync_detailed
 from ...client.client import Client
@@ -23,6 +23,10 @@ class Command(CommandRunner):
             type=int,
             description="""The target server id.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return DataUsageResponse
 
     def request(
         self,

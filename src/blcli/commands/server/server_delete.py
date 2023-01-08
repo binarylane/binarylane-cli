@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server.server_delete import sync_detailed
 from ...client.client import Client
@@ -31,6 +31,10 @@ class Command(CommandRunner):
             required=False,
             description="""The reason for cancelling the server.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return type(None)
 
     def request(
         self,

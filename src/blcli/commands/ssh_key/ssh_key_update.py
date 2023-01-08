@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ... import cli
 from ...client.api.ssh_key.ssh_key_update import sync_detailed
@@ -45,6 +45,10 @@ class Command(CommandRunner):
 Optional: If true this will be added to all new server installations (if we support SSH Key injection for the server's operating system).""",
             action=cli.BooleanOptionalAction,
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return SshKeyResponse
 
     def request(
         self,

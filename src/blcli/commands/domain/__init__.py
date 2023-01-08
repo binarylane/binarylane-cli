@@ -3,13 +3,13 @@ from __future__ import annotations
 
 from typing import List, Type
 
-from ...runners import ModuleRunner, Runner
+from ...runners import ModuleRunner
 
 __all__ = ["commands"]
-commands: List[Type[Runner]] = []
+commands: List[Type[ModuleRunner]] = []
 
 
-def register_command(cls):
+def register_command(cls: ModuleRunner) -> ModuleRunner:
     commands.append(cls)
     return cls
 

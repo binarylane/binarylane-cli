@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Type, Union
 
 from ...client.api.software.software_get import sync_detailed
 from ...client.client import Client
@@ -23,6 +23,10 @@ class Command(CommandRunner):
             type=str,
             description="""The ID of the software to fetch.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return SoftwareResponse
 
     def request(
         self,

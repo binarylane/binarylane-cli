@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ...client.api.load_balancer.load_balancer_rule_create import sync_detailed
 from ...client.client import Client
@@ -33,6 +33,10 @@ class Command(CommandRunner):
             required=True,
             description="""The rules that control which traffic the load balancer will forward to servers in the pool.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return type(None)
 
     def request(
         self,

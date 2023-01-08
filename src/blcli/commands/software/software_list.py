@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Type
 
 from ...client.api.software.software_list import sync_detailed
 from ...client.client import Client
@@ -45,6 +45,10 @@ class Command(ListRunner):
 
     def configure(self, parser):
         """Add arguments for software_list"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return SoftwaresResponse
 
     def request(
         self,

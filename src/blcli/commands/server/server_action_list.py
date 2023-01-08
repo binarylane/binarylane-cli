@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.server.server_action_list import sync_detailed
 from ...client.client import Client
@@ -68,6 +68,10 @@ class Command(ListRunner):
             type=int,
             description="""The ID of the server for which actions should be listed.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionsResponse
 
     def request(
         self,

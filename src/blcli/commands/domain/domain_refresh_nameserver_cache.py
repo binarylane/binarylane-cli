@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Type
 
 from ...client.api.domain.domain_refresh_nameserver_cache import sync_detailed
 from ...client.client import Client
@@ -16,6 +16,10 @@ class Command(CommandRunner):
 
     def configure(self, parser):
         """Add arguments for domain_refresh-nameserver-cache"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return type(None)
 
     def request(
         self,

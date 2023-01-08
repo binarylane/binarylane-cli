@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.server.server_data_usage_list import sync_detailed
 from ...client.client import Client
@@ -38,6 +38,10 @@ If you have more than one server, please see our data pooling policy: this value
 
     def configure(self, parser):
         """Add arguments for server_data-usage_list"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return DataUsagesResponse
 
     def request(
         self,

@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.vpc.vpc_get import sync_detailed
 from ...client.client import Client
@@ -23,6 +23,10 @@ class Command(CommandRunner):
             type=int,
             description="""The target vpc id.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return VpcResponse
 
     def request(
         self,

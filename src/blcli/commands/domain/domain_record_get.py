@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.domain.domain_record_get import sync_detailed
 from ...client.client import Client
@@ -28,6 +28,10 @@ class Command(CommandRunner):
             type=int,
             description="""The ID of the record to fetch.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return DomainRecordResponse
 
     def request(
         self,

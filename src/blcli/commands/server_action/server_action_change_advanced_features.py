@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ... import cli
 from ...client.api.server_action.server_action_change_advanced_features import sync_detailed
@@ -107,6 +107,10 @@ class Command(ActionRunner):
 
 """,
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

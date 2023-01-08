@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, List, Optional, Union, Type, cast
 
 import httpx
 
@@ -25,27 +25,30 @@ from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} imp
 
 {% set return_string = endpoint.response_type() %}
 {% set parsed_responses = (endpoint.responses | length > 0) and return_string != "Any" %}
-{% set response_class = {} %}
+{% set response_class = {'name': 'CommandRunner'} %}
 {% for response_type in endpoint.responses if response_type.status_code == 200 %}
+{% set _ = response_class.update({'type': response_type.prop}) %}
 {% if endpoint.method != 'get' and response_type.prop.class_info and response_type.prop.class_info.name == 'ActionResponse' %}
-{% set _ = response_class.update({'action': openapi.models_by_class[response_type.prop.class_info]}) %}
+{% set _ = response_class.update({'name': 'ActionRunner'}) %}
 {% endif %}
+{% for prop in response_type.prop.required_properties if prop.name == 'links' and prop.class_info.name == 'ActionsLinks' %}
+{% set _ = response_class.update({'name': 'ActionLinkRunner'}) %}
+{% endfor %}
 {# Check if response contains a list[Model] property; and store it for later #}
 {% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() == 'list' and prop.inner_property.class_info %}
-{# see package_init.py.jinja for explanation of why we need to use models_by_class #}
-{% set _ = response_class.update({'list': openapi.models_by_class[prop.inner_property.class_info]}) %}
+{% set _ = response_class.update({'name': 'ListRunner', 'list': openapi.models_by_class[prop.inner_property.class_info]}) %}
 {% endfor %}
 {# Second check if there are any non-list values, which means this isnt a list response #}
-{% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() != 'list' %}
+{% for prop in response_type.prop.required_properties if response_class.get('list') and prop.name not in ('meta', 'links') and prop.get_instance_type_string() != 'list' %}
 {# This is required because of jinja 'for' variable scope #}
-{% set _ = response_class.update({'list':None}) %}
+{% set _ = response_class.update({'name': 'CommandRunner', 'list':None}) %}
 {% endfor %}
 {% endfor %}
 
+from ...runners import {{ response_class['name'] }}
+class Command({{ response_class['name'] }}):
 {% if response_class.get('list') %}
 {% set list_response = response_class.get('list') %}
-from ...runners import ListRunner
-class Command(ListRunner):
 
     @property
     def default_format(self) -> List[str]:
@@ -65,12 +68,6 @@ class Command(ListRunner):
             '{{ prop.name }}': """{{ prop.description }}""",
             {% endfor %}
         }
-{% elif response_class.get('action') %}
-from ...runners import ActionRunner
-class Command(ActionRunner):
-{% else %}
-from ...runners import CommandRunner
-class Command(CommandRunner):
 {% endif %}
 
     @property
@@ -134,6 +131,13 @@ class Command(CommandRunner):
         {% endfor %}
         {% endif %}
 
+    @property
+    def ok_response_type(self) -> Type:
+        {% if 'type' in response_class %}
+        return {{ response_class['type'].get_type_string() }}
+        {% else %}
+        return type(None)
+        {% endif %}
 
     def request(self,
         {% for parameter in endpoint.path_parameters.values() %}

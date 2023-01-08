@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server_action.server_action_change_backup_schedule import sync_detailed
 from ...client.client import Client
@@ -59,6 +59,10 @@ class Command(ActionRunner):
             required=False,
             description="""Do not provide a value to keep the current setting.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

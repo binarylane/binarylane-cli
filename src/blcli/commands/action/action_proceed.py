@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ... import cli
 from ...client.api.action.action_proceed import sync_detailed
@@ -33,6 +33,10 @@ class Command(CommandRunner):
             description="""Please see the documentation for each type of interaction for the effect of providing 'true' or 'false' here.""",
             action=cli.BooleanOptionalAction,
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return type(None)
 
     def request(
         self,

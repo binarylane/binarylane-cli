@@ -7,7 +7,7 @@ from ..runners import Runner
 
 if TYPE_CHECKING:
     from ..client import AuthenticatedClient
-    from ..client.api.account import account_get
+    from ..client.api.account.account_get import sync_detailed
 
 
 class ConfigureRunner(Runner):
@@ -47,12 +47,11 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
     def _try_token(self, config: Config) -> bool:
         """Return bool indicating if API is accessible with current configuration"""
 
-        # Delayed import to avoid impact on program startup time:
-        from ..client import AuthenticatedClient  # pylint: disable=import-outside-toplevel
-        from ..client.api.account import account_get  # pylint: disable=import-outside-toplevel
+        from ..client import AuthenticatedClient
+        from ..client.api.account.account_get import sync_detailed
 
         client = AuthenticatedClient(token=config.api_token, base_url=config.api_url)
-        response = account_get.sync_detailed(client=client)
+        response = sync_detailed(client=client)
 
         # Check for success
         if response.status_code == 200:

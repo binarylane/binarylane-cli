@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.account.account_invoice_list import sync_detailed
 from ...client.client import Client
@@ -50,6 +50,10 @@ class Command(ListRunner):
 
     def configure(self, parser):
         """Add arguments for account_invoice_list"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return InvoicesResponse
 
     def request(
         self,

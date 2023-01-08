@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ... import cli
 from ...client.api.server_action.server_action_change_manage_offsite_backup_copies import sync_detailed
@@ -44,6 +44,10 @@ class Command(ActionRunner):
             description="""This only has effect if a custom offsite location is being used: the internal offsite backup location always manages copies. If this is true old offsite backups will be removed once the replacement upload is complete. If this is false backups must be removed from the Amazon S3 bucket manually. Amazon will charge your S3 account at their standard rate for every backup stored.""",
             action=cli.BooleanOptionalAction,
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.load_balancer.load_balancer_list import sync_detailed
 from ...client.client import Client
@@ -64,6 +64,10 @@ class Command(ListRunner):
 
     def configure(self, parser):
         """Add arguments for load-balancer_list"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return LoadBalancersResponse
 
     def request(
         self,

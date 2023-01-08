@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.image.image_list import sync_detailed
 from ...client.client import Client
@@ -92,6 +92,10 @@ class Command(ListRunner):
             required=False,
             description="""Provide 'true' to only list private images. 'false' has no effect.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ImagesResponse
 
     def request(
         self,

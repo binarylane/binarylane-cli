@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ... import cli
 from ...client.api.image.image_update import sync_detailed
@@ -44,6 +44,10 @@ class Command(CommandRunner):
             description="""Optional: you may choose to lock an individual backup in which case we will not update that backup until you unlock it. Do not provide to leave the locked status unchanged.""",
             action=cli.BooleanOptionalAction,
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ImageResponse
 
     def request(
         self,

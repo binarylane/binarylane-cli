@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.domain.domain_record_create import sync_detailed
 from ...client.client import Client
@@ -112,6 +112,10 @@ class Command(CommandRunner):
             required=False,
             description="""A parameter tag that is only relevant for CAA records.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return DomainRecordResponse
 
     def request(
         self,

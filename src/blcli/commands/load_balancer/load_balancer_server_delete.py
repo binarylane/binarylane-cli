@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ...client.api.load_balancer.load_balancer_server_delete import sync_detailed
 from ...client.client import Client
@@ -32,6 +32,10 @@ class Command(CommandRunner):
             required=True,
             description="""A list of server IDs.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return type(None)
 
     def request(
         self,

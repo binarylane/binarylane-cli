@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server_action.server_action_attach_backup import sync_detailed
 from ...client.client import Client
@@ -42,6 +42,10 @@ class Command(ActionRunner):
             required=True,
             description="""Only attaching backup images is currently supported.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

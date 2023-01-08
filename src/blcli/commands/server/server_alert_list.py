@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server.server_alert_list import sync_detailed
 from ...client.client import Client
@@ -18,6 +18,10 @@ class Command(CommandRunner):
 
     def configure(self, parser):
         """Add arguments for server_alert_list"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return CurrentServerAlertsResponse
 
     def request(
         self,

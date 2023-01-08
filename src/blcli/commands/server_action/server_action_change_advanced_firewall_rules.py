@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ...client.api.server_action.server_action_change_advanced_firewall_rules import sync_detailed
 from ...client.client import Client
@@ -43,6 +43,10 @@ class Command(ActionRunner):
             required=True,
             description="""A list of rules for the server. NB: that any existing rules that are not included will be removed. Submit an empty list to clear all rules.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

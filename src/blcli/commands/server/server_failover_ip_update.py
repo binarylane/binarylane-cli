@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ...client.api.server.server_failover_ip_update import sync_detailed
 from ...client.client import Client
@@ -29,6 +29,10 @@ class Command(ActionRunner):
             "--value",
             nargs="*",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self, server_id: int, client: Client, server: List[str]

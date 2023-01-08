@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.vpc.vpc_members import sync_detailed
 from ...client.client import Client
@@ -70,6 +70,10 @@ class Command(ListRunner):
 
 """,
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return VpcMembersResponse
 
     def request(
         self,

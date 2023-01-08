@@ -1,0 +1,22 @@
+from typing import Any
+
+from .action_runner import ActionRunner
+
+
+class ActionLinkRunner(ActionRunner):
+    """ActionLinkRunner handles command responses with an optional action ID attached"""
+
+    def response(self, status_code: int, received: Any) -> None:
+
+        from ..client.models.actions_links import ActionsLinks
+
+        links = getattr(received, "links", None)
+        if not isinstance(links, ActionsLinks) or not links.actions:
+            super().response(status_code, received)
+            return
+
+        action_id = links.actions[0].id
+        super().response(status_code, action_id)
+
+        # Print the 'other' object (e.g. server) from the response
+        self._printer.print(received)

@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.domain.domain_get import sync_detailed
 from ...client.client import Client
@@ -23,6 +23,10 @@ class Command(CommandRunner):
             type=str,
             description="""The name of the domain to fetch.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return DomainResponse
 
     def request(
         self,

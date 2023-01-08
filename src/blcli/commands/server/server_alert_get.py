@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.server.server_alert_get import sync_detailed
 from ...client.client import Client
@@ -53,6 +53,10 @@ class Command(ListRunner):
             type=int,
             description="""The ID of the server for which threshold alerts should be fetched.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ThresholdAlertsResponse
 
     def request(
         self,

@@ -1,4 +1,4 @@
-from typing import Dict, List, Union
+from typing import Dict, List, Type, Union
 
 from ...client.api.software.software_operating_system import sync_detailed
 from ...client.client import Client
@@ -51,6 +51,10 @@ class Command(ListRunner):
             type=str,
             description="""The ID or slug of the operating system for which available software should be listed.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return SoftwaresResponse
 
     def request(
         self,

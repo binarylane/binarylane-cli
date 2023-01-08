@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ... import cli
 from ...client.api.load_balancer.load_balancer_update import sync_detailed
@@ -112,6 +112,10 @@ class Command(CommandRunner):
             required=False,
             description="""A list of server IDs to assign to this load balancer.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return UpdateLoadBalancerResponse
 
     def request(
         self,

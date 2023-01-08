@@ -106,7 +106,6 @@ class CommandRunner(Runner):
 
         self.process(parsed)
 
-        # pylint: disable=import-outside-toplevel
         from ..client import AuthenticatedClient
 
         self._client = AuthenticatedClient(

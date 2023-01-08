@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ...client.api.vpc.vpc_create import sync_detailed
 from ...client.client import Client
@@ -45,6 +45,10 @@ class Command(CommandRunner):
             required=False,
             description="""A private address range that you select during creation, such as the default value of 10.240.0.0/16. Because the virtual network is dedicated to your use, you may use whatever IP address range you like.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return VpcResponse
 
     def request(
         self,

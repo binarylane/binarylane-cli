@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.load_balancer.load_balancer_get import sync_detailed
 from ...client.client import Client
@@ -23,6 +23,10 @@ class Command(CommandRunner):
             type=int,
             description="""The ID of the load balancer to fetch.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return LoadBalancerResponse
 
     def request(
         self,

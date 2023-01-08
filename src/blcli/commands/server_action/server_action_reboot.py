@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server_action.server_action_reboot import sync_detailed
 from ...client.client import Client
@@ -34,6 +34,10 @@ class Command(ActionRunner):
             required=True,
             description="""None""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ...client.api.vpc.vpc_patch import sync_detailed
 from ...client.client import Client
@@ -43,6 +43,10 @@ class Command(CommandRunner):
             required=False,
             description="""Submit null to leave unaltered, submit an empty list to clear all route entries. It is not possible to PATCH individual route entries, to alter a route entry submit the entire list of route entries you wish to save.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return VpcResponse
 
     def request(
         self,

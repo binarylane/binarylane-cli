@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server_action.server_action_change_partner import sync_detailed
 from ...client.client import Client
@@ -43,6 +43,10 @@ class Command(ActionRunner):
             required=False,
             description="""Leave this null to remove the server partnership. The partner server must be in the same region as the target server.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

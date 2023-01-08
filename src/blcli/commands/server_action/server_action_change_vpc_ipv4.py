@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server_action.server_action_change_vpc_ipv4 import sync_detailed
 from ...client.client import Client
@@ -50,6 +50,10 @@ class Command(ActionRunner):
             required=True,
             description="""The new Ipv4 address for the private VPC network adapter.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

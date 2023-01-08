@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.server.server_backup_upload import sync_detailed
 from ...client.client import Client
@@ -84,6 +84,10 @@ class Command(ActionRunner):
             required=False,
             description="""An optional label to identify the backup.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

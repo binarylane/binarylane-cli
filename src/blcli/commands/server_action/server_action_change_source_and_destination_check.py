@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ... import cli
 from ...client.api.server_action.server_action_change_source_and_destination_check import sync_detailed
@@ -44,6 +44,10 @@ class Command(ActionRunner):
             description="""The desired enabled status of the source and destination checks for network packets.""",
             action=cli.BooleanOptionalAction,
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return ActionResponse
 
     def request(
         self,

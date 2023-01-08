@@ -51,6 +51,9 @@ disable = [
     # Most modules contain a single class
     "missing-module-docstring",
 
+    # CLI needs some delayed imports to avoid slow program start
+    "import-outside-toplevel",
+
     # Initial impl still in progress:
     "fixme",
 ]

@@ -1,4 +1,5 @@
-from typing import List
+from functools import cached_property
+from typing import List, Sequence
 
 from ..runners import PackageRunner, Runner
 from .configure import ConfigureRunner
@@ -25,8 +26,13 @@ class App(PackageRunner):
         return ".commands"
 
     @property
-    def package_runners(self) -> List[Runner]:
-        return super().package_runners + [VersionRunner(self), ConfigureRunner(self)]
+    def runners(self) -> Sequence[Runner]:
+        return list(super().runners) + self.app_runners
+
+    @cached_property
+    def app_runners(self) -> List[Runner]:
+        """Additional runners to include"""
+        return [VersionRunner(self), ConfigureRunner(self)]
 
     def run(self, args: List[str]) -> None:
         # Allowing doing `bl help command [subcommand...]` instead of --help

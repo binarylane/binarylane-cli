@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.account.account_get import sync_detailed
 from ...client.client import Client
@@ -17,6 +17,10 @@ class Command(CommandRunner):
 
     def configure(self, parser):
         """Add arguments for account_get"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return AccountResponse
 
     def request(
         self,

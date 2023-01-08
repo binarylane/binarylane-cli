@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.load_balancer.load_balancer_availability import sync_detailed
 from ...client.client import Client
@@ -34,6 +34,10 @@ class Command(ListRunner):
 
     def configure(self, parser):
         """Add arguments for load-balancer_availability"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return LoadBalancerAvailabilityResponse
 
     def request(
         self,

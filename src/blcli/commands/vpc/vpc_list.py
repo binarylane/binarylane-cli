@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
 from ...client.api.vpc.vpc_list import sync_detailed
 from ...client.client import Client
@@ -34,6 +34,10 @@ class Command(ListRunner):
 
     def configure(self, parser):
         """Add arguments for vpc_list"""
+
+    @property
+    def ok_response_type(self) -> Type:
+        return VpcsResponse
 
     def request(
         self,

@@ -5,6 +5,7 @@ from functools import cached_property
 from typing import List, Optional, Sequence
 
 from ..cli import debug
+from .module_runner import ModuleRunner
 from .runner import Runner
 
 
@@ -53,9 +54,14 @@ class PackageRunner(Runner):
         """Path of python package containing runners to import during run()"""
 
     @cached_property
-    def package_runners(self) -> List[Runner]:
+    def module_runners(self) -> List[ModuleRunner]:
         """Runners to provide access to from this package"""
         return [cls(self) for cls in importlib.import_module(f".{self.package_path}", package=__package__).commands]
+
+    @property
+    def runners(self) -> Sequence[Runner]:
+        """List of runners provided by this package"""
+        return self.module_runners
 
     def _get_prefixes(self) -> Sequence[str]:
         """Get unique set of prefixes for runners in this package.
@@ -66,15 +72,15 @@ class PackageRunner(Runner):
 
         The resulting sequence may be empty if there are no runners with an underscore in the name.
         """
-        return sorted({runner.name.split("_")[0] for runner in (self.package_runners) if "_" in runner.name})
+        return sorted({runner.name.split("_")[0] for runner in self.runners if "_" in runner.name})
 
     def _get_unprefixed_runners(self) -> Sequence[Runner]:
         """Return all runners from package_runners that do not have a prefix"""
-        return [runner for runner in self.package_runners if "_" not in runner.name]
+        return [runner for runner in self.runners if "_" not in runner.name]
 
     def _get_prefix_runners(self, prefix: str) -> Sequence[Runner]:
         """Filter package_runners by the supplied prefix."""
-        return [runner for runner in self.package_runners if "_" in runner.name and runner.name.split("_")[0] == prefix]
+        return [runner for runner in self.runners if "_" in runner.name and runner.name.split("_")[0] == prefix]
 
     def configure(self) -> None:
         """Configure argument parser"""

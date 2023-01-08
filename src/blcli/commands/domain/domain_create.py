@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Type, Union
 
 from ...client.api.domain.domain_create import sync_detailed
 from ...client.client import Client
@@ -36,6 +36,10 @@ class Command(CommandRunner):
             required=False,
             description="""An optional IPv4 address that will be used to create an A record for the root domain.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return DomainResponse
 
     def request(
         self,

@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List, Type, Union
 
 from ... import cli
 from ...client.api.load_balancer.load_balancer_create import sync_detailed
@@ -123,6 +123,10 @@ class Command(CommandRunner):
             required=False,
             description="""Adding or assigning a load balancer to a VPC is not currently supported.""",
         )
+
+    @property
+    def ok_response_type(self) -> Type:
+        return CreateLoadBalancerResponse
 
     def request(
         self,
