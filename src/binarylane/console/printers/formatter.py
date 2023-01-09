@@ -28,12 +28,13 @@ def format_response(response: Any, show_header: bool, fields: Optional[List[str]
             and not getattr(value, "__origin__", None) in (Union, list)
         ]
 
+        def object_to_list(row: Dict[str, Any], columns: List[str]) -> List[Any]:
+            """Extract each field in `columns` from `row` into a list, in the same order as `columns`"""
+            return [row.get(prop) for prop in columns]
+
         data = [header] if show_header else []
         data += [
-            _flatten(
-                [item] if isinstance(item, str) else [value for key, value in item.to_dict().items() if key in header]
-            )
-            for item in primary
+            _flatten([item] if isinstance(item, str) else object_to_list(item.to_dict(), header)) for item in primary
         ]
 
     elif isinstance(primary, str):
