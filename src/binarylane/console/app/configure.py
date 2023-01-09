@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from getpass import getpass
 from typing import TYPE_CHECKING, List
 
 from binarylane.console.cli import error, warn
@@ -37,7 +36,7 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
 """
         )
         config = Config.load()
-        config.api_token = getpass("Enter your API access token: ")
+        config.api_token = input("Enter your API access token: ")
 
         print(f"Trying to authenticate with {config.api_url} ...")
         if self._try_token(config):
