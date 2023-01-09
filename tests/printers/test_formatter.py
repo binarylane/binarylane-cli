@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from typing import Any, Dict, List
 
-from blcli.printers import formatter
+from binarylane.console.printers import formatter
 
 
 def test_format_str() -> None:

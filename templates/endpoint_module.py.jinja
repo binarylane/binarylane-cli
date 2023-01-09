@@ -3,23 +3,23 @@ from typing import Any, Dict, List, Optional, Union, Type, cast
 import httpx
 
 
-from ... import cli
+from binarylane.console import cli
 
-from ...client.client import AuthenticatedClient, Client
-from ...client.types import Response, UNSET, Unset
+from binarylane.client import AuthenticatedClient, Client
+from binarylane.types import Response, UNSET, Unset
 
-from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync_detailed
+from binarylane.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync_detailed
 
 {% for relative in endpoint.relative_imports %}
-{{ relative.replace('...', '...client.') }}
+{{ relative.replace('...', 'binarylane.') }}
 {% endfor %}
 
 {% if endpoint.json_body %}
 {% for relative in endpoint.json_body.relative_imports %}
-{{ relative.replace('..', '...client.') }}
+{{ relative.replace('..', 'binarylane.') }}
 {% endfor %}
 {% for relative in endpoint.json_body.lazy_imports %}
-{{ relative.replace('..', '...client.') }}
+{{ relative.replace('..', 'binarylane.') }}
 {% endfor %}
 {% endif %}
 
@@ -45,7 +45,7 @@ from ...client.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} imp
 {% endfor %}
 {% endfor %}
 
-from ...runners import {{ response_class['name'] }}
+from binarylane.console.runners import {{ response_class['name'] }}
 class Command({{ response_class['name'] }}):
 {% if response_class.get('list') %}
 {% set list_response = response_class.get('list') %}
@@ -88,10 +88,6 @@ class Command({{ response_class['name'] }}):
         {% endfor %}
 
         {% if endpoint.json_body %}
-        {% if endpoint.json_body.class_info %}
-        from ...client.models.{{ endpoint.json_body.class_info.module_name }} import {{ endpoint.json_body.class_info.name }}
-        {% endif %}
-
         {#
             FIXME: BL API is not supposed to have any of these, but currently failover-ip update uses it.
             type= is intentionally missing to trigger a warning in cli_argument()

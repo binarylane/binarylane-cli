@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from typing import Any, List
 
 import pytest
 
-from blcli.commands import commands
-from blcli.printers import formatter
+from binarylane.console.commands import commands
+from binarylane.console.printers import formatter
 
 
 def ok_response_types() -> List[Any]:

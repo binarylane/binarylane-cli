@@ -9,8 +9,8 @@ if [[ ! -e openapi.json ]]; then
     exit 1
 fi
 
-rm -rf commands ../src/blcli/commands
+rm -rf commands ../src/binarylane/console/commands
 mkdir commands
 openapi-python-client update --path openapi.json --config commands.yml --custom-template-path ../templates
-mv commands/api ../src/blcli/commands
+mv commands/api ../src/binarylane/console/commands
 rm -rf commands

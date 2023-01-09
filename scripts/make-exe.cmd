@@ -7,10 +7,12 @@ REM it doesnt seem to function correctly when collecting submodules
 REM so we will just set PYTHONPATH explicitly
 set PYTHONPATH=exe
 
-echo from blcli import app ; app.main() > exe\bl.py
+echo from binarylane.console import app ; app.main() > exe\bl.py
 
-FOR /F "tokens=*" %%g IN ('poetry version --short') do (set BLCLI_VERSION=%%g)
-echo __version__ = '%BLCLI_VERSION%' > exe\blcli\_version.py
+REM I believe this is required because pyinstaller bundle does not contain "installed"
+REM packages, instead it is a "raw" bundle of the required modules.
+FOR /F "tokens=*" %%g IN ('poetry version --short') do (set PROJECT_VERSION=%%g)
+echo __version__ = '%PROJECT_VERSION%' > exe\binarylane\console\_version.py
 
-pyinstaller -F --collect-submodules blcli exe\bl.py --clean
+pyinstaller --name bl --onefile --collect-submodules binarylane exe\bl.py --clean
 rmdir /s /q exe

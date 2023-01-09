@@ -2,6 +2,7 @@ __pycache__
 *.pyc
 dist
 .idea
+.cache
 
 # Generated client + commands is not versioned during initial development
 scripts/openapi.json
