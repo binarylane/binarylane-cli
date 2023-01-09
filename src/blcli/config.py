@@ -29,7 +29,10 @@ class Config:
     def _get_config_home() -> Path:
         """Return platform-specific path that programs should store configuration in"""
         if sys.platform == "win32":
-            return Path(os.getenv("APPDATA"))
+            appdata = os.getenv("APPDATA")
+            if not appdata:
+                error("%APPDATA% is not set?")
+            return Path(appdata)
 
         xdg_config_home = os.getenv("XDG_CONFIG_HOME")
         if xdg_config_home:
@@ -37,7 +40,7 @@ class Config:
 
         home = os.getenv("HOME")
         if not home:
-            error("HOME is not set?")
+            error("$HOME is not set?")
         return Path(home) / ".config"
 
     def _get_config_dir(self) -> Path:
