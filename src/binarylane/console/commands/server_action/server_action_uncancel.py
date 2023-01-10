@@ -26,14 +26,14 @@ class Command(ActionRunner):
         """Add arguments for server-action_uncancel"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            UncancelType,
             dest="type",
-            type=UncancelType,
             required=True,
             description="""None""",
         )

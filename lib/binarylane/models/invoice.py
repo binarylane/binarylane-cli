@@ -27,7 +27,7 @@ class Invoice:
         date_overdue (datetime.datetime): The date in ISO8601 format this invoice is considered overdue.
         paid (bool): If this is true the invoice has been paid.
         refunded (bool): If this is true the payment for this invoice has been refunded.
-        invoice_items (List['InvoiceLineItem']): The individual items that make up invoice.
+        invoice_items (List[InvoiceLineItem]): The individual items that make up invoice.
         reference (Union[Unset, None, str]): The reference for this invoice. If this invoice is for a single service
             this may identify the service, otherwise it will be the account reference.
         payment_failure_count (Union[Unset, None, int]): If this is included it indicates the number of failed attempts
@@ -45,7 +45,7 @@ class Invoice:
     date_overdue: datetime.datetime
     paid: bool
     refunded: bool
-    invoice_items: List["InvoiceLineItem"]
+    invoice_items: List[InvoiceLineItem]
     reference: Union[Unset, None, str] = UNSET
     payment_failure_count: Union[Unset, None, int] = UNSET
     invoice_download_url: Union[Unset, None, str] = UNSET

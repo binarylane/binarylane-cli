@@ -13,10 +13,10 @@ T = TypeVar("T", bound="LoadBalancerAvailabilityResponse")
 class LoadBalancerAvailabilityResponse:
     """
     Attributes:
-        load_balancer_availability_options (List['LoadBalancerAvailabilityOption']):
+        load_balancer_availability_options (List[LoadBalancerAvailabilityOption]):
     """
 
-    load_balancer_availability_options: List["LoadBalancerAvailabilityOption"]
+    load_balancer_availability_options: List[LoadBalancerAvailabilityOption]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

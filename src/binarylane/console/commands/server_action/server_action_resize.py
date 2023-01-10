@@ -31,54 +31,54 @@ class Command(ActionRunner):
         """Add arguments for server-action_resize"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ResizeType,
             dest="type",
-            type=ResizeType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--size",
+            Union[Unset, None, str],
             dest="size",
-            type=Union[Unset, None, str],
             required=False,
             description="""The slug of the selected size. Do not provide to keep the current size.""",
         )
 
         parser.cli_argument(
             "--options",
+            Union[Unset, None, ChangeSizeOptionsRequest],
             dest="options",
-            type=Union[Unset, None, ChangeSizeOptionsRequest],
             required=False,
             description="""""",
         )
 
         parser.cli_argument(
             "--change-image",
+            Union[Unset, None, ChangeImage],
             dest="change_image",
-            type=Union[Unset, None, ChangeImage],
             required=False,
             description="""""",
         )
 
         parser.cli_argument(
             "--change-licenses",
+            Union[Unset, None, ChangeLicenses],
             dest="change_licenses",
-            type=Union[Unset, None, ChangeLicenses],
             required=False,
             description="""""",
         )
 
         parser.cli_argument(
             "--pre-action-backup",
+            Union[Unset, None, TakeBackup],
             dest="pre_action_backup",
-            type=Union[Unset, None, TakeBackup],
             required=False,
             description="""Take a Backup of a Server""",
         )

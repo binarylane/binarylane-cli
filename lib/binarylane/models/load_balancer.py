@@ -32,8 +32,8 @@ class LoadBalancer:
             | errored | The load balancer is in an errored state. |
 
         created_at (datetime.datetime): The date and time in ISO8601 format of the creation of the load balancer.
-        forwarding_rules (List['ForwardingRule']): The rules that control which traffic the load balancer will forward
-            to servers in the pool.
+        forwarding_rules (List[ForwardingRule]): The rules that control which traffic the load balancer will forward to
+            servers in the pool.
         health_check (HealthCheck):
         sticky_sessions (StickySessions):
         server_ids (List[int]): The server IDs of the servers that are currently in the load balancer pool (regardless
@@ -62,7 +62,7 @@ class LoadBalancer:
     ip: str
     status: LoadBalancerStatus
     created_at: datetime.datetime
-    forwarding_rules: List["ForwardingRule"]
+    forwarding_rules: List[ForwardingRule]
     health_check: HealthCheck
     sticky_sessions: StickySessions
     server_ids: List[int]

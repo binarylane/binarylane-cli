@@ -26,22 +26,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_delete-disk"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            DeleteDiskType,
             dest="type",
-            type=DeleteDiskType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--disk-id",
+            str,
             dest="disk_id",
-            type=str,
             required=True,
             description="""The ID of the existing disk. See server.disks for a list of IDs.""",
         )

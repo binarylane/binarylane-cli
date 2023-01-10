@@ -27,22 +27,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-partner"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangePartnerType,
             dest="type",
-            type=ChangePartnerType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--partner-server-id",
+            Union[Unset, None, int],
             dest="partner_server_id",
-            type=Union[Unset, None, int],
             required=False,
             description="""Leave this null to remove the server partnership. The partner server must be in the same region as the target server.""",
         )

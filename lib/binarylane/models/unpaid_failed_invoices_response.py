@@ -13,10 +13,10 @@ T = TypeVar("T", bound="UnpaidFailedInvoicesResponse")
 class UnpaidFailedInvoicesResponse:
     """
     Attributes:
-        invoices (List['Invoice']):
+        invoices (List[Invoice]):
     """
 
-    invoices: List["Invoice"]
+    invoices: List[Invoice]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

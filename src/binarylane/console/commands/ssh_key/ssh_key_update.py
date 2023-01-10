@@ -10,7 +10,7 @@ from binarylane.models.update_ssh_key_request import UpdateSshKeyRequest
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
-from binarylane.console import cli
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.runners import CommandRunner
 
 
@@ -27,26 +27,26 @@ class Command(CommandRunner):
         """Add arguments for ssh-key_update"""
         parser.cli_argument(
             "key_id",
-            type=str,
+            str,
             description="""The ID or fingerprint of the SSH Key to update.""",
         )
 
         parser.cli_argument(
             "--name",
+            str,
             dest="name",
-            type=str,
             required=True,
             description="""A name to help you identify the key.""",
         )
 
         parser.cli_argument(
             "--default",
+            Union[Unset, None, bool],
             dest="default",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Do not provide or leave null to leave the default status of the key unchanged.
 Optional: If true this will be added to all new server installations (if we support SSH Key injection for the server's operating system).""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
     @property

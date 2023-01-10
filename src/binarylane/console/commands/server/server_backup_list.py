@@ -73,7 +73,7 @@ class Command(ListRunner):
         """Add arguments for server_backup_list"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server for which backups should be listed.""",
         )
 

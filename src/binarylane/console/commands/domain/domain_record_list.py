@@ -62,14 +62,14 @@ class Command(ListRunner):
         """Add arguments for domain_record_list"""
         parser.cli_argument(
             "domain_name",
-            type=str,
+            str,
             description="""The domain name for which records should be listed.""",
         )
 
         parser.cli_argument(
             "--type",
+            Union[Unset, None, DomainRecordType],
             dest="type",
-            type=Union[Unset, None, DomainRecordType],
             required=False,
             description="""
 | Value | Description |
@@ -88,8 +88,8 @@ class Command(ListRunner):
         )
         parser.cli_argument(
             "--name",
+            Union[Unset, None, str],
             dest="name",
-            type=Union[Unset, None, str],
             required=False,
             description="""Only return records for this subdomain name.""",
         )

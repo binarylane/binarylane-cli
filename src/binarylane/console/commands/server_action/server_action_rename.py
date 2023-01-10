@@ -26,22 +26,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_rename"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            RenameType,
             dest="type",
-            type=RenameType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--name",
+            str,
             dest="name",
-            type=str,
             required=True,
             description="""The new hostname of your server, such as vps01.yourcompany.com.""",
         )

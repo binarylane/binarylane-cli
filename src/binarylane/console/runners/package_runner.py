@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import importlib
+import logging
 from abc import abstractmethod
 from argparse import ArgumentParser, HelpFormatter
 from functools import cached_property
 from typing import List, Optional, Sequence
 
-from binarylane.console.cli import debug
 from binarylane.console.runners.module_runner import ModuleRunner
 from binarylane.console.runners.runner import Runner
+
+logger = logging.getLogger(__name__)
 
 
 class PackageHelpFormatter(HelpFormatter):
@@ -119,7 +121,7 @@ class PackageRunner(Runner):
         options.add_argument("--help", help="Display available commands and descriptions", action="help")
         self.configure()
 
-        debug(f"PackageRunner for {self.name} ({self.package_path}). Received arguments: {args}")
+        logger.debug(f"PackageRunner for {self.name} ({self.package_path}). Received arguments: {args}")
 
         # We need to hide the --help parameter from argparse, so that we can pass it to a subrunner
         # rather than displaying our own help.

@@ -17,12 +17,12 @@ class SampleSetsResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        sample_sets (List['SampleSet']):
+        sample_sets (List[SampleSet]):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    sample_sets: List["SampleSet"]
+    sample_sets: List[SampleSet]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

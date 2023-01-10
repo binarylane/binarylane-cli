@@ -1,16 +1,18 @@
 from __future__ import annotations
 
+import logging
 import shutil
 import sys
 import time
 from typing import TYPE_CHECKING, Any, List, Optional
 
-from binarylane.console.cli import warn
 from binarylane.console.runners.command_runner import CommandRunner
 
 if TYPE_CHECKING:
     from binarylane.api.action.action_get import sync_detailed
     from binarylane.models.action_response import ActionResponse
+
+logger = logging.getLogger(__name__)
 
 
 class ActionRunner(CommandRunner):
@@ -73,6 +75,6 @@ class ActionRunner(CommandRunner):
             status_code, received = response.status_code, response.parsed
 
         else:
-            warn("Failed to get action")
+            logger.warning("Failed to get action")
             super().response(status_code, received)
         return

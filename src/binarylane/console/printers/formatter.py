@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import logging
 import typing
 from typing import Any, Dict, List, Optional, Sequence, Union
 
-from binarylane.console.cli import debug, warn
+logger = logging.getLogger(__name__)
 
 NULL_STR = ""
 META = {"additional_properties", "meta", "links"}
@@ -18,7 +19,7 @@ def format_response(response: Any, show_header: bool, fields: Optional[List[str]
 
     if isinstance(primary, list):
         for key, value in getattr(primary_type, "__annotations__", {DEFAULT_HEADING: "value"}).items():
-            debug(f'{key}: {value} dict?{hasattr(value, "to_dict")} origin:{getattr(value, "__origin__", None)}')
+            logger.debug(f'{key}: {value} dict?{hasattr(value, "to_dict")} origin:{getattr(value, "__origin__", None)}')
 
         header = fields or [
             key
@@ -65,13 +66,14 @@ def _extract_primary(response: Any) -> Any:
     extract that while ignore the descriptor properties like meta, links, additional_properties.
     """
 
-    type_hints = _get_primary_candidates(type(response))
+    response_type = type(response)
+    type_hints = _get_primary_candidates(response_type)
 
     if len(type_hints) == 1:
         return getattr(response, list(type_hints.keys())[0])
 
     if len(type_hints) > 1:
-        warn("{response_type} has multiple properties, displaying the whole response")
+        logger.warning(f"{response_type} has multiple properties, displaying the whole response")
     return response
 
 

@@ -53,7 +53,7 @@ class Command(ListRunner):
         """Add arguments for server_alert_get"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server for which threshold alerts should be fetched.""",
         )
 

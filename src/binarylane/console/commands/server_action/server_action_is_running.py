@@ -26,14 +26,14 @@ class Command(ActionRunner):
         """Add arguments for server-action_is-running"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            IsRunningType,
             dest="type",
-            type=IsRunningType,
             required=True,
             description="""None""",
         )

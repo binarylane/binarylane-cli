@@ -24,7 +24,7 @@ class Command(ActionRunner):
         """Add arguments for server_action_create"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 

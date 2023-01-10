@@ -76,8 +76,8 @@ class Command(ListRunner):
 
         parser.cli_argument(
             "--type",
+            Union[Unset, None, ImageQueryType],
             dest="type",
-            type=Union[Unset, None, ImageQueryType],
             required=False,
             description="""
 | Value | Description |
@@ -90,8 +90,8 @@ class Command(ListRunner):
         )
         parser.cli_argument(
             "--private",
+            Union[Unset, None, bool],
             dest="private",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Provide 'true' to only list private images. 'false' has no effect.""",
         )

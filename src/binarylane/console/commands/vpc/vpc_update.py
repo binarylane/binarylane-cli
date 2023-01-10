@@ -27,22 +27,22 @@ class Command(CommandRunner):
         """Add arguments for vpc_update"""
         parser.cli_argument(
             "vpc_id",
-            type=int,
+            int,
             description="""The target vpc id.""",
         )
 
         parser.cli_argument(
             "--name",
+            str,
             dest="name",
-            type=str,
             required=True,
             description="""A name to help identify this VPC.""",
         )
 
         parser.cli_argument(
             "--route-entries",
+            Union[Unset, None, List[RouteEntryRequest]],
             dest="route_entries",
-            type=Union[Unset, None, List["RouteEntryRequest"]],
             required=False,
             description="""The route entries that control how network traffic is directed through the VPC environment.""",
         )
@@ -56,7 +56,7 @@ class Command(CommandRunner):
         vpc_id: int,
         client: Client,
         name: str,
-        route_entries: Union[Unset, None, List["RouteEntryRequest"]] = UNSET,
+        route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET,
     ) -> Union[Any, ProblemDetails, ValidationProblemDetails, VpcResponse]:
 
         page_response = sync_detailed(

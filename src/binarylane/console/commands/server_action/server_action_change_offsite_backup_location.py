@@ -27,22 +27,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-offsite-backup-location"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeOffsiteBackupLocationType,
             dest="type",
-            type=ChangeOffsiteBackupLocationType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--offsite-backup-location",
+            Union[Unset, None, str],
             dest="offsite_backup_location",
-            type=Union[Unset, None, str],
             required=False,
             description="""Do not provide or set to null to use the internal offsite backup location, otherwise this must be a valid Amazon S3 bucket address. If this is provided Amazon will charge your S3 account at their standard rate for every backup stored.""",
         )

@@ -24,14 +24,14 @@ class Command(CommandRunner):
         """Add arguments for load-balancer_server_create"""
         parser.cli_argument(
             "load_balancer_id",
-            type=int,
+            int,
             description="""The ID of the load balancer to which servers should be added.""",
         )
 
         parser.cli_argument(
             "--server-ids",
+            List[int],
             dest="server_ids",
-            type=List[int],
             required=True,
             description="""A list of server IDs.""",
         )

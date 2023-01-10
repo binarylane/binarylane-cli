@@ -11,7 +11,7 @@ from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
-from binarylane.console import cli
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.runners import ActionRunner
 
 
@@ -28,22 +28,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_password-reset"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            PasswordResetType,
             dest="type",
-            type=PasswordResetType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--username",
+            Union[Unset, None, str],
             dest="username",
-            type=Union[Unset, None, str],
             required=False,
             description="""The username of the user to change the password.
 Only valid if the server supports password change actions (check server.password_change_supported via the servers endpoint).
@@ -52,11 +52,11 @@ If omitted and the server supports password change actions this will default to 
 
         parser.cli_argument(
             "--send-password-via-email",
+            Union[Unset, None, bool],
             dest="send_password_via_email",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Send the new password via email. If you do not include this the new password will only be available by querying the action result within five minutes of the action being completed.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
     @property

@@ -25,7 +25,7 @@ class UpdateLoadBalancerRequest:
             | least_connections | Each request will be sent to the server with the least existing connections. This option
             is not currently supported. |
 
-        forwarding_rules (Union[Unset, None, List['ForwardingRule']]): The rules that control which traffic the load
+        forwarding_rules (Union[Unset, None, List[ForwardingRule]]): The rules that control which traffic the load
             balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.
         health_check (Union[Unset, None, HealthCheck]):
         sticky_sessions (Union[Unset, None, StickySessions]):
@@ -40,7 +40,7 @@ class UpdateLoadBalancerRequest:
 
     name: str
     algorithm: Union[Unset, None, AlgorithmType] = UNSET
-    forwarding_rules: Union[Unset, None, List["ForwardingRule"]] = UNSET
+    forwarding_rules: Union[Unset, None, List[ForwardingRule]] = UNSET
     health_check: Union[Unset, None, HealthCheck] = UNSET
     sticky_sessions: Union[Unset, None, StickySessions] = UNSET
     redirect_http_to_https: Union[Unset, None, bool] = UNSET

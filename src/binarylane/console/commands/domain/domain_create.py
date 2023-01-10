@@ -26,16 +26,16 @@ class Command(CommandRunner):
 
         parser.cli_argument(
             "--name",
+            str,
             dest="name",
-            type=str,
             required=True,
             description="""The domain name to add to the DNS management system.""",
         )
 
         parser.cli_argument(
             "--ip-address",
+            Union[Unset, None, str],
             dest="ip_address",
-            type=Union[Unset, None, str],
             required=False,
             description="""An optional IPv4 address that will be used to create an A record for the root domain.""",
         )

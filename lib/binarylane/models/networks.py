@@ -14,8 +14,8 @@ T = TypeVar("T", bound="Networks")
 class Networks:
     """
     Attributes:
-        v4 (List['Network']): A list of the IPv4 networks for this server.
-        v6 (List['Network']): A list of the IPv6 networks for this server.
+        v4 (List[Network]): A list of the IPv4 networks for this server.
+        v6 (List[Network]): A list of the IPv6 networks for this server.
         port_blocking (bool): Whether the default port blocking is enabled for this server.
         recent_ddos (bool): If this is true this server has been the target of a recent DDOS attack. An email will have
             been sent to your email address when the DDOS was detected (and if it has ended, when it ended) with more
@@ -28,8 +28,8 @@ class Networks:
             server. Please see our documentation for how this interacts with IPv6 nameserver settings at the account level.
     """
 
-    v4: List["Network"]
-    v6: List["Network"]
+    v4: List[Network]
+    v6: List[Network]
     port_blocking: bool
     recent_ddos: bool
     separate_private_network_interface: Union[Unset, None, bool] = UNSET

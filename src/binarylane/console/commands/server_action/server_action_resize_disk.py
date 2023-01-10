@@ -26,30 +26,30 @@ class Command(ActionRunner):
         """Add arguments for server-action_resize-disk"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ResizeDiskType,
             dest="type",
-            type=ResizeDiskType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--disk-id",
+            str,
             dest="disk_id",
-            type=str,
             required=True,
             description="""The ID of the existing disk. See server.disks for a list of IDs.""",
         )
 
         parser.cli_argument(
             "--size-gigabytes",
+            int,
             dest="size_gigabytes",
-            type=int,
             required=True,
             description="""The new size of the disk in GB. If increasing the size of the disk the server must have sufficient unallocated storage space.""",
         )

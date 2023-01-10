@@ -45,14 +45,14 @@ class Command(ListRunner):
         """Add arguments for server_metrics_list"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The target server id.""",
         )
 
         parser.cli_argument(
             "--data-interval",
+            Union[Unset, None, DataInterval],
             dest="data_interval",
-            type=Union[Unset, None, DataInterval],
             required=False,
             description="""
 | Value | Description |
@@ -68,15 +68,15 @@ class Command(ListRunner):
         )
         parser.cli_argument(
             "--start",
+            Union[Unset, None, datetime.datetime],
             dest="start",
-            type=Union[Unset, None, datetime.datetime],
             required=False,
             description="""The start of the window of samples to retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week before end for intervals larger than 5 minutes, or 1 day for 5 minute intervals.""",
         )
         parser.cli_argument(
             "--end",
+            Union[Unset, None, datetime.datetime],
             dest="end",
-            type=Union[Unset, None, datetime.datetime],
             required=False,
             description="""The start of the window of samples to retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week or 1 day after start date depending on the selected data interval (or the current time if start is not provided). Can't be more than 1 year from start.""",
         )

@@ -16,14 +16,14 @@ class Vpc:
         id (int): The ID of this VPC.
         name (str): The name of this VPC.
         ip_range (str): The IPv4 range for this VPC in CIDR format.
-        route_entries (List['RouteEntry']): The route entries that control how network traffic is directed through the
-            VPC environment.
+        route_entries (List[RouteEntry]): The route entries that control how network traffic is directed through the VPC
+            environment.
     """
 
     id: int
     name: str
     ip_range: str
-    route_entries: List["RouteEntry"]
+    route_entries: List[RouteEntry]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

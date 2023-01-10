@@ -14,7 +14,7 @@ from binarylane.models.update_load_balancer_response import UpdateLoadBalancerRe
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
-from binarylane.console import cli
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.runners import CommandRunner
 
 
@@ -31,22 +31,22 @@ class Command(CommandRunner):
         """Add arguments for load-balancer_update"""
         parser.cli_argument(
             "load_balancer_id",
-            type=int,
+            int,
             description="""The ID of the load balancer to update.""",
         )
 
         parser.cli_argument(
             "--name",
+            str,
             dest="name",
-            type=str,
             required=True,
             description="""The hostname of the load balancer.""",
         )
 
         parser.cli_argument(
             "--algorithm",
+            Union[Unset, None, AlgorithmType],
             dest="algorithm",
-            type=Union[Unset, None, AlgorithmType],
             required=False,
             description="""
 | Value | Description |
@@ -59,59 +59,59 @@ class Command(CommandRunner):
 
         parser.cli_argument(
             "--forwarding-rules",
+            Union[Unset, None, List[ForwardingRule]],
             dest="forwarding_rules",
-            type=Union[Unset, None, List["ForwardingRule"]],
             required=False,
             description="""The rules that control which traffic the load balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.""",
         )
 
         parser.cli_argument(
             "--health-check",
+            Union[Unset, None, HealthCheck],
             dest="health_check",
-            type=Union[Unset, None, HealthCheck],
             required=False,
             description="""""",
         )
 
         parser.cli_argument(
             "--sticky-sessions",
+            Union[Unset, None, StickySessions],
             dest="sticky_sessions",
-            type=Union[Unset, None, StickySessions],
             required=False,
             description="""""",
         )
 
         parser.cli_argument(
             "--redirect-http-to-https",
+            Union[Unset, None, bool],
             dest="redirect_http_to_https",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Redirect HTTP traffic received by the load balancer to HTTPS. This is not currently supported.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
         parser.cli_argument(
             "--enable-proxy-protocol",
+            Union[Unset, None, bool],
             dest="enable_proxy_protocol",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Enable the PROXY protocol on the load balancer. This is not currently supported.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
         parser.cli_argument(
             "--enable-backend-keepalive",
+            Union[Unset, None, bool],
             dest="enable_backend_keepalive",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Use HTTP keepalive connections to servers in the load balancer pool. This is not currently supported.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
         parser.cli_argument(
             "--server-ids",
+            Union[Unset, None, List[int]],
             dest="server_ids",
-            type=Union[Unset, None, List[int]],
             required=False,
             description="""A list of server IDs to assign to this load balancer.""",
         )
@@ -126,7 +126,7 @@ class Command(CommandRunner):
         client: Client,
         name: str,
         algorithm: Union[Unset, None, AlgorithmType] = UNSET,
-        forwarding_rules: Union[Unset, None, List["ForwardingRule"]] = UNSET,
+        forwarding_rules: Union[Unset, None, List[ForwardingRule]] = UNSET,
         health_check: Union[Unset, None, HealthCheck] = UNSET,
         sticky_sessions: Union[Unset, None, StickySessions] = UNSET,
         redirect_http_to_https: Union[Unset, None, bool] = UNSET,

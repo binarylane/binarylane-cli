@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for load-balancer_get"""
         parser.cli_argument(
             "load_balancer_id",
-            type=int,
+            int,
             description="""The ID of the load balancer to fetch.""",
         )
 

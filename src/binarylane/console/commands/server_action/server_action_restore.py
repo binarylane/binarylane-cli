@@ -26,22 +26,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_restore"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            RestoreType,
             dest="type",
-            type=RestoreType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--image",
+            Union[int, str],
             dest="image",
-            type=Union[int, str],
             required=True,
             description="""The ID of the specific backup to use. Snapshots are not currently supported.""",
         )

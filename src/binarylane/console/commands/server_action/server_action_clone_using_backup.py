@@ -27,38 +27,38 @@ class Command(ActionRunner):
         """Add arguments for server-action_clone-using-backup"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            CloneUsingBackupType,
             dest="type",
-            type=CloneUsingBackupType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--image-id",
+            int,
             dest="image_id",
-            type=int,
             required=True,
             description="""The ID of the image to clone. Only backup type images are currently supported. This must be a backup of the server ID in the action endpoint URL.""",
         )
 
         parser.cli_argument(
             "--target-server-id",
+            int,
             dest="target_server_id",
-            type=int,
             required=True,
             description="""The target server ID. This server's current disks will be wiped and replaced with the selected backup image.""",
         )
 
         parser.cli_argument(
             "--name",
+            Union[Unset, None, str],
             dest="name",
-            type=Union[Unset, None, str],
             required=False,
             description="""The new hostname for the target server. If this is not supplied the target server's existing hostname will be used.""",
         )

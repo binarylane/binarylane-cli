@@ -26,14 +26,14 @@ class Command(ActionRunner):
         """Add arguments for server-action_disable-backups"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            DisableBackupsType,
             dest="type",
-            type=DisableBackupsType,
             required=True,
             description="""None""",
         )

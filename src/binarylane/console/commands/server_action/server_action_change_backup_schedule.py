@@ -27,38 +27,38 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-backup-schedule"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeBackupScheduleType,
             dest="type",
-            type=ChangeBackupScheduleType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--backup-hour-of-day",
+            Union[Unset, None, int],
             dest="backup_hour_of_day",
-            type=Union[Unset, None, int],
             required=False,
             description="""Do not provide a value to keep the current setting.""",
         )
 
         parser.cli_argument(
             "--backup-day-of-week",
+            Union[Unset, None, int],
             dest="backup_day_of_week",
-            type=Union[Unset, None, int],
             required=False,
             description="""Sunday is 0, Monday is 1 etc. Do not provide a value to keep the current setting.""",
         )
 
         parser.cli_argument(
             "--backup-day-of-month",
+            Union[Unset, None, int],
             dest="backup_day_of_month",
-            type=Union[Unset, None, int],
             required=False,
             description="""Do not provide a value to keep the current setting.""",
         )

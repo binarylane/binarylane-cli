@@ -7,7 +7,7 @@ from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.proceed_request import ProceedRequest
 
-from binarylane.console import cli
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.runners import CommandRunner
 
 
@@ -24,17 +24,17 @@ class Command(CommandRunner):
         """Add arguments for action_proceed"""
         parser.cli_argument(
             "action_id",
-            type=int,
+            int,
             description="""The ID of the action for which this is a response.""",
         )
 
         parser.cli_argument(
             "--proceed",
+            bool,
             dest="proceed",
-            type=bool,
             required=True,
             description="""Please see the documentation for each type of interaction for the effect of providing 'true' or 'false' here.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
     @property

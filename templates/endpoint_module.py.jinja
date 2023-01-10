@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 from typing import Any, Dict, List, Optional, Union, Type, cast
 
 import httpx
 
 
-from binarylane.console import cli
-
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.client import AuthenticatedClient, Client
 from binarylane.types import Response, UNSET, Unset
 
@@ -82,7 +83,7 @@ class Command({{ response_class['name'] }}):
         """Add arguments for {{ endpoint.name }}"""
         {% for parameter in endpoint.path_parameters.values() %}
         parser.cli_argument('{{ parameter.name }}',
-            type={{ parameter.get_type_string() }},
+            {{ parameter.get_type_string() }},
             {% if parameter.description %}description="""{{ parameter.description }}""", {% endif %}
             )
         {% endfor %}
@@ -90,24 +91,24 @@ class Command({{ response_class['name'] }}):
         {% if endpoint.json_body %}
         {#
             FIXME: BL API is not supposed to have any of these, but currently failover-ip update uses it.
-            type= is intentionally missing to trigger a warning in cli_argument()
         #}
         {% if endpoint.json_body.get_instance_type_string() == 'list' %}
         parser.cli_argument('--value',
-                nargs='*',
+                {{ endpoint.json_body.get_type_string() }},
                 {% if endpoint.json_body.description %}description="""{{ endpoint.json_body.description  }}""",{% endif %}
+                warning="request body is {{ endpoint.json_body.get_type_string() }}",
                 )
 
         {% elif endpoint.json_body.class_info %}
         {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
 
         parser.cli_argument('--{{  property.name.replace('_','-') }}',
+                {{ property.get_type_string() }},
                 dest='{{  property.python_name }}',
-                type={{ property.get_type_string() }},
                 required={{ property.required }},
                 description="""{{  property.description }}""",
                 {%  if property.get_instance_type_string() == 'bool' %}
-                action=cli.BooleanOptionalAction,
+                action=BooleanOptionalAction,
                 {%  endif %}
                 )
         {% endfor %}
@@ -119,8 +120,8 @@ class Command({{ response_class['name'] }}):
         {% if endpoint.query_parameters %}
         {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
         parser.cli_argument('--{{  property.name.replace('_','-') }}',
+                {{ property.get_type_string() }},
                 dest='{{  property.python_name }}',
-                type={{ property.get_type_string() }},
                 required=False,
                 description="""{{  property.description }}""",
                 )

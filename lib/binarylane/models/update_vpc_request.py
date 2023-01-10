@@ -16,12 +16,12 @@ class UpdateVpcRequest:
 
     Attributes:
         name (str): A name to help identify this VPC.
-        route_entries (Union[Unset, None, List['RouteEntryRequest']]): The route entries that control how network
-            traffic is directed through the VPC environment.
+        route_entries (Union[Unset, None, List[RouteEntryRequest]]): The route entries that control how network traffic
+            is directed through the VPC environment.
     """
 
     name: str
-    route_entries: Union[Unset, None, List["RouteEntryRequest"]] = UNSET
+    route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

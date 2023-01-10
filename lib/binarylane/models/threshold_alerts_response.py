@@ -13,10 +13,10 @@ T = TypeVar("T", bound="ThresholdAlertsResponse")
 class ThresholdAlertsResponse:
     """
     Attributes:
-        threshold_alerts (List['ThresholdAlert']):
+        threshold_alerts (List[ThresholdAlert]):
     """
 
-    threshold_alerts: List["ThresholdAlert"]
+    threshold_alerts: List[ThresholdAlert]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

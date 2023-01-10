@@ -23,14 +23,14 @@ class Command(CommandRunner):
         """Add arguments for server_delete"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server to be cancelled.""",
         )
 
         parser.cli_argument(
             "--reason",
+            Union[Unset, None, str],
             dest="reason",
-            type=Union[Unset, None, str],
             required=False,
             description="""The reason for cancelling the server.""",
         )

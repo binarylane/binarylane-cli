@@ -16,12 +16,12 @@ class ChangeAdvancedFirewallRules:
 
     Attributes:
         type (ChangeAdvancedFirewallRulesType):
-        firewall_rules (List['AdvancedFirewallRule']): A list of rules for the server. NB: that any existing rules that
+        firewall_rules (List[AdvancedFirewallRule]): A list of rules for the server. NB: that any existing rules that
             are not included will be removed. Submit an empty list to clear all rules.
     """
 
     type: ChangeAdvancedFirewallRulesType
-    firewall_rules: List["AdvancedFirewallRule"]
+    firewall_rules: List[AdvancedFirewallRule]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

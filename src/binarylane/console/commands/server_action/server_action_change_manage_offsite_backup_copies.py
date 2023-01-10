@@ -10,7 +10,7 @@ from binarylane.models.change_manage_offsite_backup_copies_type import ChangeMan
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 
-from binarylane.console import cli
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.runners import ActionRunner
 
 
@@ -27,25 +27,25 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-manage-offsite-backup-copies"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeManageOffsiteBackupCopiesType,
             dest="type",
-            type=ChangeManageOffsiteBackupCopiesType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--manage-offsite-backup-copies",
+            bool,
             dest="manage_offsite_backup_copies",
-            type=bool,
             required=True,
             description="""This only has effect if a custom offsite location is being used: the internal offsite backup location always manages copies. If this is true old offsite backups will be removed once the replacement upload is complete. If this is false backups must be removed from the Amazon S3 bucket manually. Amazon will charge your S3 account at their standard rate for every backup stored.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
     @property

@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for image_get"""
         parser.cli_argument(
             "image_id_or_slug",
-            type=str,
+            str,
             description="""The ID or Slug (if an operating system) of the image to retrieve.""",
         )
 

@@ -15,15 +15,15 @@ class CreateVpcRequest:
     """
     Attributes:
         name (str): A name to help identify this VPC.
-        route_entries (Union[Unset, None, List['RouteEntryRequest']]): The route entries that control how network
-            traffic is directed through the VPC environment.
+        route_entries (Union[Unset, None, List[RouteEntryRequest]]): The route entries that control how network traffic
+            is directed through the VPC environment.
         ip_range (Union[Unset, None, str]): A private address range that you select during creation, such as the default
             value of 10.240.0.0/16. Because the virtual network is dedicated to your use, you may use whatever IP address
             range you like.
     """
 
     name: str
-    route_entries: Union[Unset, None, List["RouteEntryRequest"]] = UNSET
+    route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET
     ip_range: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

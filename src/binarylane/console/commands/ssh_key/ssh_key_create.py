@@ -9,7 +9,7 @@ from binarylane.models.ssh_key_response import SshKeyResponse
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
-from binarylane.console import cli
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.runners import CommandRunner
 
 
@@ -27,27 +27,27 @@ class Command(CommandRunner):
 
         parser.cli_argument(
             "--public-key",
+            str,
             dest="public_key",
-            type=str,
             required=True,
             description="""The public key in OpenSSH "authorized_keys" format.""",
         )
 
         parser.cli_argument(
             "--name",
+            str,
             dest="name",
-            type=str,
             required=True,
             description="""A name to help you identify the key.""",
         )
 
         parser.cli_argument(
             "--default",
+            Union[Unset, None, bool],
             dest="default",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Optional: If true this will be added to all new server installations (if we support SSH Key injection for the server's operating system).""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
     @property

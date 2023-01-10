@@ -27,22 +27,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-threshold-alerts"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeThresholdAlertsType,
             dest="type",
-            type=ChangeThresholdAlertsType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--threshold-alerts",
+            List[ThresholdAlertRequest],
             dest="threshold_alerts",
-            type=List["ThresholdAlertRequest"],
             required=True,
             description="""Any alert type not listed will not be updated.""",
         )
@@ -56,7 +56,7 @@ class Command(ActionRunner):
         server_id: int,
         client: Client,
         type: ChangeThresholdAlertsType,
-        threshold_alerts: List["ThresholdAlertRequest"],
+        threshold_alerts: List[ThresholdAlertRequest],
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
         page_response = sync_detailed(

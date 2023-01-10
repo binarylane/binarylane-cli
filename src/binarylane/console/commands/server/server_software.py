@@ -36,7 +36,7 @@ class Command(ListRunner):
         """Add arguments for server_software"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server for which software should be fetched.""",
         )
 

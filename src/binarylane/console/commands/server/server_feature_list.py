@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for server_feature_list"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server for which advanced features should be listed.""",
         )
 

@@ -27,19 +27,19 @@ class Command(CommandRunner):
         """Add arguments for domain_record_update"""
         parser.cli_argument(
             "domain_name",
-            type=str,
+            str,
             description="""The domain name for which the record should be updated.""",
         )
         parser.cli_argument(
             "record_id",
-            type=int,
+            int,
             description="""The ID of the record to update.""",
         )
 
         parser.cli_argument(
             "--type",
+            Union[Unset, None, DomainRecordType],
             dest="type",
-            type=Union[Unset, None, DomainRecordType],
             required=False,
             description="""
 | Value | Description |
@@ -59,64 +59,64 @@ class Command(CommandRunner):
 
         parser.cli_argument(
             "--name",
+            Union[Unset, None, str],
             dest="name",
-            type=Union[Unset, None, str],
             required=False,
             description="""The subdomain for this record. Use @ for records on the domain itself, and * to create a wildcard record.""",
         )
 
         parser.cli_argument(
             "--data",
+            Union[Unset, None, str],
             dest="data",
-            type=Union[Unset, None, str],
             required=False,
             description="""A general data field that has different functions depending on the record type.""",
         )
 
         parser.cli_argument(
             "--priority",
+            Union[Unset, None, int],
             dest="priority",
-            type=Union[Unset, None, int],
             required=False,
             description="""A priority value that is only relevant for SRV and MX records.""",
         )
 
         parser.cli_argument(
             "--port",
+            Union[Unset, None, int],
             dest="port",
-            type=Union[Unset, None, int],
             required=False,
             description="""A port value that is only relevant for SRV records.""",
         )
 
         parser.cli_argument(
             "--ttl",
+            Union[Unset, None, int],
             dest="ttl",
-            type=Union[Unset, None, int],
             required=False,
             description="""This value is the time to live for the record, in seconds.""",
         )
 
         parser.cli_argument(
             "--weight",
+            Union[Unset, None, int],
             dest="weight",
-            type=Union[Unset, None, int],
             required=False,
             description="""The weight value that is only relevant for SRV records.""",
         )
 
         parser.cli_argument(
             "--flags",
+            Union[Unset, None, int],
             dest="flags",
-            type=Union[Unset, None, int],
             required=False,
             description="""An unsigned integer between 0-255 that is only relevant for CAA records.""",
         )
 
         parser.cli_argument(
             "--tag",
+            Union[Unset, None, str],
             dest="tag",
-            type=Union[Unset, None, str],
             required=False,
             description="""A parameter tag that is only relevant for CAA records.""",
         )

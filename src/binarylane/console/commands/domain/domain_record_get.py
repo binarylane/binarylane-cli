@@ -23,12 +23,12 @@ class Command(CommandRunner):
         """Add arguments for domain_record_get"""
         parser.cli_argument(
             "domain_name",
-            type=str,
+            str,
             description="""The domain name for which the record should be fetched.""",
         )
         parser.cli_argument(
             "record_id",
-            type=int,
+            int,
             description="""The ID of the record to fetch.""",
         )
 

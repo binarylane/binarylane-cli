@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for action_get"""
         parser.cli_argument(
             "action_id",
-            type=int,
+            int,
             description="""The ID of the action to fetch.""",
         )
 

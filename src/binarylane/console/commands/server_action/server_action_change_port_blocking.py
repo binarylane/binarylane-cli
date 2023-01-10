@@ -10,7 +10,7 @@ from binarylane.models.change_port_blocking_type import ChangePortBlockingType
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 
-from binarylane.console import cli
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.runners import ActionRunner
 
 
@@ -27,25 +27,25 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-port-blocking"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangePortBlockingType,
             dest="type",
-            type=ChangePortBlockingType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--enabled",
+            bool,
             dest="enabled",
-            type=bool,
             required=True,
             description="""The desired enabled status for port blocking.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
     @property

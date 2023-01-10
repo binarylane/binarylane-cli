@@ -26,22 +26,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-ipv6-reverse-nameservers"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeIpv6ReverseNameserversType,
             dest="type",
-            type=ChangeIpv6ReverseNameserversType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--ipv6-reverse-nameservers",
+            List[str],
             dest="ipv6_reverse_nameservers",
-            type=List[str],
             required=True,
             description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
         )

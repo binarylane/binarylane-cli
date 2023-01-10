@@ -27,24 +27,24 @@ class Command(CommandRunner):
 
         parser.cli_argument(
             "--name",
+            str,
             dest="name",
-            type=str,
             required=True,
             description="""A name to help identify this VPC.""",
         )
 
         parser.cli_argument(
             "--route-entries",
+            Union[Unset, None, List[RouteEntryRequest]],
             dest="route_entries",
-            type=Union[Unset, None, List["RouteEntryRequest"]],
             required=False,
             description="""The route entries that control how network traffic is directed through the VPC environment.""",
         )
 
         parser.cli_argument(
             "--ip-range",
+            Union[Unset, None, str],
             dest="ip_range",
-            type=Union[Unset, None, str],
             required=False,
             description="""A private address range that you select during creation, such as the default value of 10.240.0.0/16. Because the virtual network is dedicated to your use, you may use whatever IP address range you like.""",
         )
@@ -57,7 +57,7 @@ class Command(CommandRunner):
         self,
         client: Client,
         name: str,
-        route_entries: Union[Unset, None, List["RouteEntryRequest"]] = UNSET,
+        route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET,
         ip_range: Union[Unset, None, str] = UNSET,
     ) -> Union[Any, ValidationProblemDetails, VpcResponse]:
 

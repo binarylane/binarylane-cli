@@ -25,14 +25,14 @@ class Command(CommandRunner):
         """Add arguments for load-balancer_rule_create"""
         parser.cli_argument(
             "load_balancer_id",
-            type=int,
+            int,
             description="""The ID of the load balancer to which forwarding rules should be added.""",
         )
 
         parser.cli_argument(
             "--forwarding-rules",
+            List[ForwardingRule],
             dest="forwarding_rules",
-            type=List["ForwardingRule"],
             required=True,
             description="""The rules that control which traffic the load balancer will forward to servers in the pool.""",
         )
@@ -45,7 +45,7 @@ class Command(CommandRunner):
         self,
         load_balancer_id: int,
         client: Client,
-        forwarding_rules: List["ForwardingRule"],
+        forwarding_rules: List[ForwardingRule],
     ) -> Union[Any, ProblemDetails, ValidationProblemDetails]:
 
         page_response = sync_detailed(

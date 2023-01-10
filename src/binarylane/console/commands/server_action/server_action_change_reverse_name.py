@@ -27,30 +27,30 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-reverse-name"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeReverseNameType,
             dest="type",
-            type=ChangeReverseNameType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--ipv4-address",
+            str,
             dest="ipv4_address",
-            type=str,
             required=True,
             description="""The IPv4 address to set or clear the reverse name for.""",
         )
 
         parser.cli_argument(
             "--reverse-name",
+            Union[Unset, None, str],
             dest="reverse_name",
-            type=Union[Unset, None, str],
             required=False,
             description="""Leave this null to clear the custom reverse name.""",
         )

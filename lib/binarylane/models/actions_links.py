@@ -13,10 +13,10 @@ T = TypeVar("T", bound="ActionsLinks")
 class ActionsLinks:
     """
     Attributes:
-        actions (List['ActionLink']):
+        actions (List[ActionLink]):
     """
 
-    actions: List["ActionLink"]
+    actions: List[ActionLink]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for software_get"""
         parser.cli_argument(
             "software_id",
-            type=str,
+            str,
             description="""The ID of the software to fetch.""",
         )
 

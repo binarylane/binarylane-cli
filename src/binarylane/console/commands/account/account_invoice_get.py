@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for account_invoice_get"""
         parser.cli_argument(
             "invoice_id",
-            type=int,
+            int,
             description="""The ID of the invoice to fetch.""",
         )
 

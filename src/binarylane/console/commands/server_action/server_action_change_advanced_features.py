@@ -14,7 +14,7 @@ from binarylane.models.video_device import VideoDevice
 from binarylane.models.vm_machine_type import VmMachineType
 from binarylane.types import UNSET, Unset
 
-from binarylane.console import cli
+from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.runners import ActionRunner
 
 
@@ -31,47 +31,47 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-advanced-features"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeAdvancedFeaturesType,
             dest="type",
-            type=ChangeAdvancedFeaturesType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--enabled-advanced-features",
+            Union[Unset, None, List[AdvancedFeature]],
             dest="enabled_advanced_features",
-            type=Union[Unset, None, List[AdvancedFeature]],
             required=False,
             description="""Do not provide or set to null to keep existing advanced features. Provide an empty array to disable all advanced features, otherwise provide an array with selected advanced features. If provided, any currently enabled advanced features that aren't included will be disabled.""",
         )
 
         parser.cli_argument(
             "--processor-model",
+            Union[Unset, None, str],
             dest="processor_model",
-            type=Union[Unset, None, str],
             required=False,
             description="""Do not provide or set to null to keep existing processor model.""",
         )
 
         parser.cli_argument(
             "--automatic-processor-model",
+            Union[Unset, None, bool],
             dest="automatic_processor_model",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Set to true to use best available processor model. If this is provided the processor_model property must not be provided.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
         parser.cli_argument(
             "--machine-type",
+            Union[Unset, None, VmMachineType],
             dest="machine_type",
-            type=Union[Unset, None, VmMachineType],
             required=False,
             description="""
 | Value | Description |
@@ -88,17 +88,17 @@ class Command(ActionRunner):
 
         parser.cli_argument(
             "--automatic-machine-type",
+            Union[Unset, None, bool],
             dest="automatic_machine_type",
-            type=Union[Unset, None, bool],
             required=False,
             description="""Set to true to use best available machine type. If this is provided the machine_type property must not be provided.""",
-            action=cli.BooleanOptionalAction,
+            action=BooleanOptionalAction,
         )
 
         parser.cli_argument(
             "--video-device",
+            Union[Unset, None, VideoDevice],
             dest="video_device",
-            type=Union[Unset, None, VideoDevice],
             required=False,
             description="""
 | Value | Description |

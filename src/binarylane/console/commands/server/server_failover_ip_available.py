@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for server_failover-ip_available"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The target server id.""",
         )
 

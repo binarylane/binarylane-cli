@@ -13,11 +13,11 @@ T = TypeVar("T", bound="ForwardingRulesRequest")
 class ForwardingRulesRequest:
     """
     Attributes:
-        forwarding_rules (List['ForwardingRule']): The rules that control which traffic the load balancer will forward
-            to servers in the pool.
+        forwarding_rules (List[ForwardingRule]): The rules that control which traffic the load balancer will forward to
+            servers in the pool.
     """
 
-    forwarding_rules: List["ForwardingRule"]
+    forwarding_rules: List[ForwardingRule]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

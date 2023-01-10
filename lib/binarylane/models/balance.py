@@ -18,14 +18,14 @@ class Balance:
     Attributes:
         unbilled_total (float): The total of any un-billed charges in AU$.
         available_credit (float): Available credit in AU$.
-        charges (List['ChargeInformation']): A list of all of the individual charges that contribute to the un-billed
+        charges (List[ChargeInformation]): A list of all of the individual charges that contribute to the un-billed
             total.
         generated_at (Union[Unset, None, datetime.datetime]): The timestamp of the most recent charge.
     """
 
     unbilled_total: float
     available_credit: float
-    charges: List["ChargeInformation"]
+    charges: List[ChargeInformation]
     generated_at: Union[Unset, None, datetime.datetime] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

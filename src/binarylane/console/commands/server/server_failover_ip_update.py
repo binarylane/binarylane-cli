@@ -24,13 +24,14 @@ class Command(ActionRunner):
         """Add arguments for server_failover-ip_update"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The target server id.""",
         )
 
         parser.cli_argument(
             "--value",
-            nargs="*",
+            List[str],
+            warning="request body is List[str]",
         )
 
     @property

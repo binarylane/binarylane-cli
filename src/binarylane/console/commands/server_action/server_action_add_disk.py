@@ -27,30 +27,30 @@ class Command(ActionRunner):
         """Add arguments for server-action_add-disk"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            AddDiskType,
             dest="type",
-            type=AddDiskType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--size-gigabytes",
+            int,
             dest="size_gigabytes",
-            type=int,
             required=True,
             description="""The size of the new disk in GB. The server must have at least this much unallocated storage space.""",
         )
 
         parser.cli_argument(
             "--description",
+            Union[Unset, None, str],
             dest="description",
-            type=Union[Unset, None, str],
             required=False,
             description="""An optional description for the disk.""",
         )

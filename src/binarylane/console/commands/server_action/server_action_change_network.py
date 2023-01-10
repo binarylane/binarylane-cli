@@ -27,22 +27,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-network"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeNetworkType,
             dest="type",
-            type=ChangeNetworkType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--vpc-id",
+            Union[Unset, None, int],
             dest="vpc_id",
-            type=Union[Unset, None, int],
             required=False,
             description="""If this is null the server will be moved into the default public network for the server's region.""",
         )

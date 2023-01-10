@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for server_data-usage_get"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The target server id.""",
         )
 

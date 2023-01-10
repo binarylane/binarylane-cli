@@ -27,22 +27,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-advanced-firewall-rules"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeAdvancedFirewallRulesType,
             dest="type",
-            type=ChangeAdvancedFirewallRulesType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--firewall-rules",
+            List[AdvancedFirewallRule],
             dest="firewall_rules",
-            type=List["AdvancedFirewallRule"],
             required=True,
             description="""A list of rules for the server. NB: that any existing rules that are not included will be removed. Submit an empty list to clear all rules.""",
         )
@@ -56,7 +56,7 @@ class Command(ActionRunner):
         server_id: int,
         client: Client,
         type: ChangeAdvancedFirewallRulesType,
-        firewall_rules: List["AdvancedFirewallRule"],
+        firewall_rules: List[AdvancedFirewallRule],
     ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
 
         page_response = sync_detailed(

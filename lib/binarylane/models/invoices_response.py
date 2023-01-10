@@ -17,12 +17,12 @@ class InvoicesResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        invoices (List['Invoice']):
+        invoices (List[Invoice]):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    invoices: List["Invoice"]
+    invoices: List[Invoice]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

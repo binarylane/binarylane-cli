@@ -17,12 +17,12 @@ class DomainRecordsResponse:
     """
     Attributes:
         meta (Meta): Contains metadata about the response, currently this includes the total number of items.
-        domain_records (List['DomainRecord']):
+        domain_records (List[DomainRecord]):
         links (Union[Unset, None, Links]):
     """
 
     meta: Meta
-    domain_records: List["DomainRecord"]
+    domain_records: List[DomainRecord]
     links: Union[Unset, None, Links] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

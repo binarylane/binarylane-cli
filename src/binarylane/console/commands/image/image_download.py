@@ -23,7 +23,7 @@ class Command(CommandRunner):
         """Add arguments for image_download"""
         parser.cli_argument(
             "image_id",
-            type=int,
+            int,
             description="""The ID of the image to download.""",
         )
 

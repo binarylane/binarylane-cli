@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import sys
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
@@ -40,3 +41,8 @@ class Runner(ABC):
 
     def __call__(self, args: List[str]) -> None:
         self.run(args)
+
+    @staticmethod
+    def error(message: str) -> None:
+        print("ERROR: ", message, file=sys.stderr)
+        raise SystemExit(-1)

@@ -1,14 +1,16 @@
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, List
 
-from binarylane.console.cli import error, warn
 from binarylane.console.config import Config
 from binarylane.console.runners import Runner
 
 if TYPE_CHECKING:
     from binarylane.api.account.account_get import sync_detailed
     from binarylane.client import AuthenticatedClient
+
+logger = logging.getLogger(__name__)
 
 
 class ConfigureRunner(Runner):
@@ -43,7 +45,7 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
             config.save()
             print("Success! API access token saved.")
         else:
-            error("Invalid API token")
+            self.error("Invalid API token")
 
     def _try_token(self, config: Config) -> bool:
         """Return bool indicating if API is accessible with current configuration"""
@@ -60,5 +62,5 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
 
         # Request failed; it should be a 401 if token is invalid. If it isnt, show some extra info:
         if response.status_code != 401:
-            warn(f"HTTP {response.status_code.value} - {response.status_code.name}")
+            logger.warning(f"HTTP {response.status_code.value} - {response.status_code.name}")
         return False

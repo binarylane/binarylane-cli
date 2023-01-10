@@ -83,7 +83,7 @@ class Command(ListRunner):
         """Add arguments for server_neighbors_get"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server for which neighbours should be listed.""",
         )
 

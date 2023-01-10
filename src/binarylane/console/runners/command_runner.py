@@ -1,16 +1,19 @@
 from __future__ import annotations
 
+import logging
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from binarylane.console.cli import CommandParser, debug, error
 from binarylane.console.config import Config
+from binarylane.console.parsers.parser import CommandParser
 from binarylane.console.printers import Printer, PrinterType, create_printer
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 from binarylane.console.runners.runner import Runner
 
 if TYPE_CHECKING:
     from binarylane.client import AuthenticatedClient
+
+logger = logging.getLogger(__name__)
 
 
 class CommandRunner(Runner):
@@ -81,11 +84,11 @@ class CommandRunner(Runner):
     def response(self, status_code: int, received: Any) -> None:
         """Format and display response received from API operation"""
         if status_code == 401:
-            error('Unable to authenticate with API - please run "bl configure" to get started.')
+            self.error('Unable to authenticate with API - please run "bl configure" to get started.')
         elif received:
             self._printer.print(received)
         elif status_code != 204:
-            error(f"HTTP {status_code}")
+            self.error(f"HTTP {status_code}")
 
     def process(self, parsed: Any) -> None:
         """Process runner-local arguments"""
@@ -105,9 +108,9 @@ class CommandRunner(Runner):
         if args == [Runner.CHECK]:
             return None
 
-        debug(f"Command parser for {self.name}. args: {args}")
+        logger.debug(f"Command parser for {self.name}. args: {args}")
         parsed = self._parser.parse_args(args)
-        debug(f"Parsing succeeded, have {parsed}")
+        logger.debug(f"Parsing succeeded, have {parsed}")
 
         self.process(parsed)
 

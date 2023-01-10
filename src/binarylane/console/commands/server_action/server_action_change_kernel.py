@@ -26,22 +26,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-kernel"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeKernelType,
             dest="type",
-            type=ChangeKernelType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--kernel",
+            int,
             dest="kernel",
-            type=int,
             required=True,
             description="""The ID of the kernel to use.""",
         )

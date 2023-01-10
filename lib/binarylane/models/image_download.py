@@ -17,12 +17,12 @@ class ImageDownload:
     Attributes:
         id (int): The ID of the image this download object refers to.
         expiry (datetime.datetime): The date and time in ISO8601 format that this download URL will expire.
-        disks (List['ImageDiskDownload']): A list of objects containing the download URLs for each disk in the image.
+        disks (List[ImageDiskDownload]): A list of objects containing the download URLs for each disk in the image.
     """
 
     id: int
     expiry: datetime.datetime
-    disks: List["ImageDiskDownload"]
+    disks: List[ImageDiskDownload]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

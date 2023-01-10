@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 script_path="$(dirname "$(readlink -f "$0")")"
 cd "${script_path}"
 
@@ -9,5 +8,10 @@ if [[ ! -e openapi.json ]]; then
     exit 1
 fi
 
-openapi-python-client update --path openapi.json --config client.yml
-rm -f ../lib/binarylane/__init__.py
+if openapi-python-client update --path openapi.json --config client.yml
+then
+    cd ..
+    rm -f lib/binarylane/__init__.py
+    find lib -name '*.py' -exec poetry run absolufy-imports --application-directories lib {} + || true  # retu
+    poetry run isort --add-import 'from __future__ import annotations' lib | grep -v 'Fixing'
+fi

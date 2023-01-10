@@ -52,14 +52,14 @@ class Command(ListRunner):
         """Add arguments for vpc_members"""
         parser.cli_argument(
             "vpc_id",
-            type=int,
+            int,
             description="""The target vpc id.""",
         )
 
         parser.cli_argument(
             "--resource-type",
+            Union[Unset, None, ResourceType],
             dest="resource_type",
-            type=Union[Unset, None, ResourceType],
             required=False,
             description="""
 | Value | Description |

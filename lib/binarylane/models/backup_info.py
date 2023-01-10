@@ -28,7 +28,7 @@ class BackupInfo:
         locked (bool): If this is true the backup is locked and cannot be replaced.
         iso (bool): If this is true the backup is an ISO image and cannot be restored. ISO images may only be attached
             for use as a boot disk or an additional disk.
-        disks (List['Disk']): A list of the individual disks that make up this backup.
+        disks (List[Disk]): A list of the individual disks that make up this backup.
     """
 
     type: BackupSlot
@@ -36,7 +36,7 @@ class BackupInfo:
     offsite: bool
     locked: bool
     iso: bool
-    disks: List["Disk"]
+    disks: List[Disk]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

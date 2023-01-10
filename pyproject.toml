@@ -26,6 +26,7 @@ mypy = "^0.971"
 pydantic = "^1.10.2"
 types-python-dateutil = "^2.8.19"
 pytest = "^7.2.0"
+absolufy-imports = "^0.3.1"
 
 [tool.taskipy.tasks]
 black = "black ."
@@ -52,14 +53,16 @@ ignore-paths = ['src/binarylane/console/commands/*/']
 
 [tool.pylint.messages_control]
 disable = [
-    # Most modules contain a single class
-    "missing-module-docstring",
 
     # CLI needs some delayed imports to avoid slow program start
     "import-outside-toplevel",
 
-    # Initial impl still in progress:
+    # Initial impl in progress:
     "fixme",
+    "logging-fstring-interpolation",
+    "missing-module-docstring",
+    "missing-class-docstring",
+    "missing-function-docstring",
 ]
 
 [tool.mypy]

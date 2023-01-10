@@ -27,8 +27,8 @@ class Command(CommandRunner):
 
         parser.cli_argument(
             "--reverse-nameservers",
+            Union[Unset, None, List[str]],
             dest="reverse_nameservers",
-            type=Union[Unset, None, List[str]],
             required=False,
             description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
         )

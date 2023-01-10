@@ -26,30 +26,30 @@ class Command(ActionRunner):
         """Add arguments for server-action_change-vpc-ipv4"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            ChangeVpcIpv4Type,
             dest="type",
-            type=ChangeVpcIpv4Type,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--current-ipv4-address",
+            str,
             dest="current_ipv4_address",
-            type=str,
             required=True,
             description="""The existing Ipv4 address for the private VPC network adapter you wish to change.""",
         )
 
         parser.cli_argument(
             "--new-ipv4-address",
+            str,
             dest="new_ipv4_address",
-            type=str,
             required=True,
             description="""The new Ipv4 address for the private VPC network adapter.""",
         )

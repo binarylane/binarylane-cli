@@ -25,14 +25,14 @@ class Command(CommandRunner):
         """Add arguments for server_metrics_get"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The target server id.""",
         )
 
         parser.cli_argument(
             "--data-interval",
+            Union[Unset, None, DataInterval],
             dest="data_interval",
-            type=Union[Unset, None, DataInterval],
             required=False,
             description="""
 | Value | Description |

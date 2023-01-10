@@ -28,30 +28,30 @@ class Command(ActionRunner):
         """Add arguments for server-action_rebuild"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            RebuildType,
             dest="type",
-            type=RebuildType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--image",
+            Union[None, Unset, int, str],
             dest="image",
-            type=Union[None, Unset, int, str],
             required=False,
             description="""The Operating System ID or slug or Backup image ID to use as a base for the rebuild.""",
         )
 
         parser.cli_argument(
             "--options",
+            Union[Unset, None, ImageOptions],
             dest="options",
-            type=Union[Unset, None, ImageOptions],
             required=False,
             description="""""",
         )

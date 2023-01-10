@@ -26,14 +26,14 @@ class Command(ActionRunner):
         """Add arguments for server-action_enable-ipv6"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            EnableIpv6Type,
             dest="type",
-            type=EnableIpv6Type,
             required=True,
             description="""None""",
         )

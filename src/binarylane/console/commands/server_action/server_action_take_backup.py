@@ -29,22 +29,22 @@ class Command(ActionRunner):
         """Add arguments for server-action_take-backup"""
         parser.cli_argument(
             "server_id",
-            type=int,
+            int,
             description="""The ID of the server on which the action should be performed.""",
         )
 
         parser.cli_argument(
             "--type",
+            TakeBackupType,
             dest="type",
-            type=TakeBackupType,
             required=True,
             description="""None""",
         )
 
         parser.cli_argument(
             "--replacement-strategy",
+            BackupReplacementStrategy,
             dest="replacement_strategy",
-            type=BackupReplacementStrategy,
             required=True,
             description="""
 | Value | Description |
@@ -59,8 +59,8 @@ class Command(ActionRunner):
 
         parser.cli_argument(
             "--backup-type",
+            Union[Unset, None, BackupSlot],
             dest="backup_type",
-            type=Union[Unset, None, BackupSlot],
             required=False,
             description="""
 | Value | Description |
@@ -75,16 +75,16 @@ class Command(ActionRunner):
 
         parser.cli_argument(
             "--backup-id-to-replace",
+            Union[Unset, None, int],
             dest="backup_id_to_replace",
-            type=Union[Unset, None, int],
             required=False,
             description="""If replacement_strategy is 'specified' this property must be set to an existing backup.""",
         )
 
         parser.cli_argument(
             "--label",
+            Union[Unset, None, str],
             dest="label",
-            type=Union[Unset, None, str],
             required=False,
             description="""An optional label to identify the backup.""",
         )

@@ -16,11 +16,11 @@ class ChangeThresholdAlerts:
 
     Attributes:
         type (ChangeThresholdAlertsType):
-        threshold_alerts (List['ThresholdAlertRequest']): Any alert type not listed will not be updated.
+        threshold_alerts (List[ThresholdAlertRequest]): Any alert type not listed will not be updated.
     """
 
     type: ChangeThresholdAlertsType
-    threshold_alerts: List["ThresholdAlertRequest"]
+    threshold_alerts: List[ThresholdAlertRequest]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

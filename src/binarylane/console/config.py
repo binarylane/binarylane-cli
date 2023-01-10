@@ -7,8 +7,6 @@ import sys
 from configparser import ConfigParser, SectionProxy
 from pathlib import Path
 
-from binarylane.console.cli import error
-
 
 class Config:
     """User configuration manager"""
@@ -31,7 +29,7 @@ class Config:
         if sys.platform == "win32":
             appdata = os.getenv("APPDATA")
             if not appdata:
-                error("%APPDATA% is not set?")
+                raise EnvironmentError("%APPDATA% is not set?")
             return Path(appdata)
 
         xdg_config_home = os.getenv("XDG_CONFIG_HOME")
@@ -40,7 +38,7 @@ class Config:
 
         home = os.getenv("HOME")
         if not home:
-            error("$HOME is not set?")
+            raise EnvironmentError("$HOME is not set?")
         return Path(home) / ".config"
 
     def _get_config_dir(self) -> Path:

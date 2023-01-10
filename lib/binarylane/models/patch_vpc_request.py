@@ -15,13 +15,13 @@ class PatchVpcRequest:
     """
     Attributes:
         name (Union[Unset, None, str]): >A name to help identify this VPC. Submit null to leave unaltered.
-        route_entries (Union[Unset, None, List['RouteEntryRequest']]): Submit null to leave unaltered, submit an empty
+        route_entries (Union[Unset, None, List[RouteEntryRequest]]): Submit null to leave unaltered, submit an empty
             list to clear all route entries. It is not possible to PATCH individual route entries, to alter a route entry
             submit the entire list of route entries you wish to save.
     """
 
     name: Union[Unset, None, str] = UNSET
-    route_entries: Union[Unset, None, List["RouteEntryRequest"]] = UNSET
+    route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
