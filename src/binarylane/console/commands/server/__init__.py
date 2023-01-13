@@ -9,7 +9,7 @@ __all__ = ["commands"]
 commands: List[Type[ModuleRunner]] = []
 
 
-def register_command(cls: ModuleRunner) -> ModuleRunner:
+def register_command(cls: Type[ModuleRunner]) -> Type[ModuleRunner]:
     commands.append(cls)
     return cls
 
@@ -182,23 +182,6 @@ class ServerActionList(ModuleRunner):
     @property
     def module_path(self) -> str:
         return ".commands.server.server_action_list"
-
-
-@register_command
-class ServerActionCreate(ModuleRunner):
-    """Runner for server_action_create API operation"""
-
-    @property
-    def name(self) -> str:
-        return "action_create"
-
-    @property
-    def description(self) -> str:
-        return "Perform an Action on a Server"
-
-    @property
-    def module_path(self) -> str:
-        return ".commands.server.server_action_create"
 
 
 @register_command

@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.image.image_list import sync_detailed
 from binarylane.client import Client
 from binarylane.models.image_query_type import ImageQueryType
 from binarylane.models.images_response import ImagesResponse
+from binarylane.models.links import Links
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -64,14 +67,14 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """List All Images"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for image_list"""
 
         parser.cli_argument(
@@ -83,7 +86,6 @@ class Command(ListRunner):
 | Value | Description |
 | ----- | ----------- |
 | distribution | Base operating system images. |
-| application | Operating system images that include pre-installed applications. This option is not currently supported, operating system images with pre-installed applications are listed under 'distribution'. |
 | backup | A backup image of a server. |
 
 """,
@@ -97,7 +99,7 @@ class Command(ListRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return ImagesResponse
 
     def request(
@@ -105,12 +107,15 @@ class Command(ListRunner):
         client: Client,
         type: Union[Unset, None, ImageQueryType] = UNSET,
         private: Union[Unset, None, bool] = UNSET,
-    ) -> Union[Any, ImagesResponse, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, ImagesResponse, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: ImagesResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page = 0
         per_page = 25
         has_next = True
-        response: ImagesResponse = None
+        response: Optional[ImagesResponse] = None
 
         while has_next:
             page += 1
@@ -124,10 +129,12 @@ class Command(ListRunner):
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, ImagesResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

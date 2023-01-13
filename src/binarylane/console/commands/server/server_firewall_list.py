@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Tuple, Union
 
 from binarylane.api.server.server_firewall_list import sync_detailed
 from binarylane.client import Client
 from binarylane.models.advanced_firewall_rules_response import AdvancedFirewallRulesResponse
 from binarylane.models.problem_details import ProblemDetails
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -44,14 +46,14 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch All Advanced Firewall Rules for a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_firewall_list"""
         parser.cli_argument(
             "server_id",
@@ -60,15 +62,18 @@ class Command(ListRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return AdvancedFirewallRulesResponse
 
     def request(
         self,
         server_id: int,
         client: Client,
-    ) -> Union[AdvancedFirewallRulesResponse, Any, ProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[AdvancedFirewallRulesResponse, None, ProblemDetails]]:
 
+        # HTTPStatus.OK: AdvancedFirewallRulesResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             server_id=server_id,
             client=client,

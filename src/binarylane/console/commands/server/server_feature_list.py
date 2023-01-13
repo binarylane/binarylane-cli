@@ -1,25 +1,27 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Tuple, Union
 
 from binarylane.api.server.server_feature_list import sync_detailed
 from binarylane.client import Client
 from binarylane.models.available_advanced_server_features_response import AvailableAdvancedServerFeaturesResponse
 from binarylane.models.problem_details import ProblemDetails
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch the Currently Available Advanced Features for a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_feature_list"""
         parser.cli_argument(
             "server_id",
@@ -28,15 +30,18 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return AvailableAdvancedServerFeaturesResponse
 
     def request(
         self,
         server_id: int,
         client: Client,
-    ) -> Union[Any, AvailableAdvancedServerFeaturesResponse, ProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, AvailableAdvancedServerFeaturesResponse, ProblemDetails]]:
 
+        # HTTPStatus.OK: AvailableAdvancedServerFeaturesResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             server_id=server_id,
             client=client,

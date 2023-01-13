@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import logging
-from typing import Any, Optional
+from typing import Any, Optional, Type
 
 from binarylane.console.parsers.argument import CommandArgument
 from binarylane.console.parsers.help_formatter import CommandHelpFormatter
@@ -26,12 +26,12 @@ class CommandParser(argparse.ArgumentParser):
     def cli_argument(
         self,
         name: str,
-        _type: type,
+        _type: object,
         *,
         dest: Optional[str] = None,
         required: Optional[bool] = None,
-        description: Optional[bool] = None,
-        action: argparse.Action = None,
+        description: Optional[str] = None,
+        action: Optional[Type[argparse.Action]] = None,
         warning: Optional[str] = None,
     ) -> None:
         """Add CLI argument to parser"""

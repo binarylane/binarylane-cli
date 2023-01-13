@@ -1,33 +1,32 @@
 from __future__ import annotations
 
-from typing import Any, List, Type, Union
+from http import HTTPStatus
+from typing import List, Tuple, Union
 
 from binarylane.api.load_balancer.load_balancer_create import sync_detailed
 from binarylane.client import Client
-from binarylane.models.algorithm_type import AlgorithmType
 from binarylane.models.create_load_balancer_request import CreateLoadBalancerRequest
 from binarylane.models.create_load_balancer_response import CreateLoadBalancerResponse
 from binarylane.models.forwarding_rule import ForwardingRule
 from binarylane.models.health_check import HealthCheck
 from binarylane.models.problem_details import ProblemDetails
-from binarylane.models.sticky_sessions import StickySessions
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.actions import BooleanOptionalAction
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "create"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Create a New Load Balancer"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for load-balancer_create"""
 
         parser.cli_argument(
@@ -36,20 +35,6 @@ class Command(CommandRunner):
             dest="name",
             required=True,
             description="""The hostname of the load balancer.""",
-        )
-
-        parser.cli_argument(
-            "--algorithm",
-            Union[Unset, None, AlgorithmType],
-            dest="algorithm",
-            required=False,
-            description="""
-| Value | Description |
-| ----- | ----------- |
-| round_robin | Each request will be sent to one of the nominated servers in turn. |
-| least_connections | Each request will be sent to the server with the least existing connections. This option is not currently supported. |
-
-""",
         )
 
         parser.cli_argument(
@@ -69,41 +54,6 @@ class Command(CommandRunner):
         )
 
         parser.cli_argument(
-            "--sticky-sessions",
-            Union[Unset, None, StickySessions],
-            dest="sticky_sessions",
-            required=False,
-            description="""""",
-        )
-
-        parser.cli_argument(
-            "--redirect-http-to-https",
-            Union[Unset, None, bool],
-            dest="redirect_http_to_https",
-            required=False,
-            description="""Redirect HTTP traffic received by the load balancer to HTTPS. This is not currently supported.""",
-            action=BooleanOptionalAction,
-        )
-
-        parser.cli_argument(
-            "--enable-proxy-protocol",
-            Union[Unset, None, bool],
-            dest="enable_proxy_protocol",
-            required=False,
-            description="""Enable the PROXY protocol on the load balancer. This is not currently supported.""",
-            action=BooleanOptionalAction,
-        )
-
-        parser.cli_argument(
-            "--enable-backend-keepalive",
-            Union[Unset, None, bool],
-            dest="enable_backend_keepalive",
-            required=False,
-            description="""Use HTTP keepalive connections to servers in the load balancer pool. This is not currently supported.""",
-            action=BooleanOptionalAction,
-        )
-
-        parser.cli_argument(
             "--server-ids",
             Union[Unset, None, List[int]],
             dest="server_ids",
@@ -119,48 +69,32 @@ class Command(CommandRunner):
             description="""Leave null to create an anycast load balancer.""",
         )
 
-        parser.cli_argument(
-            "--vpc-id",
-            Union[Unset, None, int],
-            dest="vpc_id",
-            required=False,
-            description="""Adding or assigning a load balancer to a VPC is not currently supported.""",
-        )
-
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return CreateLoadBalancerResponse
 
     def request(
         self,
         client: Client,
         name: str,
-        algorithm: Union[Unset, None, AlgorithmType] = UNSET,
         forwarding_rules: Union[Unset, None, List[ForwardingRule]] = UNSET,
         health_check: Union[Unset, None, HealthCheck] = UNSET,
-        sticky_sessions: Union[Unset, None, StickySessions] = UNSET,
-        redirect_http_to_https: Union[Unset, None, bool] = UNSET,
-        enable_proxy_protocol: Union[Unset, None, bool] = UNSET,
-        enable_backend_keepalive: Union[Unset, None, bool] = UNSET,
         server_ids: Union[Unset, None, List[int]] = UNSET,
         region: Union[Unset, None, str] = UNSET,
-        vpc_id: Union[Unset, None, int] = UNSET,
-    ) -> Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: CreateLoadBalancerResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
             json_body=CreateLoadBalancerRequest(
                 name=name,
-                algorithm=algorithm,
                 forwarding_rules=forwarding_rules,
                 health_check=health_check,
-                sticky_sessions=sticky_sessions,
-                redirect_http_to_https=redirect_http_to_https,
-                enable_proxy_protocol=enable_proxy_protocol,
-                enable_backend_keepalive=enable_backend_keepalive,
                 server_ids=server_ids,
                 region=region,
-                vpc_id=vpc_id,
             ),
         )
         return page_response.status_code, page_response.parsed

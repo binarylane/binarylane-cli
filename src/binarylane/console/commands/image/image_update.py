@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Tuple, Union
 
 from binarylane.api.image.image_update import sync_detailed
 from binarylane.client import Client
@@ -11,19 +12,20 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 from binarylane.types import UNSET, Unset
 
 from binarylane.console.actions import BooleanOptionalAction
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "update"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Update an Existing Image"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for image_update"""
         parser.cli_argument(
             "image_id",
@@ -49,7 +51,7 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return ImageResponse
 
     def request(
@@ -58,8 +60,12 @@ class Command(CommandRunner):
         client: Client,
         name: Union[Unset, None, str] = UNSET,
         locked: Union[Unset, None, bool] = UNSET,
-    ) -> Union[Any, ImageResponse, ProblemDetails, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, ImageResponse, ProblemDetails, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: ImageResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             image_id=image_id,
             client=client,

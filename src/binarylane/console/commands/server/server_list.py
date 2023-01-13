@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.server.server_list import sync_detailed
 from binarylane.client import Client
+from binarylane.models.links import Links
 from binarylane.models.servers_response import ServersResponse
+from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -18,7 +22,6 @@ class Command(ListRunner):
             "memory",
             "vcpus",
             "disk",
-            "locked",
             "created_at",
             "status",
             "size_slug",
@@ -33,7 +36,6 @@ class Command(ListRunner):
             "memory": """The memory in MB of this server.""",
             "vcpus": """The number of virtual CPUs of this server.""",
             "disk": """The total disk in GB of this server.""",
-            "locked": """If this server is locked no actions may be performed.""",
             "created_at": """The date and time in ISO8601 format of this server's initial creation.""",
             "status": """
 | Value | Description |
@@ -45,14 +47,12 @@ class Command(ListRunner):
 
 """,
             "backup_ids": """A list of the currently existing backup image IDs for this server (if any).""",
-            "snapshot_ids": """Snapshots are not currently supported and this will always be an empty array.""",
             "features": """A list of the currently enabled features on this server.""",
             "region": """""",
             "image": """""",
             "size": """""",
             "size_slug": """The slug of the currently selected size for this server.""",
             "networks": """""",
-            "volume_ids": """Volumes are not currently supported and this will always be an empty array.""",
             "disks": """A list of the disks that are currently attached to the server.""",
             "backup_settings": """""",
             "rescue_console": """""",
@@ -71,44 +71,58 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """List All Servers"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_list"""
 
+        parser.cli_argument(
+            "--hostname",
+            Union[Unset, None, str],
+            dest="hostname",
+            required=False,
+            description="""Providing a hostname restricts the results to the server that has this hostname (case insensitive). If this parameter is provided at most 1 server will be returned.""",
+        )
+
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return ServersResponse
 
     def request(
         self,
         client: Client,
-    ) -> Union[Any, ServersResponse]:
+        hostname: Union[Unset, None, str] = UNSET,
+    ) -> Tuple[HTTPStatus, Union[None, ServersResponse]]:
 
+        # HTTPStatus.OK: ServersResponse
+        # HTTPStatus.UNAUTHORIZED: Any
         page = 0
         per_page = 25
         has_next = True
-        response: ServersResponse = None
+        response: Optional[ServersResponse] = None
 
         while has_next:
             page += 1
             page_response = sync_detailed(
                 client=client,
+                hostname=hostname,
                 page=page,
                 per_page=per_page,
             )
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, ServersResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

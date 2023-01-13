@@ -34,7 +34,6 @@ class Server:
         memory (int): The memory in MB of this server.
         vcpus (int): The number of virtual CPUs of this server.
         disk (int): The total disk in GB of this server.
-        locked (bool): If this server is locked no actions may be performed.
         created_at (datetime.datetime): The date and time in ISO8601 format of this server's initial creation.
         status (ServerStatus):
             | Value | Description |
@@ -45,14 +44,12 @@ class Server:
             | off | The server has been powered off, but may be powered back on. |
 
         backup_ids (List[int]): A list of the currently existing backup image IDs for this server (if any).
-        snapshot_ids (List[str]): Snapshots are not currently supported and this will always be an empty array.
         features (List[str]): A list of the currently enabled features on this server.
         region (Region):
         image (Image):
         size (Size):
         size_slug (str): The slug of the currently selected size for this server.
         networks (Networks):
-        volume_ids (List[str]): Volumes are not currently supported and this will always be an empty array.
         disks (List[Disk]): A list of the disks that are currently attached to the server.
         backup_settings (BackupSettings):
         rescue_console (RescueConsole):
@@ -80,18 +77,15 @@ class Server:
     memory: int
     vcpus: int
     disk: int
-    locked: bool
     created_at: datetime.datetime
     status: ServerStatus
     backup_ids: List[int]
-    snapshot_ids: List[str]
     features: List[str]
     region: Region
     image: Image
     size: Size
     size_slug: str
     networks: Networks
-    volume_ids: List[str]
     disks: List[Disk]
     backup_settings: BackupSettings
     rescue_console: RescueConsole
@@ -115,14 +109,11 @@ class Server:
         memory = self.memory
         vcpus = self.vcpus
         disk = self.disk
-        locked = self.locked
         created_at = self.created_at.isoformat()
 
         status = self.status.value
 
         backup_ids = self.backup_ids
-
-        snapshot_ids = self.snapshot_ids
 
         features = self.features
 
@@ -134,8 +125,6 @@ class Server:
 
         size_slug = self.size_slug
         networks = self.networks.to_dict()
-
-        volume_ids = self.volume_ids
 
         disks = []
         for disks_item_data in self.disks:
@@ -186,18 +175,15 @@ class Server:
                 "memory": memory,
                 "vcpus": vcpus,
                 "disk": disk,
-                "locked": locked,
                 "created_at": created_at,
                 "status": status,
                 "backup_ids": backup_ids,
-                "snapshot_ids": snapshot_ids,
                 "features": features,
                 "region": region,
                 "image": image,
                 "size": size,
                 "size_slug": size_slug,
                 "networks": networks,
-                "volume_ids": volume_ids,
                 "disks": disks,
                 "backup_settings": backup_settings,
                 "rescue_console": rescue_console,
@@ -239,15 +225,11 @@ class Server:
 
         disk = d.pop("disk")
 
-        locked = d.pop("locked")
-
         created_at = isoparse(d.pop("created_at"))
 
         status = ServerStatus(d.pop("status"))
 
         backup_ids = cast(List[int], d.pop("backup_ids"))
-
-        snapshot_ids = cast(List[str], d.pop("snapshot_ids"))
 
         features = cast(List[str], d.pop("features"))
 
@@ -260,8 +242,6 @@ class Server:
         size_slug = d.pop("size_slug")
 
         networks = Networks.from_dict(d.pop("networks"))
-
-        volume_ids = cast(List[str], d.pop("volume_ids"))
 
         disks = []
         _disks = d.pop("disks")
@@ -339,18 +319,15 @@ class Server:
             memory=memory,
             vcpus=vcpus,
             disk=disk,
-            locked=locked,
             created_at=created_at,
             status=status,
             backup_ids=backup_ids,
-            snapshot_ids=snapshot_ids,
             features=features,
             region=region,
             image=image,
             size=size,
             size_slug=size_slug,
             networks=networks,
-            volume_ids=volume_ids,
             disks=disks,
             backup_settings=backup_settings,
             rescue_console=rescue_console,

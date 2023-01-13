@@ -1,25 +1,27 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Tuple, Union
 
 from binarylane.api.server.server_delete import sync_detailed
 from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "delete"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Cancel an Existing Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_delete"""
         parser.cli_argument(
             "server_id",
@@ -36,7 +38,7 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return type(None)
 
     def request(
@@ -44,8 +46,11 @@ class Command(CommandRunner):
         server_id: int,
         client: Client,
         reason: Union[Unset, None, str] = UNSET,
-    ) -> Union[Any, ProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails]]:
 
+        # HTTPStatus.NO_CONTENT: Any
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             server_id=server_id,
             client=client,

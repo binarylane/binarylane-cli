@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Tuple, Union
 
 from binarylane.api.load_balancer.load_balancer_availability import sync_detailed
 from binarylane.client import Client
 from binarylane.models.load_balancer_availability_response import LoadBalancerAvailabilityResponse
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -28,25 +30,27 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "availability"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch Load Balancer Availability and Pricing"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for load-balancer_availability"""
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return LoadBalancerAvailabilityResponse
 
     def request(
         self,
         client: Client,
-    ) -> Union[Any, LoadBalancerAvailabilityResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, LoadBalancerAvailabilityResponse]]:
 
+        # HTTPStatus.OK: LoadBalancerAvailabilityResponse
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
         )

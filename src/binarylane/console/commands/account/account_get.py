@@ -1,35 +1,39 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Any, Tuple, Union
 
 from binarylane.api.account.account_get import sync_detailed
 from binarylane.client import Client
 from binarylane.models.account_response import AccountResponse
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "get"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch Information About the Current Account"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for account_get"""
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return AccountResponse
 
     def request(
         self,
         client: Client,
-    ) -> Union[AccountResponse, Any]:
+    ) -> Tuple[HTTPStatus, Union[None, AccountResponse, Any]]:
 
+        # HTTPStatus.OK: AccountResponse
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
         )

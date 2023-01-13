@@ -6,12 +6,10 @@ from typing import Any, Dict, List, Type, TypeVar, Union, cast
 import attr
 from dateutil.parser import isoparse
 
-from binarylane.models.algorithm_type import AlgorithmType
 from binarylane.models.forwarding_rule import ForwardingRule
 from binarylane.models.health_check import HealthCheck
 from binarylane.models.load_balancer_status import LoadBalancerStatus
 from binarylane.models.region import Region
-from binarylane.models.sticky_sessions import StickySessions
 from binarylane.types import UNSET, Unset
 
 T = TypeVar("T", bound="LoadBalancer")
@@ -35,26 +33,9 @@ class LoadBalancer:
         forwarding_rules (List[ForwardingRule]): The rules that control which traffic the load balancer will forward to
             servers in the pool.
         health_check (HealthCheck):
-        sticky_sessions (StickySessions):
         server_ids (List[int]): The server IDs of the servers that are currently in the load balancer pool (regardless
             of their current 'health').
-        algorithm (AlgorithmType):
-            | Value | Description |
-            | ----- | ----------- |
-            | round_robin | Each request will be sent to one of the nominated servers in turn. |
-            | least_connections | Each request will be sent to the server with the least existing connections. This option
-            is not currently supported. |
-
-        redirect_http_to_https (bool): Whether to redirect HTTP traffic received by the load balancer to HTTPS. This is
-            not currently supported.
-        enable_proxy_protocol (bool): Whether the PROXY protocol is enabled on the load balancer. This is not currently
-            supported.
-        enable_backend_keepalive (bool): Whether to use HTTP keepalive connections to servers in the load balancer pool.
-            This is not currently supported.
         region (Union[Unset, None, Region]):
-        vpc_id (Union[Unset, None, int]): The VPC ID of the VPC the load balancer is assigned to. This is not currently
-            supported: all load balancers are either in the default (public) network for the region or are 'AnyCast' load
-            balancers.
     """
 
     id: int
@@ -64,14 +45,8 @@ class LoadBalancer:
     created_at: datetime.datetime
     forwarding_rules: List[ForwardingRule]
     health_check: HealthCheck
-    sticky_sessions: StickySessions
     server_ids: List[int]
-    algorithm: AlgorithmType
-    redirect_http_to_https: bool
-    enable_proxy_protocol: bool
-    enable_backend_keepalive: bool
     region: Union[Unset, None, Region] = UNSET
-    vpc_id: Union[Unset, None, int] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -90,20 +65,11 @@ class LoadBalancer:
 
         health_check = self.health_check.to_dict()
 
-        sticky_sessions = self.sticky_sessions.to_dict()
-
         server_ids = self.server_ids
 
-        algorithm = self.algorithm.value
-
-        redirect_http_to_https = self.redirect_http_to_https
-        enable_proxy_protocol = self.enable_proxy_protocol
-        enable_backend_keepalive = self.enable_backend_keepalive
         region: Union[Unset, None, Dict[str, Any]] = UNSET
         if not isinstance(self.region, Unset):
             region = self.region.to_dict() if self.region else None
-
-        vpc_id = self.vpc_id
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -116,18 +82,11 @@ class LoadBalancer:
                 "created_at": created_at,
                 "forwarding_rules": forwarding_rules,
                 "health_check": health_check,
-                "sticky_sessions": sticky_sessions,
                 "server_ids": server_ids,
-                "algorithm": algorithm,
-                "redirect_http_to_https": redirect_http_to_https,
-                "enable_proxy_protocol": enable_proxy_protocol,
-                "enable_backend_keepalive": enable_backend_keepalive,
             }
         )
         if region is not UNSET:
             field_dict["region"] = region
-        if vpc_id is not UNSET:
-            field_dict["vpc_id"] = vpc_id
 
         return field_dict
 
@@ -153,17 +112,7 @@ class LoadBalancer:
 
         health_check = HealthCheck.from_dict(d.pop("health_check"))
 
-        sticky_sessions = StickySessions.from_dict(d.pop("sticky_sessions"))
-
         server_ids = cast(List[int], d.pop("server_ids"))
-
-        algorithm = AlgorithmType(d.pop("algorithm"))
-
-        redirect_http_to_https = d.pop("redirect_http_to_https")
-
-        enable_proxy_protocol = d.pop("enable_proxy_protocol")
-
-        enable_backend_keepalive = d.pop("enable_backend_keepalive")
 
         _region = d.pop("region", UNSET)
         region: Union[Unset, None, Region]
@@ -174,8 +123,6 @@ class LoadBalancer:
         else:
             region = Region.from_dict(_region)
 
-        vpc_id = d.pop("vpc_id", UNSET)
-
         load_balancer = cls(
             id=id,
             name=name,
@@ -184,14 +131,8 @@ class LoadBalancer:
             created_at=created_at,
             forwarding_rules=forwarding_rules,
             health_check=health_check,
-            sticky_sessions=sticky_sessions,
             server_ids=server_ids,
-            algorithm=algorithm,
-            redirect_http_to_https=redirect_http_to_https,
-            enable_proxy_protocol=enable_proxy_protocol,
-            enable_backend_keepalive=enable_backend_keepalive,
             region=region,
-            vpc_id=vpc_id,
         )
 
         load_balancer.additional_properties = d

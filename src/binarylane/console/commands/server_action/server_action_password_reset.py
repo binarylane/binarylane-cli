@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Tuple, Union
 
 from binarylane.api.server_action.server_action_password_reset import sync_detailed
 from binarylane.client import Client
@@ -12,19 +13,20 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 from binarylane.types import UNSET, Unset
 
 from binarylane.console.actions import BooleanOptionalAction
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ActionRunner
 
 
 class Command(ActionRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "password-reset"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Reset the Password of a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server-action_password-reset"""
         parser.cli_argument(
             "server_id",
@@ -60,7 +62,7 @@ If omitted and the server supports password change actions this will default to 
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return ActionResponse
 
     def request(
@@ -70,8 +72,14 @@ If omitted and the server supports password change actions this will default to 
         type: PasswordResetType,
         username: Union[Unset, None, str] = UNSET,
         send_password_via_email: Union[Unset, None, bool] = UNSET,
-    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: ActionResponse
+        # HTTPStatus.ACCEPTED: Any
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             server_id=server_id,
             client=client,

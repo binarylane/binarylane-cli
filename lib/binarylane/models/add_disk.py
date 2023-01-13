@@ -18,7 +18,8 @@ class AddDisk:
         type (AddDiskType):
         size_gigabytes (int): The size of the new disk in GB. The server must have at least this much unallocated
             storage space.
-        description (Union[Unset, None, str]): An optional description for the disk.
+        description (Union[Unset, None, str]): An optional description for the disk. If this is null a default
+            description will be added. Submit an empty string to prevent the default description being added.
     """
 
     type: AddDiskType

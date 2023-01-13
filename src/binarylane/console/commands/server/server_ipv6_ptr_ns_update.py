@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, List, Type, Union
+from http import HTTPStatus
+from typing import List, Tuple, Union
 
 from binarylane.api.server.server_ipv6_ptr_ns_update import sync_detailed
 from binarylane.client import Client
@@ -10,19 +11,20 @@ from binarylane.models.reverse_nameservers_request import ReverseNameserversRequ
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "update"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Create New or Update Existing IPv6 Name Server Records"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_ipv6-ptr-ns_update"""
 
         parser.cli_argument(
@@ -34,15 +36,19 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return Action
 
     def request(
         self,
         client: Client,
         reverse_nameservers: Union[Unset, None, List[str]] = UNSET,
-    ) -> Union[Action, Any, ProblemDetails, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[Action, None, ProblemDetails, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: Action
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
             json_body=ReverseNameserversRequest(

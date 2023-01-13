@@ -1,25 +1,27 @@
 from __future__ import annotations
 
-from typing import Type, Union
+from http import HTTPStatus
+from typing import Tuple, Union
 
 from binarylane.api.software.software_get import sync_detailed
 from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.software_response import SoftwareResponse
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "get"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch Existing Software"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for software_get"""
         parser.cli_argument(
             "software_id",
@@ -28,15 +30,17 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return SoftwareResponse
 
     def request(
         self,
         software_id: str,
         client: Client,
-    ) -> Union[ProblemDetails, SoftwareResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SoftwareResponse]]:
 
+        # HTTPStatus.OK: SoftwareResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
         page_response = sync_detailed(
             software_id=software_id,
             client=client,

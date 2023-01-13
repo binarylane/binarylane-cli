@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Tuple, Union
 
 from binarylane.api.domain.domain_record_create import sync_detailed
 from binarylane.client import Client
@@ -11,19 +12,20 @@ from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "create"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Create a New Domain Record"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for domain_record_create"""
         parser.cli_argument(
             "domain_name",
@@ -117,7 +119,7 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return DomainRecordResponse
 
     def request(
@@ -133,8 +135,12 @@ class Command(CommandRunner):
         weight: Union[Unset, None, int] = UNSET,
         flags: Union[Unset, None, int] = UNSET,
         tag: Union[Unset, None, str] = UNSET,
-    ) -> Union[Any, DomainRecordResponse, ProblemDetails, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, DomainRecordResponse, ProblemDetails, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: DomainRecordResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             domain_name=domain_name,
             client=client,

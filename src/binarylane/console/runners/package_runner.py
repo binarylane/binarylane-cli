@@ -30,7 +30,7 @@ class PackageRunner(Runner):
     _prefix: Optional[str]
     _runners: List[Runner]
 
-    def __init__(self, parent: Optional[Runner] = None, prefix: str = None) -> None:
+    def __init__(self, parent: Optional[Runner] = None, prefix: Optional[str] = None) -> None:
         super().__init__(parent)
         self._prefix = prefix
         self._runners = []

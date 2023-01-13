@@ -1,13 +1,22 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Union, Type, cast
+{% if endpoint.json_body and endpoint.json_body.template.startswith('union_') %}
+{# endpoint_init.py.jinja has same check and will not generate a ModuleRunner #}
+# json_body unions are not implmemented
+# Type: {{ endpoint.json_body.get_instance_type_string() }}
+
+{% else %}
+{# Can import pretty liberally, as the generator will remove unused imports #}
+from typing import Any, Dict, List, Optional, Union, Tuple, Type, cast
 
 import httpx
+from http import HTTPStatus
 
-
+from binarylane.console.parsers import CommandParser
 from binarylane.console.actions import BooleanOptionalAction
 from binarylane.client import AuthenticatedClient, Client
 from binarylane.types import Response, UNSET, Unset
+from binarylane.models.links import Links
 
 from binarylane.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync_detailed
 
@@ -72,14 +81,14 @@ class Command({{ response_class['name'] }}):
 {% endif %}
 
     @property
-    def name(self):
+    def name(self) -> str:
         return '{{ endpoint.name.split('_')[-1] }}'
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """{{ endpoint.summary }}"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for {{ endpoint.name }}"""
         {% for parameter in endpoint.path_parameters.values() %}
         parser.cli_argument('{{ parameter.name }}',
@@ -129,7 +138,7 @@ class Command({{ response_class['name'] }}):
         {% endif %}
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         {% if 'type' in response_class %}
         return {{ response_class['type'].get_type_string() }}
         {% else %}
@@ -164,14 +173,25 @@ class Command({{ response_class['name'] }}):
         {{ property.to_string() }},
         {% endfor %}
         {% endif %}
-        ) -> {{ endpoint.response_type() }}:
+        {# regex not available, so we handle both types separately #}
+        {% set return_string = endpoint.response_type().replace('[Any, ', '[None, ').replace(' Any, ', ' None, ') %}
+        {% if not return_string.startswith("Union[") %}
+        {% set return_string = "Union[{}]".format(return_string) %}
+        {% endif %}
+        {% if "None, " not in return_string %}
+        {% set return_string = return_string.replace("Union[", "Union[None, ") %}
+        {% endif %}
+        ) -> Tuple[HTTPStatus, {{ return_string }}]:
 
+            {% for response_type in endpoint.responses %}
+            # {{ response_type.status_code }}: {{ response_type.prop.get_type_string() }}
+            {% endfor %}
             {% if paginated %}
             page = 0
             per_page = 25
             has_next = True
             {% for response_type in endpoint.responses if response_type.status_code == 200 %}
-            response: {{ response_type.prop.class_info.name }} = None
+            response: Optional[{{ response_type.prop.class_info.name }}] = None
             {% endfor %}
 
             while has_next:
@@ -213,10 +233,10 @@ class Command({{ response_class['name'] }}):
 
                 status_code = page_response.status_code
                 if status_code != 200:
-                    response = page_response.parsed
-                    break
+                    return status_code, page_response.parsed
 
-                has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+                assert isinstance(page_response.parsed, {{ response_class['type'].get_type_string() }})
+                has_next = isinstance(page_response.parsed.links, Links) and isinstance(page_response.parsed.links.pages.next_, str)
                 if not response:
                     response = page_response.parsed
                 else:
@@ -232,3 +252,4 @@ class Command({{ response_class['name'] }}):
 
             return status_code, response
             {% endif %}
+{% endif %}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, List, Type, Union
+from http import HTTPStatus
+from typing import List, Tuple, Union
 
 from binarylane.api.server.server_create import sync_detailed
 from binarylane.client import Client
@@ -13,19 +14,20 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 from binarylane.types import UNSET, Unset
 
 from binarylane.console.actions import BooleanOptionalAction
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ActionLinkRunner
 
 
 class Command(ActionLinkRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "create"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Create a New Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_create"""
 
         parser.cli_argument(
@@ -136,7 +138,7 @@ class Command(ActionLinkRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return CreateServerResponse
 
     def request(
@@ -155,8 +157,11 @@ class Command(ActionLinkRunner):
         licenses: Union[Unset, None, List[License]] = UNSET,
         user_data: Union[Unset, None, str] = UNSET,
         port_blocking: Union[Unset, None, bool] = UNSET,
-    ) -> Union[Any, CreateServerResponse, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, CreateServerResponse, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: CreateServerResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
             json_body=CreateServerRequest(

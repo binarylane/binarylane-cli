@@ -1,25 +1,28 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Optional, Tuple, Union
 
 from binarylane.api.server.server_failover_ip_get import sync_detailed
 from binarylane.client import Client
 from binarylane.models.failover_ips_response import FailoverIpsResponse
+from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "get"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch the Failover IPs for a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_failover-ip_get"""
         parser.cli_argument(
             "server_id",
@@ -28,19 +31,22 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return FailoverIpsResponse
 
     def request(
         self,
         server_id: int,
         client: Client,
-    ) -> Union[Any, FailoverIpsResponse, ProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, FailoverIpsResponse, ProblemDetails]]:
 
+        # HTTPStatus.OK: FailoverIpsResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page = 0
         per_page = 25
         has_next = True
-        response: FailoverIpsResponse = None
+        response: Optional[FailoverIpsResponse] = None
 
         while has_next:
             page += 1
@@ -53,10 +59,12 @@ class Command(CommandRunner):
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, FailoverIpsResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

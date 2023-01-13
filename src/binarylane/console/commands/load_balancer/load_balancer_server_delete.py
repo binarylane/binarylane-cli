@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, List, Type, Union
+from http import HTTPStatus
+from typing import List, Tuple, Union
 
 from binarylane.api.load_balancer.load_balancer_server_delete import sync_detailed
 from binarylane.client import Client
@@ -8,19 +9,20 @@ from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.server_ids_request import ServerIdsRequest
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "delete"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Remove Servers from an Existing Load Balancer"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for load-balancer_server_delete"""
         parser.cli_argument(
             "load_balancer_id",
@@ -37,7 +39,7 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return type(None)
 
     def request(
@@ -45,8 +47,13 @@ class Command(CommandRunner):
         load_balancer_id: int,
         client: Client,
         server_ids: List[int],
-    ) -> Union[Any, ProblemDetails, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, ValidationProblemDetails]]:
 
+        # HTTPStatus.NO_CONTENT: Any
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             load_balancer_id=load_balancer_id,
             client=client,

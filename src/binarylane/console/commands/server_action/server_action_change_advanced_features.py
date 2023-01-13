@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, List, Type, Union
+from http import HTTPStatus
+from typing import List, Tuple, Union
 
 from binarylane.api.server_action.server_action_change_advanced_features import sync_detailed
 from binarylane.client import Client
@@ -15,19 +16,20 @@ from binarylane.models.vm_machine_type import VmMachineType
 from binarylane.types import UNSET, Unset
 
 from binarylane.console.actions import BooleanOptionalAction
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ActionRunner
 
 
 class Command(ActionRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "change-advanced-features"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Change the Advanced Features of a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server-action_change-advanced-features"""
         parser.cli_argument(
             "server_id",
@@ -112,7 +114,7 @@ class Command(ActionRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return ActionResponse
 
     def request(
@@ -126,8 +128,14 @@ class Command(ActionRunner):
         machine_type: Union[Unset, None, VmMachineType] = UNSET,
         automatic_machine_type: Union[Unset, None, bool] = UNSET,
         video_device: Union[Unset, None, VideoDevice] = UNSET,
-    ) -> Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: ActionResponse
+        # HTTPStatus.ACCEPTED: Any
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             server_id=server_id,
             client=client,

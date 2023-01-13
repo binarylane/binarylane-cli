@@ -9,7 +9,7 @@ __all__ = ["commands"]
 commands: List[Type[ModuleRunner]] = []
 
 
-def register_command(cls: ModuleRunner) -> ModuleRunner:
+def register_command(cls: Type[ModuleRunner]) -> Type[ModuleRunner]:
     commands.append(cls)
     return cls
 

@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Tuple, Union
 
 from binarylane.api.server.server_alert_get import sync_detailed
 from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.threshold_alerts_response import ThresholdAlertsResponse
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -42,14 +44,14 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "get"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch the Currently Set Threshold Alerts for a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_alert_get"""
         parser.cli_argument(
             "server_id",
@@ -58,15 +60,18 @@ class Command(ListRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return ThresholdAlertsResponse
 
     def request(
         self,
         server_id: int,
         client: Client,
-    ) -> Union[Any, ProblemDetails, ThresholdAlertsResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, ThresholdAlertsResponse]]:
 
+        # HTTPStatus.OK: ThresholdAlertsResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             server_id=server_id,
             client=client,

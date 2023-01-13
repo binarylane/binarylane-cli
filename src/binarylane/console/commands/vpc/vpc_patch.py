@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, List, Type, Union
+from http import HTTPStatus
+from typing import List, Tuple, Union
 
 from binarylane.api.vpc.vpc_patch import sync_detailed
 from binarylane.client import Client
@@ -11,19 +12,20 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 from binarylane.models.vpc_response import VpcResponse
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "patch"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Update an Existing VPC"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for vpc_patch"""
         parser.cli_argument(
             "vpc_id",
@@ -48,7 +50,7 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return VpcResponse
 
     def request(
@@ -57,8 +59,12 @@ class Command(CommandRunner):
         client: Client,
         name: Union[Unset, None, str] = UNSET,
         route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET,
-    ) -> Union[Any, ProblemDetails, ValidationProblemDetails, VpcResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, ValidationProblemDetails, VpcResponse]]:
 
+        # HTTPStatus.OK: VpcResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             vpc_id=vpc_id,
             client=client,

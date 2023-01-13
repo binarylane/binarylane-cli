@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.account.account_invoice_list import sync_detailed
 from binarylane.client import Client
 from binarylane.models.invoices_response import InvoicesResponse
+from binarylane.models.links import Links
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -44,29 +47,31 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch Invoices"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for account_invoice_list"""
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return InvoicesResponse
 
     def request(
         self,
         client: Client,
-    ) -> Union[Any, InvoicesResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, InvoicesResponse]]:
 
+        # HTTPStatus.OK: InvoicesResponse
+        # HTTPStatus.UNAUTHORIZED: Any
         page = 0
         per_page = 25
         has_next = True
-        response: InvoicesResponse = None
+        response: Optional[InvoicesResponse] = None
 
         while has_next:
             page += 1
@@ -78,10 +83,12 @@ class Command(ListRunner):
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, InvoicesResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

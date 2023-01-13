@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Tuple, Union
 
 from binarylane.api.server.server_neighbors_get import sync_detailed
 from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.server_neighbors_response import ServerNeighborsResponse
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -19,7 +21,6 @@ class Command(ListRunner):
             "memory",
             "vcpus",
             "disk",
-            "locked",
             "created_at",
             "status",
             "size_slug",
@@ -34,7 +35,6 @@ class Command(ListRunner):
             "memory": """The memory in MB of this server.""",
             "vcpus": """The number of virtual CPUs of this server.""",
             "disk": """The total disk in GB of this server.""",
-            "locked": """If this server is locked no actions may be performed.""",
             "created_at": """The date and time in ISO8601 format of this server's initial creation.""",
             "status": """
 | Value | Description |
@@ -46,14 +46,12 @@ class Command(ListRunner):
 
 """,
             "backup_ids": """A list of the currently existing backup image IDs for this server (if any).""",
-            "snapshot_ids": """Snapshots are not currently supported and this will always be an empty array.""",
             "features": """A list of the currently enabled features on this server.""",
             "region": """""",
             "image": """""",
             "size": """""",
             "size_slug": """The slug of the currently selected size for this server.""",
             "networks": """""",
-            "volume_ids": """Volumes are not currently supported and this will always be an empty array.""",
             "disks": """A list of the disks that are currently attached to the server.""",
             "backup_settings": """""",
             "rescue_console": """""",
@@ -72,14 +70,14 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "get"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """List All Servers That Share a Host with a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_neighbors_get"""
         parser.cli_argument(
             "server_id",
@@ -88,15 +86,18 @@ class Command(ListRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return ServerNeighborsResponse
 
     def request(
         self,
         server_id: int,
         client: Client,
-    ) -> Union[Any, ProblemDetails, ServerNeighborsResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, ServerNeighborsResponse]]:
 
+        # HTTPStatus.OK: ServerNeighborsResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             server_id=server_id,
             client=client,

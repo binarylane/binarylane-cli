@@ -1,16 +1,19 @@
 from __future__ import annotations
 
 import datetime
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.server.server_metrics_list import sync_detailed
 from binarylane.client import Client
 from binarylane.models.data_interval import DataInterval
+from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.sample_sets_response import SampleSetsResponse
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -34,14 +37,14 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch all of the Performance and Usage Data Sample Sets for a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_metrics_list"""
         parser.cli_argument(
             "server_id",
@@ -82,7 +85,7 @@ class Command(ListRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return SampleSetsResponse
 
     def request(
@@ -92,12 +95,16 @@ class Command(ListRunner):
         data_interval: Union[Unset, None, DataInterval] = UNSET,
         start: Union[Unset, None, datetime.datetime] = UNSET,
         end: Union[Unset, None, datetime.datetime] = UNSET,
-    ) -> Union[Any, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SampleSetsResponse, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: SampleSetsResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page = 0
         per_page = 25
         has_next = True
-        response: SampleSetsResponse = None
+        response: Optional[SampleSetsResponse] = None
 
         while has_next:
             page += 1
@@ -113,10 +120,12 @@ class Command(ListRunner):
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, SampleSetsResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

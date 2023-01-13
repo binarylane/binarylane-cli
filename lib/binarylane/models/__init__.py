@@ -20,7 +20,6 @@ from binarylane.models.advanced_firewall_rule_action import AdvancedFirewallRule
 from binarylane.models.advanced_firewall_rule_protocol import AdvancedFirewallRuleProtocol
 from binarylane.models.advanced_firewall_rules_response import AdvancedFirewallRulesResponse
 from binarylane.models.advanced_server_features import AdvancedServerFeatures
-from binarylane.models.algorithm_type import AlgorithmType
 from binarylane.models.attach_backup import AttachBackup
 from binarylane.models.attach_backup_type import AttachBackupType
 from binarylane.models.attached_backup import AttachedBackup
@@ -214,8 +213,6 @@ from binarylane.models.ssh_key import SshKey
 from binarylane.models.ssh_key_request import SshKeyRequest
 from binarylane.models.ssh_key_response import SshKeyResponse
 from binarylane.models.ssh_keys_response import SshKeysResponse
-from binarylane.models.sticky_sessions import StickySessions
-from binarylane.models.sticky_sessions_type import StickySessionsType
 from binarylane.models.take_backup import TakeBackup
 from binarylane.models.take_backup_type import TakeBackupType
 from binarylane.models.tax_code import TaxCode
@@ -266,7 +263,6 @@ __all__ = (
     "AdvancedFirewallRuleProtocol",
     "AdvancedFirewallRulesResponse",
     "AdvancedServerFeatures",
-    "AlgorithmType",
     "AttachBackup",
     "AttachBackupType",
     "AttachedBackup",
@@ -460,8 +456,6 @@ __all__ = (
     "SshKeyRequest",
     "SshKeyResponse",
     "SshKeysResponse",
-    "StickySessions",
-    "StickySessionsType",
     "TakeBackup",
     "TakeBackupType",
     "TaxCode",

@@ -97,9 +97,6 @@ def sync_detailed(
             | Value | Description |
             | ----- | ----------- |
             | distribution | Base operating system images. |
-            | application | Operating system images that include pre-installed applications. This
-            option is not currently supported, operating system images with pre-installed applications
-            are listed under 'distribution'. |
             | backup | A backup image of a server. |
 
         private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
@@ -146,9 +143,6 @@ def sync(
             | Value | Description |
             | ----- | ----------- |
             | distribution | Base operating system images. |
-            | application | Operating system images that include pre-installed applications. This
-            option is not currently supported, operating system images with pre-installed applications
-            are listed under 'distribution'. |
             | backup | A backup image of a server. |
 
         private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
@@ -188,9 +182,6 @@ async def asyncio_detailed(
             | Value | Description |
             | ----- | ----------- |
             | distribution | Base operating system images. |
-            | application | Operating system images that include pre-installed applications. This
-            option is not currently supported, operating system images with pre-installed applications
-            are listed under 'distribution'. |
             | backup | A backup image of a server. |
 
         private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
@@ -235,9 +226,6 @@ async def asyncio(
             | Value | Description |
             | ----- | ----------- |
             | distribution | Base operating system images. |
-            | application | Operating system images that include pre-installed applications. This
-            option is not currently supported, operating system images with pre-installed applications
-            are listed under 'distribution'. |
             | backup | A backup image of a server. |
 
         private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'

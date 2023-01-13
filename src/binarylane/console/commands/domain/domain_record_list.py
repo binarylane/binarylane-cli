@@ -1,14 +1,17 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.domain.domain_record_list import sync_detailed
 from binarylane.client import Client
 from binarylane.models.domain_record_type import DomainRecordType
 from binarylane.models.domain_records_response import DomainRecordsResponse
+from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -51,14 +54,14 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """List All Domain Records for a Domain"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for domain_record_list"""
         parser.cli_argument(
             "domain_name",
@@ -95,7 +98,7 @@ class Command(ListRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return DomainRecordsResponse
 
     def request(
@@ -104,12 +107,15 @@ class Command(ListRunner):
         client: Client,
         type: Union[Unset, None, DomainRecordType] = UNSET,
         name: Union[Unset, None, str] = UNSET,
-    ) -> Union[Any, DomainRecordsResponse, ProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, DomainRecordsResponse, ProblemDetails]]:
 
+        # HTTPStatus.OK: DomainRecordsResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page = 0
         per_page = 25
         has_next = True
-        response: DomainRecordsResponse = None
+        response: Optional[DomainRecordsResponse] = None
 
         while has_next:
             page += 1
@@ -124,10 +130,12 @@ class Command(ListRunner):
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, DomainRecordsResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

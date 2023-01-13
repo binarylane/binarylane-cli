@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import logging
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from http import HTTPStatus
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Tuple
 
 from binarylane.console.config import Config
 from binarylane.console.parsers.parser import CommandParser
@@ -63,9 +64,10 @@ class CommandRunner(Runner):
     def configure(self, parser: CommandParser) -> None:
         """Add supported CLI arguments"""
 
-    @abstractmethod
-    def request(self, **kwargs: Dict[str, Any]) -> Any:
-        """Perform API operation and return response"""
+    # @abstractmethod
+    # def request(self, **kwargs: Dict[str, object]) -> Tuple[int, object]:  # type: ignore
+    #    """Perform API operation and return response"""
+    request: Callable[..., Tuple[HTTPStatus, object]]
 
     @property
     @abstractmethod
@@ -106,7 +108,7 @@ class CommandRunner(Runner):
     def run(self, args: List[str]) -> None:
         # Checks have already been performed during __init__
         if args == [Runner.CHECK]:
-            return None
+            return
 
         logger.debug(f"Command parser for {self.name}. args: {args}")
         parsed = self._parser.parse_args(args)
@@ -128,6 +130,8 @@ class CommandRunner(Runner):
         if self._print_curl:
             with CurlCommand() as curl:
                 self.request(**request_args)
-                return print(curl.shell)
+                print(curl.shell)
+                return
 
-        return self.response(*self.request(**vars(parsed)))
+        status_code, received = self.request(**vars(parsed))
+        self.response(status_code, received)

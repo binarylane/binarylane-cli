@@ -1,13 +1,16 @@
 from __future__ import annotations
 
-from typing import Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.size.size_list import sync_detailed
 from binarylane.client import Client
+from binarylane.models.links import Links
 from binarylane.models.sizes_response import SizesResponse
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -52,14 +55,14 @@ otherwise not all regions listed will support all operating systems on this size
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """List All Available Sizes"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for size_list"""
 
         parser.cli_argument(
@@ -78,7 +81,7 @@ otherwise not all regions listed will support all operating systems on this size
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return SizesResponse
 
     def request(
@@ -86,12 +89,14 @@ otherwise not all regions listed will support all operating systems on this size
         client: Client,
         server_id: Union[Unset, None, int] = UNSET,
         image: Union[Unset, None, str] = UNSET,
-    ) -> Union[SizesResponse, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, SizesResponse, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: SizesResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         page = 0
         per_page = 25
         has_next = True
-        response: SizesResponse = None
+        response: Optional[SizesResponse] = None
 
         while has_next:
             page += 1
@@ -105,10 +110,12 @@ otherwise not all regions listed will support all operating systems on this size
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, SizesResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

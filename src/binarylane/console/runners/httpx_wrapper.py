@@ -53,4 +53,4 @@ class CurlCommand(HttpxWrapper):  # pylint: disable=too-few-public-methods
         self.shell = shlex.join(curl_cmdline)
 
         # Intentionally not calling super().request, so that the request is not executed
-        return httpx.Response(400)
+        return httpx.Response(401)

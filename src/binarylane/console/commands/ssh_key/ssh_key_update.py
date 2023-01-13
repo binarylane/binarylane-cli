@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Tuple, Union
 
 from binarylane.api.ssh_key.ssh_key_update import sync_detailed
 from binarylane.client import Client
@@ -11,19 +12,20 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 from binarylane.types import UNSET, Unset
 
 from binarylane.console.actions import BooleanOptionalAction
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "update"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Update an Existing SSH Key"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for ssh-key_update"""
         parser.cli_argument(
             "key_id",
@@ -50,7 +52,7 @@ Optional: If true this will be added to all new server installations (if we supp
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return SshKeyResponse
 
     def request(
@@ -59,8 +61,12 @@ Optional: If true this will be added to all new server installations (if we supp
         client: Client,
         name: str,
         default: Union[Unset, None, bool] = UNSET,
-    ) -> Union[Any, ProblemDetails, SshKeyResponse, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SshKeyResponse, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: SshKeyResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             key_id=key_id,
             client=client,

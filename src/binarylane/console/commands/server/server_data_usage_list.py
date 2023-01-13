@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.server.server_data_usage_list import sync_detailed
 from binarylane.client import Client
 from binarylane.models.data_usages_response import DataUsagesResponse
+from binarylane.models.links import Links
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -32,29 +35,31 @@ If you have more than one server, please see our data pooling policy: this value
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch all Current Data Usage (Transfer) for All Servers"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_data-usage_list"""
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return DataUsagesResponse
 
     def request(
         self,
         client: Client,
-    ) -> Union[Any, DataUsagesResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, DataUsagesResponse]]:
 
+        # HTTPStatus.OK: DataUsagesResponse
+        # HTTPStatus.UNAUTHORIZED: Any
         page = 0
         per_page = 25
         has_next = True
-        response: DataUsagesResponse = None
+        response: Optional[DataUsagesResponse] = None
 
         while has_next:
             page += 1
@@ -66,10 +71,12 @@ If you have more than one server, please see our data pooling policy: this value
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, DataUsagesResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

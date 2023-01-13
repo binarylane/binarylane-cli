@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Type, Union
+from http import HTTPStatus
+from typing import Tuple, Union
 
 from binarylane.api.ssh_key.ssh_key_create import sync_detailed
 from binarylane.client import Client
@@ -10,19 +11,20 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 from binarylane.types import UNSET, Unset
 
 from binarylane.console.actions import BooleanOptionalAction
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import CommandRunner
 
 
 class Command(CommandRunner):
     @property
-    def name(self):
+    def name(self) -> str:
         return "create"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Add a New SSH Key"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for ssh-key_create"""
 
         parser.cli_argument(
@@ -51,7 +53,7 @@ class Command(CommandRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return SshKeyResponse
 
     def request(
@@ -60,8 +62,11 @@ class Command(CommandRunner):
         public_key: str,
         name: str,
         default: Union[Unset, None, bool] = UNSET,
-    ) -> Union[Any, SshKeyResponse, ValidationProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, SshKeyResponse, ValidationProblemDetails]]:
 
+        # HTTPStatus.OK: SshKeyResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
             json_body=SshKeyRequest(

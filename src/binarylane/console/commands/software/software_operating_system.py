@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from typing import Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.software.software_operating_system import sync_detailed
 from binarylane.client import Client
+from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.softwares_response import SoftwaresResponse
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -40,14 +43,14 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "operating-system"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """List All Available Software for an Existing Operating System"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for software_operating-system"""
         parser.cli_argument(
             "operating_system_id_or_slug",
@@ -56,19 +59,21 @@ class Command(ListRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return SoftwaresResponse
 
     def request(
         self,
         operating_system_id_or_slug: str,
         client: Client,
-    ) -> Union[ProblemDetails, SoftwaresResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SoftwaresResponse]]:
 
+        # HTTPStatus.OK: SoftwaresResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
         page = 0
         per_page = 25
         has_next = True
-        response: SoftwaresResponse = None
+        response: Optional[SoftwaresResponse] = None
 
         while has_next:
             page += 1
@@ -81,10 +86,12 @@ class Command(ListRunner):
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, SoftwaresResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:

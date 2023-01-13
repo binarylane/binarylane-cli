@@ -14,6 +14,7 @@ from binarylane.types import UNSET, Response, Unset
 def _get_kwargs(
     *,
     client: Client,
+    hostname: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Dict[str, Any]:
@@ -23,6 +24,8 @@ def _get_kwargs(
     cookies: Dict[str, Any] = client.get_cookies()
 
     params: Dict[str, Any] = {}
+    params["hostname"] = hostname
+
     params["page"] = page
 
     params["per_page"] = per_page
@@ -65,12 +68,16 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 def sync_detailed(
     *,
     client: Client,
+    hostname: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Response[Union[Any, ServersResponse]]:
     """List All Servers
 
     Args:
+        hostname (Union[Unset, None, str]): Providing a hostname restricts the results to the
+            server that has this hostname (case insensitive). If this parameter is provided at most 1
+            server will be returned.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -84,6 +91,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         client=client,
+        hostname=hostname,
         page=page,
         per_page=per_page,
     )
@@ -99,12 +107,16 @@ def sync_detailed(
 def sync(
     *,
     client: Client,
+    hostname: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Optional[Union[Any, ServersResponse]]:
     """List All Servers
 
     Args:
+        hostname (Union[Unset, None, str]): Providing a hostname restricts the results to the
+            server that has this hostname (case insensitive). If this parameter is provided at most 1
+            server will be returned.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -118,6 +130,7 @@ def sync(
 
     return sync_detailed(
         client=client,
+        hostname=hostname,
         page=page,
         per_page=per_page,
     ).parsed
@@ -126,12 +139,16 @@ def sync(
 async def asyncio_detailed(
     *,
     client: Client,
+    hostname: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Response[Union[Any, ServersResponse]]:
     """List All Servers
 
     Args:
+        hostname (Union[Unset, None, str]): Providing a hostname restricts the results to the
+            server that has this hostname (case insensitive). If this parameter is provided at most 1
+            server will be returned.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -145,6 +162,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         client=client,
+        hostname=hostname,
         page=page,
         per_page=per_page,
     )
@@ -158,12 +176,16 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: Client,
+    hostname: Union[Unset, None, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Optional[Union[Any, ServersResponse]]:
     """List All Servers
 
     Args:
+        hostname (Union[Unset, None, str]): Providing a hostname restricts the results to the
+            server that has this hostname (case insensitive). If this parameter is provided at most 1
+            server will be returned.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -178,6 +200,7 @@ async def asyncio(
     return (
         await asyncio_detailed(
             client=client,
+            hostname=hostname,
             page=page,
             per_page=per_page,
         )

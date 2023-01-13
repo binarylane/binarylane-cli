@@ -5,24 +5,23 @@ import datetime
 import logging
 import typing
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
 
 if TYPE_CHECKING:
     from binarylane.console.parsers.parser import CommandParser
 
 logger = logging.getLogger(__name__)
 
-
 # pylint: disable=too-few-public-methods
 class CommandArgument:
     """Represents a strongly typed, command parameter"""
 
     _name: str
-    _type: type
+    _type: object
     _dest: str
     _required: Optional[bool]
-    _description: Optional[bool]
-    _action: Optional[argparse.Action]
+    _description: Optional[str]
+    _action: Optional[Type[argparse.Action]]
     prog: Optional[str]
 
     raise_on_unsupported = False
@@ -30,12 +29,12 @@ class CommandArgument:
     def __init__(
         self,
         name: str,
-        _type: type,
+        _type: object,
         *,
         dest: Optional[str] = None,
         required: Optional[bool] = None,
-        description: Optional[bool] = None,
-        action: Optional[argparse.Action] = None,
+        description: Optional[str] = None,
+        action: Optional[Type[argparse.Action]] = None,
     ) -> None:
         self._name = name
         self._type = _type
@@ -57,16 +56,18 @@ class CommandArgument:
             parser.add_argument(self._name, **kwargs)
             return
 
-        # type could be a primitive like 'str' or 'bool', or something complex like `List[Union[int,str]]`
+        # type could be a primitive like 'str' or 'bool', or something complex like `List[Union[int,str]]`.
+        # These do not share a common ancestor at runtime
+        #
         # We need to determine the correct primitive type(s) to use and corresponding argparse settings
-        _type = self._type
+        _type: Any = self._type
 
-        origin: Optional[type] = _type
+        origin: Optional[type] = type
         while origin is not None:
             origin = typing.get_origin(_type)
 
             if origin is Union:
-                _type = self._unbox_union(_type)
+                _type = self._unbox_union(_type, kwargs)
             elif origin is list:
                 inner_type = typing.get_args(_type)[0]
 
@@ -107,17 +108,19 @@ class CommandArgument:
         group = parser.arguments_group if self._required is not False else parser.modifiers_group
         group.add_argument(self._name, type=_type, **kwargs)
 
-    def _unbox_union(self, _type: type) -> type:
+    def _unbox_union(self, _type: object, kwargs: Dict[str, Any]) -> type:
         # delayed import to avoid circular reference
-        from binarylane.types import Unset as unset
+        from binarylane.types import UNSET, Unset
 
         # Generally for optional parameters the API has Union[None,Unset,T]
         # We strip Unset and None so that we can provide argument for T
         inner_types = list(typing.get_args(_type))
-        if unset in inner_types:
-            inner_types.remove(unset)
         if type(None) in inner_types and self._required is False:
             inner_types.remove(type(None))
+            kwargs["default"] = None
+        if Unset in inner_types:
+            inner_types.remove(Unset)
+            kwargs["default"] = UNSET
         # FIXME: probably need to add separate arguments for int and str?
         #        Or determine it dynamically based on whether input str
         #        can cast to int ?

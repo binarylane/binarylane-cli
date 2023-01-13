@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Tuple, Union
 
 from binarylane.api.account.account_invoice_overdue import sync_detailed
 from binarylane.client import Client
 from binarylane.models.unpaid_failed_invoices_response import UnpaidFailedInvoicesResponse
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -44,25 +46,27 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "overdue"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """Fetch Unpaid Failed Invoices"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for account_invoice_overdue"""
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return UnpaidFailedInvoicesResponse
 
     def request(
         self,
         client: Client,
-    ) -> Union[Any, UnpaidFailedInvoicesResponse]:
+    ) -> Tuple[HTTPStatus, Union[None, UnpaidFailedInvoicesResponse]]:
 
+        # HTTPStatus.OK: UnpaidFailedInvoicesResponse
+        # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
         )

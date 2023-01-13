@@ -7,11 +7,11 @@ from binarylane.console.runners import ModuleRunner
 __all__ = ['commands']
 commands : List[Type[ModuleRunner]] = []
 
-def register_command(cls: ModuleRunner) -> ModuleRunner:
+def register_command(cls: Type[ModuleRunner]) -> Type[ModuleRunner]:
     commands.append(cls)
     return cls
 
-{% for endpoint in endpoint_collection.endpoints %}
+{% for endpoint in endpoint_collection.endpoints if not (endpoint.json_body and endpoint.json_body.template.startswith('union_')) %}
 @register_command
 class {{ class_name(endpoint.name) }}(ModuleRunner):
     """Runner for {{ endpoint.name }} API operation"""

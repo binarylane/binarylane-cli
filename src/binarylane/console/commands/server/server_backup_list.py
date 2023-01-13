@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, Union
+from http import HTTPStatus
+from typing import Dict, List, Optional, Tuple, Union
 
 from binarylane.api.server.server_backup_list import sync_detailed
 from binarylane.client import Client
 from binarylane.models.backups_response import BackupsResponse
+from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 
+from binarylane.console.parsers import CommandParser
 from binarylane.console.runners import ListRunner
 
 
@@ -62,14 +65,14 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self):
+    def name(self) -> str:
         return "list"
 
     @property
-    def description(self):
+    def description(self) -> str:
         return """List All Backups for a Server"""
 
-    def configure(self, parser):
+    def configure(self, parser: CommandParser) -> None:
         """Add arguments for server_backup_list"""
         parser.cli_argument(
             "server_id",
@@ -78,19 +81,22 @@ class Command(ListRunner):
         )
 
     @property
-    def ok_response_type(self) -> Type:
+    def ok_response_type(self) -> type:
         return BackupsResponse
 
     def request(
         self,
         server_id: int,
         client: Client,
-    ) -> Union[Any, BackupsResponse, ProblemDetails]:
+    ) -> Tuple[HTTPStatus, Union[None, BackupsResponse, ProblemDetails]]:
 
+        # HTTPStatus.OK: BackupsResponse
+        # HTTPStatus.NOT_FOUND: ProblemDetails
+        # HTTPStatus.UNAUTHORIZED: Any
         page = 0
         per_page = 25
         has_next = True
-        response: BackupsResponse = None
+        response: Optional[BackupsResponse] = None
 
         while has_next:
             page += 1
@@ -103,10 +109,12 @@ class Command(ListRunner):
 
             status_code = page_response.status_code
             if status_code != 200:
-                response = page_response.parsed
-                break
+                return status_code, page_response.parsed
 
-            has_next = page_response.parsed.links and page_response.parsed.links.pages.next_
+            assert isinstance(page_response.parsed, BackupsResponse)
+            has_next = isinstance(page_response.parsed.links, Links) and isinstance(
+                page_response.parsed.links.pages.next_, str
+            )
             if not response:
                 response = page_response.parsed
             else:
