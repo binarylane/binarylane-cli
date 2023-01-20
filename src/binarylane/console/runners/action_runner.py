@@ -39,8 +39,16 @@ class ActionRunner(CommandRunner):
         super().process(parsed)
 
     def _progress(self, progress: str) -> None:
-        if not self._quiet:
-            print(progress, end="", file=sys.stderr)
+        if self._quiet:
+            return
+
+        if not sys.stderr.isatty():
+            print(progress.rstrip("\n"), file=sys.stderr, flush=True)
+            return
+
+        # Used to wipe existing output
+        blanks = " " * (shutil.get_terminal_size().columns - 1)
+        print(f"\r{blanks}\r{progress}", end="", file=sys.stderr)
 
     def response(self, status_code: int, received: Any) -> None:
         # If async is requested, use standard handler
@@ -57,14 +65,11 @@ class ActionRunner(CommandRunner):
             response = sync_detailed(received, client=self._client)
             status_code, received = response.status_code, response.parsed
 
-        # Used to wipe existing output
-        blanks = " " * (shutil.get_terminal_size().columns - 1)
-
         # Sit and wait for completion
         while isinstance(received, ActionResponse):
             step = received.action.progress.current_step or "Starting"
             status = f"{received.action.type}: {step} ({received.action.progress.percent_complete}%) ... "
-            self._progress(f"\r{blanks}\r{status}")
+            self._progress(status)
 
             if received.action.completed_at:
                 self._progress(f"{received.action.status}.\n")
