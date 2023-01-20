@@ -6,8 +6,8 @@ import pytest
 
 from binarylane.console.commands import commands
 from binarylane.console.parser import Attribute
-from binarylane.console.parser.primitive_attribute import PrimitiveAttribute
-from binarylane.console.runners import CommandRunner, Runner
+from binarylane.console.runners import Runner
+from binarylane.console.runners.command import CommandRunner
 
 
 def get_all_command_runners() -> List[Type[CommandRunner]]:

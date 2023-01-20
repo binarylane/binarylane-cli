@@ -11,8 +11,8 @@ from binarylane.console.config import Config
 from binarylane.console.parser import Mapping
 from binarylane.console.parser.parser import Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
+from binarylane.console.runners import Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
-from binarylane.console.runners.runner import Runner
 
 logger = logging.getLogger(__name__)
 

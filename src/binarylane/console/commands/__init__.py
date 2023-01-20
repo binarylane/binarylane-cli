@@ -4,7 +4,7 @@ from __future__ import annotations
 import importlib
 from typing import List, Type
 
-from binarylane.console.runners import PackageRunner
+from binarylane.console.runners.package import PackageRunner
 
 __all__ = ["commands"]
 commands: List[Type[PackageRunner]] = []

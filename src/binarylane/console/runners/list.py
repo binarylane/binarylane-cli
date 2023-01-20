@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Dict, List
 
-from binarylane.console.runners.command_runner import CommandRunner
+from binarylane.console.runners.command import CommandRunner
 
 
 class ListRunner(CommandRunner):

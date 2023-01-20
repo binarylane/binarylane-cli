@@ -70,7 +70,7 @@ if TYPE_CHECKING:
 {% endfor %}
 {% endfor %}
 
-from binarylane.console.runners import {{ response_class['name'] }}
+from binarylane.console.runners.{{ response_class['name'].lower().replace('runner', '') }} import {{ response_class['name'] }}
 from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, PrimitiveAttribute
 
 

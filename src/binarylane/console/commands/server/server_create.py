@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute
-from binarylane.console.runners import ActionLinkRunner
+from binarylane.console.runners.actionlink import ActionLinkRunner
 
 
 class CommandRequest:

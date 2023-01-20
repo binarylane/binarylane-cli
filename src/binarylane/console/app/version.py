@@ -4,19 +4,11 @@ import importlib
 import importlib.metadata
 from typing import List, Optional
 
-from binarylane.console.runners import Runner
+from binarylane.console.app.lazy_runner import LazyRunner
 
 
-class VersionRunner(Runner):
+class VersionRunner(LazyRunner):
     """Display blcli package version"""
-
-    @property
-    def name(self) -> str:
-        return "version"
-
-    @property
-    def description(self) -> str:
-        return "Show the current version"
 
     def run(self, args: List[str]) -> None:
         package = __package__
@@ -35,3 +27,6 @@ class VersionRunner(Runner):
             return importlib.import_module(".._version", package).__version__
         except ModuleNotFoundError:
             return None
+
+
+Command = VersionRunner

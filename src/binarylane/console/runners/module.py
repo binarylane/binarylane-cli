@@ -5,10 +5,10 @@ import logging
 from abc import abstractmethod
 from typing import TYPE_CHECKING, List, Type
 
-from binarylane.console.runners.runner import Runner
+from binarylane.console.runners import Runner
 
 if TYPE_CHECKING:
-    from binarylane.console.runners.command_runner import CommandRunner
+    from binarylane.console.runners.command import CommandRunner
 
 logger = logging.getLogger(__name__)
 

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 from binarylane.console.parser import Mapping
-from binarylane.console.runners import CommandRunner
+from binarylane.console.runners.command import CommandRunner
 
 
 class CommandRequest:

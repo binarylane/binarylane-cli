@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, List
 
+from binarylane.console.app.lazy_runner import LazyRunner
 from binarylane.console.config import Config
 from binarylane.console.runners import Runner
 
@@ -13,16 +14,8 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class ConfigureRunner(Runner):
+class ConfigureRunner(LazyRunner):
     """Interactive runner to request, verify, and store API token to configuration file"""
-
-    @property
-    def name(self) -> str:
-        return "configure"
-
-    @property
-    def description(self) -> str:
-        return "Configure access to BinaryLane API"
 
     def run(self, args: List[str]) -> None:
         if args == [Runner.CHECK]:
@@ -64,3 +57,6 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         if response.status_code != 401:
             logger.warning("HTTP %s - %s", response.status_code.value, response.status_code.name)
         return False
+
+
+Command = ConfigureRunner

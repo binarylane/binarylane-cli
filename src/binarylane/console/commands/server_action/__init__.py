@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import List, Type
 
-from binarylane.console.runners import ModuleRunner
+from binarylane.console.runners.module import ModuleRunner
 
 __all__ = ["commands"]
 commands: List[Type[ModuleRunner]] = []

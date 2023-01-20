@@ -6,7 +6,7 @@ import sys
 import time
 from typing import TYPE_CHECKING, Any, List, Optional
 
-from binarylane.console.runners.command_runner import CommandRunner
+from binarylane.console.runners.command import CommandRunner
 
 if TYPE_CHECKING:
     from binarylane.api.action.action_get import sync_detailed

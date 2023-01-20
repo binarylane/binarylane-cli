@@ -7,8 +7,8 @@ from argparse import ArgumentParser, HelpFormatter
 from functools import cached_property
 from typing import List, Optional, Sequence
 
-from binarylane.console.runners.module_runner import ModuleRunner
-from binarylane.console.runners.runner import Runner
+from binarylane.console.runners import Runner
+from binarylane.console.runners.module import ModuleRunner
 
 logger = logging.getLogger(__name__)
 

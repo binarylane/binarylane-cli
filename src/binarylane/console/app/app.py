@@ -3,9 +3,9 @@ from __future__ import annotations
 from functools import cached_property
 from typing import List, Sequence
 
-from binarylane.console.app.configure import ConfigureRunner
-from binarylane.console.app.version import VersionRunner
-from binarylane.console.runners import PackageRunner, Runner
+from binarylane.console.app.lazy_loader import LazyLoader
+from binarylane.console.runners import Runner
+from binarylane.console.runners.package import PackageRunner
 
 
 class App(PackageRunner):
@@ -33,8 +33,10 @@ class App(PackageRunner):
 
     @cached_property
     def app_runners(self) -> List[Runner]:
-        """Additional runners to include"""
-        return [VersionRunner(self), ConfigureRunner(self)]
+        return [
+            LazyLoader(self, ".app.configure", "configure", "Configure access to BinaryLane API"),
+            LazyLoader(self, ".app.version", "version", "Show the current version"),
+        ]
 
     def run(self, args: List[str]) -> None:
         # Allowing doing `bl help command [subcommand...]` instead of --help

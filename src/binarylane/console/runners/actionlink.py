@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from binarylane.console.runners.action_runner import ActionRunner
+from binarylane.console.runners.action import ActionRunner
 
 if TYPE_CHECKING:
     from binarylane.models.actions_links import ActionsLinks
