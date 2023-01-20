@@ -34,7 +34,7 @@ isort = "isort ."
 mypy = "mypy ."
 pylint = "pylint src"
 regen = "scripts/generate-client.sh && scripts/generate-commands.sh"
-check = "task isort && task black && task mypy && task pylint"
+check = "task isort && task black && task mypy && task pylint && task test"
 test = "pytest tests"
 
 [tool.isort]
