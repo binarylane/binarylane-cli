@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "binarylane-cli"
-version = "0.9.1"
+version = "0.10.0"
 description = ""
 authors = ["Nathan O'Sullivan <nathan.osullivan@mammoth.com.au>"]
 readme = "README.md"
