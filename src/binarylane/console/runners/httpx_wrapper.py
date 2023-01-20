@@ -5,9 +5,11 @@ import shlex
 import urllib.parse
 from abc import ABC, abstractmethod
 from types import TracebackType
-from typing import Any, Callable, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar
 
-import httpx
+if TYPE_CHECKING:
+    import httpx
+
 
 WrapperT = TypeVar("WrapperT", bound="HttpxWrapper")
 
@@ -18,6 +20,8 @@ class HttpxWrapper(ABC):
     _httpx_request: Optional[Callable[..., httpx.Response]]
 
     def __enter__(self: WrapperT) -> WrapperT:
+        import httpx
+
         self._httpx_request = httpx.request
         httpx.request = self.request
         return self
