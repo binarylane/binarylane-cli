@@ -5,22 +5,28 @@ import logging
 from abc import abstractmethod
 from argparse import ArgumentParser, HelpFormatter
 from functools import cached_property
-from typing import List, Optional, Sequence
+from typing import List, NoReturn, Optional, Sequence
 
 from binarylane.console.runners import Runner
 from binarylane.console.runners.module import ModuleRunner
 
 logger = logging.getLogger(__name__)
 
+# The 24 character width of the metavar ensures a fixed left-column size
+COMMAND_METAVAR = "!" * 24
+
 
 class PackageHelpFormatter(HelpFormatter):
-    """Remove suppressed metavar from help"""
-
-    # The 24 character width of the suppressed string ensures a fixed left-column size
-    SUPPRESS = "!" * 24
+    """Remove command metavar from help"""
 
     def format_help(self) -> str:
-        return super().format_help().replace(f"  {PackageHelpFormatter.SUPPRESS}\n", "")
+        return super().format_help().replace(f"  {COMMAND_METAVAR}\n", "")
+
+
+class PackageParser(ArgumentParser):
+    def error(self, message: str) -> NoReturn:
+        """Use normal COMMAND metavar when reporting an error"""
+        super().error(message.replace(COMMAND_METAVAR, "COMMAND"))
 
 
 class PackageRunner(Runner):
@@ -101,14 +107,14 @@ class PackageRunner(Runner):
             self._runners += self._get_prefix_runners(self._prefix)
 
         # Add runners for this prefix to parser:
-        cmd_parser = self.parser.add_subparsers(metavar=PackageHelpFormatter.SUPPRESS, title="Commands")
+        cmd_parser = self.parser.add_subparsers(metavar=COMMAND_METAVAR, title="Commands")
         for runner in self._runners:
             cmd_parser.add_parser(
                 runner.name.split("_")[-1], help=runner.format_description(), add_help=False
             ).set_defaults(runner=runner)
 
     def run(self, args: List[str]) -> None:
-        self.parser = ArgumentParser(
+        self.parser = PackageParser(
             prog=f"{self.prog}",
             description=self.format_description(),
             usage=f"{self.prog} [OPTIONS] COMMAND",
@@ -140,5 +146,8 @@ class PackageRunner(Runner):
                 runner.run([Runner.CHECK])
             return None
 
-        # If not, display help
+        # Runner was not selected, perform a full parse so that we error on invalid arguments
+        self.parser.parse_args(args)
+
+        # If all arguments were valid, display help
         return self.parser.print_help()
