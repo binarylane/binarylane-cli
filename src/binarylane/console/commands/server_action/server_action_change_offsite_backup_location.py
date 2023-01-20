@@ -1,19 +1,30 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.server_action.server_action_change_offsite_backup_location import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.change_offsite_backup_location import ChangeOffsiteBackupLocation
 from binarylane.models.change_offsite_backup_location_type import ChangeOffsiteBackupLocationType
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: ChangeOffsiteBackupLocation
+
+    def __init__(self, server_id: int, json_body: ChangeOffsiteBackupLocation) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -25,29 +36,35 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Change the Offsite Backup Location of a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_change-offsite-backup-location"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(ChangeOffsiteBackupLocation)
+
+        json_body.add_primitive(
+            "type",
             ChangeOffsiteBackupLocationType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--offsite-backup-location",
+        json_body.add_primitive(
+            "offsite_backup_location",
             Union[Unset, None, str],
-            dest="offsite_backup_location",
+            option_name="offsite-backup-location",
             required=False,
             description="""Do not provide or set to null to use the internal offsite backup location, otherwise this must be a valid Amazon S3 bucket address. If this is provided Amazon will charge your S3 account at their standard rate for every backup stored.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -55,11 +72,10 @@ class Command(ActionRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: ChangeOffsiteBackupLocationType,
-        offsite_backup_location: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -68,11 +84,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=ChangeOffsiteBackupLocation(
-                type=type,
-                offsite_backup_location=offsite_backup_location,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

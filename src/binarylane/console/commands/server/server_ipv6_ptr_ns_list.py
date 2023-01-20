@@ -1,16 +1,22 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Optional, Tuple, Union
+from typing import TYPE_CHECKING, Optional, Tuple, Union
 
 from binarylane.api.server.server_ipv6_ptr_ns_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.reverse_name_servers_response import ReverseNameServersResponse
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    pass
 
 
 class Command(CommandRunner):
@@ -22,8 +28,9 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch all Existing IPv6 Name Server Records"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server_ipv6-ptr-ns_list"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -32,7 +39,9 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, ReverseNameServersResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ReverseNameServersResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails

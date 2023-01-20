@@ -13,7 +13,7 @@ T = TypeVar("T", bound="ChangeLicenses")
 class ChangeLicenses:
     """
     Attributes:
-        licenses (List[License]):
+        licenses (List[License]): The desired set of licenses.
     """
 
     licenses: List[License]

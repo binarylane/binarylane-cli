@@ -1,18 +1,29 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.domain.domain_record_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.domain_record_type import DomainRecordType
 from binarylane.models.domain_records_response import DomainRecordsResponse
 from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    domain_name: str
+    type: Union[Unset, None, DomainRecordType] = UNSET
+    name: Union[Unset, None, str] = UNSET
+
+    def __init__(self, domain_name: str) -> None:
+        self.domain_name = domain_name
 
 
 class Command(ListRunner):
@@ -61,19 +72,22 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List All Domain Records for a Domain"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for domain_record_list"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "domain_name",
             str,
+            required=True,
+            option_name=None,
             description="""The domain name for which records should be listed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        mapping.add_primitive(
+            "type",
             Union[Unset, None, DomainRecordType],
-            dest="type",
             required=False,
+            option_name="type",
             description="""
 | Value | Description |
 | ----- | ----------- |
@@ -89,13 +103,14 @@ class Command(ListRunner):
 
 """,
         )
-        parser.cli_argument(
-            "--name",
+        mapping.add_primitive(
+            "name",
             Union[Unset, None, str],
-            dest="name",
             required=False,
+            option_name="name",
             description="""Only return records for this subdomain name.""",
         )
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -103,11 +118,10 @@ class Command(ListRunner):
 
     def request(
         self,
-        domain_name: str,
         client: Client,
-        type: Union[Unset, None, DomainRecordType] = UNSET,
-        name: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, DomainRecordsResponse, ProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: DomainRecordsResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails
@@ -120,10 +134,10 @@ class Command(ListRunner):
         while has_next:
             page += 1
             page_response = sync_detailed(
-                domain_name=domain_name,
+                domain_name=request.domain_name,
                 client=client,
-                type=type,
-                name=name,
+                type=request.type,
+                name=request.name,
                 page=page,
                 per_page=per_page,
             )

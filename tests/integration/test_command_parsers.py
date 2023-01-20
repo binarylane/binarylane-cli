@@ -5,7 +5,8 @@ from typing import Any, List, Type
 import pytest
 
 from binarylane.console.commands import commands
-from binarylane.console.parsers.argument import CommandArgument
+from binarylane.console.parser import Attribute
+from binarylane.console.parser.primitive_attribute import PrimitiveAttribute
 from binarylane.console.runners import CommandRunner, Runner
 
 
@@ -41,5 +42,5 @@ def test_runner() -> Runner:
 
 
 def test_command_parser(command_runner: Type[CommandRunner], test_runner: Runner) -> None:
-    CommandArgument.raise_on_unsupported = True
+    Attribute.raise_on_unsupported = True
     command_runner(test_runner)

@@ -7,7 +7,7 @@ import httpx
 
 from binarylane import errors
 from binarylane.client import Client
-from binarylane.models.action import Action
+from binarylane.models.action_response import ActionResponse
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.reverse_nameservers_request import ReverseNameserversRequest
 from binarylane.models.validation_problem_details import ValidationProblemDetails
@@ -38,9 +38,9 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Client, response: httpx.Response
-) -> Optional[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]:
+) -> Optional[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = Action.from_dict(response.json())
+        response_200 = ActionResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.BAD_REQUEST:
@@ -62,7 +62,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Client, response: httpx.Response
-) -> Response[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]:
+) -> Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -75,7 +75,7 @@ def sync_detailed(
     *,
     client: Client,
     json_body: ReverseNameserversRequest,
-) -> Response[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]:
+) -> Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     """Create New or Update Existing IPv6 Name Server Records
 
     Args:
@@ -86,7 +86,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]
+        Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
@@ -106,7 +106,7 @@ def sync(
     *,
     client: Client,
     json_body: ReverseNameserversRequest,
-) -> Optional[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]:
+) -> Optional[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     """Create New or Update Existing IPv6 Name Server Records
 
     Args:
@@ -117,7 +117,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]
+        Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]
     """
 
     return sync_detailed(
@@ -130,7 +130,7 @@ async def asyncio_detailed(
     *,
     client: Client,
     json_body: ReverseNameserversRequest,
-) -> Response[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]:
+) -> Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     """Create New or Update Existing IPv6 Name Server Records
 
     Args:
@@ -141,7 +141,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]
+        Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
@@ -159,7 +159,7 @@ async def asyncio(
     *,
     client: Client,
     json_body: ReverseNameserversRequest,
-) -> Optional[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]:
+) -> Optional[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     """Create New or Update Existing IPv6 Name Server Records
 
     Args:
@@ -170,7 +170,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Action, Any, ProblemDetails, ValidationProblemDetails]]
+        Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]
     """
 
     return (

@@ -1,18 +1,28 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.vpc.vpc_members import sync_detailed
-from binarylane.client import Client
 from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.resource_type import ResourceType
 from binarylane.models.vpc_members_response import VpcMembersResponse
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    vpc_id: int
+    resource_type: Union[Unset, None, ResourceType] = UNSET
+
+    def __init__(self, vpc_id: int) -> None:
+        self.vpc_id = vpc_id
 
 
 class Command(ListRunner):
@@ -51,19 +61,22 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List All Members of an Existing VPC"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for vpc_members"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "vpc_id",
             int,
+            required=True,
+            option_name=None,
             description="""The target vpc id.""",
         )
 
-        parser.cli_argument(
-            "--resource-type",
+        mapping.add_primitive(
+            "resource_type",
             Union[Unset, None, ResourceType],
-            dest="resource_type",
             required=False,
+            option_name="resource-type",
             description="""
 | Value | Description |
 | ----- | ----------- |
@@ -76,6 +89,7 @@ class Command(ListRunner):
 
 """,
         )
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -83,10 +97,10 @@ class Command(ListRunner):
 
     def request(
         self,
-        vpc_id: int,
         client: Client,
-        resource_type: Union[Unset, None, ResourceType] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, VpcMembersResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: VpcMembersResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails
@@ -99,9 +113,9 @@ class Command(ListRunner):
         while has_next:
             page += 1
             page_response = sync_detailed(
-                vpc_id=vpc_id,
+                vpc_id=request.vpc_id,
                 client=client,
-                resource_type=resource_type,
+                resource_type=request.resource_type,
                 page=page,
                 per_page=per_page,
             )

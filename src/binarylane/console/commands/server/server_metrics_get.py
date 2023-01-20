@@ -1,17 +1,27 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.server.server_metrics_get import sync_detailed
-from binarylane.client import Client
 from binarylane.models.data_interval import DataInterval
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.sample_set_response import SampleSetResponse
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    server_id: int
+    data_interval: Union[Unset, None, DataInterval] = UNSET
+
+    def __init__(self, server_id: int) -> None:
+        self.server_id = server_id
 
 
 class Command(CommandRunner):
@@ -23,19 +33,22 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch the Latest Performance and Usage Data Sample Set for a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server_metrics_get"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The target server id.""",
         )
 
-        parser.cli_argument(
-            "--data-interval",
+        mapping.add_primitive(
+            "data_interval",
             Union[Unset, None, DataInterval],
-            dest="data_interval",
             required=False,
+            option_name="data-interval",
             description="""
 | Value | Description |
 | ----- | ----------- |
@@ -48,6 +61,7 @@ class Command(CommandRunner):
 
 """,
         )
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -55,17 +69,17 @@ class Command(CommandRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        data_interval: Union[Unset, None, DataInterval] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SampleSetResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: SampleSetResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            data_interval=data_interval,
+            data_interval=request.data_interval,
         )
         return page_response.status_code, page_response.parsed

@@ -1,19 +1,30 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.server_action.server_action_add_disk import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.add_disk import AddDisk
 from binarylane.models.add_disk_type import AddDiskType
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: AddDisk
+
+    def __init__(self, server_id: int, json_body: AddDisk) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -25,37 +36,43 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Create an Additional Disk for a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_add-disk"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(AddDisk)
+
+        json_body.add_primitive(
+            "type",
             AddDiskType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--size-gigabytes",
+        json_body.add_primitive(
+            "size_gigabytes",
             int,
-            dest="size_gigabytes",
+            option_name="size-gigabytes",
             required=True,
             description="""The size of the new disk in GB. The server must have at least this much unallocated storage space.""",
         )
 
-        parser.cli_argument(
-            "--description",
+        json_body.add_primitive(
+            "description",
             Union[Unset, None, str],
-            dest="description",
+            option_name="description",
             required=False,
             description="""An optional description for the disk. If this is null a default description will be added. Submit an empty string to prevent the default description being added.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -63,12 +80,10 @@ class Command(ActionRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: AddDiskType,
-        size_gigabytes: int,
-        description: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -77,12 +92,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=AddDisk(
-                type=type,
-                size_gigabytes=size_gigabytes,
-                description=description,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

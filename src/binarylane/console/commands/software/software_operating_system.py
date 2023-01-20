@@ -1,16 +1,25 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.software.software_operating_system import sync_detailed
-from binarylane.client import Client
 from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.softwares_response import SoftwaresResponse
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    operating_system_id_or_slug: str
+
+    def __init__(self, operating_system_id_or_slug: str) -> None:
+        self.operating_system_id_or_slug = operating_system_id_or_slug
 
 
 class Command(ListRunner):
@@ -50,13 +59,18 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List All Available Software for an Existing Operating System"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for software_operating-system"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "operating_system_id_or_slug",
             str,
+            required=True,
+            option_name=None,
             description="""The ID or slug of the operating system for which available software should be listed.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -64,9 +78,10 @@ class Command(ListRunner):
 
     def request(
         self,
-        operating_system_id_or_slug: str,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SoftwaresResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: SoftwaresResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails
@@ -78,7 +93,7 @@ class Command(ListRunner):
         while has_next:
             page += 1
             page_response = sync_detailed(
-                operating_system_id_or_slug=operating_system_id_or_slug,
+                operating_system_id_or_slug=request.operating_system_id_or_slug,
                 client=client,
                 page=page,
                 per_page=per_page,

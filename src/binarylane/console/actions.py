@@ -5,10 +5,7 @@ import argparse
 
 
 # New to 3.9 - copied here to import if required
-# pylint: disable=missing-class-docstring
 class BooleanOptionalAction(argparse.Action):
-
-    # pylint: disable=too-many-arguments
     def __init__(
         self,
         option_strings,
@@ -48,6 +45,5 @@ class BooleanOptionalAction(argparse.Action):
         if option_string in self.option_strings:
             setattr(namespace, self.dest, not option_string.startswith("--no-"))
 
-    # pylint: disable=missing-function-docstring
     def format_usage(self):
         return " | ".join(self.option_strings)

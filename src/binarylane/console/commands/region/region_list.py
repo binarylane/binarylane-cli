@@ -1,15 +1,21 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.region.region_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.links import Links
 from binarylane.models.regions_response import RegionsResponse
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    pass
 
 
 class Command(ListRunner):
@@ -40,8 +46,9 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List all Regions"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for region_list"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -50,7 +57,9 @@ class Command(ListRunner):
     def request(
         self,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, RegionsResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: RegionsResponse
         page = 0

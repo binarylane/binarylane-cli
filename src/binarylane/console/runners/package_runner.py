@@ -121,7 +121,7 @@ class PackageRunner(Runner):
         options.add_argument("--help", help="Display available commands and descriptions", action="help")
         self.configure()
 
-        logger.debug(f"PackageRunner for {self.name} ({self.package_path}). Received arguments: {args}")
+        logger.debug("PackageRunner for %s (%s). Received arguments: %s", self.name, self.package_path, args)
 
         # We need to hide the --help parameter from argparse, so that we can pass it to a subrunner
         # rather than displaying our own help.

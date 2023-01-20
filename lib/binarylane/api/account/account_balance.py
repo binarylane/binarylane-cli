@@ -7,7 +7,7 @@ import httpx
 
 from binarylane import errors
 from binarylane.client import Client
-from binarylane.models.balance import Balance
+from binarylane.models.balance_response import BalanceResponse
 from binarylane.types import Response
 
 
@@ -29,9 +29,9 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[Any, Balance]]:
+def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[Any, BalanceResponse]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = Balance.from_dict(response.json())
+        response_200 = BalanceResponse.from_dict(response.json())
 
         return response_200
     if response.status_code == HTTPStatus.UNAUTHORIZED:
@@ -43,7 +43,7 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Uni
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[Any, Balance]]:
+def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[Any, BalanceResponse]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -55,7 +55,7 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 def sync_detailed(
     *,
     client: Client,
-) -> Response[Union[Any, Balance]]:
+) -> Response[Union[Any, BalanceResponse]]:
     """Fetch Current Balance Information
 
     Raises:
@@ -63,7 +63,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Balance]]
+        Response[Union[Any, BalanceResponse]]
     """
 
     kwargs = _get_kwargs(
@@ -81,7 +81,7 @@ def sync_detailed(
 def sync(
     *,
     client: Client,
-) -> Optional[Union[Any, Balance]]:
+) -> Optional[Union[Any, BalanceResponse]]:
     """Fetch Current Balance Information
 
     Raises:
@@ -89,7 +89,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Balance]]
+        Response[Union[Any, BalanceResponse]]
     """
 
     return sync_detailed(
@@ -100,7 +100,7 @@ def sync(
 async def asyncio_detailed(
     *,
     client: Client,
-) -> Response[Union[Any, Balance]]:
+) -> Response[Union[Any, BalanceResponse]]:
     """Fetch Current Balance Information
 
     Raises:
@@ -108,7 +108,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Balance]]
+        Response[Union[Any, BalanceResponse]]
     """
 
     kwargs = _get_kwargs(
@@ -124,7 +124,7 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: Client,
-) -> Optional[Union[Any, Balance]]:
+) -> Optional[Union[Any, BalanceResponse]]:
     """Fetch Current Balance Information
 
     Raises:
@@ -132,7 +132,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, Balance]]
+        Response[Union[Any, BalanceResponse]]
     """
 
     return (

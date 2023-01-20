@@ -1,14 +1,20 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Tuple, Union
 
 from binarylane.api.load_balancer.load_balancer_availability import sync_detailed
-from binarylane.client import Client
 from binarylane.models.load_balancer_availability_response import LoadBalancerAvailabilityResponse
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    pass
 
 
 class Command(ListRunner):
@@ -37,8 +43,9 @@ class Command(ListRunner):
     def description(self) -> str:
         return """Fetch Load Balancer Availability and Pricing"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for load-balancer_availability"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -47,7 +54,9 @@ class Command(ListRunner):
     def request(
         self,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, LoadBalancerAvailabilityResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: LoadBalancerAvailabilityResponse
         # HTTPStatus.UNAUTHORIZED: Any

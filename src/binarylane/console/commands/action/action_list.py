@@ -1,15 +1,21 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.action.action_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.actions_response import ActionsResponse
 from binarylane.models.links import Links
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    pass
 
 
 class Command(ListRunner):
@@ -66,8 +72,9 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List All Actions"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for action_list"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -76,7 +83,9 @@ class Command(ListRunner):
     def request(
         self,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ActionsResponse, Any]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionsResponse
         # HTTPStatus.UNAUTHORIZED: Any

@@ -1,19 +1,33 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import List, Tuple, Union
+from typing import TYPE_CHECKING, List, Tuple, Union
 
 from binarylane.api.server_action.server_action_change_advanced_firewall_rules import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.advanced_firewall_rule import AdvancedFirewallRule
+from binarylane.models.advanced_firewall_rule_action import AdvancedFirewallRuleAction
+from binarylane.models.advanced_firewall_rule_protocol import AdvancedFirewallRuleProtocol
 from binarylane.models.change_advanced_firewall_rules import ChangeAdvancedFirewallRules
 from binarylane.models.change_advanced_firewall_rules_type import ChangeAdvancedFirewallRulesType
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import ListAttribute, Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: ChangeAdvancedFirewallRules
+
+    def __init__(self, server_id: int, json_body: ChangeAdvancedFirewallRules) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -25,29 +39,99 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Change the Advanced Firewall Rules for a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_change-advanced-firewall-rules"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(ChangeAdvancedFirewallRules)
+
+        json_body.add_primitive(
+            "type",
             ChangeAdvancedFirewallRulesType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--firewall-rules",
-            List[AdvancedFirewallRule],
-            dest="firewall_rules",
-            required=True,
-            description="""A list of rules for the server. NB: that any existing rules that are not included will be removed. Submit an empty list to clear all rules.""",
+        json_body_advanced_firewall_rule = json_body.add(
+            ListAttribute(
+                "firewall_rules",
+                AdvancedFirewallRule,
+                option_name="firewall-rules",
+                description="""A list of rules for the server. NB: that any existing rules that are not included will be removed. Submit an empty list to clear all rules.""",
+                required=True,
+            )
         )
+
+        json_body_advanced_firewall_rule.add_primitive(
+            "source_addresses",
+            List[str],
+            option_name="source-addresses",
+            required=True,
+            description="""The source addresses to match for this rule. Each address may be an individual IPv4 address or a range in IPv4 CIDR notation.""",
+        )
+
+        json_body_advanced_firewall_rule.add_primitive(
+            "destination_addresses",
+            List[str],
+            option_name="destination-addresses",
+            required=True,
+            description="""The destination addresses to match for this rule. Each address may be an individual IPv4 address or a range in IPv4 CIDR notation.""",
+        )
+
+        json_body_advanced_firewall_rule.add_primitive(
+            "protocol",
+            AdvancedFirewallRuleProtocol,
+            option_name="protocol",
+            required=True,
+            description="""
+| Value | Description |
+| ----- | ----------- |
+| all | This rule will match any protocol. |
+| icmp | This rule will match ICMP traffic only. |
+| tcp | This rule will match TCP traffic only. |
+| udp | This rule will match UDP traffic only. |
+
+""",
+        )
+
+        json_body_advanced_firewall_rule.add_primitive(
+            "action",
+            AdvancedFirewallRuleAction,
+            option_name="action",
+            required=True,
+            description="""
+| Value | Description |
+| ----- | ----------- |
+| drop | Traffic matching this rule will be dropped. |
+| accept | Traffic matching this rule will be accepted. |
+
+""",
+        )
+
+        json_body_advanced_firewall_rule.add_primitive(
+            "destination_ports",
+            Union[Unset, None, List[str]],
+            option_name="destination-ports",
+            required=False,
+            description="""The destination ports to match for this rule. Leave null or empty to match on all ports.""",
+        )
+
+        json_body_advanced_firewall_rule.add_primitive(
+            "description",
+            Union[Unset, None, str],
+            option_name="description",
+            required=False,
+            description="""A description to assist in identifying this rule. Commonly used to record the reason for the rule or the intent behind it, e.g. "Block access to RDP" or "Allow access from HQ".""",
+        )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -55,11 +139,10 @@ class Command(ActionRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: ChangeAdvancedFirewallRulesType,
-        firewall_rules: List[AdvancedFirewallRule],
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -68,11 +151,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=ChangeAdvancedFirewallRules(
-                type=type,
-                firewall_rules=firewall_rules,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

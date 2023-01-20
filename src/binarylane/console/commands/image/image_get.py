@@ -1,15 +1,24 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.image.image_get import sync_detailed
-from binarylane.client import Client
 from binarylane.models.image_response import ImageResponse
 from binarylane.models.problem_details import ProblemDetails
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    image_id_or_slug: str
+
+    def __init__(self, image_id_or_slug: str) -> None:
+        self.image_id_or_slug = image_id_or_slug
 
 
 class Command(CommandRunner):
@@ -21,13 +30,18 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch an Existing Image"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for image_get"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "image_id_or_slug",
             str,
+            required=True,
+            option_name=None,
             description="""The ID or Slug (if an operating system) of the image to retrieve.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -35,15 +49,16 @@ class Command(CommandRunner):
 
     def request(
         self,
-        image_id_or_slug: str,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ImageResponse, ProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ImageResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            image_id_or_slug=image_id_or_slug,
+            image_id_or_slug=request.image_id_or_slug,
             client=client,
         )
         return page_response.status_code, page_response.parsed

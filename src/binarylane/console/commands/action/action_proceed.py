@@ -1,16 +1,26 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.action.action_proceed import sync_detailed
-from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.proceed_request import ProceedRequest
 
-from binarylane.console.actions import BooleanOptionalAction
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    action_id: int
+    json_body: ProceedRequest
+
+    def __init__(self, action_id: int, json_body: ProceedRequest) -> None:
+        self.action_id = action_id
+        self.json_body = json_body
 
 
 class Command(CommandRunner):
@@ -22,22 +32,28 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Respond to a UserInteractionRequired Action"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for action_proceed"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "action_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the action for which this is a response.""",
         )
 
-        parser.cli_argument(
-            "--proceed",
+        json_body = mapping.add_json_body(ProceedRequest)
+
+        json_body.add_primitive(
+            "proceed",
             bool,
-            dest="proceed",
+            option_name="proceed",
             required=True,
             description="""Please see the documentation for each type of interaction for the effect of providing 'true' or 'false' here.""",
-            action=BooleanOptionalAction,
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -45,19 +61,17 @@ class Command(CommandRunner):
 
     def request(
         self,
-        action_id: int,
         client: Client,
-        proceed: bool,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.NO_CONTENT: Any
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            action_id=action_id,
+            action_id=request.action_id,
             client=client,
-            json_body=ProceedRequest(
-                proceed=proceed,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

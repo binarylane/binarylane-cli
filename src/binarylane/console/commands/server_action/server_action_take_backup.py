@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.server_action.server_action_take_backup import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.backup_replacement_strategy import BackupReplacementStrategy
 from binarylane.models.backup_slot import BackupSlot
@@ -12,10 +11,22 @@ from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.take_backup import TakeBackup
 from binarylane.models.take_backup_type import TakeBackupType
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: TakeBackup
+
+    def __init__(self, server_id: int, json_body: TakeBackup) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -27,26 +38,30 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Take a Backup of a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_take-backup"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(TakeBackup)
+
+        json_body.add_primitive(
+            "type",
             TakeBackupType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--replacement-strategy",
+        json_body.add_primitive(
+            "replacement_strategy",
             BackupReplacementStrategy,
-            dest="replacement_strategy",
+            option_name="replacement-strategy",
             required=True,
             description="""
 | Value | Description |
@@ -59,10 +74,10 @@ class Command(ActionRunner):
 """,
         )
 
-        parser.cli_argument(
-            "--backup-type",
+        json_body.add_primitive(
+            "backup_type",
             Union[Unset, None, BackupSlot],
-            dest="backup_type",
+            option_name="backup-type",
             required=False,
             description="""
 | Value | Description |
@@ -75,21 +90,23 @@ class Command(ActionRunner):
 """,
         )
 
-        parser.cli_argument(
-            "--backup-id-to-replace",
+        json_body.add_primitive(
+            "backup_id_to_replace",
             Union[Unset, None, int],
-            dest="backup_id_to_replace",
+            option_name="backup-id-to-replace",
             required=False,
             description="""If replacement_strategy is 'specified' this property must be set to an existing backup.""",
         )
 
-        parser.cli_argument(
-            "--label",
+        json_body.add_primitive(
+            "label",
             Union[Unset, None, str],
-            dest="label",
+            option_name="label",
             required=False,
             description="""An optional label to identify the backup.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -97,14 +114,10 @@ class Command(ActionRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: TakeBackupType,
-        replacement_strategy: BackupReplacementStrategy,
-        backup_type: Union[Unset, None, BackupSlot] = UNSET,
-        backup_id_to_replace: Union[Unset, None, int] = UNSET,
-        label: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -113,14 +126,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=TakeBackup(
-                type=type,
-                replacement_strategy=replacement_strategy,
-                backup_type=backup_type,
-                backup_id_to_replace=backup_id_to_replace,
-                label=label,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

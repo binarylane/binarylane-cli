@@ -1,15 +1,24 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Tuple, Union
 
 from binarylane.api.server.server_firewall_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.advanced_firewall_rules_response import AdvancedFirewallRulesResponse
 from binarylane.models.problem_details import ProblemDetails
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    server_id: int
+
+    def __init__(self, server_id: int) -> None:
+        self.server_id = server_id
 
 
 class Command(ListRunner):
@@ -53,13 +62,18 @@ class Command(ListRunner):
     def description(self) -> str:
         return """Fetch All Advanced Firewall Rules for a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server_firewall_list"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server for which firewall rules should be listed.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -67,15 +81,16 @@ class Command(ListRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[AdvancedFirewallRulesResponse, None, ProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: AdvancedFirewallRulesResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
         )
         return page_response.status_code, page_response.parsed

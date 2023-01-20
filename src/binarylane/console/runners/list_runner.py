@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from argparse import SUPPRESS
 from typing import Any, Dict, List
 
 from binarylane.console.runners.command_runner import CommandRunner
@@ -24,25 +23,8 @@ class ListRunner(CommandRunner):
     def fields(self) -> Dict[str, str]:
         """Map of field name: description for all available fields"""
 
-    def _add_fields_help(self) -> None:
-        """Add a list of available fields to displayed help"""
-
-        fields_help = self._parser.add_argument_group("Available fields")
-        for key, value in self.fields.items():
-            # FIXME: Use HelpFormatter to create an epilog instead
-            #
-            # NOTE: These group arguments will never parse, the group exists purely to provide argparse-formatted help -
-            # dest: starts with '_field_` so that it is cannot be same as as anther argument
-            # metavar: field name, displayed as-is in argument group's help
-            # nargs: SUPPRESS (since python 3.7) will cause it to accept no arguments nor be shown in usage
-            # default: SUPPRESS so that f'_field_{key}' is not added to parsed namespace object
-            # help: description of the field
-            fields_help.add_argument(
-                f"_field_{key}", metavar=key, nargs=SUPPRESS, default=SUPPRESS, help=value
-            ).required = False
-
     def run(self, args: List[str]) -> None:
-        self._add_fields_help()
+        self._parser.add_group_help(title="Available fields", entries=self.fields)
         self._parser.add_argument(
             "--format",
             dest="runner_format",

@@ -1,19 +1,29 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.image.image_update import sync_detailed
-from binarylane.client import Client
 from binarylane.models.image_request import ImageRequest
 from binarylane.models.image_response import ImageResponse
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.actions import BooleanOptionalAction
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    image_id: int
+    json_body: ImageRequest
+
+    def __init__(self, image_id: int, json_body: ImageRequest) -> None:
+        self.image_id = image_id
+        self.json_body = json_body
 
 
 class Command(CommandRunner):
@@ -25,30 +35,36 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Update an Existing Image"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for image_update"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "image_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the image to update.""",
         )
 
-        parser.cli_argument(
-            "--name",
+        json_body = mapping.add_json_body(ImageRequest)
+
+        json_body.add_primitive(
+            "name",
             Union[Unset, None, str],
-            dest="name",
+            option_name="name",
             required=False,
             description="""Optional: a new display name for this image. Do not provide to leave the display name unchanged, submit an empty string to clear the display name.""",
         )
 
-        parser.cli_argument(
-            "--locked",
+        json_body.add_primitive(
+            "locked",
             Union[Unset, None, bool],
-            dest="locked",
+            option_name="locked",
             required=False,
             description="""Optional: you may choose to lock an individual backup in which case we will not update that backup until you unlock it. Do not provide to leave the locked status unchanged.""",
-            action=BooleanOptionalAction,
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -56,22 +72,18 @@ class Command(CommandRunner):
 
     def request(
         self,
-        image_id: int,
         client: Client,
-        name: Union[Unset, None, str] = UNSET,
-        locked: Union[Unset, None, bool] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ImageResponse, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ImageResponse
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            image_id=image_id,
+            image_id=request.image_id,
             client=client,
-            json_body=ImageRequest(
-                name=name,
-                locked=locked,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

@@ -1,19 +1,30 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.server_action.server_action_change_backup_schedule import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.change_backup_schedule import ChangeBackupSchedule
 from binarylane.models.change_backup_schedule_type import ChangeBackupScheduleType
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: ChangeBackupSchedule
+
+    def __init__(self, server_id: int, json_body: ChangeBackupSchedule) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -25,45 +36,51 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Change the Backup Schedule of a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_change-backup-schedule"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(ChangeBackupSchedule)
+
+        json_body.add_primitive(
+            "type",
             ChangeBackupScheduleType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--backup-hour-of-day",
+        json_body.add_primitive(
+            "backup_hour_of_day",
             Union[Unset, None, int],
-            dest="backup_hour_of_day",
+            option_name="backup-hour-of-day",
             required=False,
             description="""Do not provide a value to keep the current setting.""",
         )
 
-        parser.cli_argument(
-            "--backup-day-of-week",
+        json_body.add_primitive(
+            "backup_day_of_week",
             Union[Unset, None, int],
-            dest="backup_day_of_week",
+            option_name="backup-day-of-week",
             required=False,
             description="""Sunday is 0, Monday is 1 etc. Do not provide a value to keep the current setting.""",
         )
 
-        parser.cli_argument(
-            "--backup-day-of-month",
+        json_body.add_primitive(
+            "backup_day_of_month",
             Union[Unset, None, int],
-            dest="backup_day_of_month",
+            option_name="backup-day-of-month",
             required=False,
             description="""Do not provide a value to keep the current setting.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -71,13 +88,10 @@ class Command(ActionRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: ChangeBackupScheduleType,
-        backup_hour_of_day: Union[Unset, None, int] = UNSET,
-        backup_day_of_week: Union[Unset, None, int] = UNSET,
-        backup_day_of_month: Union[Unset, None, int] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -86,13 +100,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=ChangeBackupSchedule(
-                type=type,
-                backup_hour_of_day=backup_hour_of_day,
-                backup_day_of_week=backup_day_of_week,
-                backup_day_of_month=backup_day_of_month,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

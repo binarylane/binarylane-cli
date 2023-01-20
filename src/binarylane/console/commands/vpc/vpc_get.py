@@ -1,15 +1,24 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.vpc.vpc_get import sync_detailed
-from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.vpc_response import VpcResponse
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    vpc_id: int
+
+    def __init__(self, vpc_id: int) -> None:
+        self.vpc_id = vpc_id
 
 
 class Command(CommandRunner):
@@ -21,13 +30,18 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch an Existing VPC"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for vpc_get"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "vpc_id",
             int,
+            required=True,
+            option_name=None,
             description="""The target vpc id.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -35,15 +49,16 @@ class Command(CommandRunner):
 
     def request(
         self,
-        vpc_id: int,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, VpcResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: VpcResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            vpc_id=vpc_id,
+            vpc_id=request.vpc_id,
             client=client,
         )
         return page_response.status_code, page_response.parsed

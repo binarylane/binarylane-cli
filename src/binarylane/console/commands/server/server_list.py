@@ -1,16 +1,22 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.server.server_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.links import Links
 from binarylane.models.servers_response import ServersResponse
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    hostname: Union[Unset, None, str] = UNSET
 
 
 class Command(ListRunner):
@@ -78,16 +84,17 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List All Servers"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server_list"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
 
-        parser.cli_argument(
-            "--hostname",
+        mapping.add_primitive(
+            "hostname",
             Union[Unset, None, str],
-            dest="hostname",
             required=False,
+            option_name="hostname",
             description="""Providing a hostname restricts the results to the server that has this hostname (case insensitive). If this parameter is provided at most 1 server will be returned.""",
         )
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -96,8 +103,9 @@ class Command(ListRunner):
     def request(
         self,
         client: Client,
-        hostname: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ServersResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ServersResponse
         # HTTPStatus.UNAUTHORIZED: Any
@@ -110,7 +118,7 @@ class Command(ListRunner):
             page += 1
             page_response = sync_detailed(
                 client=client,
-                hostname=hostname,
+                hostname=request.hostname,
                 page=page,
                 per_page=per_page,
             )

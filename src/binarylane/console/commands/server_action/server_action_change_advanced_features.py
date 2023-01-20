@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import List, Tuple, Union
+from typing import TYPE_CHECKING, List, Tuple, Union
 
 from binarylane.api.server_action.server_action_change_advanced_features import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.advanced_feature import AdvancedFeature
 from binarylane.models.change_advanced_features import ChangeAdvancedFeatures
@@ -13,11 +12,22 @@ from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.models.video_device import VideoDevice
 from binarylane.models.vm_machine_type import VmMachineType
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.actions import BooleanOptionalAction
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: ChangeAdvancedFeatures
+
+    def __init__(self, server_id: int, json_body: ChangeAdvancedFeatures) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -29,51 +39,54 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Change the Advanced Features of a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_change-advanced-features"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(ChangeAdvancedFeatures)
+
+        json_body.add_primitive(
+            "type",
             ChangeAdvancedFeaturesType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--enabled-advanced-features",
+        json_body.add_primitive(
+            "enabled_advanced_features",
             Union[Unset, None, List[AdvancedFeature]],
-            dest="enabled_advanced_features",
+            option_name="enabled-advanced-features",
             required=False,
             description="""Do not provide or set to null to keep existing advanced features. Provide an empty array to disable all advanced features, otherwise provide an array with selected advanced features. If provided, any currently enabled advanced features that aren't included will be disabled.""",
         )
 
-        parser.cli_argument(
-            "--processor-model",
+        json_body.add_primitive(
+            "processor_model",
             Union[Unset, None, str],
-            dest="processor_model",
+            option_name="processor-model",
             required=False,
             description="""Do not provide or set to null to keep existing processor model.""",
         )
 
-        parser.cli_argument(
-            "--automatic-processor-model",
+        json_body.add_primitive(
+            "automatic_processor_model",
             Union[Unset, None, bool],
-            dest="automatic_processor_model",
+            option_name="automatic-processor-model",
             required=False,
             description="""Set to true to use best available processor model. If this is provided the processor_model property must not be provided.""",
-            action=BooleanOptionalAction,
         )
 
-        parser.cli_argument(
-            "--machine-type",
+        json_body.add_primitive(
+            "machine_type",
             Union[Unset, None, VmMachineType],
-            dest="machine_type",
+            option_name="machine-type",
             required=False,
             description="""
 | Value | Description |
@@ -88,19 +101,18 @@ class Command(ActionRunner):
 """,
         )
 
-        parser.cli_argument(
-            "--automatic-machine-type",
+        json_body.add_primitive(
+            "automatic_machine_type",
             Union[Unset, None, bool],
-            dest="automatic_machine_type",
+            option_name="automatic-machine-type",
             required=False,
             description="""Set to true to use best available machine type. If this is provided the machine_type property must not be provided.""",
-            action=BooleanOptionalAction,
         )
 
-        parser.cli_argument(
-            "--video-device",
+        json_body.add_primitive(
+            "video_device",
             Union[Unset, None, VideoDevice],
-            dest="video_device",
+            option_name="video-device",
             required=False,
             description="""
 | Value | Description |
@@ -113,22 +125,18 @@ class Command(ActionRunner):
 """,
         )
 
+        return mapping
+
     @property
     def ok_response_type(self) -> type:
         return ActionResponse
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: ChangeAdvancedFeaturesType,
-        enabled_advanced_features: Union[Unset, None, List[AdvancedFeature]] = UNSET,
-        processor_model: Union[Unset, None, str] = UNSET,
-        automatic_processor_model: Union[Unset, None, bool] = UNSET,
-        machine_type: Union[Unset, None, VmMachineType] = UNSET,
-        automatic_machine_type: Union[Unset, None, bool] = UNSET,
-        video_device: Union[Unset, None, VideoDevice] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -137,16 +145,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=ChangeAdvancedFeatures(
-                type=type,
-                enabled_advanced_features=enabled_advanced_features,
-                processor_model=processor_model,
-                automatic_processor_model=automatic_processor_model,
-                machine_type=machine_type,
-                automatic_machine_type=automatic_machine_type,
-                video_device=video_device,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

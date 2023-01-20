@@ -7,14 +7,11 @@ from __future__ import annotations
 
 {% else %}
 {# Can import pretty liberally, as the generator will remove unused imports #}
-from typing import Any, Dict, List, Optional, Union, Tuple, Type, cast
+from typing import Any, Dict, List, Optional, Union, Tuple, Type, cast, TYPE_CHECKING
 
 import httpx
 from http import HTTPStatus
 
-from binarylane.console.parsers import CommandParser
-from binarylane.console.actions import BooleanOptionalAction
-from binarylane.client import AuthenticatedClient, Client
 from binarylane.types import Response, UNSET, Unset
 from binarylane.models.links import Links
 
@@ -24,14 +21,32 @@ from binarylane.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} im
 {{ relative.replace('...', 'binarylane.') }}
 {% endfor %}
 
-{% if endpoint.json_body %}
-{% for relative in endpoint.json_body.relative_imports %}
+{% macro relative_imports(prop) %}
+{% for relative in prop.relative_imports %}
 {{ relative.replace('..', 'binarylane.') }}
 {% endfor %}
-{% for relative in endpoint.json_body.lazy_imports %}
+{% for relative in prop.lazy_imports %}
 {{ relative.replace('..', 'binarylane.') }}
+{% endfor %}
+{% if prop.class_info %}
+{% for p in prop.required_properties + prop.optional_properties %}
+{% if p.class_info in openapi.models_by_class %}
+{{ relative_imports(openapi.models_by_class[p.class_info]) }}
+{% endif %}
+{% if p.get_instance_type_string() == 'list' and p.inner_property.class_info in openapi.models_by_class %}
+{{ relative_imports(openapi.models_by_class[p.inner_property.class_info]) }}
+{% endif %}
 {% endfor %}
 {% endif %}
+{% endmacro %}
+{% if endpoint.json_body %}
+{{ relative_imports(endpoint.json_body) }}
+{% endif %}
+
+if TYPE_CHECKING:
+    from binarylane.console.parser import Parser
+    from binarylane.client import Client
+
 
 {% set return_string = endpoint.response_type() %}
 {% set parsed_responses = (endpoint.responses | length > 0) and return_string != "Any" %}
@@ -56,6 +71,44 @@ from binarylane.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} im
 {% endfor %}
 
 from binarylane.console.runners import {{ response_class['name'] }}
+from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, PrimitiveAttribute
+
+
+class CommandRequest:
+{% set req_parameters=[] %}
+{% set opt_parameters=[] %}
+{% for parameter in endpoint.path_parameters.values() %}
+{% set _ = req_parameters.append((parameter.python_name, parameter.get_type_string())) %}
+{% endfor %}
+{% if endpoint.json_body %}
+{% if endpoint.json_body.get_instance_type_string() == 'list' %}
+    {% set _ = req_parameters.append((endpoint.tag, endpoint.json_body.get_type_string())) %}
+{% elif endpoint.json_body.class_info %}
+    {% set _ = req_parameters.append(('json_body', endpoint.json_body.get_type_string())) %}
+{% endif %}
+{% endif %}
+{% for parameter in endpoint.query_parameters.values() if parameter.name not in ('page', 'per_page') %}
+    {% set _ = opt_parameters.append(parameter.to_string()) %}
+{% endfor %}
+{% if req_parameters or opt_parameters %}
+{% for item in req_parameters %}
+    {{ item[0] }}: {{ item[1] }}
+{% endfor %}
+{% for item in opt_parameters %}
+    {{ item }}
+{% endfor %}
+
+{% if req_parameters %}
+    def __init__(self{% for item in req_parameters %}, {{ item[0] }}: {{ item[1] }}{% endfor %}) -> None:
+{% for item in req_parameters %}
+        self.{{ item[0] }} = {{ item[0] }}
+{% endfor %}
+{% endif %}
+{% else %}
+    pass
+{% endif %}
+
+
 class Command({{ response_class['name'] }}):
 {% if response_class.get('list') %}
 {% set list_response = response_class.get('list') %}
@@ -88,12 +141,19 @@ class Command({{ response_class['name'] }}):
     def description(self) -> str:
         return """{{ endpoint.summary }}"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for {{ endpoint.name }}"""
-        {% for parameter in endpoint.path_parameters.values() %}
-        parser.cli_argument('{{ parameter.name }}',
-            {{ parameter.get_type_string() }},
-            {% if parameter.description %}description="""{{ parameter.description }}""", {% endif %}
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+        {% if (req_parameters + opt_parameters) %}
+        {% macro description_argument(prop) %}{% if prop.description %}description="""{{ prop.description.replace("    ","") }}""",{% endif %}{% endmacro %}
+        {% macro option_name(prop) %}option_name = "{{ prop.name.replace('_','-') }}",{% endmacro %}
+
+        {% for property in endpoint.path_parameters.values() %}
+        mapping.add_primitive(
+            "{{ property.python_name }}",
+            {{ property.get_type_string() }},
+            required = True,
+            option_name = None,
+            {{ description_argument(property) }}
             )
         {% endfor %}
 
@@ -102,25 +162,57 @@ class Command({{ response_class['name'] }}):
             FIXME: BL API is not supposed to have any of these, but currently failover-ip update uses it.
         #}
         {% if endpoint.json_body.get_instance_type_string() == 'list' %}
-        parser.cli_argument('--value',
-                {{ endpoint.json_body.get_type_string() }},
-                {% if endpoint.json_body.description %}description="""{{ endpoint.json_body.description  }}""",{% endif %}
-                warning="request body is {{ endpoint.json_body.get_type_string() }}",
-                )
+        mapping.add_primitive(
+            "{{ endpoint.tag }}",
+            {{ endpoint.json_body.get_type_string() }},
+            option_name='value',
+            required = True,
+            {{ description_argument(endpoint.json_body) }}
+            warning="request body is {{ endpoint.json_body.get_type_string() }}",
+            )
 
         {% elif endpoint.json_body.class_info %}
-        {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
 
-        parser.cli_argument('--{{  property.name.replace('_','-') }}',
-                {{ property.get_type_string() }},
-                dest='{{  property.python_name }}',
-                required={{ property.required }},
-                description="""{{  property.description }}""",
-                {%  if property.get_instance_type_string() == 'bool' %}
-                action=BooleanOptionalAction,
-                {%  endif %}
-                )
+        {% macro add_object_to_parser(parser, prop) %}
+        {% for property in prop.required_properties + prop.optional_properties %}
+        {% if property.get_instance_type_string() == "list" and property.inner_property.class_info in openapi.models_by_class %}
+        {% set subparser = parser + "_" + property.inner_property.class_info.module_name %}
+
+        {{ subparser }} = {{ parser }}.add(ListAttribute(
+            "{{ property.python_name }}",
+            {{ property.inner_property.get_type_string(no_optional=True) }},
+            {{ option_name(property) }}
+            {{ description_argument(property) }}
+            required = {{ property.required }},
+        ))
+        {{ add_object_to_parser(subparser, openapi.models_by_class[property.inner_property.class_info]) }}
+        {% elif property.class_info in openapi.models_by_class %}
+        {% set subparser = parser + "_" + property.class_info.module_name %}
+
+        {{ subparser }} = {{ parser }}.add(ObjectAttribute(
+            "{{ property.python_name }}",
+            {{ property.get_type_string(no_optional=True) }},
+            {{ option_name(property) }}
+            required = {{ property.required }},
+            {{ description_argument(prop.data.properties[property.name]) }}
+        ))
+        {{ add_object_to_parser(subparser, openapi.models_by_class[property.class_info]) }}
+        {% else %}
+
+        {{ parser }}.add_primitive(
+            "{{  property.python_name }}",
+            {{ property.get_type_string() }},
+            {{ option_name(property) }}
+            required={{ property.required }},
+            {{ description_argument(property) }}
+        )
+        {% endif %}
         {% endfor %}
+        {% endmacro %}
+
+        json_body = mapping.add_json_body({{ endpoint.json_body.get_type_string() }})
+        {{ add_object_to_parser('json_body', endpoint.json_body) }}
+
         {% else %}
         # Unknown {{ endpoint.json_body.get_instance_type_string() }} {{ endpoint.json_body.template }}
         {% endif %}
@@ -128,14 +220,17 @@ class Command({{ response_class['name'] }}):
 
         {% if endpoint.query_parameters %}
         {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
-        parser.cli_argument('--{{  property.name.replace('_','-') }}',
+        mapping.add_primitive(
+                "{{ property.python_name }}",
                 {{ property.get_type_string() }},
-                dest='{{  property.python_name }}',
-                required=False,
-                description="""{{  property.description }}""",
+                required={{ property.required }},
+                {{ option_name(property) }}
+                {{ description_argument(property) }}
                 )
         {% endfor %}
         {% endif %}
+        {% endif %}
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -146,32 +241,16 @@ class Command({{ response_class['name'] }}):
         {% endif %}
 
     def request(self,
-        {% for parameter in endpoint.path_parameters.values() %}
-        {{ parameter.to_string() }},
-        {% endfor %}
-
         {% if endpoint.requires_security %}
         client: AuthenticatedClient,
         {% else %}
         client: Client,
         {% endif %}
-
-        {% if endpoint.json_body %}
-        {% if endpoint.json_body.get_instance_type_string() == 'list' %}
-        {{ endpoint.tag }}: {{ endpoint.json_body.get_type_string() }}
-        {% elif endpoint.json_body.class_info %}
-        {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
-        {{ property.to_string() }},
-        {% endfor %}
-        {% endif %}
-        {% endif %}
+        request: object,
 
         {% set paginated=False %}
         {% if endpoint.query_parameters %}
         {% set paginated='page' in endpoint.query_parameters.keys() and 'per_page' in endpoint.query_parameters.keys() %}
-        {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
-        {{ property.to_string() }},
-        {% endfor %}
         {% endif %}
         {# regex not available, so we handle both types separately #}
         {% set return_string = endpoint.response_type().replace('[Any, ', '[None, ').replace(' Any, ', ' None, ') %}
@@ -182,6 +261,7 @@ class Command({{ response_class['name'] }}):
         {% set return_string = return_string.replace("Union[", "Union[None, ") %}
         {% endif %}
         ) -> Tuple[HTTPStatus, {{ return_string }}]:
+            assert isinstance(request, CommandRequest)
 
             {% for response_type in endpoint.responses %}
             # {{ response_type.status_code }}: {{ response_type.prop.get_type_string() }}
@@ -201,26 +281,23 @@ class Command({{ response_class['name'] }}):
             page_response = sync_detailed(
             {% endif %}
                 {% for parameter in endpoint.path_parameters.values() %}
-                {{ parameter.python_name }} = {{ parameter.python_name }},
+                {{ parameter.python_name }} = request.{{ parameter.python_name }},
                 {% endfor %}
                 client = client,
 
                 {% if endpoint.json_body %}
                 {% if endpoint.json_body.get_instance_type_string() == 'list' %}
-                json_body = {{ endpoint.tag }},
+                json_body = request.{{ endpoint.tag }},
 
                 {% elif endpoint.json_body.class_info %}
-                json_body = {{ endpoint.json_body.class_info.name }}(
-                    {% for property in endpoint.json_body.required_properties + endpoint.json_body.optional_properties %}
-                    {{ property.python_name }} = {{ property.python_name }},
-                    {% endfor %}
-                ),
+                json_body = request.json_body,
+
                 {% endif %}
                 {% endif %}
 
                 {% if endpoint.query_parameters %}
                 {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
-                    {{ property.python_name }} = {{ property.python_name }},
+                    {{ property.python_name }} = request.{{ property.python_name }},
                 {% endfor %}
                 {% endif %}
             {% if not paginated %}

@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, TypeVar, Union
+from typing import Any, Dict, List, Type, TypeVar
 
 import attr
 
 from binarylane.models.actions_links import ActionsLinks
 from binarylane.models.load_balancer import LoadBalancer
-from binarylane.types import UNSET, Unset
 
 T = TypeVar("T", bound="CreateLoadBalancerResponse")
 
@@ -16,29 +15,26 @@ class CreateLoadBalancerResponse:
     """
     Attributes:
         load_balancer (LoadBalancer):
-        links (Union[Unset, None, ActionsLinks]):
+        links (ActionsLinks):
     """
 
     load_balancer: LoadBalancer
-    links: Union[Unset, None, ActionsLinks] = UNSET
+    links: ActionsLinks
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         load_balancer = self.load_balancer.to_dict()
 
-        links: Union[Unset, None, Dict[str, Any]] = UNSET
-        if not isinstance(self.links, Unset):
-            links = self.links.to_dict() if self.links else None
+        links = self.links.to_dict()
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
                 "load_balancer": load_balancer,
+                "links": links,
             }
         )
-        if links is not UNSET:
-            field_dict["links"] = links
 
         return field_dict
 
@@ -47,14 +43,7 @@ class CreateLoadBalancerResponse:
         d = src_dict.copy()
         load_balancer = LoadBalancer.from_dict(d.pop("load_balancer"))
 
-        _links = d.pop("links", UNSET)
-        links: Union[Unset, None, ActionsLinks]
-        if _links is None:
-            links = None
-        elif isinstance(_links, Unset):
-            links = UNSET
-        else:
-            links = ActionsLinks.from_dict(_links)
+        links = ActionsLinks.from_dict(d.pop("links"))
 
         create_load_balancer_response = cls(
             load_balancer=load_balancer,

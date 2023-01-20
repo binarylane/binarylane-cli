@@ -1,19 +1,30 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import List, Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.vpc.vpc_patch import sync_detailed
-from binarylane.client import Client
 from binarylane.models.patch_vpc_request import PatchVpcRequest
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.route_entry_request import RouteEntryRequest
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.models.vpc_response import VpcResponse
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import ListAttribute, Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    vpc_id: int
+    json_body: PatchVpcRequest
+
+    def __init__(self, vpc_id: int, json_body: PatchVpcRequest) -> None:
+        self.vpc_id = vpc_id
+        self.json_body = json_body
 
 
 class Command(CommandRunner):
@@ -25,29 +36,62 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Update an Existing VPC"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for vpc_patch"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "vpc_id",
             int,
+            required=True,
+            option_name=None,
             description="""The target vpc id.""",
         )
 
-        parser.cli_argument(
-            "--name",
+        json_body = mapping.add_json_body(PatchVpcRequest)
+
+        json_body.add_primitive(
+            "name",
             Union[Unset, None, str],
-            dest="name",
+            option_name="name",
             required=False,
             description=""">A name to help identify this VPC. Submit null to leave unaltered.""",
         )
 
-        parser.cli_argument(
-            "--route-entries",
-            Union[Unset, None, List[RouteEntryRequest]],
-            dest="route_entries",
-            required=False,
-            description="""Submit null to leave unaltered, submit an empty list to clear all route entries. It is not possible to PATCH individual route entries, to alter a route entry submit the entire list of route entries you wish to save.""",
+        json_body_route_entry_request = json_body.add(
+            ListAttribute(
+                "route_entries",
+                RouteEntryRequest,
+                option_name="route-entries",
+                description="""Submit null to leave unaltered, submit an empty list to clear all route entries. It is not possible to PATCH individual route entries, to alter a route entry submit the entire list of route entries you wish to save.""",
+                required=False,
+            )
         )
+
+        json_body_route_entry_request.add_primitive(
+            "router",
+            str,
+            option_name="router",
+            required=True,
+            description="""The server that will receive traffic sent to the destination property in this VPC.""",
+        )
+
+        json_body_route_entry_request.add_primitive(
+            "destination",
+            str,
+            option_name="destination",
+            required=True,
+            description="""The destination address for this route entry. This may be in CIDR format.""",
+        )
+
+        json_body_route_entry_request.add_primitive(
+            "description",
+            Union[Unset, None, str],
+            option_name="description",
+            required=False,
+            description="""An optional description for the route.""",
+        )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -55,22 +99,18 @@ class Command(CommandRunner):
 
     def request(
         self,
-        vpc_id: int,
         client: Client,
-        name: Union[Unset, None, str] = UNSET,
-        route_entries: Union[Unset, None, List[RouteEntryRequest]] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, ValidationProblemDetails, VpcResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: VpcResponse
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            vpc_id=vpc_id,
+            vpc_id=request.vpc_id,
             client=client,
-            json_body=PatchVpcRequest(
-                name=name,
-                route_entries=route_entries,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

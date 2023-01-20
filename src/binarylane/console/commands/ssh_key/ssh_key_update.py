@@ -1,19 +1,29 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.ssh_key.ssh_key_update import sync_detailed
-from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.ssh_key_response import SshKeyResponse
 from binarylane.models.update_ssh_key_request import UpdateSshKeyRequest
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.actions import BooleanOptionalAction
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    key_id: str
+    json_body: UpdateSshKeyRequest
+
+    def __init__(self, key_id: str, json_body: UpdateSshKeyRequest) -> None:
+        self.key_id = key_id
+        self.json_body = json_body
 
 
 class Command(CommandRunner):
@@ -25,31 +35,37 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Update an Existing SSH Key"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for ssh-key_update"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "key_id",
             str,
+            required=True,
+            option_name=None,
             description="""The ID or fingerprint of the SSH Key to update.""",
         )
 
-        parser.cli_argument(
-            "--name",
+        json_body = mapping.add_json_body(UpdateSshKeyRequest)
+
+        json_body.add_primitive(
+            "name",
             str,
-            dest="name",
+            option_name="name",
             required=True,
             description="""A name to help you identify the key.""",
         )
 
-        parser.cli_argument(
-            "--default",
+        json_body.add_primitive(
+            "default",
             Union[Unset, None, bool],
-            dest="default",
+            option_name="default",
             required=False,
             description="""Do not provide or leave null to leave the default status of the key unchanged.
 Optional: If true this will be added to all new server installations (if we support SSH Key injection for the server's operating system).""",
-            action=BooleanOptionalAction,
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -57,22 +73,18 @@ Optional: If true this will be added to all new server installations (if we supp
 
     def request(
         self,
-        key_id: str,
         client: Client,
-        name: str,
-        default: Union[Unset, None, bool] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SshKeyResponse, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: SshKeyResponse
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            key_id=key_id,
+            key_id=request.key_id,
             client=client,
-            json_body=UpdateSshKeyRequest(
-                name=name,
-                default=default,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

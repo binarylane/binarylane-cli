@@ -6,7 +6,6 @@ import attr
 
 from binarylane.models.license_ import License
 from binarylane.models.size_options_request import SizeOptionsRequest
-from binarylane.models.ssh_key_request import SshKeyRequest
 from binarylane.types import UNSET, Unset
 
 T = TypeVar("T", bound="CreateServerRequest")
@@ -28,9 +27,8 @@ class CreateServerRequest:
         ssh_keys (Union[Unset, None, List[Union[int, str]]]): This may be either the SSH keys Ids or fingerprints. If
             this is null or not provided any SSH keys that have been marked as default will be deployed (if the operating
             system supports SSH keys). Submit an empty array to disable deployment of default keys.
-        new_ssh_key (Union[Unset, None, SshKeyRequest]):
         options (Union[Unset, None, SizeOptionsRequest]):
-        licenses (Union[Unset, None, List[License]]):
+        licenses (Union[Unset, None, List[License]]): The desired set of licenses.
         user_data (Union[Unset, None, str]): If provided this will be used to initialise the new server. This must be
             left null if the Image does not support UserData, see DistributionInfo.Features for more information.
         port_blocking (Union[Unset, None, bool]): Port blocking of outgoing connections for email, SSH and Remote
@@ -46,7 +44,6 @@ class CreateServerRequest:
     ipv6: Union[Unset, None, bool] = UNSET
     vpc_id: Union[Unset, None, int] = UNSET
     ssh_keys: Union[Unset, None, List[Union[int, str]]] = UNSET
-    new_ssh_key: Union[Unset, None, SshKeyRequest] = UNSET
     options: Union[Unset, None, SizeOptionsRequest] = UNSET
     licenses: Union[Unset, None, List[License]] = UNSET
     user_data: Union[Unset, None, str] = UNSET
@@ -76,10 +73,6 @@ class CreateServerRequest:
                     ssh_keys_item = ssh_keys_item_data
 
                     ssh_keys.append(ssh_keys_item)
-
-        new_ssh_key: Union[Unset, None, Dict[str, Any]] = UNSET
-        if not isinstance(self.new_ssh_key, Unset):
-            new_ssh_key = self.new_ssh_key.to_dict() if self.new_ssh_key else None
 
         options: Union[Unset, None, Dict[str, Any]] = UNSET
         if not isinstance(self.options, Unset):
@@ -118,8 +111,6 @@ class CreateServerRequest:
             field_dict["vpc_id"] = vpc_id
         if ssh_keys is not UNSET:
             field_dict["ssh_keys"] = ssh_keys
-        if new_ssh_key is not UNSET:
-            field_dict["new_ssh_key"] = new_ssh_key
         if options is not UNSET:
             field_dict["options"] = options
         if licenses is not UNSET:
@@ -162,15 +153,6 @@ class CreateServerRequest:
 
             ssh_keys.append(ssh_keys_item)
 
-        _new_ssh_key = d.pop("new_ssh_key", UNSET)
-        new_ssh_key: Union[Unset, None, SshKeyRequest]
-        if _new_ssh_key is None:
-            new_ssh_key = None
-        elif isinstance(_new_ssh_key, Unset):
-            new_ssh_key = UNSET
-        else:
-            new_ssh_key = SshKeyRequest.from_dict(_new_ssh_key)
-
         _options = d.pop("options", UNSET)
         options: Union[Unset, None, SizeOptionsRequest]
         if _options is None:
@@ -200,7 +182,6 @@ class CreateServerRequest:
             ipv6=ipv6,
             vpc_id=vpc_id,
             ssh_keys=ssh_keys,
-            new_ssh_key=new_ssh_key,
             options=options,
             licenses=licenses,
             user_data=user_data,

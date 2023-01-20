@@ -1,18 +1,26 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.ssh_key.ssh_key_create import sync_detailed
-from binarylane.client import Client
 from binarylane.models.ssh_key_request import SshKeyRequest
 from binarylane.models.ssh_key_response import SshKeyResponse
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.actions import BooleanOptionalAction
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    json_body: SshKeyRequest
+
+    def __init__(self, json_body: SshKeyRequest) -> None:
+        self.json_body = json_body
 
 
 class Command(CommandRunner):
@@ -24,33 +32,36 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Add a New SSH Key"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for ssh-key_create"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
 
-        parser.cli_argument(
-            "--public-key",
+        json_body = mapping.add_json_body(SshKeyRequest)
+
+        json_body.add_primitive(
+            "public_key",
             str,
-            dest="public_key",
+            option_name="public-key",
             required=True,
             description="""The public key in OpenSSH "authorized_keys" format.""",
         )
 
-        parser.cli_argument(
-            "--name",
+        json_body.add_primitive(
+            "name",
             str,
-            dest="name",
+            option_name="name",
             required=True,
             description="""A name to help you identify the key.""",
         )
 
-        parser.cli_argument(
-            "--default",
+        json_body.add_primitive(
+            "default",
             Union[Unset, None, bool],
-            dest="default",
+            option_name="default",
             required=False,
             description="""Optional: If true this will be added to all new server installations (if we support SSH Key injection for the server's operating system).""",
-            action=BooleanOptionalAction,
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -59,20 +70,15 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-        public_key: str,
-        name: str,
-        default: Union[Unset, None, bool] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, SshKeyResponse, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: SshKeyResponse
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
-            json_body=SshKeyRequest(
-                public_key=public_key,
-                name=name,
-                default=default,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

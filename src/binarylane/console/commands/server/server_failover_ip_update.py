@@ -1,16 +1,28 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import List, Tuple, Union
+from typing import TYPE_CHECKING, List, Tuple, Union
 
 from binarylane.api.server.server_failover_ip_update import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
+from binarylane.models.failover_ips_request import FailoverIpsRequest
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: FailoverIpsRequest
+
+    def __init__(self, server_id: int, json_body: FailoverIpsRequest) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -22,27 +34,39 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Sets the List of Failover IPs that are Assigned to a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server_failover-ip_update"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The target server id.""",
         )
 
-        parser.cli_argument(
-            "--value",
+        json_body = mapping.add_json_body(FailoverIpsRequest)
+
+        json_body.add_primitive(
+            "failover_ips",
             List[str],
-            warning="request body is List[str]",
+            option_name="failover-ips",
+            required=True,
+            description="""The list of failover IP addresses to assign to this server. This overwrites the current list, so any current failover IP addresses that are omitted will be removed from the server.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
         return ActionResponse
 
     def request(
-        self, server_id: int, client: Client, server: List[str]
+        self,
+        client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.NO_CONTENT: Any
@@ -50,8 +74,8 @@ class Command(ActionRunner):
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=server,
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

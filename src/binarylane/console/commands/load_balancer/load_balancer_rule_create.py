@@ -1,17 +1,29 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import List, Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.load_balancer.load_balancer_rule_create import sync_detailed
-from binarylane.client import Client
 from binarylane.models.forwarding_rule import ForwardingRule
 from binarylane.models.forwarding_rules_request import ForwardingRulesRequest
+from binarylane.models.load_balancer_rule_protocol import LoadBalancerRuleProtocol
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import ListAttribute, Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    load_balancer_id: int
+    json_body: ForwardingRulesRequest
+
+    def __init__(self, load_balancer_id: int, json_body: ForwardingRulesRequest) -> None:
+        self.load_balancer_id = load_balancer_id
+        self.json_body = json_body
 
 
 class Command(CommandRunner):
@@ -23,21 +35,44 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Add Forwarding Rules to an Existing Load Balancer"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for load-balancer_rule_create"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "load_balancer_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the load balancer to which forwarding rules should be added.""",
         )
 
-        parser.cli_argument(
-            "--forwarding-rules",
-            List[ForwardingRule],
-            dest="forwarding_rules",
-            required=True,
-            description="""The rules that control which traffic the load balancer will forward to servers in the pool.""",
+        json_body = mapping.add_json_body(ForwardingRulesRequest)
+
+        json_body_forwarding_rule = json_body.add(
+            ListAttribute(
+                "forwarding_rules",
+                ForwardingRule,
+                option_name="forwarding-rules",
+                description="""The rules that control which traffic the load balancer will forward to servers in the pool.""",
+                required=True,
+            )
         )
+
+        json_body_forwarding_rule.add_primitive(
+            "entry_protocol",
+            LoadBalancerRuleProtocol,
+            option_name="entry-protocol",
+            required=True,
+            description="""
+| Value | Description |
+| ----- | ----------- |
+| http | The load balancer will forward HTTP traffic that matches this rule. |
+| https | The load balancer will forward HTTPS traffic that matches this rule. |
+
+""",
+        )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -45,20 +80,18 @@ class Command(CommandRunner):
 
     def request(
         self,
-        load_balancer_id: int,
         client: Client,
-        forwarding_rules: List[ForwardingRule],
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.NO_CONTENT: Any
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            load_balancer_id=load_balancer_id,
+            load_balancer_id=request.load_balancer_id,
             client=client,
-            json_body=ForwardingRulesRequest(
-                forwarding_rules=forwarding_rules,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

@@ -1,19 +1,30 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.server_action.server_action_clone_using_backup import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.clone_using_backup import CloneUsingBackup
 from binarylane.models.clone_using_backup_type import CloneUsingBackupType
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: CloneUsingBackup
+
+    def __init__(self, server_id: int, json_body: CloneUsingBackup) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -25,45 +36,51 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Restore a Backup of a Server to a Different Existing Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_clone-using-backup"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(CloneUsingBackup)
+
+        json_body.add_primitive(
+            "type",
             CloneUsingBackupType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--image-id",
+        json_body.add_primitive(
+            "image_id",
             int,
-            dest="image_id",
+            option_name="image-id",
             required=True,
             description="""The ID of the image to clone. Only backup type images are currently supported. This must be a backup of the server ID in the action endpoint URL.""",
         )
 
-        parser.cli_argument(
-            "--target-server-id",
+        json_body.add_primitive(
+            "target_server_id",
             int,
-            dest="target_server_id",
+            option_name="target-server-id",
             required=True,
             description="""The target server ID. This server's current disks will be wiped and replaced with the selected backup image.""",
         )
 
-        parser.cli_argument(
-            "--name",
+        json_body.add_primitive(
+            "name",
             Union[Unset, None, str],
-            dest="name",
+            option_name="name",
             required=False,
             description="""The new hostname for the target server. If this is not supplied the target server's existing hostname will be used.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -71,13 +88,10 @@ class Command(ActionRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: CloneUsingBackupType,
-        image_id: int,
-        target_server_id: int,
-        name: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -86,13 +100,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=CloneUsingBackup(
-                type=type,
-                image_id=image_id,
-                target_server_id=target_server_id,
-                name=name,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

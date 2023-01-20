@@ -1,14 +1,23 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.domain.domain_delete import sync_detailed
-from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    domain_name: str
+
+    def __init__(self, domain_name: str) -> None:
+        self.domain_name = domain_name
 
 
 class Command(CommandRunner):
@@ -20,13 +29,18 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Delete an Existing Domain"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for domain_delete"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "domain_name",
             str,
+            required=True,
+            option_name=None,
             description="""The name of the domain to delete.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -34,15 +48,16 @@ class Command(CommandRunner):
 
     def request(
         self,
-        domain_name: str,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.NO_CONTENT: Any
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            domain_name=domain_name,
+            domain_name=request.domain_name,
             client=client,
         )
         return page_response.status_code, page_response.parsed

@@ -1,15 +1,21 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.server.server_data_usage_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.data_usages_response import DataUsagesResponse
 from binarylane.models.links import Links
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    pass
 
 
 class Command(ListRunner):
@@ -42,8 +48,9 @@ If you have more than one server, please see our data pooling policy: this value
     def description(self) -> str:
         return """Fetch all Current Data Usage (Transfer) for All Servers"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server_data-usage_list"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -52,7 +59,9 @@ If you have more than one server, please see our data pooling policy: this value
     def request(
         self,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, DataUsagesResponse]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: DataUsagesResponse
         # HTTPStatus.UNAUTHORIZED: Any

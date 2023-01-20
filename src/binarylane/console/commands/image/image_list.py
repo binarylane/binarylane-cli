@@ -1,18 +1,25 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.image.image_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.image_query_type import ImageQueryType
 from binarylane.models.images_response import ImagesResponse
 from binarylane.models.links import Links
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    type: Union[Unset, None, ImageQueryType] = UNSET
+    private: Union[Unset, None, bool] = UNSET
 
 
 class Command(ListRunner):
@@ -74,14 +81,14 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List All Images"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for image_list"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
 
-        parser.cli_argument(
-            "--type",
+        mapping.add_primitive(
+            "type",
             Union[Unset, None, ImageQueryType],
-            dest="type",
             required=False,
+            option_name="type",
             description="""
 | Value | Description |
 | ----- | ----------- |
@@ -90,13 +97,14 @@ class Command(ListRunner):
 
 """,
         )
-        parser.cli_argument(
-            "--private",
+        mapping.add_primitive(
+            "private",
             Union[Unset, None, bool],
-            dest="private",
             required=False,
+            option_name="private",
             description="""Provide 'true' to only list private images. 'false' has no effect.""",
         )
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -105,9 +113,9 @@ class Command(ListRunner):
     def request(
         self,
         client: Client,
-        type: Union[Unset, None, ImageQueryType] = UNSET,
-        private: Union[Unset, None, bool] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, ImagesResponse, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ImagesResponse
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
@@ -121,8 +129,8 @@ class Command(ListRunner):
             page += 1
             page_response = sync_detailed(
                 client=client,
-                type=type,
-                private=private,
+                type=request.type,
+                private=request.private,
                 page=page,
                 per_page=per_page,
             )

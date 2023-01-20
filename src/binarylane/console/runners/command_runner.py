@@ -3,16 +3,16 @@ from __future__ import annotations
 import logging
 from abc import abstractmethod
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Any, Callable, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
+
+from binarylane.client import AuthenticatedClient, Client
 
 from binarylane.console.config import Config
-from binarylane.console.parsers.parser import CommandParser
+from binarylane.console.parser import Mapping
+from binarylane.console.parser.parser import Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 from binarylane.console.runners.runner import Runner
-
-if TYPE_CHECKING:
-    from binarylane.client import AuthenticatedClient
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
 
-    _parser: CommandParser
+    _parser: Parser
     _parent: Runner
     _config: Config
     _client: AuthenticatedClient
@@ -32,7 +32,7 @@ class CommandRunner(Runner):
     def __init__(self, parent: Runner) -> None:
         super().__init__(parent)
         self._config = Config.load()
-        self._parser = CommandParser(prog=self.prog, add_help=False)
+        self._parser = Parser(prog=self.prog, add_help=False)
         self.configure(self._parser)
 
         self._parser.add_argument(
@@ -60,14 +60,19 @@ class CommandRunner(Runner):
         self._output = None
         self._header = None
 
+        self._parser.configure()
+
     @abstractmethod
-    def configure(self, parser: CommandParser) -> None:
+    def create_mapping(self) -> Mapping:
         """Add supported CLI arguments"""
 
-    # @abstractmethod
-    # def request(self, **kwargs: Dict[str, object]) -> Tuple[int, object]:  # type: ignore
-    #    """Perform API operation and return response"""
-    request: Callable[..., Tuple[HTTPStatus, object]]
+    def configure(self, parser: Parser) -> None:
+        mapping = self.create_mapping()
+        parser.set_mapping(mapping)
+
+    @abstractmethod
+    def request(self, client: Client, request: object) -> Tuple[HTTPStatus, object]:
+        """Perform API operation and return response"""
 
     @property
     @abstractmethod
@@ -110,13 +115,11 @@ class CommandRunner(Runner):
         if args == [Runner.CHECK]:
             return
 
-        logger.debug(f"Command parser for {self.name}. args: {args}")
-        parsed = self._parser.parse_args(args)
-        logger.debug(f"Parsing succeeded, have {parsed}")
+        logger.debug("Command parser for %s. args: %s", self.name, args)
+        parsed = self._parser.parse(args)
+        logger.debug("Parsing succeeded, have %s", parsed)
 
         self.process(parsed)
-
-        from binarylane.client import AuthenticatedClient
 
         self._client = AuthenticatedClient(
             self._config.api_url,
@@ -124,14 +127,12 @@ class CommandRunner(Runner):
         )
         parsed.client = self._client
 
-        request_args = vars(parsed)
-
         # CurlCommand does not execute the request, so there is no response to display
         if self._print_curl:
             with CurlCommand() as curl:
-                self.request(**request_args)
+                self.request(parsed.client, parsed.mapped_object)
                 print(curl.shell)
                 return
 
-        status_code, received = self.request(**vars(parsed))
+        status_code, received = self.request(parsed.client, parsed.mapped_object)
         self.response(status_code, received)

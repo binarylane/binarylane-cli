@@ -1,36 +1,31 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, cast
 
 import attr
 
-from binarylane.models.server import Server
-
-T = TypeVar("T", bound="ServerNeighborsResponse")
+T = TypeVar("T", bound="FailoverIpsRequest")
 
 
 @attr.s(auto_attribs=True)
-class ServerNeighborsResponse:
+class FailoverIpsRequest:
     """
     Attributes:
-        servers (List[Server]):
+        failover_ips (List[str]): The list of failover IP addresses to assign to this server. This overwrites the
+            current list, so any current failover IP addresses that are omitted will be removed from the server.
     """
 
-    servers: List[Server]
+    failover_ips: List[str]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        servers = []
-        for servers_item_data in self.servers:
-            servers_item = servers_item_data.to_dict()
-
-            servers.append(servers_item)
+        failover_ips = self.failover_ips
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "servers": servers,
+                "failover_ips": failover_ips,
             }
         )
 
@@ -39,19 +34,14 @@ class ServerNeighborsResponse:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        servers = []
-        _servers = d.pop("servers")
-        for servers_item_data in _servers:
-            servers_item = Server.from_dict(servers_item_data)
+        failover_ips = cast(List[str], d.pop("failover_ips"))
 
-            servers.append(servers_item)
-
-        server_neighbors_response = cls(
-            servers=servers,
+        failover_ips_request = cls(
+            failover_ips=failover_ips,
         )
 
-        server_neighbors_response.additional_properties = d
-        return server_neighbors_response
+        failover_ips_request.additional_properties = d
+        return failover_ips_request
 
     @property
     def additional_keys(self) -> List[str]:

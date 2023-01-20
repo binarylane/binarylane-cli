@@ -19,7 +19,15 @@ def format_response(response: Any, show_header: bool, fields: Optional[List[str]
 
     if isinstance(primary, list):
         for key, value in getattr(primary_type, "__annotations__", {DEFAULT_HEADING: "value"}).items():
-            logger.debug(f'{key}: {value} dict?{hasattr(value, "to_dict")} origin:{getattr(value, "__origin__", None)}')
+            logger.debug(
+                "key=%(key)s value=%(value)s dict?%(is_dict)s origin:%(origin)s",
+                {
+                    "key": key,
+                    "value": value,
+                    "is_dict": hasattr(value, "to_dict"),
+                    "origin": getattr(value, "__origin__", None),
+                },
+            )
 
         header = fields or [
             key
@@ -73,7 +81,7 @@ def _extract_primary(response: Any) -> Any:
         return getattr(response, list(type_hints.keys())[0])
 
     if len(type_hints) > 1:
-        logger.warning(f"{response_type} has multiple properties, displaying the whole response")
+        logger.warning("%s has multiple properties, displaying the whole response", response_type)
     return response
 
 
@@ -82,7 +90,7 @@ def _flatten(values: Sequence[Any], single_object: bool = False) -> List[str]:
 
     result: List[str] = []
     max_list = 5
-    max_str = 80
+    max_str = 80 if not single_object else 240
     trunc = "..."
 
     for item in values:

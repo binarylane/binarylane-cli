@@ -1,19 +1,30 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.server_action.server_action_change_reverse_name import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.change_reverse_name import ChangeReverseName
 from binarylane.models.change_reverse_name_type import ChangeReverseNameType
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: ChangeReverseName
+
+    def __init__(self, server_id: int, json_body: ChangeReverseName) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -25,37 +36,43 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Change the Reverse Name for an IPv4 Address on a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_change-reverse-name"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(ChangeReverseName)
+
+        json_body.add_primitive(
+            "type",
             ChangeReverseNameType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--ipv4-address",
+        json_body.add_primitive(
+            "ipv4_address",
             str,
-            dest="ipv4_address",
+            option_name="ipv4-address",
             required=True,
             description="""The IPv4 address to set or clear the reverse name for.""",
         )
 
-        parser.cli_argument(
-            "--reverse-name",
+        json_body.add_primitive(
+            "reverse_name",
             Union[Unset, None, str],
-            dest="reverse_name",
+            option_name="reverse-name",
             required=False,
             description="""Leave this null to clear the custom reverse name.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -63,12 +80,10 @@ class Command(ActionRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: ChangeReverseNameType,
-        ipv4_address: str,
-        reverse_name: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -77,12 +92,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=ChangeReverseName(
-                type=type,
-                ipv4_address=ipv4_address,
-                reverse_name=reverse_name,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

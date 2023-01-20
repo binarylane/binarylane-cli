@@ -1,17 +1,24 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.size.size_list import sync_detailed
-from binarylane.client import Client
 from binarylane.models.links import Links
 from binarylane.models.sizes_response import SizesResponse
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ListRunner
+
+
+class CommandRequest:
+    server_id: Union[Unset, None, int] = UNSET
+    image: Union[Unset, None, str] = UNSET
 
 
 class Command(ListRunner):
@@ -62,23 +69,24 @@ otherwise not all regions listed will support all operating systems on this size
     def description(self) -> str:
         return """List All Available Sizes"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for size_list"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
 
-        parser.cli_argument(
-            "--server-id",
+        mapping.add_primitive(
+            "server_id",
             Union[Unset, None, int],
-            dest="server_id",
             required=False,
+            option_name="server-id",
             description="""If supplied only sizes available for a resize the specified server will be returned. This parameter is only available when authenticated.""",
         )
-        parser.cli_argument(
-            "--image",
+        mapping.add_primitive(
+            "image",
             Union[Unset, None, str],
-            dest="image",
             required=False,
+            option_name="image",
             description="""If null or not provided regions that support the size are included in the returned objects regardless of operating system. If this is provided it must be the id or slug of an operating system image and will cause only valid regions for the size and operating system to be included in the returned objects.""",
         )
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -87,9 +95,9 @@ otherwise not all regions listed will support all operating systems on this size
     def request(
         self,
         client: Client,
-        server_id: Union[Unset, None, int] = UNSET,
-        image: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, SizesResponse, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: SizesResponse
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
@@ -102,8 +110,8 @@ otherwise not all regions listed will support all operating systems on this size
             page += 1
             page_response = sync_detailed(
                 client=client,
-                server_id=server_id,
-                image=image,
+                server_id=request.server_id,
+                image=request.image,
                 page=page,
                 per_page=per_page,
             )

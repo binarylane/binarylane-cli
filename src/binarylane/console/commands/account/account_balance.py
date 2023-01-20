@@ -1,14 +1,20 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.account.account_balance import sync_detailed
-from binarylane.client import Client
-from binarylane.models.balance import Balance
+from binarylane.models.balance_response import BalanceResponse
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    pass
 
 
 class Command(CommandRunner):
@@ -20,19 +26,22 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch Current Balance Information"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for account_balance"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
-        return Balance
+        return BalanceResponse
 
     def request(
         self,
         client: Client,
-    ) -> Tuple[HTTPStatus, Union[None, Balance]]:
+        request: object,
+    ) -> Tuple[HTTPStatus, Union[None, BalanceResponse]]:
+        assert isinstance(request, CommandRequest)
 
-        # HTTPStatus.OK: Balance
+        # HTTPStatus.OK: BalanceResponse
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,

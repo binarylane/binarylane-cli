@@ -1,19 +1,29 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Tuple, Union
+from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.server_action.server_action_change_separate_private_network_interface import sync_detailed
-from binarylane.client import Client
 from binarylane.models.action_response import ActionResponse
 from binarylane.models.change_separate_private_network_interface import ChangeSeparatePrivateNetworkInterface
 from binarylane.models.change_separate_private_network_interface_type import ChangeSeparatePrivateNetworkInterfaceType
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 
-from binarylane.console.actions import BooleanOptionalAction
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import ActionRunner
+
+
+class CommandRequest:
+    server_id: int
+    json_body: ChangeSeparatePrivateNetworkInterface
+
+    def __init__(self, server_id: int, json_body: ChangeSeparatePrivateNetworkInterface) -> None:
+        self.server_id = server_id
+        self.json_body = json_body
 
 
 class Command(ActionRunner):
@@ -25,30 +35,35 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Enable or Disable a Separate Private Network Interface for a Server in a VPC"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server-action_change-separate-private-network-interface"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The ID of the server on which the action should be performed.""",
         )
 
-        parser.cli_argument(
-            "--type",
+        json_body = mapping.add_json_body(ChangeSeparatePrivateNetworkInterface)
+
+        json_body.add_primitive(
+            "type",
             ChangeSeparatePrivateNetworkInterfaceType,
-            dest="type",
+            option_name="type",
             required=True,
-            description="""None""",
         )
 
-        parser.cli_argument(
-            "--enabled",
+        json_body.add_primitive(
+            "enabled",
             bool,
-            dest="enabled",
+            option_name="enabled",
             required=True,
             description="""The desired enabled status of the separate second network interface.""",
-            action=BooleanOptionalAction,
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -56,11 +71,10 @@ class Command(ActionRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
-        type: ChangeSeparatePrivateNetworkInterfaceType,
-        enabled: bool,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[ActionResponse, None, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
         # HTTPStatus.ACCEPTED: Any
@@ -69,11 +83,8 @@ class Command(ActionRunner):
         # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
-            server_id=server_id,
+            server_id=request.server_id,
             client=client,
-            json_body=ChangeSeparatePrivateNetworkInterface(
-                type=type,
-                enabled=enabled,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed

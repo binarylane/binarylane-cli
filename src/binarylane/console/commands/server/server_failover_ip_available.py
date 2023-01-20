@@ -1,16 +1,25 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Optional, Tuple, Union
+from typing import TYPE_CHECKING, Optional, Tuple, Union
 
 from binarylane.api.server.server_failover_ip_available import sync_detailed
-from binarylane.client import Client
 from binarylane.models.failover_ips_response import FailoverIpsResponse
 from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    server_id: int
+
+    def __init__(self, server_id: int) -> None:
+        self.server_id = server_id
 
 
 class Command(CommandRunner):
@@ -22,13 +31,18 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch a List of all Failover IPs that are Available to be Assigned to a Server"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for server_failover-ip_available"""
-        parser.cli_argument(
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+
+        mapping.add_primitive(
             "server_id",
             int,
+            required=True,
+            option_name=None,
             description="""The target server id.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -36,9 +50,10 @@ class Command(CommandRunner):
 
     def request(
         self,
-        server_id: int,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, FailoverIpsResponse, ProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: FailoverIpsResponse
         # HTTPStatus.NOT_FOUND: ProblemDetails
@@ -51,7 +66,7 @@ class Command(CommandRunner):
         while has_next:
             page += 1
             page_response = sync_detailed(
-                server_id=server_id,
+                server_id=request.server_id,
                 client=client,
                 page=page,
                 per_page=per_page,

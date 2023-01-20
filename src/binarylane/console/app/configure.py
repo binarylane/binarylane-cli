@@ -62,5 +62,5 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
 
         # Request failed; it should be a 401 if token is invalid. If it isnt, show some extra info:
         if response.status_code != 401:
-            logger.warning(f"HTTP {response.status_code.value} - {response.status_code.name}")
+            logger.warning("HTTP %s - %s", response.status_code.value, response.status_code.name)
         return False

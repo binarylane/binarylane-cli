@@ -11,7 +11,10 @@ fi
 if openapi-python-client update --path openapi.json --config client.yml
 then
     cd ..
+    # Namespace package
     rm -f lib/binarylane/__init__.py
-    find lib -name '*.py' -exec poetry run absolufy-imports --application-directories lib {} + || true  # retu
+    # Importing all the models takes too long for interactive CLI use
+    echo -n "" > lib/binarylane/models/__init__.py
+    find lib -name '*.py' -exec poetry run absolufy-imports --application-directories lib {} +
     poetry run isort --add-import 'from __future__ import annotations' lib | grep -v 'Fixing'
 fi

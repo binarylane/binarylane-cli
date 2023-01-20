@@ -1,34 +1,32 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, TypeVar, cast
+from typing import Any, Dict, List, Type, TypeVar
 
 import attr
 
-T = TypeVar("T", bound="NeighborsResponse")
+from binarylane.models.balance import Balance
+
+T = TypeVar("T", bound="BalanceResponse")
 
 
 @attr.s(auto_attribs=True)
-class NeighborsResponse:
+class BalanceResponse:
     """
     Attributes:
-        neighbor_ids (List[List[int]]):
+        balance (Balance):
     """
 
-    neighbor_ids: List[List[int]]
+    balance: Balance
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        neighbor_ids = []
-        for neighbor_ids_item_data in self.neighbor_ids:
-            neighbor_ids_item = neighbor_ids_item_data
-
-            neighbor_ids.append(neighbor_ids_item)
+        balance = self.balance.to_dict()
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "neighbor_ids": neighbor_ids,
+                "balance": balance,
             }
         )
 
@@ -37,19 +35,14 @@ class NeighborsResponse:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        neighbor_ids = []
-        _neighbor_ids = d.pop("neighbor_ids")
-        for neighbor_ids_item_data in _neighbor_ids:
-            neighbor_ids_item = cast(List[int], neighbor_ids_item_data)
+        balance = Balance.from_dict(d.pop("balance"))
 
-            neighbor_ids.append(neighbor_ids_item)
-
-        neighbors_response = cls(
-            neighbor_ids=neighbor_ids,
+        balance_response = cls(
+            balance=balance,
         )
 
-        neighbors_response.additional_properties = d
-        return neighbors_response
+        balance_response.additional_properties = d
+        return balance_response
 
     @property
     def additional_keys(self) -> List[str]:

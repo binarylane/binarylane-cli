@@ -355,40 +355,6 @@ class ServerKernelList(ModuleRunner):
 
 
 @register_command
-class ServerNeighborsGet(ModuleRunner):
-    """Runner for server_neighbors_get API operation"""
-
-    @property
-    def name(self) -> str:
-        return "neighbors_get"
-
-    @property
-    def description(self) -> str:
-        return "List All Servers That Share a Host with a Server"
-
-    @property
-    def module_path(self) -> str:
-        return ".commands.server.server_neighbors_get"
-
-
-@register_command
-class ServerNeighborsList(ModuleRunner):
-    """Runner for server_neighbors_list API operation"""
-
-    @property
-    def name(self) -> str:
-        return "neighbors_list"
-
-    @property
-    def description(self) -> str:
-        return "List All Servers That Share a Host"
-
-    @property
-    def module_path(self) -> str:
-        return ".commands.server.server_neighbors_list"
-
-
-@register_command
 class ServerSnapshotList(ModuleRunner):
     """Runner for server_snapshot_list API operation"""
 

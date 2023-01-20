@@ -17,8 +17,7 @@ repos:
     rev: v0.3.1
     hooks:
       - id: absolufy-imports
-        args: ['--application-directories','lib:src']
-        exclude: '^tests/'
+        args: ['--application-directories','lib:src:.']
   - repo: https://github.com/pycqa/isort
     rev: 5.11.4
     hooks:

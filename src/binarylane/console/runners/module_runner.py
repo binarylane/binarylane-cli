@@ -35,5 +35,5 @@ class ModuleRunner(Runner):
         return self.command_runner_type(self)
 
     def run(self, args: List[str]) -> None:
-        logger.debug(f"ModuleRunner for {self.name} ({self.module_path}). Received arguments: {args}")
+        logger.debug("ModuleRunner for %s (%s). Received arguments: %s", self.name, self.module_path, args)
         self.command_runner.run(args)

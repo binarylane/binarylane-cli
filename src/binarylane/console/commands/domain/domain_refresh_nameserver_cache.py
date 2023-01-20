@@ -1,13 +1,19 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Any, Tuple, Union
+from typing import TYPE_CHECKING, Any, Tuple, Union
 
 from binarylane.api.domain.domain_refresh_nameserver_cache import sync_detailed
-from binarylane.client import Client
 
-from binarylane.console.parsers import CommandParser
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import CommandRunner
+
+
+class CommandRequest:
+    pass
 
 
 class Command(CommandRunner):
@@ -19,8 +25,9 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Refresh Cached Nameserver Domain Records"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for domain_refresh-nameserver-cache"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -29,7 +36,9 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, Any]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.NO_CONTENT: Any
         # HTTPStatus.UNAUTHORIZED: Any

@@ -14,7 +14,7 @@ attrs = "^22.2.0"
 python-dateutil = "^2.8.2"
 
 [tool.poetry.scripts]
-bl = "binarylane.console:app.main"
+bl = "binarylane.console.app:main"
 
 [tool.poetry.group.dev.dependencies]
 openapi-python-client = "^0.11.6"
@@ -53,13 +53,11 @@ ignore-paths = ['src/binarylane/console/commands/*/']
 
 [tool.pylint.messages_control]
 disable = [
+    "import-outside-toplevel",  # CLI programs need delayed import
+    "design",  # design checker is too opinionated
+    "fixme",  # FIXME: initial impl in progress
 
-    # CLI needs some delayed imports to avoid slow program start
-    "import-outside-toplevel",
-
-    # Initial impl in progress:
-    "fixme",
-    "logging-fstring-interpolation",
+    # Checkbox documentation is bad:
     "missing-module-docstring",
     "missing-class-docstring",
     "missing-function-docstring",

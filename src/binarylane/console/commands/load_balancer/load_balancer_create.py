@@ -1,23 +1,34 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import List, Tuple, Union
+from typing import TYPE_CHECKING, List, Tuple, Union
 
 from binarylane.api.load_balancer.load_balancer_create import sync_detailed
-from binarylane.client import Client
 from binarylane.models.create_load_balancer_request import CreateLoadBalancerRequest
 from binarylane.models.create_load_balancer_response import CreateLoadBalancerResponse
 from binarylane.models.forwarding_rule import ForwardingRule
 from binarylane.models.health_check import HealthCheck
+from binarylane.models.health_check_protocol import HealthCheckProtocol
+from binarylane.models.load_balancer_rule_protocol import LoadBalancerRuleProtocol
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import UNSET, Unset
+from binarylane.types import Unset
 
-from binarylane.console.parsers import CommandParser
-from binarylane.console.runners import CommandRunner
+if TYPE_CHECKING:
+    from binarylane.client import Client
+
+from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute
+from binarylane.console.runners import ActionLinkRunner
 
 
-class Command(CommandRunner):
+class CommandRequest:
+    json_body: CreateLoadBalancerRequest
+
+    def __init__(self, json_body: CreateLoadBalancerRequest) -> None:
+        self.json_body = json_body
+
+
+class Command(ActionLinkRunner):
     @property
     def name(self) -> str:
         return "create"
@@ -26,48 +37,93 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Create a New Load Balancer"""
 
-    def configure(self, parser: CommandParser) -> None:
-        """Add arguments for load-balancer_create"""
+    def create_mapping(self) -> Mapping:
+        mapping = Mapping(CommandRequest)
 
-        parser.cli_argument(
-            "--name",
+        json_body = mapping.add_json_body(CreateLoadBalancerRequest)
+
+        json_body.add_primitive(
+            "name",
             str,
-            dest="name",
+            option_name="name",
             required=True,
             description="""The hostname of the load balancer.""",
         )
 
-        parser.cli_argument(
-            "--forwarding-rules",
-            Union[Unset, None, List[ForwardingRule]],
-            dest="forwarding_rules",
-            required=False,
-            description="""The rules that control which traffic the load balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.""",
+        json_body_forwarding_rule = json_body.add(
+            ListAttribute(
+                "forwarding_rules",
+                ForwardingRule,
+                option_name="forwarding-rules",
+                description="""The rules that control which traffic the load balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.""",
+                required=False,
+            )
         )
 
-        parser.cli_argument(
-            "--health-check",
-            Union[Unset, None, HealthCheck],
-            dest="health_check",
-            required=False,
-            description="""""",
+        json_body_forwarding_rule.add_primitive(
+            "entry_protocol",
+            LoadBalancerRuleProtocol,
+            option_name="entry-protocol",
+            required=True,
+            description="""
+| Value | Description |
+| ----- | ----------- |
+| http | The load balancer will forward HTTP traffic that matches this rule. |
+| https | The load balancer will forward HTTPS traffic that matches this rule. |
+
+""",
         )
 
-        parser.cli_argument(
-            "--server-ids",
+        json_body_health_check = json_body.add(
+            ObjectAttribute(
+                "health_check",
+                HealthCheck,
+                option_name="health-check",
+                required=False,
+                description="""The rules that determine which servers are considered 'healthy' and in the server pool for the load balancer. Leave this null to accept appropriate defaults based on the forwarding_rules.""",
+            )
+        )
+
+        json_body_health_check.add_primitive(
+            "protocol",
+            Union[Unset, None, HealthCheckProtocol],
+            option_name="protocol",
+            required=False,
+            description="""
+| Value | Description |
+| ----- | ----------- |
+| http | The health check will be performed via HTTP. |
+| https | The health check will be performed via HTTPS. |
+| both | The health check will be performed via both HTTP and HTTPS. Failing a health check on one protocol will remove the server from the pool of servers only for that protocol. |
+
+""",
+        )
+
+        json_body_health_check.add_primitive(
+            "path",
+            Union[Unset, None, str],
+            option_name="path",
+            required=False,
+            description="""Leave null to accept the default '/' path.""",
+        )
+
+        json_body.add_primitive(
+            "server_ids",
             Union[Unset, None, List[int]],
-            dest="server_ids",
+            option_name="server-ids",
             required=False,
             description="""A list of server IDs to assign to this load balancer.""",
         )
 
-        parser.cli_argument(
-            "--region",
+        json_body.add_primitive(
+            "region",
             Union[Unset, None, str],
-            dest="region",
+            option_name="region",
             required=False,
             description="""Leave null to create an anycast load balancer.""",
         )
+
+        return mapping
 
     @property
     def ok_response_type(self) -> type:
@@ -76,12 +132,9 @@ class Command(CommandRunner):
     def request(
         self,
         client: Client,
-        name: str,
-        forwarding_rules: Union[Unset, None, List[ForwardingRule]] = UNSET,
-        health_check: Union[Unset, None, HealthCheck] = UNSET,
-        server_ids: Union[Unset, None, List[int]] = UNSET,
-        region: Union[Unset, None, str] = UNSET,
+        request: object,
     ) -> Tuple[HTTPStatus, Union[None, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
+        assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: CreateLoadBalancerResponse
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
@@ -89,12 +142,6 @@ class Command(CommandRunner):
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,
-            json_body=CreateLoadBalancerRequest(
-                name=name,
-                forwarding_rules=forwarding_rules,
-                health_check=health_check,
-                server_ids=server_ids,
-                region=region,
-            ),
+            json_body=request.json_body,
         )
         return page_response.status_code, page_response.parsed
