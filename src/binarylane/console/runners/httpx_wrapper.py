@@ -17,10 +17,15 @@ WrapperT = TypeVar("WrapperT", bound="HttpxWrapper")
 class HttpxWrapper(ABC):
     """Hook httpx.request to enable displaying additional information from API calls"""
 
+    def __init__(self) -> None:
+        # Lazy import of httpx, since this wrapper is rarely used
+        import httpx
+
+        globals()["httpx"] = httpx
+
     _httpx_request: Optional[Callable[..., httpx.Response]]
 
     def __enter__(self: WrapperT) -> WrapperT:
-        import httpx
 
         self._httpx_request = httpx.request
         httpx.request = self.request

@@ -4,9 +4,10 @@ from typing import Any, List, Type
 
 import pytest
 
+from tests.runner import TypeRunner
+
 from binarylane.console.commands import commands
 from binarylane.console.parser import Attribute
-from binarylane.console.runners import Runner
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -24,23 +25,8 @@ def command_runner(request: pytest.FixtureRequest) -> Any:
     return request.param
 
 
-@pytest.fixture
-def test_runner() -> Runner:
-    class TestRunner(Runner):
-        @property
-        def name(self) -> str:
-            return "test"
-
-        @property
-        def description(self) -> str:
-            return "test"
-
-        def run(self, args: List[str]) -> None:
-            pass
-
-    return TestRunner()
-
-
-def test_command_parser(command_runner: Type[CommandRunner], test_runner: Runner) -> None:
+def test_command_parser(command_runner: Type[CommandRunner]) -> None:
     Attribute.raise_on_unsupported = True
-    command_runner(test_runner)
+
+    runner = TypeRunner(command_runner)
+    runner.run([CommandRunner.CHECK])
