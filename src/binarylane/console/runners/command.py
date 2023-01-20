@@ -32,7 +32,7 @@ class CommandRunner(Runner):
     def __init__(self, parent: Runner) -> None:
         super().__init__(parent)
         self._config = Config.load()
-        self._parser = Parser(prog=self.prog, add_help=False)
+        self._parser = Parser(prog=self.prog, add_help=False, description=self.description)
         self.configure(self._parser)
 
         self._parser.add_argument(
