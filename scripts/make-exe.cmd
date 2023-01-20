@@ -14,5 +14,7 @@ REM packages, instead it is a "raw" bundle of the required modules.
 FOR /F "tokens=*" %%g IN ('poetry version --short') do (set PROJECT_VERSION=%%g)
 echo __version__ = '%PROJECT_VERSION%' > exe\binarylane\console\_version.py
 
-pyinstaller --name bl --onefile --collect-submodules binarylane exe\bl.py --clean
+REM UPX makes little difference to the final filesize (about 1MB in our testing)
+REM but makes the startup time signficantly slower, so overall using UPX is a net loss
+pyinstaller --name bl --onefile --noupx --collect-submodules binarylane exe\bl.py --clean
 rmdir /s /q exe
