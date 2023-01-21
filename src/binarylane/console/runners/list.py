@@ -46,6 +46,10 @@ class ListRunner(CommandRunner):
     def process(self, parsed: Any) -> None:
         self._format = parsed.runner_format.split(",")
 
+        for field in self._format:
+            if field not in self.fields:
+                self._parser.error(f"invalid --format value: '{field}'")
+
         if parsed.runner_single_column:
             self._format = self.default_format[:1]
             self._output = "tsv"
