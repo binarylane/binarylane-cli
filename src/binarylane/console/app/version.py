@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import importlib
-import importlib.metadata
 from typing import List, Optional
+from binarylane.pycompat.importlib import metadata
 
 from binarylane.console.app.lazy_runner import LazyRunner
 
@@ -18,8 +18,8 @@ class VersionRunner(LazyRunner):
 
     def _distribution_version(self, package: str) -> Optional[str]:
         try:
-            return importlib.metadata.distribution(package).version
-        except importlib.metadata.PackageNotFoundError:
+            return metadata.distribution(package).version
+        except metadata.PackageNotFoundError:
             return None
 
     def _module_version(self, package: str) -> Optional[str]:

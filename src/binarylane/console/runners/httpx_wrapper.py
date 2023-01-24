@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import json
-import shlex
 import urllib.parse
 from abc import ABC, abstractmethod
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar
+from binarylane.pycompat import shlex
 
 if TYPE_CHECKING:
     import httpx

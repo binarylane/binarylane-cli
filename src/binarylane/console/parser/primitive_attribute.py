@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import argparse
 import logging
-import typing
 from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+from binarylane.pycompat import typing
 
 from binarylane.types import UNSET, Unset
 

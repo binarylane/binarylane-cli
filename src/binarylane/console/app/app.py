@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from functools import cached_property
 from typing import List, Sequence
+from binarylane.pycompat.functools import cached_property
 
 from binarylane.console.app.lazy_loader import LazyLoader
 from binarylane.console.runners import Runner

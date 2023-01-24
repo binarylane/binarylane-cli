@@ -4,8 +4,8 @@ import importlib
 import logging
 from abc import abstractmethod
 from argparse import ArgumentParser, HelpFormatter
-from functools import cached_property
 from typing import List, NoReturn, Optional, Sequence
+from binarylane.pycompat.functools import cached_property
 
 from binarylane.console.runners import Runner
 from binarylane.console.runners.module import ModuleRunner
