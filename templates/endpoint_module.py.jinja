@@ -135,7 +135,7 @@ class Command({{ response_class['name'] }}):
 
     @property
     def name(self) -> str:
-        return '{{ endpoint.name.split('_')[-1] }}'
+        return '{{ endpoint.data['x-cli-command'].split(' ')[-1] }}'
 
     @property
     def description(self) -> str:

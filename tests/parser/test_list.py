@@ -138,3 +138,11 @@ def test_list_item_must_be_last(parser: Parser) -> None:
         parser.parse(REQUIRED_ARGUMENTS + ["+route", "--router", "1", "--ip-range", "10.240.0.0/16"])
 
     assert "unrecognized arguments: --ip-range" in exc.value.message
+
+
+def test_invalid_list_item_has_correct_prog(parser: Parser) -> None:
+    """list has its own subparser, so check its error output matches root parser"""
+    with pytest.raises(ArgumentError) as exc:
+        parser.parse(REQUIRED_ARGUMENTS + ["+route", "--router", "1"])
+
+    assert "bl test: error: " in exc.value.message

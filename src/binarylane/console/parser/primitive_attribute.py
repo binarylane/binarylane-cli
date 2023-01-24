@@ -97,6 +97,7 @@ class PrimitiveAttribute(Attribute):
                 self._default_value = enum_options[0]
                 return
             kwargs["choices"] = enum_options
+            kwargs["help"] += " (One of: %(choices)s)"
             if not kwargs.get("metavar"):
                 self._unsupported("missing metavar")
                 kwargs["metavar"] = self._dest.upper()

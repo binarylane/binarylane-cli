@@ -8,6 +8,7 @@ from binarylane.console.runners import Runner
 from binarylane.console.runners.package import PackageRunner
 
 
+# FIXME: Combination of PackageRunner._prefix and App's overrides is difficult to support correctly
 class App(PackageRunner):
     """
     AppRunner is the 'root' runner for the application. In normal usage, all command line arguments are passed
@@ -21,6 +22,8 @@ class App(PackageRunner):
 
     @property
     def description(self) -> str:
+        if self._prefix:
+            return super().description
         return "bl is a command-line interface for the BinaryLane API"
 
     @property
@@ -29,6 +32,8 @@ class App(PackageRunner):
 
     @property
     def runners(self) -> Sequence[Runner]:
+        if self._prefix:
+            return super().runners
         return list(super().runners) + self.app_runners
 
     @cached_property

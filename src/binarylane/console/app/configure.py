@@ -8,7 +8,7 @@ from binarylane.console.config import Config
 from binarylane.console.runners import Runner
 
 if TYPE_CHECKING:
-    from binarylane.api.account.account_get import sync_detailed
+    from binarylane.api.accounts.get_v2_account import sync_detailed
     from binarylane.client import AuthenticatedClient
 
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
     def _try_token(self, config: Config) -> bool:
         """Return bool indicating if API is accessible with current configuration"""
 
-        from binarylane.api.account.account_get import sync_detailed
+        from binarylane.api.accounts.get_v2_account import sync_detailed
         from binarylane.client import AuthenticatedClient
 
         client = AuthenticatedClient(token=config.api_token, base_url=config.api_url)

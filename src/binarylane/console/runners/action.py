@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, List, Optional
 from binarylane.console.runners.command import CommandRunner
 
 if TYPE_CHECKING:
-    from binarylane.api.action.action_get import sync_detailed
+    from binarylane.api.actions.get_v2_actions_action_id import sync_detailed
     from binarylane.models.action_response import ActionResponse
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ class ActionRunner(CommandRunner):
             super().response(status_code, received)
             return
 
-        from binarylane.api.action.action_get import sync_detailed
+        from binarylane.api.actions.get_v2_actions_action_id import sync_detailed
         from binarylane.models.action_response import ActionResponse
 
         # FIXME: Extract _get_action(id: int) -> Tuple[int, Any] method so that derived class can call that instead

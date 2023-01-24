@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 # The 24 character width of the metavar ensures a fixed left-column size
 COMMAND_METAVAR = "!" * 24
 
+SEPARATOR = " "
+
 
 class PackageHelpFormatter(HelpFormatter):
     """Remove command metavar from help"""
@@ -33,17 +35,19 @@ class PackageRunner(Runner):
     """PackageRunner imports a list of runners from specified package."""
 
     parser: ArgumentParser
-    _prefix: Optional[str]
+    _prefix: str
     _runners: List[Runner]
 
-    def __init__(self, parent: Optional[Runner] = None, prefix: Optional[str] = None) -> None:
+    def __init__(self, parent: Optional[Runner] = None, prefix: str = "") -> None:
         super().__init__(parent)
         self._prefix = prefix
         self._runners = []
 
     @property
     def prog(self) -> str:
-        return f"{self._parent.prog} {self._prefix}" if self._parent and self._prefix else super().prog
+        if not self._parent or not self._prefix:
+            return super().prog
+        return f"{self._parent.prog} {self._prefix.split(SEPARATOR)[-1]}"
 
     @property
     def name(self) -> str:
@@ -70,47 +74,49 @@ class PackageRunner(Runner):
 
     @property
     def runners(self) -> Sequence[Runner]:
-        """List of runners provided by this package"""
-        return self.module_runners
+        """List of runners provided by this package, filtered by current prefix"""
 
-    def _get_prefixes(self) -> Sequence[str]:
-        """Get unique set of prefixes for runners in this package.
+        prefix = self._prefix + SEPARATOR if self._prefix else ""
+        return [runner for runner in self.module_runners if runner.name.startswith(prefix)]
 
-        A runner has a "prefix" if its name contains an underscore, in which case the prefix the leading string.
-        - runner for 'domain_list' has prefix of 'domain'
-        - runner for 'list' does not have a prefix
+    def _get_name(self, runner: Runner) -> str:
+        prefix_length = len(self._prefix) + 1 if self._prefix else 0
+        return runner.name[prefix_length:]
 
-        The resulting sequence may be empty if there are no runners with an underscore in the name.
+    @staticmethod
+    def _get_command(runner: Runner) -> str:
+        return runner.name.split(SEPARATOR)[-1]
+
+    def _get_branches(self) -> Sequence[str]:
+        """Get unique set of prefixes (non-leaf commands) for runners under the current prefix.
+
+        The result may be empty if all commands for current prefix are leaves.
         """
-        return sorted({runner.name.split("_")[0] for runner in self.runners if "_" in runner.name})
+        return sorted(
+            {self._get_name(runner).split(" ")[0] for runner in self.runners if " " in self._get_name(runner)}
+        )
 
-    def _get_unprefixed_runners(self) -> Sequence[Runner]:
-        """Return all runners from package_runners that do not have a prefix"""
-        return [runner for runner in self.runners if "_" not in runner.name]
-
-    def _get_prefix_runners(self, prefix: str) -> Sequence[Runner]:
-        """Filter package_runners by the supplied prefix."""
-        return [runner for runner in self.runners if "_" in runner.name and runner.name.split("_")[0] == prefix]
+    def _get_leaves(self) -> Sequence[Runner]:
+        """Return all leaf runners that can be executed from current prefix"""
+        return [runner for runner in self.runners if SEPARATOR not in self._get_name(runner)]
 
     def configure(self) -> None:
         """Configure argument parser"""
 
-        # If we are not in a prefix:
-        if not self._prefix:
-            # Add any required prefix runners:
-            for prefix in self._get_prefixes():
-                self._runners.append(self.__class__(self, prefix))
-            # And then the un-prefixed commands:
-            self._runners += self._get_unprefixed_runners()
-        # Otherwise, add commands from the selected prefix:
-        else:
-            self._runners += self._get_prefix_runners(self._prefix)
+        # Add un-prefixed (leaf) commands:
+        self._runners += self._get_leaves()
+        # Add prefix runners for subcommands:
+        for prefix in self._get_branches():
+            branch_name = f"{self._prefix} {prefix}" if self._prefix else prefix
+            self._runners.append(self.__class__(self, branch_name))
+
+        self._runners.sort(key=self._get_command)
 
         # Add runners for this prefix to parser:
-        cmd_parser = self.parser.add_subparsers(metavar=COMMAND_METAVAR, title="Commands")
+        cmd_parser = self.parser.add_subparsers(metavar=COMMAND_METAVAR, title="Available Commands")
         for runner in self._runners:
             cmd_parser.add_parser(
-                runner.name.split("_")[-1], help=runner.format_description(), add_help=False
+                self._get_command(runner), help=runner.format_description(), add_help=False
             ).set_defaults(runner=runner)
 
     def run(self, args: List[str]) -> None:

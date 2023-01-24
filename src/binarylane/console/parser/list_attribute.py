@@ -76,7 +76,7 @@ class ListAttribute(ObjectAttribute):
                 parser.error(f"unrecognized arguments: {keyword}")
 
             # Create a new subparser, of same class as the primary parser
-            subparser = parser.__class__()
+            subparser = parser.__class__(prog=parser.prog)
 
             # Replace the subparser's default StoreAction with a SingleStoreAction
             subparser.register("action", None, self._create_singlestore_action)

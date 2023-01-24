@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import argparse
 import logging
+import shutil
+from argparse import HelpFormatter
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Union
 
 from binarylane.console.parser.help_formatter import CommandHelpFormatter
@@ -30,19 +32,21 @@ class Parser(argparse.ArgumentParser):
     _groups: Dict[str, ArgumentGroup]
     _dest_counter: int = 0
 
-    def __init__(self, **kwargs: Any) -> None:
-        kwargs["formatter_class"] = CommandHelpFormatter
-        kwargs["add_help"] = False
-        kwargs["allow_abbrev"] = False
-        super().__init__(**kwargs)
+    def __init__(self, prog: str, description: Optional[str] = None) -> None:
+        super().__init__(prog=prog, description=description, add_help=False, allow_abbrev=False)
 
         self._groups = {
             "required=True": self.add_argument_group(title="Arguments"),
-            "required=False": self.add_argument_group(title="Modifiers"),
+            "required=False": self.add_argument_group(title="Parameters"),
         }
         self._optionals.title = "Options"
         self._argument_names = []
         self._keywords = []
+
+    def _get_formatter(self) -> HelpFormatter:
+        # argparse defaults to 70 when terminal size is unavailable, which is rather narrow
+        size = shutil.get_terminal_size((80, 25))
+        return CommandHelpFormatter(self.prog, width=size.columns - 2)
 
     @property
     def argument_names(self) -> List[str]:
@@ -86,8 +90,8 @@ class Parser(argparse.ArgumentParser):
                     attributes += attr.attributes
 
             mapping_usage += [arg.usage for arg in attributes if arg.required and arg.usage]
-            if any(not arg.required for arg in attributes):
-                mapping_usage.append("[MODIFIERS]")
+            if any(not arg.required for arg in attributes if arg.usage):
+                mapping_usage.append("[PARAMETERS]")
             mapping_usage += [f"[{keyword} ... ]" for keyword in self._keywords]
 
         return f"{self.prog} [OPTIONS] {' '.join(mapping_usage)}"

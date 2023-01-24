@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC
 from argparse import ArgumentError
-from typing import Dict, NoReturn
+from typing import Dict, NoReturn, Optional
 
 from binarylane.console.parser.parser import Parser
 
@@ -21,9 +21,9 @@ class TestRequest(ABC):
 
 
 class TestParser(Parser):
-    def error(self, message: str) -> NoReturn:
-        raise ArgumentError(None, message)
+    def exit(self, status: int = 0, message: Optional[str] = None) -> NoReturn:
+        raise ArgumentError(None, message or f"status={status}")
 
 
 def create_parser() -> Parser:
-    return TestParser()
+    return TestParser(prog="bl test")

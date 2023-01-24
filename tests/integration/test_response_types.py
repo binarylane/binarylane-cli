@@ -11,9 +11,7 @@ from binarylane.console.printers import formatter
 def ok_response_types() -> List[Any]:
     types = []
     for command_type in commands:
-        command = command_type()
-        for item in command.module_runners:
-            types.append(item.command_runner.ok_response_type)
+        types.append(command_type().command_runner.ok_response_type)
     return types
 
 

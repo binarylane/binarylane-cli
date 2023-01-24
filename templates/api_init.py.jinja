@@ -4,27 +4,31 @@ from __future__ import annotations
 from typing import List, Type
 import importlib
 
-from binarylane.console.runners.package import PackageRunner
-
+from binarylane.console.runners.module import ModuleRunner
 
 __all__ = ['commands']
-commands : List[Type[PackageRunner]] = []
+commands : List[Type[ModuleRunner]] = []
 
-def register_command(cls: Type[PackageRunner]) -> Type[PackageRunner]:
+def register_command(cls: Type[ModuleRunner]) -> Type[ModuleRunner]:
     commands.append(cls)
     return cls
 
+
 {% for key, value in endpoint_collections_by_tag | dictsort %}
+{% for endpoint in value.endpoints if endpoint.data['x-cli-command'] %}
 @register_command
-class {{ class_name(key) }}(PackageRunner):
-    """Runner for {{key}} API operations"""
+class {{ class_name(endpoint.name) }}(ModuleRunner):
+    @property
+    def name(self) -> str:
+        return '{{ endpoint.data['x-cli-command'] }}'
 
     @property
-    def package_name(self) -> str:
-        return '{{ value.endpoints[0].name.split('_')[0] }}'
+    def description(self) -> str:
+        return '{{ endpoint.summary }}'
 
     @property
-    def package_path(self) -> str:
-        return f'.commands.{{ key }}'
+    def module_path(self) -> str:
+        return '.commands.{{ key }}.{{ python_identifier(endpoint.name) }}'
 
+{% endfor %}
 {% endfor %}

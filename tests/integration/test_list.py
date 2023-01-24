@@ -5,7 +5,7 @@ from _pytest.capture import CaptureFixture
 
 from tests.runner import TypeRunner
 
-from binarylane.console.commands.size import size_list
+from binarylane.console.commands.sizes import get_v2_sizes as size_list
 from binarylane.console.runners.command import CommandRunner
 
 
