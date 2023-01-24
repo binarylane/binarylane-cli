@@ -35,6 +35,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Update an Existing Image"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Images/paths/~1v2~1images~1%7Bimage_id%7D/put"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

@@ -37,6 +37,10 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Update the IPv6 Reverse Name Servers for a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#ChangeIpv6ReverseNameservers/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

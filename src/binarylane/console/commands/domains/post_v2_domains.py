@@ -32,6 +32,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Create a New Domain"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Domains/paths/~1v2~1domains/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

@@ -30,6 +30,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch the Current Data Usage (Transfer) for a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/DataUsages/paths/~1v2~1data_usages~1%7Bserver_id%7D~1current/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

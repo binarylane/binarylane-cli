@@ -30,6 +30,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch Existing Software"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Software/paths/~1v2~1software~1%7Bsoftware_id%7D/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

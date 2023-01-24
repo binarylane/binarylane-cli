@@ -34,6 +34,10 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Sets the List of Failover IPs that are Assigned to a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/FailoverIps/paths/~1v2~1failover_ips~1%7Bserver_id%7D/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

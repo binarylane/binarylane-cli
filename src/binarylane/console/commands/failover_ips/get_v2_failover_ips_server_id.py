@@ -31,6 +31,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch the Failover IPs for a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/FailoverIps/paths/~1v2~1failover_ips~1%7Bserver_id%7D/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

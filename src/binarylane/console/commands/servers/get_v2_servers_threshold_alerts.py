@@ -27,6 +27,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """List any Servers that have a Current Exceeded Threshold Alert"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Servers/paths/~1v2~1servers~1threshold_alerts/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
         return mapping

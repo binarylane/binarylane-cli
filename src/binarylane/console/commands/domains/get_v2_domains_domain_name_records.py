@@ -73,6 +73,12 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List All Domain Records for a Domain"""
 
+    @property
+    def reference_url(self) -> str:
+        return (
+            "https://api.binarylane.com.au/reference/#tag/Domains/paths/~1v2~1domains~1%7Bdomain_name%7D~1records/get"
+        )
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

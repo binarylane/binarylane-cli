@@ -35,6 +35,10 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Enable or Disable IPv6 for a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#ChangeIpv6/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

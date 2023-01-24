@@ -37,6 +37,10 @@ class Command(ActionLinkRunner):
     def description(self) -> str:
         return """Create a New Load Balancer"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/LoadBalancers/paths/~1v2~1load_balancers/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

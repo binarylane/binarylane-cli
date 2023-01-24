@@ -35,6 +35,10 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Enable Two Daily Backups for an Existing Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#EnableBackups/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

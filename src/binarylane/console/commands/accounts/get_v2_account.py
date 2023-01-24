@@ -26,6 +26,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch Information About the Current Account"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Accounts/paths/~1v2~1account/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
         return mapping

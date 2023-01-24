@@ -69,6 +69,10 @@ otherwise not all regions listed will support all operating systems on this size
     def description(self) -> str:
         return """List All Available Sizes"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Sizes/paths/~1v2~1sizes/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

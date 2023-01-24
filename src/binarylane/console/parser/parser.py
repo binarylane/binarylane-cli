@@ -32,8 +32,8 @@ class Parser(argparse.ArgumentParser):
     _groups: Dict[str, ArgumentGroup]
     _dest_counter: int = 0
 
-    def __init__(self, prog: str, description: Optional[str] = None) -> None:
-        super().__init__(prog=prog, description=description, add_help=False, allow_abbrev=False)
+    def __init__(self, prog: str, description: Optional[str] = None, epilog: Optional[str] = None) -> None:
+        super().__init__(prog=prog, description=description, epilog=epilog, add_help=False, allow_abbrev=False)
 
         self._groups = {
             "required=True": self.add_argument_group(title="Arguments"),

@@ -37,6 +37,10 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Enable or Disable a Separate Private Network Interface for a Server in a VPC"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#ChangeSeparatePrivateNetworkInterface/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

@@ -60,6 +60,10 @@ class Command(ListRunner):
     def description(self) -> str:
         return """Fetch the Currently Set Threshold Alerts for a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Servers/paths/~1v2~1servers~1%7Bserver_id%7D~1threshold_alerts/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

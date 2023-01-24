@@ -33,6 +33,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Remove Servers from an Existing Load Balancer"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/LoadBalancers/paths/~1v2~1load_balancers~1%7Bload_balancer_id%7D~1servers/delete"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

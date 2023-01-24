@@ -45,6 +45,10 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List all Available Kernels for a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Servers/paths/~1v2~1servers~1%7Bserver_id%7D~1kernels/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

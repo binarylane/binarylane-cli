@@ -32,6 +32,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Add a New SSH Key"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Keys/paths/~1v2~1account~1keys/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

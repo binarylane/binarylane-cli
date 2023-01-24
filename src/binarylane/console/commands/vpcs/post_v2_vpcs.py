@@ -33,6 +33,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Create a New VPC"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Vpcs/paths/~1v2~1vpcs/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

@@ -56,6 +56,10 @@ class Command(ListRunner):
     def description(self) -> str:
         return """Fetch all of the Performance and Usage Data Sample Sets for a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/SampleSets/paths/~1v2~1samplesets~1%7Bserver_id%7D/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

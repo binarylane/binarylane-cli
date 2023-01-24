@@ -30,6 +30,10 @@ class Command(CommandRunner):
     def description(self) -> str:
         return """Fetch an Existing Action"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/Actions/paths/~1v2~1actions~1%7Baction_id%7D/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 

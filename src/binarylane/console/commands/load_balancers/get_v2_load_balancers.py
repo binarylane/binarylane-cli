@@ -58,6 +58,10 @@ class Command(ListRunner):
     def description(self) -> str:
         return """List all Load Balancers"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/LoadBalancers/paths/~1v2~1load_balancers/get"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
         return mapping

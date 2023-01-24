@@ -141,6 +141,10 @@ class Command({{ response_class['name'] }}):
     def description(self) -> str:
         return """{{ endpoint.summary }}"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/{{ endpoint.data["tags"][0] }}/paths/{{ endpoint.path.replace("/","~1").replace("{","%7B").replace("}","%7D") }}/{{ endpoint.method }}"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
         {% if (req_parameters + opt_parameters) %}

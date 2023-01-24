@@ -32,7 +32,7 @@ class CommandRunner(Runner):
     def __init__(self, parent: Runner) -> None:
         super().__init__(parent)
         self._config = Config.load()
-        self._parser = Parser(prog=self.prog, description=self.description)
+        self._parser = Parser(prog=self.prog, description=self.description, epilog=self._epilog)
         self.configure(self._parser)
 
         self._parser.add_argument(
@@ -80,6 +80,11 @@ class CommandRunner(Runner):
         """The type returned by API for HTTP 200"""
 
     @property
+    @abstractmethod
+    def reference_url(self) -> str:
+        """URL of reference documentation for this command"""
+
+    @property
     def _printer(self) -> Printer:
         """Create printer of requested type"""
         if self._output is None or self._header is None:
@@ -87,6 +92,10 @@ class CommandRunner(Runner):
         printer = create_printer(self._output)
         printer.header = self._header
         return printer
+
+    @property
+    def _epilog(self) -> str:
+        return f"* API Documentation: {self.reference_url}\n"
 
     def response(self, status_code: int, received: Any) -> None:
         """Format and display response received from API operation"""

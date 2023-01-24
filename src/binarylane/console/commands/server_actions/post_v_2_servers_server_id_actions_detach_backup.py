@@ -35,6 +35,10 @@ class Command(ActionRunner):
     def description(self) -> str:
         return """Detach Any Attached Backup from a Server"""
 
+    @property
+    def reference_url(self) -> str:
+        return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#DetachBackup/post"
+
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
