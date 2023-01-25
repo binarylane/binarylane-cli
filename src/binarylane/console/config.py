@@ -26,20 +26,29 @@ class Config:
     @staticmethod
     def _get_config_home() -> Path:
         """Return platform-specific path that programs should store configuration in"""
+        # On windows, configuration is stored in APPDATA
         if sys.platform == "win32":
             appdata = os.getenv("APPDATA")
             if not appdata:
                 raise EnvironmentError("%APPDATA% is not set?")
             return Path(appdata)
 
+        # On other systems, use XDG_CONFIG_HOME if set
         xdg_config_home = os.getenv("XDG_CONFIG_HOME")
         if xdg_config_home:
             return Path(xdg_config_home)
 
+        # Otherwise, use $HOME/.config
         home = os.getenv("HOME")
         if not home:
             raise EnvironmentError("$HOME is not set?")
-        return Path(home) / ".config"
+        home_config = Path(home) / ".config"
+
+        # Ensure $HOME/.config is a directory, creating it if necessary
+        if home_config.exists() and not home_config.is_dir():
+            raise EnvironmentError(f"{home_config} is not a directory?")
+        home_config.mkdir(mode=0o700, exist_ok=True)
+        return home_config
 
     def _get_config_dir(self) -> Path:
         return self._get_config_home() / self._DIRNAME
