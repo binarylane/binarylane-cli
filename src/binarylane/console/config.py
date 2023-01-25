@@ -81,6 +81,10 @@ class Config:
     @property
     def api_url(self) -> str:
         """URL of BinaryLane API"""
+        env_override = os.getenv("BL_API_URL")
+        if env_override:
+            return env_override
+
         return "https://api.binarylane.com.au"
 
     @property
@@ -95,6 +99,14 @@ class Config:
     @api_token.setter
     def api_token(self, value: str) -> None:
         self._context[self._API_TOKEN] = value
+
+    @property
+    def verify_ssl(self) -> bool:
+        """Verify SSL certificates when making API requests"""
+        env_override = os.getenv("BL_API_SKIP_VERIFY_SSL")
+        if env_override:
+            return not env_override.lower() in ("1", "true", "yes")
+        return True
 
     @classmethod
     def load(cls) -> "Config":

@@ -131,8 +131,7 @@ class CommandRunner(Runner):
         self.process(parsed)
 
         self._client = AuthenticatedClient(
-            self._config.api_url,
-            self._config.api_token,
+            self._config.api_url, self._config.api_token, verify_ssl=self._config.verify_ssl
         )
         parsed.client = self._client
 
