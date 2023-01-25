@@ -19,20 +19,8 @@ class AdvancedFirewallRule:
             IPv4 address or a range in IPv4 CIDR notation.
         destination_addresses (List[str]): The destination addresses to match for this rule. Each address may be an
             individual IPv4 address or a range in IPv4 CIDR notation.
-        protocol (AdvancedFirewallRuleProtocol):
-            | Value | Description |
-            | ----- | ----------- |
-            | all | This rule will match any protocol. |
-            | icmp | This rule will match ICMP traffic only. |
-            | tcp | This rule will match TCP traffic only. |
-            | udp | This rule will match UDP traffic only. |
-
-        action (AdvancedFirewallRuleAction):
-            | Value | Description |
-            | ----- | ----------- |
-            | drop | Traffic matching this rule will be dropped. |
-            | accept | Traffic matching this rule will be accepted. |
-
+        protocol (AdvancedFirewallRuleProtocol): The protocol to match for this rule.
+        action (AdvancedFirewallRuleAction): The action to take when there is a match on this rule.
         destination_ports (Union[Unset, None, List[str]]): The destination ports to match for this rule. Leave null or
             empty to match on all ports.
         description (Union[Unset, None, str]): A description to assist in identifying this rule. Commonly used to record

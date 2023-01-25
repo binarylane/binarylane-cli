@@ -21,10 +21,17 @@ class Resize:
     Attributes:
         type (ResizeType):
         size (Union[Unset, None, str]): The slug of the selected size. Do not provide to keep the current size.
-        options (Union[Unset, None, ChangeSizeOptionsRequest]):
-        change_image (Union[Unset, None, ChangeImage]):
-        change_licenses (Union[Unset, None, ChangeLicenses]):
-        pre_action_backup (Union[Unset, None, TakeBackup]): Take a Backup of a Server
+        options (Union[Unset, None, ChangeSizeOptionsRequest]): If this is null and the server has no selected size
+            options the defaults for the size will be used. If this is null and the server has currently selected size
+            options those will be preserved. If this is provided any option fields that are not included will be removed
+            from the existing server.
+        change_image (Union[Unset, None, ChangeImage]): This may be left null to keep the current base image for the
+            server. If this is provided the server disks will be destroyed and the server will be rebuilt from the selected
+            image.
+        change_licenses (Union[Unset, None, ChangeLicenses]): This may be left null to keep the current licenses for the
+            server. If this is provided any licenses that are not included will be removed.
+        pre_action_backup (Union[Unset, None, TakeBackup]): Specify this to create a backup before any actions are
+            taken, or leave null to skip.
     """
 
     type: ResizeType

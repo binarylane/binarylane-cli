@@ -15,7 +15,8 @@ class TaxCode:
     """
     Attributes:
         name (str): The name of this tax code.
-        type (TaxCodeType):
+        type (TaxCodeType): The type of tax code.
+
             | Value | Description |
             | ----- | ----------- |
             | none | No tax is applied to any transaction. |

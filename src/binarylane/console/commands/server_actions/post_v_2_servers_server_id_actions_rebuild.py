@@ -105,6 +105,14 @@ Submit an empty array to disable deployment of default keys.""",
             description="""If provided this will be used to initialise the new server. This must be left null if the Image does not support UserData, see DistributionInfo.Features for more information.""",
         )
 
+        json_body_image_options.add_primitive(
+            "password",
+            Union[Unset, None, str],
+            option_name="password",
+            required=False,
+            description="""If this is provided the default remote user account's password will be set to this value. If this is null a random password will be generated and emailed to the account email address.""",
+        )
+
         return mapping
 
     @property

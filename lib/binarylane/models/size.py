@@ -16,7 +16,8 @@ class Size:
     """
     Attributes:
         slug (str): The slug of this size.
-        size_type (SizeType):
+        size_type (SizeType): The type of this size, generally used to differentiate sizes optimized for different
+            usages.
         available (bool): If this is false the size is not available for new servers.
         regions (List[str]): A list of region slugs where this size is available regardless of stock.
             If this a response to a query that included a selected operating system this response will only include regions
@@ -33,7 +34,7 @@ class Size:
             maps to the underlying hardware.
         vcpu_units (str): This is the unit that the vcpus field counts, e.g. "core" or "thread".
         options (SizeOptions): Available add-ons (optional features not included in the base price) for the size. All
-            costs are per month (pro-rated).
+            costs are in AU$ per month (pro-rated).
         description (Union[Unset, None, str]): A description of this size.
         cpu_description (Union[Unset, None, str]): A description of the CPU provided in this size.
         storage_description (Union[Unset, None, str]): A description of the storage provided in this size.

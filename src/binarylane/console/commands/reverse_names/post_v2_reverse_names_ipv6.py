@@ -8,7 +8,6 @@ from binarylane.models.action_response import ActionResponse
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.reverse_nameservers_request import ReverseNameserversRequest
 from binarylane.models.validation_problem_details import ValidationProblemDetails
-from binarylane.types import Unset
 
 if TYPE_CHECKING:
     from binarylane.client import Client
@@ -44,9 +43,9 @@ class Command(ActionRunner):
 
         json_body.add_primitive(
             "reverse_nameservers",
-            Union[Unset, None, List[str]],
+            List[str],
             option_name="reverse-nameservers",
-            required=False,
+            required=True,
             description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
         )
 

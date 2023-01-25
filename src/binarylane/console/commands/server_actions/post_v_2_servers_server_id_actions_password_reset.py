@@ -71,11 +71,13 @@ If omitted and the server supports password change actions this will default to 
         )
 
         json_body.add_primitive(
-            "send_password_via_email",
-            Union[Unset, None, bool],
-            option_name="send-password-via-email",
+            "password",
+            Union[Unset, None, str],
+            option_name="password",
             required=False,
-            description="""Send the new password via email. If you do not include this the new password will only be available by querying the action result within five minutes of the action being completed.""",
+            description="""If this is provided the specified or default remote user's account password will be set to this value.
+Only valid if the server supports password change actions (check server.password_change_supported via the servers endpoint).
+If omitted and the server supports password change actions a random password will be generated and emailed to the account email address.""",
         )
 
         return mapping

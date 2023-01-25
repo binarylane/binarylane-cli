@@ -20,7 +20,7 @@ class Invoice:
         invoice_id (int): The ID of the invoice.
         invoice_number (str): The invoice number for this invoice.
         amount (float): The amount of the invoice in AU$.
-        tax_code (TaxCode):
+        tax_code (TaxCode): The tax code that was applied to transactions on this invoice.
         tax (float): The amount of tax (if any) that was charged on the transactions on this invoice.
         created (datetime.datetime): The date in ISO8601 format this invoice was created.
         date_due (datetime.datetime): The date in ISO8601 format this invoice is due for payment.

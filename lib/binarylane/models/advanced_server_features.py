@@ -16,7 +16,8 @@ T = TypeVar("T", bound="AdvancedServerFeatures")
 class AdvancedServerFeatures:
     """
     Attributes:
-        video_device (VideoDevice):
+        video_device (VideoDevice): Video Device
+
             | Value | Description |
             | ----- | ----------- |
             | cirrus-logic | Cirrus Logic GD5446 |
@@ -30,16 +31,9 @@ class AdvancedServerFeatures:
             this server.
             A null value indicates automatic selection of the best processor model supported by the host node.
             This does not change the physical CPU, only the CPU flags available to the operating system.
-        machine_type (Union[Unset, None, VmMachineType]):
-            | Value | Description |
-            | ----- | ----------- |
-            | pc_i440_fx_1_point_5 | PC I440 FX 1.5 |
-            | pc_i440_fx_2_point_11 | PC I440 FX 2.11 |
-            | pc_i440_fx_4point_1 | PC I440 FX 4.1 |
-            | pc_i440_fx_4point_2 | PC I440 FX 4.2 |
-            | pc_i440_fx_5point_0 | PC I440 FX 5.0 |
-            | pc_i440_fx_5point_1 | PC I440 FX 5.1 |
-
+        machine_type (Union[Unset, None, VmMachineType]): The machine_type (corresponding to a KVM version) used for
+            this server.
+            A null value indicates automatic selection of the best KVM machine type supported by the host node.
     """
 
     video_device: VideoDevice

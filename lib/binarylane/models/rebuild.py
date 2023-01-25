@@ -19,7 +19,8 @@ class Rebuild:
         type (RebuildType):
         image (Union[None, Unset, int, str]): The Operating System ID or slug or Backup image ID to use as a base for
             the rebuild. Example: 5.
-        options (Union[Unset, None, ImageOptions]):
+        options (Union[Unset, None, ImageOptions]): Additional options. Leaving this entirely null or any of the
+            properties included null will use the defaults from the existing server.
     """
 
     type: RebuildType

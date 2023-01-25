@@ -21,11 +21,14 @@ class ImageOptions:
             Submit an empty array to disable deployment of default keys.
         user_data (Union[Unset, None, str]): If provided this will be used to initialise the new server. This must be
             left null if the Image does not support UserData, see DistributionInfo.Features for more information.
+        password (Union[Unset, None, str]): If this is provided the default remote user account's password will be set
+            to this value. If this is null a random password will be generated and emailed to the account email address.
     """
 
     name: Union[Unset, None, str] = UNSET
     ssh_keys: Union[Unset, None, List[Union[int, str]]] = UNSET
     user_data: Union[Unset, None, str] = UNSET
+    password: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -44,6 +47,7 @@ class ImageOptions:
                     ssh_keys.append(ssh_keys_item)
 
         user_data = self.user_data
+        password = self.password
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -54,6 +58,8 @@ class ImageOptions:
             field_dict["ssh_keys"] = ssh_keys
         if user_data is not UNSET:
             field_dict["user_data"] = user_data
+        if password is not UNSET:
+            field_dict["password"] = password
 
         return field_dict
 
@@ -75,10 +81,13 @@ class ImageOptions:
 
         user_data = d.pop("user_data", UNSET)
 
+        password = d.pop("password", UNSET)
+
         image_options = cls(
             name=name,
             ssh_keys=ssh_keys,
             user_data=user_data,
+            password=password,
         )
 
         image_options.additional_properties = d

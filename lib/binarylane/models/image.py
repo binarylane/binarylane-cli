@@ -45,7 +45,7 @@ class Image:
             | pending | The image is pending and is not yet available for use. |
             | deleted | The image has been deleted and is no longer available for use. |
 
-        distribution_info (DistributionInfo):
+        distribution_info (DistributionInfo): This object may provide further information about the distribution.
         distribution (Union[Unset, None, str]): If this is an operating system image, this is the name of the
             distribution. If this is a backup image, this is the name of the distribution the server is using.
         full_name (Union[Unset, None, str]): If this is an operating system image, this is the name and version of the
@@ -59,8 +59,10 @@ class Image:
         error_message (Union[Unset, None, str]): If the image creation failed this may provide further information.
         min_memory_megabytes (Union[Unset, None, int]): This is minimum memory in MB necessary to support this operating
             system (or the base operating system for a backup image).
-        distribution_surcharges (Union[Unset, None, DistributionSurcharges]):
-        backup_info (Union[Unset, None, BackupInfo]):
+        distribution_surcharges (Union[Unset, None, DistributionSurcharges]): If this is not null the use of this image
+            may incur surcharges above the base cost of the server. All costs are in AU$.
+        backup_info (Union[Unset, None, BackupInfo]): If this image is a backup, this object will provide further
+            information.
     """
 
     id: int

@@ -18,7 +18,9 @@ class UpdateLoadBalancerRequest:
         name (str): The hostname of the load balancer.
         forwarding_rules (Union[Unset, None, List[ForwardingRule]]): The rules that control which traffic the load
             balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.
-        health_check (Union[Unset, None, HealthCheck]):
+        health_check (Union[Unset, None, HealthCheck]): The rules that determine which servers are considered 'healthy'
+            and in the server pool for the load balancer. Leave this null to accept appropriate defaults based on the
+            forwarding_rules.
         server_ids (Union[Unset, None, List[int]]): A list of server IDs to assign to this load balancer.
     """
 

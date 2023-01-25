@@ -4,6 +4,3 @@ dist
 .idea
 .cache
 .python-version
-
-# Generated client + commands is not versioned during initial development
-scripts/openapi.json

@@ -15,7 +15,8 @@ class DomainRecord:
     """
     Attributes:
         id (int): The ID of this domain record.
-        type (DomainRecordType):
+        type (DomainRecordType): A general data field that has different functions depending on the record type.
+
             | Value | Description |
             | ----- | ----------- |
             | A | Map an IPv4 address to a hostname. |

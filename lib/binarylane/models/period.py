@@ -17,7 +17,8 @@ class Period:
     Attributes:
         start (datetime.datetime): The date and time of the start of the period in ISO8601 format.
         end (datetime.datetime): The date and time of the end of the period in ISO8601 format.
-        data_interval (DataInterval):
+        data_interval (DataInterval): The duration between data points. This is not the collection interval.
+
             | Value | Description |
             | ----- | ----------- |
             | five-minute | 5 Minutes |

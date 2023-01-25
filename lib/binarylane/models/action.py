@@ -30,30 +30,24 @@ class Action:
 
         type (str): The type of this action.
         started_at (datetime.datetime): The timestamp in ISO8601 format of when processing of this action started.
-        progress (ActionProgress):
+        progress (ActionProgress): Information about the current progress of the action. Some actions are divided into
+            'steps' and this may also contain information about the current and completed steps.
         completed_at (Union[Unset, None, datetime.datetime]): The timestamp in ISO8601 format of when processing of this
             action completed. If this value is null the action is currently in progress.
-        resource_type (Union[Unset, None, ResourceType]):
-            | Value | Description |
-            | ----- | ----------- |
-            | server | Server |
-            | load-balancer | Load Balancer |
-            | ssh-key | SSH Key |
-            | vpc | Virtual Private Network |
-            | image | Backup or Operating System Image |
-            | registered-domain-name | Registered Domain Name |
-
+        resource_type (Union[Unset, None, ResourceType]): The resource type (if any) associated with this action. The
+            resource type also determines which (if any) of the resource_id or resource_uuid fields are populated.
         resource_id (Union[Unset, None, int]): The resource id of the resource (if any) associated with this action.
             This is only populated when the resource type has an integer identifier.
         resource_uuid (Union[Unset, None, str]): The resource id of the resource (if any) associated with this action.
             This is only populated when the resource type has a UUID identifier.
-        region (Union[Unset, None, Region]):
+        region (Union[Unset, None, Region]): The region (if any) of the resource associated with this action.
         region_slug (Union[Unset, None, str]): The region slug (if any) of the resource associated with this action.
         result_data (Union[Unset, None, str]): Returned information from a completed action. For example: a successful
             completed 'ping' action will have the ping value in ms in this field.
         blocking_invoice_id (Union[Unset, None, str]): If this Action is currently blocked by an invoice that requires
             payment this property will be set.
-        user_interaction_required (Union[Unset, None, UserInteractionRequired]):
+        user_interaction_required (Union[Unset, None, UserInteractionRequired]): If this is not null the action is
+            waiting on a response from the user.
     """
 
     id: int

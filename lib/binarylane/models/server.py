@@ -45,31 +45,34 @@ class Server:
 
         backup_ids (List[int]): A list of the currently existing backup image IDs for this server (if any).
         features (List[str]): A list of the currently enabled features on this server.
-        region (Region):
-        image (Image):
-        size (Size):
+        region (Region): The region this server is allocated to.
+        image (Image): The base image used to create this server.
+        size (Size): The currently selected size for this server.
         size_slug (str): The slug of the currently selected size for this server.
-        networks (Networks):
+        networks (Networks): A list of the networks of the server.
         disks (List[Disk]): A list of the disks that are currently attached to the server.
-        backup_settings (BackupSettings):
-        rescue_console (RescueConsole):
+        backup_settings (BackupSettings): Detailed backup settings for the server.
+        rescue_console (RescueConsole): Details of the rescue console for this server.
         failover_ips (List[str]): A list of any assigned failover IP addresses for this server.
-        host (Host):
+        host (Host): Summary information about the host of this server.
         password_change_supported (bool): If this is true the password_reset server action can be called to change a
             user's password. If this is false the password_reset server action will merely clear the root/administrator
             password allowing the password to be changed via the web console.
-        advanced_features (AdvancedServerFeatures):
+        advanced_features (AdvancedServerFeatures): The currently enabled advanced features, machine type and processor
+            flags.
         vpc_id (Union[Unset, None, int]): The VPC ID that this server is allocated to. If this value is null the server
             is in the default (public) network for the region.
-        selected_size_options (Union[Unset, None, SelectedSizeOptions]):
-        kernel (Union[Unset, None, Kernel]):
-        next_backup_window (Union[Unset, None, BackupWindow]):
+        selected_size_options (Union[Unset, None, SelectedSizeOptions]): An object that details the selected options for
+            the current size.
+        kernel (Union[Unset, None, Kernel]): The currently selected kernel for the server.
+        next_backup_window (Union[Unset, None, BackupWindow]): The details of the next scheduled backup, if any.
         cancelled_at (Union[Unset, None, datetime.datetime]): If the server has been cancelled, this is the date and
             time in ISO8601 format of that cancellation.
         partner_id (Union[Unset, None, int]): The server ID of the partner of this server, if one has been assigned.
         permalink (Union[Unset, None, str]): A randomly generated two-word identifier assigned to servers in regions
             that support this feature.
-        attached_backup (Union[Unset, None, AttachedBackup]):
+        attached_backup (Union[Unset, None, AttachedBackup]): An object that provides details of any backup image
+            currently attached to the server..
     """
 
     id: int

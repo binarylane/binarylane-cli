@@ -26,26 +26,10 @@ class ChangeAdvancedFeatures:
         processor_model (Union[Unset, None, str]): Do not provide or set to null to keep existing processor model.
         automatic_processor_model (Union[Unset, None, bool]): Set to true to use best available processor model. If this
             is provided the processor_model property must not be provided.
-        machine_type (Union[Unset, None, VmMachineType]):
-            | Value | Description |
-            | ----- | ----------- |
-            | pc_i440_fx_1_point_5 | PC I440 FX 1.5 |
-            | pc_i440_fx_2_point_11 | PC I440 FX 2.11 |
-            | pc_i440_fx_4point_1 | PC I440 FX 4.1 |
-            | pc_i440_fx_4point_2 | PC I440 FX 4.2 |
-            | pc_i440_fx_5point_0 | PC I440 FX 5.0 |
-            | pc_i440_fx_5point_1 | PC I440 FX 5.1 |
-
+        machine_type (Union[Unset, None, VmMachineType]): Do not provide or set to null to keep existing machine type.
         automatic_machine_type (Union[Unset, None, bool]): Set to true to use best available machine type. If this is
             provided the machine_type property must not be provided.
-        video_device (Union[Unset, None, VideoDevice]):
-            | Value | Description |
-            | ----- | ----------- |
-            | cirrus-logic | Cirrus Logic GD5446 |
-            | standard | Standard VGA with VESA 2.0 extensions |
-            | virtio | Virtio VGA (800x600) |
-            | virtio-wide | Virtio VGA (1600x900) |
-
+        video_device (Union[Unset, None, VideoDevice]): Do not provide or set to null to keep existing video device.
     """
 
     type: ChangeAdvancedFeaturesType

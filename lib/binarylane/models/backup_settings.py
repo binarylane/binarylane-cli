@@ -18,7 +18,8 @@ class BackupSettings:
         backup_day_of_week (int): If weekly backups are enabled the day of the week that the weekly backup will occur.
             Sunday is day 0.
         backup_day_of_month (int): If monthly backups are enabled the day of the month the monthly backup will occur.
-        offsite_backup_settings (Union[Unset, None, OffsiteBackupSettings]):
+        offsite_backup_settings (Union[Unset, None, OffsiteBackupSettings]): If offsite backups are enabled this details
+            how they are stored and managed.
     """
 
     backup_hour_of_day: int

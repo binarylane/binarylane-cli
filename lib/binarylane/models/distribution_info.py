@@ -15,7 +15,8 @@ T = TypeVar("T", bound="DistributionInfo")
 class DistributionInfo:
     """
     Attributes:
-        password_recovery (PasswordRecoveryType):
+        password_recovery (PasswordRecoveryType): Supported methods of password recovery.
+
             | Value | Description |
             | ----- | ----------- |
             | manual | Password must be reset manually using the recovery console and rescue disk. |

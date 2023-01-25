@@ -13,7 +13,7 @@ T = TypeVar("T", bound="LicensedSoftware")
 class LicensedSoftware:
     """
     Attributes:
-        software (Software):
+        software (Software): The currently licensed software.
         licence_count (int): The current licence count for the software.
     """
 

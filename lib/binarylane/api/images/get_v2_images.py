@@ -93,12 +93,8 @@ def sync_detailed(
     """List All Images
 
     Args:
-        type (Union[Unset, None, ImageQueryType]):
-            | Value | Description |
-            | ----- | ----------- |
-            | distribution | Base operating system images. |
-            | backup | A backup image of a server. |
-
+        type (Union[Unset, None, ImageQueryType]): Queries for distribution will include images
+            that have pre-installed applications.
         private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
             has no effect.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
@@ -139,12 +135,8 @@ def sync(
     """List All Images
 
     Args:
-        type (Union[Unset, None, ImageQueryType]):
-            | Value | Description |
-            | ----- | ----------- |
-            | distribution | Base operating system images. |
-            | backup | A backup image of a server. |
-
+        type (Union[Unset, None, ImageQueryType]): Queries for distribution will include images
+            that have pre-installed applications.
         private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
             has no effect.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
@@ -178,12 +170,8 @@ async def asyncio_detailed(
     """List All Images
 
     Args:
-        type (Union[Unset, None, ImageQueryType]):
-            | Value | Description |
-            | ----- | ----------- |
-            | distribution | Base operating system images. |
-            | backup | A backup image of a server. |
-
+        type (Union[Unset, None, ImageQueryType]): Queries for distribution will include images
+            that have pre-installed applications.
         private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
             has no effect.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
@@ -222,12 +210,8 @@ async def asyncio(
     """List All Images
 
     Args:
-        type (Union[Unset, None, ImageQueryType]):
-            | Value | Description |
-            | ----- | ----------- |
-            | distribution | Base operating system images. |
-            | backup | A backup image of a server. |
-
+        type (Union[Unset, None, ImageQueryType]): Queries for distribution will include images
+            that have pre-installed applications.
         private (Union[Unset, None, bool]): Provide 'true' to only list private images. 'false'
             has no effect.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.

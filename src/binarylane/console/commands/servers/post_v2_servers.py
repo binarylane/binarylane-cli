@@ -246,6 +246,14 @@ Valid values (when converted to GB by multiplying the value provided by 1024):
             description="""Port blocking of outgoing connections for email, SSH and Remote Desktop (TCP ports 22, 25, and 3389) is enabled by default for all new servers. If this is false port blocking will be disabled. Disabling port blocking is only available to reviewed accounts.""",
         )
 
+        json_body.add_primitive(
+            "password",
+            Union[Unset, None, str],
+            option_name="password",
+            required=False,
+            description="""If this is provided the default remote user account's password will be set to this value. If this is null a random password will be generated and emailed to the account email address.""",
+        )
+
         return mapping
 
     @property

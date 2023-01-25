@@ -19,23 +19,23 @@ typing-extensions = { version = "^4.0.0", python = "<3.8" }
 bl = "binarylane.console.app:main"
 
 [tool.poetry.group.dev.dependencies]
-openapi-python-client = "^0.11.6"
 taskipy = "^1.10.3"
 isort = "^5.10.1"
 black = "^22.8.0"
 pylint = "^2.15.2"
 mypy = "^0.991"
-pydantic = "^1.10.2"
 types-python-dateutil = "^2.8.19"
 pytest = "^7.2.0"
 absolufy-imports = "^0.3.1"
+binarylane-python-client = "^0.13.2a0"
+
 
 [tool.taskipy.tasks]
 black = "black ."
 isort = "isort ."
 mypy = "mypy ."
 pylint = "pylint src"
-regen = "scripts/generate-client.sh && scripts/generate-commands.sh"
+generate = "python scripts/generate.py"
 check = "task isort && task black && task mypy && task pylint && task test"
 test = "pytest tests"
 
@@ -69,7 +69,6 @@ disable = [
 ]
 
 [tool.mypy]
-plugins = ["pydantic.mypy"]
 disallow_any_generics = true
 disallow_untyped_defs = true
 warn_redundant_casts = true

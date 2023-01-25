@@ -27,13 +27,16 @@ class CreateServerRequest:
         ssh_keys (Union[Unset, None, List[Union[int, str]]]): This may be either the SSH keys Ids or fingerprints. If
             this is null or not provided any SSH keys that have been marked as default will be deployed (if the operating
             system supports SSH keys). Submit an empty array to disable deployment of default keys.
-        options (Union[Unset, None, SizeOptionsRequest]):
+        options (Union[Unset, None, SizeOptionsRequest]): This may be left null to accept all of the defaults for the
+            selected size.
         licenses (Union[Unset, None, List[License]]): The desired set of licenses.
         user_data (Union[Unset, None, str]): If provided this will be used to initialise the new server. This must be
             left null if the Image does not support UserData, see DistributionInfo.Features for more information.
         port_blocking (Union[Unset, None, bool]): Port blocking of outgoing connections for email, SSH and Remote
             Desktop (TCP ports 22, 25, and 3389) is enabled by default for all new servers. If this is false port blocking
             will be disabled. Disabling port blocking is only available to reviewed accounts.
+        password (Union[Unset, None, str]): If this is provided the default remote user account's password will be set
+            to this value. If this is null a random password will be generated and emailed to the account email address.
     """
 
     size: str
@@ -48,6 +51,7 @@ class CreateServerRequest:
     licenses: Union[Unset, None, List[License]] = UNSET
     user_data: Union[Unset, None, str] = UNSET
     port_blocking: Union[Unset, None, bool] = UNSET
+    password: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -91,6 +95,7 @@ class CreateServerRequest:
 
         user_data = self.user_data
         port_blocking = self.port_blocking
+        password = self.password
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -119,6 +124,8 @@ class CreateServerRequest:
             field_dict["user_data"] = user_data
         if port_blocking is not UNSET:
             field_dict["port_blocking"] = port_blocking
+        if password is not UNSET:
+            field_dict["password"] = password
 
         return field_dict
 
@@ -173,6 +180,8 @@ class CreateServerRequest:
 
         port_blocking = d.pop("port_blocking", UNSET)
 
+        password = d.pop("password", UNSET)
+
         create_server_request = cls(
             size=size,
             image=image,
@@ -186,6 +195,7 @@ class CreateServerRequest:
             licenses=licenses,
             user_data=user_data,
             port_blocking=port_blocking,
+            password=password,
         )
 
         create_server_request.additional_properties = d

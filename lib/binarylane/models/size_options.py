@@ -36,7 +36,8 @@ class SizeOptions:
                 support document for how to calculate the final cost of backups based on the options selected.
             offsite_backups_cost_per_gigabyte (float): The additional cost per GB of storage for enabling offsite backups.
                 See the API support document for how to calculate the final cost of backups based on the options selected.
-            offsite_backup_frequency_cost (OffsiteBackupFrequencyCost): All costs are in AU$.
+            offsite_backup_frequency_cost (OffsiteBackupFrequencyCost): The additional cost per GB of storage for enabling
+                offsite backups based on highest frequency of backups currently enabled. All costs are in AU$.
             restricted_disk_values (Union[Unset, None, List[int]]): If this is null the normal valid values in the
                 documentation for SizeOptionsRequest are used, otherwise only these values (in GB) are permitted.
     """

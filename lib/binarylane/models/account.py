@@ -29,7 +29,7 @@ class Account:
             contact support. |
             | locked | An account that is no longer permitted to access the service. |
 
-        tax_code (TaxCode):
+        tax_code (TaxCode): The tax code that currently applies to transactions for this account.
         configured_payment_methods (List[PaymentMethod]): The payment methods that are configured (available) for this
             account.
     """

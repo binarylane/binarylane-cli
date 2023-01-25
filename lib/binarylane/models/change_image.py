@@ -16,7 +16,8 @@ class ChangeImage:
     Attributes:
         image (Union[None, Unset, int, str]): The slug or ID of the selected image. What type of image is permitted here
             varies based on the server action. Example: 5.
-        options (Union[Unset, None, ImageOptions]):
+        options (Union[Unset, None, ImageOptions]): Additional options for the server configuration after the image has
+            been changed.
     """
 
     image: Union[None, Unset, int, str] = UNSET

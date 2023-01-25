@@ -15,8 +15,8 @@ class SampleSet:
     """
     Attributes:
         server_id (int): The ID of the server that this sample set refers to.
-        period (Period):
-        average (Sample):
+        period (Period): The period when this sample set was collected.
+        average (Sample): The average values of the samples collected during this period.
         maximum_memory_megabytes (float): The maximum memory used in MB at any point during this collection period.
         maximum_storage_gigabytes (float): The maximum storage used in GB at any point during this collection period.
     """
