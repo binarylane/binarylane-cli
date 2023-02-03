@@ -74,6 +74,12 @@ class Config:
         if config_file.exists():
             self._parser.read(config_file)
 
+    def _get_is_development(self) -> bool:
+        env_override = os.getenv("BL_API_DEVELOPMENT")
+        if env_override:
+            return not env_override.lower() in ("1", "true", "yes")
+        return False
+
     def save(self) -> None:
         """Write contents of _parser to disk"""
         config_dir = self._get_config_dir()
@@ -112,9 +118,11 @@ class Config:
     @property
     def verify_ssl(self) -> bool:
         """Verify SSL certificates when making API requests"""
-        env_override = os.getenv("BL_API_SKIP_VERIFY_SSL")
-        if env_override:
-            return not env_override.lower() in ("1", "true", "yes")
+
+        # Skip validation if we're in development mode
+        if self._get_is_development():
+            return False
+
         return True
 
     @classmethod
