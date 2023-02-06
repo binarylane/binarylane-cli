@@ -25,13 +25,12 @@ class Command(ListRunner):
         return [
             "id",
             "name",
-            "memory",
+            "image",
             "vcpus",
+            "memory",
             "disk",
-            "created_at",
-            "status",
-            "size_slug",
-            "password_change_supported",
+            "region",
+            "networks",
         ]
 
     @property

@@ -115,9 +115,19 @@ class Command({{ response_class['name'] }}):
 
     @property
     def default_format(self) -> List[str]:
+        {% set format = [] %}
+        {% for name, prop in list_response.data.properties.items() if prop['x-cli-format'] %}
+        {% set _ = format.append("%04d/%s" % (prop['x-cli-format'], name)) %}
+        {% endfor %}
+        {# if response object does not specify which properties to use, display required primitives #}
+        {% if not format %}
+        {% for prop in list_response.required_properties if prop.is_base_type %}
+        {% set _ = format.append("%04d/%s" % (loop.index, prop.name)) %}
+        {% endfor %}
+        {% endif %}
         return [
-            {% for prop in list_response.required_properties if prop.is_base_type %}
-            '{{ prop.name }}',
+            {% for entry in format|sort %}
+            '{{ entry.split('/')[1] }}',
             {% endfor %}
         ]
 

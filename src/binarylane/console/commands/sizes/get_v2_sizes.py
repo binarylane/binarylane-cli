@@ -26,15 +26,13 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "slug",
-            "available",
-            "price_monthly",
-            "price_hourly",
-            "disk",
-            "memory",
-            "transfer",
-            "excess_transfer_cost_per_gigabyte",
+            "size_type",
             "vcpus",
             "vcpu_units",
+            "memory",
+            "disk",
+            "transfer",
+            "price_monthly",
         ]
 
     @property

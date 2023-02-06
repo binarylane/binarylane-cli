@@ -27,12 +27,9 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "id",
+            "slug",
+            "distribution",
             "name",
-            "type",
-            "public",
-            "min_disk_size",
-            "size_gigabytes",
-            "status",
         ]
 
     @property

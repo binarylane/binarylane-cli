@@ -23,9 +23,9 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "id",
-            "fingerprint",
-            "public_key",
+            "name",
             "default",
+            "fingerprint",
         ]
 
     @property
