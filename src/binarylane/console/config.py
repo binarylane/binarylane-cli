@@ -74,6 +74,18 @@ class Config:
         if config_file.exists():
             self._parser.read(config_file)
 
+    def _get_is_development(self) -> bool:
+        env_override = os.getenv("BL_API_DEVELOPMENT")
+
+        # Map both None and "" to False
+        if not env_override:
+            return False
+
+        # From ConfigParser
+        if env_override.lower() not in self._parser.BOOLEAN_STATES:
+            raise ValueError(f"Not a boolean: {env_override}")
+        return self._parser.BOOLEAN_STATES[env_override.lower()]
+
     def save(self) -> None:
         """Write contents of _parser to disk"""
         config_dir = self._get_config_dir()
@@ -90,6 +102,10 @@ class Config:
     @property
     def api_url(self) -> str:
         """URL of BinaryLane API"""
+        env_override = os.getenv("BL_API_URL")
+        if env_override:
+            return env_override
+
         return "https://api.binarylane.com.au"
 
     @property
@@ -104,6 +120,16 @@ class Config:
     @api_token.setter
     def api_token(self, value: str) -> None:
         self._context[self._API_TOKEN] = value
+
+    @property
+    def verify_ssl(self) -> bool:
+        """Verify SSL certificates when making API requests"""
+
+        # Skip validation if we're in development mode
+        if self._get_is_development():
+            return False
+
+        return True
 
     @classmethod
     def load(cls) -> "Config":
