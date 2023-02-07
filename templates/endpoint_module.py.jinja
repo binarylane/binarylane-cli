@@ -125,6 +125,9 @@ class Command({{ response_class['name'] }}):
         {% set _ = format.append("%04d/%s" % (loop.index, prop.name)) %}
         {% endfor %}
         {% endif %}
+        {% if not format %}
+        {% include "default_format is empty" %}
+        {% endif %}
         return [
             {% for entry in format|sort %}
             '{{ entry.split('/')[1] }}',
