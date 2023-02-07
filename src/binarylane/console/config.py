@@ -76,7 +76,7 @@ class Config:
 
     def _get_is_development(self) -> bool:
         env_override = os.getenv("BL_API_DEVELOPMENT")
-        
+
         # Map both None and "" to False
         if not env_override:
             return False
@@ -85,7 +85,6 @@ class Config:
         if env_override.lower() not in self._parser.BOOLEAN_STATES:
             raise ValueError(f"Not a boolean: {env_override}")
         return self._parser.BOOLEAN_STATES[env_override.lower()]
-
 
     def save(self) -> None:
         """Write contents of _parser to disk"""
