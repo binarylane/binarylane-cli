@@ -56,7 +56,7 @@ jobs:
         run: poetry run task mypy
 
       - name: Run pylint
-        run: poetry run task lint
+        run: poetry run task pylint
 
       - name: Run pytest
         run: poetry run task test
