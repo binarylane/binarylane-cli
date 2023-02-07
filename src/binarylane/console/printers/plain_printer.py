@@ -15,5 +15,5 @@ class PlainPrinter(_TablePrinter):
         table.inner_heading_row_border = False
         table.outer_border = False
         table.inner_column_border = False
-        table.title = title
-        return table.table
+        title = title + "\n" if title else ""
+        return title + table.table

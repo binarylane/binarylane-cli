@@ -18,5 +18,5 @@ class TablePrinter(_TablePrinter):
     def _render(self, data: List[List[str]], title: Union[str, None]) -> str:
         table = self.table_class(data)
         table.inner_heading_row_border = self.header
-        table.title = title
-        return table.table
+        title = title + "\n" if title else ""
+        return title + table.table

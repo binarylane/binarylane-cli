@@ -80,6 +80,7 @@ class ActionRunner(CommandRunner):
             status_code, received = response.status_code, response.parsed
 
         else:
-            logger.warning("Failed to get action")
+            if status_code < 400:
+                logger.warning("Failed to get action")
             super().response(status_code, received)
         return

@@ -98,7 +98,10 @@ def _extract_primary(response: Any) -> Any:
 
     If the response is a 'wrapper' type containing one model type (e.g. a list or single entity), we want to
     extract that while ignore the descriptor properties like meta, links, additional_properties.
+    ProblemDetails and ValidationProblemDetails are returned as is.
     """
+    if isinstance(response, (ProblemDetails, ValidationProblemDetails)):
+        return response
 
     response_type = type(response)
     type_hints = _get_primary_candidates(response_type)
