@@ -27,9 +27,12 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "id",
-            "status",
             "type",
             "started_at",
+            "completed_at",
+            "resource_id",
+            "status",
+            "result_data",
         ]
 
     @property

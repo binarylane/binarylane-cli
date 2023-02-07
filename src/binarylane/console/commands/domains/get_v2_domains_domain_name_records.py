@@ -31,9 +31,9 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "id",
-            "type",
             "name",
-            "ttl",
+            "type",
+            "data",
         ]
 
     @property

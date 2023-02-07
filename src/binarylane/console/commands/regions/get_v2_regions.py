@@ -24,7 +24,6 @@ class Command(ListRunner):
         return [
             "slug",
             "name",
-            "available",
         ]
 
     @property

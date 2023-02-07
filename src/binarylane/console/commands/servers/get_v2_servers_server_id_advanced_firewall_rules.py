@@ -25,8 +25,12 @@ class Command(ListRunner):
     @property
     def default_format(self) -> List[str]:
         return [
+            "source_addresses",
+            "destination_addresses",
             "protocol",
+            "destination_ports",
             "action",
+            "description",
         ]
 
     @property

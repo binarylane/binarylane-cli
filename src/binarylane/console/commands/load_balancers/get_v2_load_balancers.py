@@ -24,9 +24,8 @@ class Command(ListRunner):
         return [
             "id",
             "name",
+            "region",
             "ip",
-            "status",
-            "created_at",
         ]
 
     @property

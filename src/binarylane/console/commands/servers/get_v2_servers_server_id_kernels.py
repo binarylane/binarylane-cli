@@ -27,6 +27,8 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "id",
+            "name",
+            "version",
         ]
 
     @property
