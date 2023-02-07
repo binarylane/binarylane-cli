@@ -44,7 +44,7 @@ class _TablePrinter(Printer):
         """format the response data"""
         formatted = formatter.format_response(response, header, fields)
 
-        if isinstance(formatted["table"], list):
+        if isinstance(formatted["table"], list) and len(formatted["table"]) > 0:
             return self._render(formatted["table"], formatted["title"]) + "\n"
 
         if isinstance(formatted["title"], str):
