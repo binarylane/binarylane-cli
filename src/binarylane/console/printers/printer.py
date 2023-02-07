@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import sys
 from abc import ABC, abstractmethod
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 from binarylane.console.printers import formatter
 
@@ -23,20 +24,34 @@ class Printer(ABC):
     def header(self, value: bool) -> None:
         self._header = value
 
-    @abstractmethod
     def print(self, response: Any, fields: Optional[List[str]] = None) -> None:
         """Format response and print to stdout"""
+        output = self._format(response, self.header, fields)
+        print(output, file=sys.stdout)
+
+    def error(self, response: Any) -> None:
+        """Format error response and print to stderr"""
+        output = self._format(response, True)
+        print(output, file=sys.stderr)
+
+    @abstractmethod
+    def _format(self, response: Any, header: bool, fields: Optional[List[str]] = None) -> str:
+        """format the response data"""
 
 
 class _TablePrinter(Printer):
-    def print(self, response: Any, fields: Optional[List[str]] = None) -> None:
-        data = formatter.format_response(response, self.header, fields)
+    def _format(self, response: Any, header: bool, fields: Optional[List[str]] = None) -> str:
+        """format the response data"""
+        formatted = formatter.format_response(response, header, fields)
 
-        if isinstance(data, str):
-            print(data)
-        else:
-            self._print(data)
+        if isinstance(formatted["table"], list):
+            return self._render(formatted["table"], formatted["title"]) + "\n"
+
+        if isinstance(formatted["title"], str):
+            return formatted["title"] + "\n"
+
+        return ""
 
     @abstractmethod
-    def _print(self, data: Any) -> None:
-        """Class-specific printer behaviour"""
+    def _render(self, data: List[List[str]], title: Union[str, None]) -> str:
+        """Class-specific table renderer"""

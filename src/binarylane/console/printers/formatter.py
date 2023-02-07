@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import logging
 import typing
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Dict, List, Optional, Sequence, TypedDict, Union
+
+from binarylane.models.problem_details import ProblemDetails
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 
 logger = logging.getLogger(__name__)
 
@@ -11,11 +14,19 @@ META = {"additional_properties", "meta", "links"}
 DEFAULT_HEADING = "response"
 
 
-def format_response(response: Any, show_header: bool, fields: Optional[List[str]] = None) -> List[List[str]]:
+class FormattedResponse(TypedDict):
+    title: Union[str, None]
+    table: List[List[str]]
+
+
+def format_response(response: Any, show_header: bool, fields: Optional[List[str]] = None) -> FormattedResponse:
     """Convert structured response object into a 'table' (where the length of each inner list is the same)"""
 
     primary = _extract_primary(response)
     primary_type = type(primary)
+
+    title = None
+    data = []
 
     if isinstance(primary, list):
         for key, value in getattr(primary_type, "__annotations__", {DEFAULT_HEADING: "value"}).items():
@@ -50,11 +61,26 @@ def format_response(response: Any, show_header: bool, fields: Optional[List[str]
         data = [[DEFAULT_HEADING]] if show_header else []
         data += [[primary]]
 
+    elif isinstance(primary, ProblemDetails):
+        title = f"Error: {primary.title}"
+        if primary.detail:
+            title += f"\n\n{primary.detail}"
+
+    elif isinstance(primary, ValidationProblemDetails):
+        title = f"Error: {primary.title}"
+        if (primary.errors is None) or (len(primary.errors.to_dict()) == 0):
+            data = []
+        else:
+            data = [["field", "errors"]] + [[k, "\n".join(v)] for k, v in primary.errors.to_dict().items()]
+
     else:
         data = [["name", "value"]] if show_header else []
         data += [_flatten(item, True) for item in primary.to_dict().items()]
 
-    return data
+    return {
+        "title": title,
+        "table": data,
+    }
 
 
 def _get_primary_candidates(response_type: Any) -> Dict[str, type]:

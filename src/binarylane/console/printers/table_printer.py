@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sys
-from typing import Any
+from typing import List, Union
 
 from terminaltables import DoubleTable, SingleTable  # type: ignore
 
@@ -15,7 +15,8 @@ class TablePrinter(_TablePrinter):
         super().__init__()
         self.table_class = SingleTable if sys.stdout.isatty() else DoubleTable
 
-    def _print(self, data: Any) -> None:
+    def _render(self, data: List[List[str]], title: Union[str, None]) -> str:
         table = self.table_class(data)
         table.inner_heading_row_border = self.header
-        print(table.table)
+        table.title = title
+        return table.table

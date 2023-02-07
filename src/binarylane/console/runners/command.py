@@ -102,8 +102,11 @@ class CommandRunner(Runner):
         if status_code == 401:
             self.error('Unable to authenticate with API - please run "bl configure" to get started.')
         elif received:
+            if 400 <= status_code <= 599:
+                self._printer.error(received)
+                raise SystemExit(-1)
             self._printer.print(received)
-        elif status_code != 204:
+        elif not 200 <= status_code <= 299:
             self.error(f"HTTP {status_code}")
 
     def process(self, parsed: Any) -> None:
