@@ -28,16 +28,18 @@ types-python-dateutil = "^2.8.19"
 pytest = "^7.2.0"
 absolufy-imports = "^0.3.1"
 binarylane-python-client = "^0.13.2a0"
+safety = "^2.3.5"
 
 
 [tool.taskipy.tasks]
+generate = "python scripts/generate.py"
 black = "black ."
 isort = "isort ."
 mypy = "mypy ."
 pylint = "pylint src"
-generate = "python scripts/generate.py"
-check = "task isort && task black && task mypy && task pylint && task test"
+safety = "poetry export -f requirements.txt | safety check --bare --stdin"
 test = "pytest tests"
+check = "task isort && task black && task mypy && task pylint && task test && task safety"
 
 [tool.isort]
 line_length = 120
