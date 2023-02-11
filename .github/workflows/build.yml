@@ -15,20 +15,14 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install requirements
+      - name: Install binarylane-cli
         run: pip install .
-
-      - name: Install Poetry
-        run: pip install poetry
-
-      - name: Create version module
-        run: echo "__version__ = '$(poetry version --short)'" > src/binarylane/console/_version.py
 
       - name: Install PyInstaller
         run: pip install pyinstaller
 
       - name: Run PyInstaller
-        run: pyinstaller --name bl --onefile --collect-submodules binarylane src/binarylane/console/__main__.py
+        run: pyinstaller --name bl --onefile --copy-metadata binarylane-cli --collect-submodules binarylane src/binarylane/console/__main__.py
 
       - uses: actions/upload-artifact@v3
         with:
