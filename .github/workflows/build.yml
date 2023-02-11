@@ -7,7 +7,8 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -16,6 +17,12 @@ jobs:
 
       - name: Install requirements
         run: pip install .
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Create version module
+        run: echo "__version__ = '$(poetry version --short)'" > src/binarylane/console/_version.py
 
       - name: Install PyInstaller
         run: pip install pyinstaller
