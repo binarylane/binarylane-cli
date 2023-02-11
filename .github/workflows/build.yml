@@ -1,0 +1,29 @@
+name: Build distributable binaries
+
+on:
+  push:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install requirements
+        run: pip install .
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Run PyInstaller
+        run: pyinstaller --name bl --onefile --collect-submodules binarylane src/binarylane/console/__main__.py
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Windows_bl
+          path: dist/bl.exe
