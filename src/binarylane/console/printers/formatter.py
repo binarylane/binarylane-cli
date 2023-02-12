@@ -139,16 +139,10 @@ def _flatten_dict(item: Dict[str, Any], single_object: bool) -> str:
     for key in ("display_name", "full_name", "name", "slug", "id"):
         if key in item:
             return item[key]
-            break
 
     # Map 'networks' dictionary to a list of primary IPv4+v6
     if not single_object and "v4" in item and "v6" in item:
         return "\n".join([entry["ip_address"] for entry in item["v4"][:1] + item["v6"][:1]])
 
     # Generic handler
-    item = (
-        "<object>"
-        if not single_object
-        else "\n".join([f"{key}: {value}" for key, value in item.items()])
-    )
-    return item
+    return "<object>" if not single_object else "\n".join([f"{key}: {value}" for key, value in item.items()])
