@@ -2,9 +2,9 @@ name: Create GitHub release
 
 on:
   workflow_dispatch:
-  #push:
-  #  tags:
-  #    - 'v*'
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build-windows:
@@ -25,7 +25,7 @@ jobs:
         run: pip install pyinstaller
 
       - name: Run PyInstaller
-        run: pyinstaller --name bl --onedir --copy-metadata binarylane-cli --collect-submodules binarylane src/binarylane/console/__main__.py
+        run: pyinstaller --name bl --onefile --copy-metadata binarylane-cli --collect-submodules binarylane src/binarylane/console/__main__.py
 
       - uses: actions/upload-artifact@v3
         with:
@@ -42,7 +42,7 @@ jobs:
         with:
           name: windows
           path: windows
-      - run: ls windows*
+      - run: ls windows* -l
 
       - name: Create release
         id: create_release
