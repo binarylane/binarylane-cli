@@ -1,4 +1,4 @@
-name: Release
+name: Create GitHub release
 
 on:
   workflow_dispatch:
@@ -62,5 +62,5 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: windows/bl.exe
           asset_name: bl.exe
-          assent_content_type: application/vnd.microsoft.portable-executable
+          asset_content_type: application/vnd.microsoft.portable-executable
       
