@@ -33,6 +33,8 @@ jobs:
           path: dist/*
 
   release:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     needs: build-windows
     steps:
