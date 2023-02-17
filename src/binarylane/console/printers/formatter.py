@@ -117,14 +117,8 @@ def _flatten(values: Sequence[Any], single_object: bool = False) -> List[str]:
                     else ""
                 )
         if item_type is dict:
-            for key in ("display_name", "name", "slug", "id"):
-                if key in item:
-                    item = item[key]
-                    break
-            else:
-                item = (
-                    "<object>" if not single_object else "\n".join([f"{key}: {value}" for key, value in item.items()])
-                )
+            item = _flatten_dict(item, single_object)
+
         if item_type is bool:
             item = "Yes" if item else "No"
 
@@ -134,3 +128,21 @@ def _flatten(values: Sequence[Any], single_object: bool = False) -> List[str]:
         result.append(item)
 
     return result
+
+
+def _flatten_dict(item: Dict[str, Any], single_object: bool) -> str:
+    # FIXME: openapi spec should provide these directions
+
+    # - use display_name for host
+    # - use full_name for image (preferred over name)
+    # - of the remainder generic columns we prefer name > slug > id
+    for key in ("display_name", "full_name", "name", "slug", "id"):
+        if key in item:
+            return item[key]
+
+    # Map 'networks' dictionary to a list of primary IPv4+v6
+    if not single_object and "v4" in item and "v6" in item:
+        return "\n".join([entry["ip_address"] for entry in item["v4"][:1] + item["v6"][:1]])
+
+    # Generic handler
+    return "<object>" if not single_object else "\n".join([f"{key}: {value}" for key, value in item.items()])
