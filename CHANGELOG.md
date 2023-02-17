@@ -1,55 +1,153 @@
-## 0.11.3
+# CHANGELOG
+
+## [0.11.1](https://github.com/binarylane/binarylane-cli/compare/v0.11.0...v0.11.1) (2023-01-25)
+
+### Bug Fixes
+
+- create $HOME/.config if it does not exist 
+
+
+## [0.11.0](https://github.com/binarylane/binarylane-cli/compare/v0.10.1...v0.11.0) (2023-01-25)
 
 ### Features
 
-- use OpenAPI x-cli-format as default value for --format option (#4)
-- set API URL and TLS verification via environment variables (#1)
-- show command-specific "API Documentation" URL in --help epilog
-- python 3.7 support
-- use OpenAPI "x-cli-command" for command names
-- Include command description in --help
-- parsing support for structured request objects
-- make "configure" command echo keyboard input during token submission
-- display progress of commands returning ActionLink
-- display progress of commands returning ActionResponse and wait until completion
-- new command 'configure' to requestsAPI token, verify it works, save config
-- convert enum definition markdown table to console
-- display warning on missing help
-- add --blcli-check for check of parameter mapping
-- display warning on unsupported parameter type
-- list requred parameters before optional in --help
-- support 3-word command names like "domain record list"
-- support additional output formats - plain, tsv, json
-- add --curl option to display API request as curl command line
-- add version command
-- list commands accept --format ,display list of fields in --help
-- display a reasonable subset of available response fields
-- auto-merge responses from paged list commands
-- add --help to subcommands
-- add support for query parameters
-- generic response printing via terminaltables package
-- add support for json_body of type List[str]
-- add support for with json_body str and/or bool properties
-- add support for path parameters
-- generic execution of parameter-less API commands
+- Include command description in --help 
+- python 3.7 support 
+- show command-specific "API Documentation" URL in --help epilog 
+- use OpenAPI "x-cli-command" for command names 
 
-### Fixes
+### Bug Fixes
 
-- create $HOME/.config if it does not exist
-- input validation for ListRunner --format option
-- display correct metavar for COMMAND in error output
-- regression in "--curl" + test case to prevent future breakage
-- disable UPX on windows executable
-- improve output formatting when stdout is not a tty
-- --format output did respect order of requested fields
-- display error on windows if APPDATA is not set
-- add datetime to cli_argument() supported types
-- make package_runner Runner.CHECK work the same as interactive invocations
-- field help reported as required arguments on error
-- do not show warning for missing help on hidden arguments
-- argument parsing for schema-less list parameter
-- template changes required for compat with openapi-python-client v0.12
-- display List[str] responses correctly, e.g. for  "domain nameservers list"
-- version command broken in pyinstaller .exe
-- add imports required for model properties of json_body
-- show correct "prog" value in subcommand usage: output
+- display correct metavar for COMMAND in error output 
+- input validation for ListRunner --format option 
+
+
+### [0.10.1](https://github.com/binarylane/binarylane-cli/compare/v0.10.0...v0.10.1) (2023-01-21)
+
+### Bug Fixes
+
+- regression in "--curl" + test case to prevent future breakage 
+
+
+## [0.10.0](https://github.com/binarylane/binarylane-cli/compare/v0.9.1...v0.10.0) (2023-01-20)
+
+### Performance Improvements
+
+- delay importing CommandRunner 
+- delay importing httpx in HttpxWrapper 
+
+
+### [0.9.1](https://github.com/binarylane/binarylane-cli/compare/v0.9.0...v0.9.1) (2023-01-20)
+
+### Bug Fixes
+
+- disable UPX on windows executable 
+
+
+## [0.9.0](https://github.com/binarylane/binarylane-cli/compare/v0.8.0...v0.9.0) (2023-01-20)
+
+### Features
+
+- make "configure" command echo keyboard input during token submission 
+- parsing support for structured request objects 
+
+### Bug Fixes
+
+- --format output did respect order of requested fields 
+- improve output formatting when stdout is not a tty 
+
+
+## [0.8.0](https://github.com/binarylane/binarylane-cli/compare/v0.7.0...v0.8.0) (2023-01-09)
+
+### Features
+
+- display progress of commands returning ActionLink 
+- display progress of commands returning ActionResponse and wait until completion 
+
+### Bug Fixes
+
+- display error on windows if APPDATA is not set 
+
+
+## [0.7.0](https://github.com/binarylane/binarylane-cli/compare/v0.6.0...v0.7.0) (2023-01-07)
+
+### Features
+
+- convert enum definition markdown table to console 
+- display warning on missing help 
+- new command 'configure' to requestsAPI token, verify it works, save config 
+
+### Bug Fixes
+
+- add datetime to cli_argument() supported types 
+- do not show warning for missing help on hidden arguments 
+- field help reported as required arguments on error 
+- make package_runner Runner.CHECK work the same as interactive invocations 
+
+
+## [0.6.0](https://github.com/binarylane/binarylane-cli/compare/v0.5.0...v0.6.0) (2023-01-04)
+
+### Features
+
+- add --blcli-check for check of parameter mapping 
+- display warning on unsupported parameter type 
+- list requred parameters before optional in --help 
+
+### Bug Fixes
+
+- argument parsing for schema-less list parameter 
+- display List[str] responses correctly, e.g. for  "domain nameservers list" 
+- template changes required for compat with openapi-python-client v0.12 
+
+
+## [0.5.0](https://github.com/binarylane/binarylane-cli/compare/v0.4.0...v0.5.0) (2022-12-31)
+
+### Features
+
+- support 3-word command names like "domain record list" 
+
+
+## [0.4.0](https://github.com/binarylane/binarylane-cli/compare/v0.3.0...v0.4.0) (2022-12-31)
+
+### Features
+
+- support additional output formats - plain, tsv, json 
+
+### Bug Fixes
+
+- version command broken in pyinstaller .exe 
+
+
+## [0.3.0](https://github.com/binarylane/binarylane-cli/compare/v0.2.0...v0.3.0) (2022-12-30)
+
+### Features
+
+- add --curl option to display API request as curl command line 
+
+
+## [0.2.0](https://github.com/binarylane/binarylane-cli/compare/v0.1.0...v0.2.0) (2022-12-29)
+
+### Features
+
+- add --help to subcommands 
+- add support for query parameters 
+- add version command 
+- auto-merge responses from paged list commands 
+- display a reasonable subset of available response fields 
+- list commands accept --format ,display list of fields in --help 
+
+### Bug Fixes
+
+- add imports required for model properties of json_body 
+- show correct "prog" value in subcommand usage: output 
+
+
+## [0.1.0](https://github.com/binarylane/binarylane-cli/compare/2005c251e268fabe333f5c314b26681e7fd5fcf7...v0.1.0) (2022-09-17)
+
+### Features
+
+- add support for json_body of type List[str] 
+- add support for path parameters 
+- add support for with json_body str and/or bool properties 
+- generic execution of parameter-less API commands 
+- generic response printing via terminaltables package 
