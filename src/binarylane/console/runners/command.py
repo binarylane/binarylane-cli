@@ -101,7 +101,26 @@ class CommandRunner(Runner):
         """Format and display response received from API operation"""
         if status_code == 401:
             self.error('Unable to authenticate with API - please run "bl configure" to get started.')
-        elif received:
+
+        # FIXME: use openapi response spec to determine how to handle errors
+        if status_code >= 400:
+            # BinaryLane API does not have correct type on all errors - some are typed as ProblemDetails but
+            # actually return ValidationProblemDetails - so need to handle when errors are in additionalProperties
+            errors = received["errors"] if "errors" in received else getattr(received, "errors", None)
+
+            if errors:
+                # errors is a map of list of error messages, convert to a list of error messages
+                for key in errors:
+                    errors[key] = ", ".join([msg.lower().rstrip(".") for msg in errors[key]])
+                self._parser.error("; ".join(f"argument {key.upper()}: {errors[key]}" for key in errors))
+
+            # Otherwise, try and find a string we can display
+            for attr in ("detail", "title"):
+                value = getattr(received, attr, None)
+                if value:
+                    self._parser.error(value)
+
+        if received:
             self._printer.print(received)
         elif status_code != 204:
             self.error(f"HTTP {status_code}")
