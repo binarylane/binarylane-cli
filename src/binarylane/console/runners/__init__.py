@@ -45,5 +45,5 @@ class Runner(ABC):
 
     @staticmethod
     def error(message: str) -> NoReturn:
-        print("ERROR: ", message, file=sys.stderr)
+        print(f"ERROR: {message}", file=sys.stderr)
         raise SystemExit(-1)

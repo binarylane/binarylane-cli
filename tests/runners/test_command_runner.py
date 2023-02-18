@@ -83,3 +83,20 @@ def test_response_handles_title_error(capsys: CaptureFixture[str]) -> None:
 
     captured = capsys.readouterr()
     assert "test cmd: error: Server not found." in captured.err
+
+def test_response_handles_none_error(capsys: CaptureFixture[str]) -> None:
+    runner = TypeRunner(CommandRunner)
+
+    with pytest.raises(SystemExit):
+        runner.test.response(400, None)
+
+    captured = capsys.readouterr()
+    assert "ERROR: HTTP 400" in captured.err
+
+def test_response_handles_nocontent(capsys: CaptureFixture[str]) -> None:
+    runner = TypeRunner(CommandRunner)
+
+    runner.test.response(204, None)
+
+    captured = capsys.readouterr()
+    assert captured.err == "" and captured.out == ""

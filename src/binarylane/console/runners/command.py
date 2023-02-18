@@ -102,8 +102,15 @@ class CommandRunner(Runner):
         if status_code == 401:
             self.error('Unable to authenticate with API - please run "bl configure" to get started.')
 
+        # No response can be due to a `204 No Content` response, but also when
+        # a response is not documented
+        if received is None:
+            if status_code != 204:
+                self.error(f"HTTP {status_code}")
+            return
+
         # FIXME: use openapi response spec to determine how to handle errors
-        if status_code >= 400:
+        if status_code >= 400 and received:
             # BinaryLane API does not have correct type on all errors - some are typed as ProblemDetails but
             # actually return ValidationProblemDetails - so need to handle when errors are in additionalProperties
             errors = received["errors"] if "errors" in received else getattr(received, "errors", None)
