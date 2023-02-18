@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v0.12.0 (2023-02-18)
+
+### Features
+
+- improved formatting of image and networks properties (#5)
+- use OpenAPI x-cli-format as default value for --format option (#4)
+- set API URL and TLS verification via environment variables (#1)
+
 ## [0.11.1](https://github.com/binarylane/binarylane-cli/compare/v0.11.0...v0.11.1) (2023-01-25)
 
 ### Bug Fixes
