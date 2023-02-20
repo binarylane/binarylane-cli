@@ -19,6 +19,12 @@ class CommandRequest:
 
 
 class Command(ListRunner):
+    def response(self, status_code: int, received: Any) -> None:
+        if status_code == 200 and isinstance(received, ActionsResponse):
+            self._printer.print(received.actions, self._format)
+        else:
+            super().response(status_code, received)
+
     @property
     def default_format(self) -> List[str]:
         return [

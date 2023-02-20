@@ -56,9 +56,3 @@ class ListRunner(CommandRunner):
             self._header = False
 
         super().process(parsed)
-
-    def response(self, status_code: int, received: Any) -> None:
-        if status_code != 200:
-            super().response(status_code, received)
-        elif received:
-            self._printer.print(received, self._format)

@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, List, Optional, Type
 from binarylane.types import UNSET
 
 from binarylane.console.parser.attribute import Attribute
+from binarylane.console.parser.lookup import Lookup
 from binarylane.console.parser.primitive_attribute import PrimitiveAttribute
 
 if TYPE_CHECKING:
@@ -73,6 +74,7 @@ class ObjectAttribute(Attribute):
         description: Optional[str] = None,
         warning: Optional[str] = None,
         action: Optional[Type[argparse.Action]] = None,
+        lookup: Optional[Lookup] = None,
     ) -> None:
 
         if warning:
@@ -95,6 +97,7 @@ class ObjectAttribute(Attribute):
                 required=required and self.required,
                 description=description,
                 action=action,
+                lookup=lookup,
                 metavar=(option_name or attribute_name).replace("-", "_").upper(),
                 parent=self,
             )

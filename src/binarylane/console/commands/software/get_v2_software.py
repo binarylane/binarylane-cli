@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.software.get_v2_software import sync_detailed
 from binarylane.models.links import Links
@@ -19,17 +19,19 @@ class CommandRequest:
 
 
 class Command(ListRunner):
+    def response(self, status_code: int, received: Any) -> None:
+        if status_code == 200 and isinstance(received, SoftwaresResponse):
+            self._printer.print(received.software, self._format)
+        else:
+            super().response(status_code, received)
+
     @property
     def default_format(self) -> List[str]:
         return [
             "id",
-            "enabled",
             "name",
             "description",
             "cost_per_licence_per_month",
-            "minimum_licence_count",
-            "maximum_licence_count",
-            "licence_step_count",
         ]
 
     @property

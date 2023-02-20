@@ -102,7 +102,10 @@ class Parser(argparse.ArgumentParser):
 
         self._parsed = self.parse_args(args, Namespace())
         if self._mapping:
-            self._parsed.mapped_object = self._mapping.construct(self, self._parsed)
+            try:
+                self._parsed.mapped_object = self._mapping.construct(self, self._parsed)
+            except argparse.ArgumentError as exc:
+                self.error(exc.message)
 
         return self._parsed
 

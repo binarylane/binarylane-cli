@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Dict, List, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Union
 
 from binarylane.api.servers.get_v2_servers_server_id_advanced_firewall_rules import sync_detailed
 from binarylane.models.advanced_firewall_rules_response import AdvancedFirewallRulesResponse
@@ -10,6 +10,7 @@ from binarylane.models.problem_details import ProblemDetails
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.servers.get_v2_servers as servers_get_v2_servers
 from binarylane.console.parser import Mapping
 from binarylane.console.runners.list import ListRunner
 
@@ -22,6 +23,12 @@ class CommandRequest:
 
 
 class Command(ListRunner):
+    def response(self, status_code: int, received: Any) -> None:
+        if status_code == 200 and isinstance(received, AdvancedFirewallRulesResponse):
+            self._printer.print(received.firewall_rules, self._format)
+        else:
+            super().response(status_code, received)
+
     @property
     def default_format(self) -> List[str]:
         return [
@@ -59,12 +66,16 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
+        def _lookup_server_id(value: str) -> Union[None, int]:
+            return servers_get_v2_servers.Command(self).lookup(value)
+
         mapping.add_primitive(
             "server_id",
             int,
             required=True,
             option_name=None,
             description="""The ID of the server for which firewall rules should be listed.""",
+            lookup=_lookup_server_id,
         )
 
         return mapping

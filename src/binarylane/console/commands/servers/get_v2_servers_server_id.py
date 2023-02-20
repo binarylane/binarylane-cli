@@ -10,6 +10,7 @@ from binarylane.models.server_response import ServerResponse
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.servers.get_v2_servers as servers_get_v2_servers
 from binarylane.console.parser import Mapping
 from binarylane.console.runners.command import CommandRunner
 
@@ -37,12 +38,16 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
+        def _lookup_server_id(value: str) -> Union[None, int]:
+            return servers_get_v2_servers.Command(self).lookup(value)
+
         mapping.add_primitive(
             "server_id",
             int,
             required=True,
             option_name=None,
             description="""The ID of the server to fetch.""",
+            lookup=_lookup_server_id,
         )
 
         return mapping

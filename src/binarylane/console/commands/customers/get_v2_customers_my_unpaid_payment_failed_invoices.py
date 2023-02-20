@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Dict, List, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Union
 
 from binarylane.api.customers.get_v2_customers_my_unpaid_payment_failed_invoices import sync_detailed
 from binarylane.models.unpaid_failed_invoices_response import UnpaidFailedInvoicesResponse
@@ -18,6 +18,12 @@ class CommandRequest:
 
 
 class Command(ListRunner):
+    def response(self, status_code: int, received: Any) -> None:
+        if status_code == 200 and isinstance(received, UnpaidFailedInvoicesResponse):
+            self._printer.print(received.invoices, self._format)
+        else:
+            super().response(status_code, received)
+
     @property
     def default_format(self) -> List[str]:
         return [

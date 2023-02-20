@@ -45,6 +45,7 @@ class Command(CommandRunner):
             option_name=None,
             description="""The domain name for which the record should be deleted.""",
         )
+
         mapping.add_primitive(
             "record_id",
             int,

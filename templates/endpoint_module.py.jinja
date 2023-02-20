@@ -61,12 +61,28 @@ if TYPE_CHECKING:
 {% endfor %}
 {# Check if response contains a list[Model] property; and store it for later #}
 {% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() == 'list' and prop.inner_property.class_info %}
-{% set _ = response_class.update({'name': 'ListRunner', 'list': openapi.models_by_class[prop.inner_property.class_info]}) %}
+{% set _ = response_class.update({'name': 'ListRunner', 'list': openapi.models_by_class[prop.inner_property.class_info], 'property': prop}) %}
 {% endfor %}
 {# Second check if there are any non-list values, which means this isnt a list response #}
 {% for prop in response_type.prop.required_properties if response_class.get('list') and prop.name not in ('meta', 'links') and prop.get_instance_type_string() != 'list' %}
 {# This is required because of jinja 'for' variable scope #}
-{% set _ = response_class.update({'name': 'CommandRunner', 'list':None}) %}
+{% set _ = response_class.update({'name': 'CommandRunner', 'list':None, 'property': None}) %}
+{% endfor %}
+
+{# A list response has a property of type List[T] - we need to import T #}
+{% if response_class.get('list') %}
+from binarylane.models.{{ response_class['list'].class_info.module_name }} import {{ response_class['list'].class_info.name }}
+{% endif %}
+{% endfor %}
+
+{# Import any command runners required to perform lookups #}
+{% for property in endpoint.path_parameters.values() %}
+{% for param in endpoint.data.parameters if param.param_in == 'path' and property.name == param.name and param['x-cli-lookup'] %}
+{% set lookup_endpoint = openapi.endpoints_by_name.get(param['x-cli-lookup']) %}
+{% if not lookup_endpoint %}
+{{ fail('lookup command not found', param['x-cli-lookup']) }}
+{% endif %}
+import binarylane.console.commands.{{ lookup_endpoint.tag }}.{{ python_identifier(lookup_endpoint.name) }} as {{ lookup_endpoint.tag }}_{{ python_identifier(lookup_endpoint.name) }}
 {% endfor %}
 {% endfor %}
 
@@ -111,39 +127,7 @@ class CommandRequest:
 
 class Command({{ response_class['name'] }}):
 {% if response_class.get('list') %}
-{% set list_response = response_class.get('list') %}
-
-    @property
-    def default_format(self) -> List[str]:
-        {% set format = [] %}
-        {% for name, prop in list_response.data.properties.items() if prop['x-cli-format'] %}
-        {% set _ = format.append("%04d/%s" % (prop['x-cli-format'], name)) %}
-        {% endfor %}
-        {# if response object does not specify which properties to use, display required primitives #}
-        {% if not format %}
-        {% for prop in list_response.required_properties if prop.is_base_type %}
-        {% set _ = format.append("%04d/%s" % (loop.index, prop.name)) %}
-        {% endfor %}
-        {% endif %}
-        {% if not format %}
-        {% include "default_format is empty" %}
-        {% endif %}
-        return [
-            {% for entry in format|sort %}
-            '{{ entry.split('/')[1] }}',
-            {% endfor %}
-        ]
-
-    @property
-    def fields(self) -> Dict[str, str]:
-        return {
-            {% for prop in list_response.required_properties %}
-            '{{ prop.name }}': """{{ prop.description }}""",
-            {% endfor %}
-            {% for prop in list_response.optional_properties %}
-            '{{ prop.name }}': """{{ prop.description }}""",
-            {% endfor %}
-        }
+{% include "list_response.jinja" %}
 {% endif %}
 
     @property
@@ -165,12 +149,26 @@ class Command({{ response_class['name'] }}):
         {% macro option_name(prop) %}option_name = "{{ prop.name.replace('_','-') }}",{% endmacro %}
 
         {% for property in endpoint.path_parameters.values() %}
+
+        {# Check if parameter has a lookup command, and define handler if it does #}
+        {% set lookup_command = [] %}
+        {% for param in endpoint.data.parameters if param.param_in == 'path' and property.name == param.name and param['x-cli-lookup'] %}
+        {% set lookup_endpoint = openapi.endpoints_by_name.get(param['x-cli-lookup']) %}
+        {% if not lookup_endpoint %}
+        {{ fail('lookup command not found', param['x-cli-lookup']) }}
+        {% endif %}  
+        {% set _ = lookup_command.append(param['x-cli-lookup']) %}
+        def _lookup_{{ property.python_name }}(value: str) -> Union[None, {{ property.get_type_string() }}]:
+            return {{ lookup_endpoint.tag }}_{{ python_identifier(lookup_endpoint.name) }}.Command(self).lookup(value)
+        {% endfor %}
+
         mapping.add_primitive(
             "{{ property.python_name }}",
             {{ property.get_type_string() }},
             required = True,
             option_name = None,
             {{ description_argument(property) }}
+            {% if lookup_command %} lookup = _lookup_{{ property.python_name }}, {% endif %}
             )
         {% endfor %}
 
