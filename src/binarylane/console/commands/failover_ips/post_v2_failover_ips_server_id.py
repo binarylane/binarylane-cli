@@ -12,6 +12,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.servers.get_v2_servers as servers_get_v2_servers
 from binarylane.console.parser import Mapping
 from binarylane.console.runners.action import ActionRunner
 
@@ -41,12 +42,16 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
+        def _lookup_server_id(value: str) -> Union[None, int]:
+            return servers_get_v2_servers.Command(self).lookup(value)
+
         mapping.add_primitive(
             "server_id",
             int,
             required=True,
             option_name=None,
             description="""The target server id.""",
+            lookup=_lookup_server_id,
         )
 
         json_body = mapping.add_json_body(FailoverIpsRequest)

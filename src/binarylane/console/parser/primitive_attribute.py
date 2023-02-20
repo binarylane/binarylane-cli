@@ -11,6 +11,7 @@ from binarylane.types import UNSET, Unset
 
 from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.parser.attribute import Attribute
+from binarylane.console.parser.lookup import Lookup
 
 NoneType = type(None)
 
@@ -33,6 +34,7 @@ class PrimitiveAttribute(Attribute):
     _alternate_types: List[type]
     _dest: str
     _action: Optional[Type[argparse.Action]]
+    _lookup: Optional[Lookup]
     _default_value: object = UNSET
 
     def __init__(
@@ -45,6 +47,7 @@ class PrimitiveAttribute(Attribute):
         required: bool,
         description: Optional[str] = None,
         action: Optional[Type[argparse.Action]] = None,
+        lookup: Optional[Lookup] = None,
         metavar: Optional[str] = None,
         parent: Optional[ObjectAttribute] = None,
     ) -> None:
@@ -65,6 +68,7 @@ class PrimitiveAttribute(Attribute):
 
         self._dest = dest or option_name or attribute_name
         self._action = action
+        self._lookup = lookup
         self._metavar = metavar or (option_name or attribute_name).upper()
         self.parent = parent
 
@@ -115,7 +119,12 @@ class PrimitiveAttribute(Attribute):
         if self.description is None:
             self._unsupported("missing help", False)
 
-        parser.add_to_group(self.group_name or bool(self.required), self.name_or_flag, self.attribute_type, **kwargs)
+        # parser input type is changed to string if lookup is permitted
+        attribute_type = self.attribute_type
+        if self._lookup:
+            attribute_type = str
+
+        parser.add_to_group(self.group_name or bool(self.required), self.name_or_flag, attribute_type, **kwargs)
 
     def construct(self, _parser: Parser, parsed: argparse.Namespace) -> object:
         value: object = getattr(parsed, self._dest, self._default_value)
@@ -143,6 +152,20 @@ class PrimitiveAttribute(Attribute):
         if self.attribute_type is None:
             logger.warning("%s does not have a primitive type, assuming str", self.option_name)
             return value
+
+        # Perform lookup or convert to native type as required
+        if self._lookup:
+            try:
+                # See if provided value is already of correct type
+                value = self.attribute_type(value)
+            except ValueError:
+                # If not, perform a lookup using the provided value
+                assert isinstance(value, str)
+                lookup_value = self._lookup(value)
+                if lookup_value is None:
+                    # pylint: disable=raise-missing-from
+                    raise argparse.ArgumentError(None, f"{self.attribute_name.upper()}: could not find '{value}'")
+                value = lookup_value
 
         # Ensure value is of correct type
         if not isinstance(value, self.attribute_type):

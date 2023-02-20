@@ -13,9 +13,10 @@ def register_command(cls: Type[ModuleRunner]) -> Type[ModuleRunner]:
     commands.append(cls)
     return cls
 
-
+{% set _ = openapi.__setattr__('endpoints_by_name', {}) %}
 {% for key, value in endpoint_collections_by_tag | dictsort %}
 {% for endpoint in value.endpoints if endpoint.data['x-cli-command'] %}
+{% set _ = openapi.endpoints_by_name.__setitem__(endpoint.data['x-cli-command'], endpoint) %}
 @register_command
 class {{ class_name(endpoint.name) }}(ModuleRunner):
     @property

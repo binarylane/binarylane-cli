@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Dict, List, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Tuple, Union
 
 from binarylane.api.load_balancers.get_v2_load_balancers_availability import sync_detailed
 from binarylane.models.load_balancer_availability_response import LoadBalancerAvailabilityResponse
@@ -18,6 +18,12 @@ class CommandRequest:
 
 
 class Command(ListRunner):
+    def response(self, status_code: int, received: Any) -> None:
+        if status_code == 200 and isinstance(received, LoadBalancerAvailabilityResponse):
+            self._printer.print(received.load_balancer_availability_options, self._format)
+        else:
+            super().response(status_code, received)
+
     @property
     def default_format(self) -> List[str]:
         return [

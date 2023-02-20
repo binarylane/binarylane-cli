@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.servers.get_v2_servers import sync_detailed
 from binarylane.models.links import Links
@@ -20,6 +20,24 @@ class CommandRequest:
 
 
 class Command(ListRunner):
+    def response(self, status_code: int, received: Any) -> None:
+        if status_code == 200 and isinstance(received, ServersResponse):
+            self._printer.print(received.servers, self._format)
+        else:
+            super().response(status_code, received)
+
+    def lookup(self, value: str) -> Optional[int]:
+        status_code, received = self.request(self._create_client(), CommandRequest())
+        if status_code != 200:
+            super().response(status_code, received)
+
+        assert isinstance(received, ServersResponse)
+        for item in received.servers:
+            if item.name == value:
+                return item.id
+        else:
+            return None
+
     @property
     def default_format(self) -> List[str]:
         return [
