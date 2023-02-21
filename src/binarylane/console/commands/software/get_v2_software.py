@@ -23,13 +23,9 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "id",
-            "enabled",
             "name",
             "description",
             "cost_per_licence_per_month",
-            "minimum_licence_count",
-            "maximum_licence_count",
-            "licence_step_count",
         ]
 
     @property

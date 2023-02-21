@@ -9,6 +9,7 @@ from binarylane import errors
 from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.softwares_response import SoftwaresResponse
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import UNSET, Response, Unset
 
 
@@ -43,11 +44,17 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[ProblemDetails, SoftwaresResponse]]:
+def _parse_response(
+    *, client: Client, response: httpx.Response
+) -> Optional[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     if response.status_code == HTTPStatus.OK:
         response_200 = SoftwaresResponse.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.BAD_REQUEST:
+        response_400 = ValidationProblemDetails.from_dict(response.json())
+
+        return response_400
     if response.status_code == HTTPStatus.NOT_FOUND:
         response_404 = ProblemDetails.from_dict(response.json())
 
@@ -58,7 +65,9 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Uni
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[ProblemDetails, SoftwaresResponse]]:
+def _build_response(
+    *, client: Client, response: httpx.Response
+) -> Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -73,7 +82,7 @@ def sync_detailed(
     client: Client,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
-) -> Response[Union[ProblemDetails, SoftwaresResponse]]:
+) -> Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     """List All Available Software for an Existing Operating System
 
     Args:
@@ -87,7 +96,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ProblemDetails, SoftwaresResponse]]
+        Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
@@ -111,7 +120,7 @@ def sync(
     client: Client,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
-) -> Optional[Union[ProblemDetails, SoftwaresResponse]]:
+) -> Optional[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     """List All Available Software for an Existing Operating System
 
     Args:
@@ -125,7 +134,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ProblemDetails, SoftwaresResponse]]
+        Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]
     """
 
     return sync_detailed(
@@ -142,7 +151,7 @@ async def asyncio_detailed(
     client: Client,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
-) -> Response[Union[ProblemDetails, SoftwaresResponse]]:
+) -> Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     """List All Available Software for an Existing Operating System
 
     Args:
@@ -156,7 +165,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ProblemDetails, SoftwaresResponse]]
+        Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
@@ -178,7 +187,7 @@ async def asyncio(
     client: Client,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
-) -> Optional[Union[ProblemDetails, SoftwaresResponse]]:
+) -> Optional[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     """List All Available Software for an Existing Operating System
 
     Args:
@@ -192,7 +201,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ProblemDetails, SoftwaresResponse]]
+        Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]
     """
 
     return (

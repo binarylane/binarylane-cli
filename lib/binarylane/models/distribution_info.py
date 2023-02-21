@@ -15,6 +15,8 @@ T = TypeVar("T", bound="DistributionInfo")
 class DistributionInfo:
     """
     Attributes:
+        image_id (int): If this is a backup image, the operating system ID of the server at the time the backup was
+            created.
         password_recovery (PasswordRecoveryType): Supported methods of password recovery.
 
             | Value | Description |
@@ -29,12 +31,14 @@ class DistributionInfo:
         remote_access_user (Union[Unset, None, str]): User name to use when connecting via remote access (RDP or SSH).
     """
 
+    image_id: int
     password_recovery: PasswordRecoveryType
     features: List[DistributionFeature]
     remote_access_user: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
+        image_id = self.image_id
         password_recovery = self.password_recovery.value
 
         features = []
@@ -49,6 +53,7 @@ class DistributionInfo:
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
+                "image_id": image_id,
                 "password_recovery": password_recovery,
                 "features": features,
             }
@@ -61,6 +66,8 @@ class DistributionInfo:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
+        image_id = d.pop("image_id")
+
         password_recovery = PasswordRecoveryType(d.pop("password_recovery"))
 
         features = []
@@ -73,6 +80,7 @@ class DistributionInfo:
         remote_access_user = d.pop("remote_access_user", UNSET)
 
         distribution_info = cls(
+            image_id=image_id,
             password_recovery=password_recovery,
             features=features,
             remote_access_user=remote_access_user,

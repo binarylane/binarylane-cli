@@ -44,7 +44,7 @@ class Action:
         region_slug (Union[Unset, None, str]): The region slug (if any) of the resource associated with this action.
         result_data (Union[Unset, None, str]): Returned information from a completed action. For example: a successful
             completed 'ping' action will have the ping value in ms in this field.
-        blocking_invoice_id (Union[Unset, None, str]): If this Action is currently blocked by an invoice that requires
+        blocking_invoice_id (Union[Unset, None, int]): If this Action is currently blocked by an invoice that requires
             payment this property will be set.
         user_interaction_required (Union[Unset, None, UserInteractionRequired]): If this is not null the action is
             waiting on a response from the user.
@@ -62,7 +62,7 @@ class Action:
     region: Union[Unset, None, Region] = UNSET
     region_slug: Union[Unset, None, str] = UNSET
     result_data: Union[Unset, None, str] = UNSET
-    blocking_invoice_id: Union[Unset, None, str] = UNSET
+    blocking_invoice_id: Union[Unset, None, int] = UNSET
     user_interaction_required: Union[Unset, None, UserInteractionRequired] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
