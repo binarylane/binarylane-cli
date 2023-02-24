@@ -3,6 +3,7 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Any, Dict, List
 
+from binarylane.console.runners import Runner
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -23,7 +24,9 @@ class ListRunner(CommandRunner):
     def fields(self) -> Dict[str, str]:
         """Map of field name: description for all available fields"""
 
-    def run(self, args: List[str]) -> None:
+    def __init__(self, parent: Runner) -> None:
+        super().__init__(parent)
+
         self._parser.add_group_help(title="Available fields", entries=self.fields)
         self._parser.add_argument(
             "--format",
@@ -40,8 +43,6 @@ class ListRunner(CommandRunner):
             action="store_true",
             help=f"List one {self.default_format[0]} per line.",
         )
-
-        super().run(args)
 
     def process(self, parsed: Any) -> None:
         self._format = parsed.runner_format.split(",")
