@@ -18,7 +18,7 @@ class ModuleRunner(Runner):
 
     @property
     def prog(self) -> str:
-        return self._parent.prog if self._parent else ""
+        return self._context.prog if self._context else ""
 
     @property
     @abstractmethod
@@ -32,7 +32,7 @@ class ModuleRunner(Runner):
 
     @property
     def command_runner(self) -> CommandRunner:
-        return self.command_runner_type(self._parent)
+        return self.command_runner_type(self._context)
 
     def run(self, args: List[str]) -> None:
         logger.debug("ModuleRunner for %s (%s). Received arguments: %s", self.name, self.module_path, args)

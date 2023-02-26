@@ -21,7 +21,6 @@ class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
 
     _parser: Parser
-    _parent: Context
     _config: Config
     _client: AuthenticatedClient
 
@@ -29,10 +28,10 @@ class CommandRunner(Runner):
     _output: Optional[str]
     _header: Optional[bool]
 
-    def __init__(self, parent: Context) -> None:
-        super().__init__(parent)
+    def __init__(self, context: Context) -> None:
+        super().__init__(context)
         self._config = Config.load()
-        prog = f"{self._parent.prog} {self.name}"
+        prog = f"{self._context.prog} {self.name}"
         self._parser = Parser(prog=prog, description=self.description, epilog=self._epilog)
         self.configure(self._parser)
 
