@@ -14,7 +14,7 @@ class VersionRunner(LazyRunner):
         package = __package__
         version = self._distribution_version("binarylane-cli") or self._module_version(package) or "dev"
 
-        print(self.prog, version)
+        print(self._parent.prog, "version", version)
 
     def _distribution_version(self, package: str) -> Optional[str]:
         try:

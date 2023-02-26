@@ -9,7 +9,7 @@ from binarylane.console.runners.package import PackageRunner
 
 
 # FIXME: Combination of PackageRunner._prefix and App's overrides is difficult to support correctly
-class App(PackageRunner):
+class AppRunner(PackageRunner):
     """
     AppRunner is the 'root' runner for the application. In normal usage, all command line arguments are passed
     directly to run(). Apart from global flags, the primary function of this class is to invoke the
@@ -39,8 +39,8 @@ class App(PackageRunner):
     @cached_property
     def app_runners(self) -> List[Runner]:
         return [
-            LazyLoader(self, ".app.configure", "configure", "Configure access to BinaryLane API"),
-            LazyLoader(self, ".app.version", "version", "Show the current version"),
+            LazyLoader(self._parent, ".app.configure", "configure", "Configure access to BinaryLane API"),
+            LazyLoader(self._parent, ".app.version", "version", "Show the current version"),
         ]
 
     def run(self, args: List[str]) -> None:

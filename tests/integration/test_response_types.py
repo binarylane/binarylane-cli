@@ -6,12 +6,13 @@ import pytest
 
 from binarylane.console.commands import commands
 from binarylane.console.printers import formatter
+from binarylane.console.runners import Context
 
 
 def ok_response_types() -> List[Any]:
     types = []
     for command_type in commands:
-        types.append(command_type().command_runner.ok_response_type)
+        types.append(command_type(Context()).command_runner.ok_response_type)
     return types
 
 

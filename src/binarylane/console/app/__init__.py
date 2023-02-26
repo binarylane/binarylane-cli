@@ -3,10 +3,23 @@ from __future__ import annotations
 import logging
 import os
 import sys
+from typing import List
 
-from binarylane.console.app.app import App
+from binarylane.console.app.app import AppRunner
+from binarylane.console.runners import Context
 
 logger = logging.getLogger(__name__)
+
+
+class App:
+    context: Context
+
+    def __init__(self) -> None:
+        self.context = Context()
+        self.runner = AppRunner(self.context)
+
+    def run(self, args: List[str]) -> None:
+        self.runner.run(args)
 
 
 def main() -> int:
