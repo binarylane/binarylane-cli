@@ -38,14 +38,14 @@ class PackageRunner(Runner):
     _prefix: str
     _runners: List[Runner]
 
-    def __init__(self, parent: Context, prefix: str = "") -> None:
-        super().__init__(parent)
+    def __init__(self, context: Context, prefix: str = "") -> None:
+        super().__init__(context)
         self._prefix = prefix
         self._runners = []
 
     @property
     def prog(self) -> str:
-        return self._parent.prog
+        return self._context.prog
 
     @property
     def name(self) -> str:
@@ -69,7 +69,7 @@ class PackageRunner(Runner):
     def module_runners(self) -> List[ModuleRunner]:
         """Runners to provide access to from this package"""
         commands = importlib.import_module(f".{self.package_path}", package=__package__).commands
-        return [cls(self._parent) for cls in commands]
+        return [cls(self._context) for cls in commands]
 
     @property
     def runners(self) -> Sequence[Runner]:
@@ -107,7 +107,7 @@ class PackageRunner(Runner):
         # Add prefix runners for subcommands:
         for prefix in self._get_branches():
             branch_name = f"{self._prefix} {prefix}" if self._prefix else prefix
-            self._runners.append(self.__class__(self._parent, branch_name))
+            self._runners.append(self.__class__(self._context, branch_name))
 
         self._runners.sort(key=self._get_command)
 
@@ -120,7 +120,7 @@ class PackageRunner(Runner):
 
     def run(self, args: List[str]) -> None:
         if self._prefix:
-            self._parent.append(self._prefix.split(" ")[-1])
+            self._context.append(self._prefix.split(" ")[-1])
 
         self.parser = PackageParser(
             prog=f"{self.prog}",

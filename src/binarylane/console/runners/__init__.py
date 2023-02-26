@@ -25,11 +25,13 @@ class Context:
 class Runner(ABC):
     """Abstract base class for all Runner implementations"""
 
+    _context: Context
+
     HELP = "--help"
     CHECK = "--blcli-check"
 
-    def __init__(self, parent: Context) -> None:
-        self._parent = parent
+    def __init__(self, context: Context) -> None:
+        self._context = context
 
     @property
     @abstractmethod

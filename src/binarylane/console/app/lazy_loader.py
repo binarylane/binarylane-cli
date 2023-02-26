@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 class LazyLoader(Runner):
     """ProxyRunner lazy imports a command from specified module."""
 
-    def __init__(self, parent: Context, module_path: str, name: str, description: str) -> None:
-        super().__init__(parent)
+    def __init__(self, context: Context, module_path: str, name: str, description: str) -> None:
+        super().__init__(context)
 
         self._module_path = module_path
         self._name = name
@@ -22,7 +22,7 @@ class LazyLoader(Runner):
 
     @property
     def prog(self) -> str:
-        return self._parent.prog if self._parent else ""
+        return self._context.prog if self._context else ""
 
     @property
     def module_path(self) -> str:
