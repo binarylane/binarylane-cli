@@ -4,7 +4,8 @@ import importlib
 import logging
 from typing import List, Type
 
-from binarylane.console.runners import Runner
+from binarylane.console.app.lazy_runner import LazyRunner
+from binarylane.console.runners import Context, Runner
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 class LazyLoader(Runner):
     """ProxyRunner lazy imports a command from specified module."""
 
-    def __init__(self, parent: Runner, module_path: str, name: str, description: str) -> None:
+    def __init__(self, parent: Context, module_path: str, name: str, description: str) -> None:
         super().__init__(parent)
 
         self._module_path = module_path
@@ -36,7 +37,7 @@ class LazyLoader(Runner):
         return self._description
 
     @property
-    def runner_type(self) -> Type[Runner]:
+    def runner_type(self) -> Type[LazyRunner]:
         """Runner that will be executed by run()"""
         return importlib.import_module(f".{self.module_path}", package=__package__).Command
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Generic, List, Type, TypeVar
 
 from binarylane.console.config import Config
-from binarylane.console.runners import Runner
+from binarylane.console.runners import Context, Runner
 
 T = TypeVar("T", bound=Runner)
 
@@ -21,8 +21,8 @@ class TypeRunner(Runner, Generic[T]):
     _test: T
 
     def __init__(self, runner_type: Type[T]) -> None:
-        super().__init__(None)
-        self._test = runner_type(self)
+        super().__init__(Context())
+        self._test = runner_type(self._parent)
 
     @property
     def test(self) -> T:

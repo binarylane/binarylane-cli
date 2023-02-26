@@ -9,7 +9,7 @@ class LazyRunner(Runner):
     proxy: Runner
 
     def __init__(self, parent: Runner) -> None:
-        super().__init__(parent)
+        super().__init__(parent._parent)
         self.proxy = parent
 
     @property

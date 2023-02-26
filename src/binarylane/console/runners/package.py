@@ -4,10 +4,10 @@ import importlib
 import logging
 from abc import abstractmethod
 from argparse import ArgumentParser, HelpFormatter
-from typing import List, NoReturn, Optional, Sequence
+from typing import List, NoReturn, Sequence
 from binarylane.pycompat.functools import cached_property
 
-from binarylane.console.runners import Runner
+from binarylane.console.runners import Context, Runner
 from binarylane.console.runners.module import ModuleRunner
 
 logger = logging.getLogger(__name__)
@@ -38,16 +38,14 @@ class PackageRunner(Runner):
     _prefix: str
     _runners: List[Runner]
 
-    def __init__(self, parent: Optional[Runner] = None, prefix: str = "") -> None:
+    def __init__(self, parent: Context, prefix: str = "") -> None:
         super().__init__(parent)
         self._prefix = prefix
         self._runners = []
 
     @property
     def prog(self) -> str:
-        if not self._parent or not self._prefix:
-            return super().prog
-        return f"{self._parent.prog} {self._prefix.split(SEPARATOR)[-1]}"
+        return self._parent.prog
 
     @property
     def name(self) -> str:
@@ -70,7 +68,8 @@ class PackageRunner(Runner):
     @cached_property
     def module_runners(self) -> List[ModuleRunner]:
         """Runners to provide access to from this package"""
-        return [cls(self) for cls in importlib.import_module(f".{self.package_path}", package=__package__).commands]
+        commands = importlib.import_module(f".{self.package_path}", package=__package__).commands
+        return [cls(self._parent) for cls in commands]
 
     @property
     def runners(self) -> Sequence[Runner]:
@@ -108,7 +107,7 @@ class PackageRunner(Runner):
         # Add prefix runners for subcommands:
         for prefix in self._get_branches():
             branch_name = f"{self._prefix} {prefix}" if self._prefix else prefix
-            self._runners.append(self.__class__(self, branch_name))
+            self._runners.append(self.__class__(self._parent, branch_name))
 
         self._runners.sort(key=self._get_command)
 
@@ -120,6 +119,9 @@ class PackageRunner(Runner):
             ).set_defaults(runner=runner)
 
     def run(self, args: List[str]) -> None:
+        if self._prefix:
+            self._parent.append(self._prefix.split(" ")[-1])
+
         self.parser = PackageParser(
             prog=f"{self.prog}",
             description=self.format_description(),

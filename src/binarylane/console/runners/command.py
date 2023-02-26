@@ -11,7 +11,7 @@ from binarylane.console.config import Config
 from binarylane.console.parser import Mapping
 from binarylane.console.parser.parser import Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
-from binarylane.console.runners import Runner
+from binarylane.console.runners import Context, Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,7 @@ class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
 
     _parser: Parser
-    _parent: Runner
+    _parent: Context
     _config: Config
     _client: AuthenticatedClient
 
@@ -29,10 +29,11 @@ class CommandRunner(Runner):
     _output: Optional[str]
     _header: Optional[bool]
 
-    def __init__(self, parent: Runner) -> None:
+    def __init__(self, parent: Context) -> None:
         super().__init__(parent)
         self._config = Config.load()
-        self._parser = Parser(prog=self.prog, description=self.description, epilog=self._epilog)
+        prog = f"{self._parent.prog} {self.name}"
+        self._parser = Parser(prog=prog, description=self.description, epilog=self._epilog)
         self.configure(self._parser)
 
         self._parser.add_argument(

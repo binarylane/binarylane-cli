@@ -4,7 +4,22 @@ from __future__ import annotations
 import re
 import sys
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List
+
+
+class Context:
+    _names: List[str]
+
+    def __init__(self) -> None:
+        self._names = ["bl"]
+
+    @property
+    def prog(self) -> str:
+        """The 'program' name is used in help output to identify this runner"""
+        return " ".join(self._names)
+
+    def append(self, name: str) -> None:
+        self._names.append(name)
 
 
 class Runner(ABC):
@@ -12,15 +27,9 @@ class Runner(ABC):
 
     HELP = "--help"
     CHECK = "--blcli-check"
-    _parent: Optional[Runner]
 
-    def __init__(self, parent: Optional[Runner] = None) -> None:
+    def __init__(self, parent: Context) -> None:
         self._parent = parent
-
-    @property
-    def prog(self) -> str:
-        """The 'program' name is used in help output to identify this runner"""
-        return (self._parent.prog + " " if self._parent else "") + self.name
 
     @property
     @abstractmethod
@@ -39,9 +48,6 @@ class Runner(ABC):
     @abstractmethod
     def run(self, args: List[str]) -> None:
         """Subclasses implement their primary behaviour here"""
-
-    def __call__(self, args: List[str]) -> None:
-        self.run(args)
 
     @staticmethod
     def error(message: str) -> None:
