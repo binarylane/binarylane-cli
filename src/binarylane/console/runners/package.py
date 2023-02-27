@@ -7,7 +7,8 @@ from argparse import ArgumentParser, HelpFormatter
 from typing import List, NoReturn, Sequence
 from binarylane.pycompat.functools import cached_property
 
-from binarylane.console.runners import Context, Runner
+from binarylane.console import Context
+from binarylane.console.runners import Runner
 from binarylane.console.runners.module import ModuleRunner
 
 logger = logging.getLogger(__name__)
@@ -120,7 +121,7 @@ class PackageRunner(Runner):
 
     def run(self, args: List[str]) -> None:
         if self._prefix:
-            self._context.append(self._prefix.split(" ")[-1])
+            self._context.prog = self._prefix
 
         self.parser = PackageParser(
             prog=f"{self.prog}",
