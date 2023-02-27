@@ -66,7 +66,7 @@ class PackageRunner(Runner):
     def module_runners(self) -> List[ModuleRunner]:
         """Runners to provide access to from this package"""
         commands = importlib.import_module(f".{self.package_path}", package=__package__).commands
-        return [cls(self._context) for cls in commands]
+        return [cls(self.context) for cls in commands]
 
     @property
     def runners(self) -> Sequence[Runner]:
@@ -104,7 +104,7 @@ class PackageRunner(Runner):
         # Add prefix runners for subcommands:
         for prefix in self._get_branches():
             branch_name = f"{self._prefix} {prefix}" if self._prefix else prefix
-            self._runners.append(self.__class__(self._context, branch_name))
+            self._runners.append(self.__class__(self.context, branch_name))
 
         self._runners.sort(key=self._get_command)
 
@@ -117,12 +117,12 @@ class PackageRunner(Runner):
 
     def run(self, args: List[str]) -> None:
         if self._prefix:
-            self._context.prog = self._prefix
+            self.context.prog = self._prefix
 
         self.parser = PackageParser(
-            prog=f"{self._context.prog}",
+            prog=f"{self.context.prog}",
             description=self.format_description(),
-            usage=f"{self._context.prog} [OPTIONS] COMMAND",
+            usage=f"{self.context.prog} [OPTIONS] COMMAND",
             add_help=False,
             formatter_class=PackageHelpFormatter,
             allow_abbrev=False,

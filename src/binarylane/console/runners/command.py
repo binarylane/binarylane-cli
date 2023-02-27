@@ -32,7 +32,7 @@ class CommandRunner(Runner):
     def __init__(self, context: Context) -> None:
         super().__init__(context)
         self._config = Config.load()
-        prog = f"{self._context.prog} {self.name}"
+        prog = f"{self.context.prog} {self.name}"
         self._parser = Parser(prog=prog, description=self.description, epilog=self._epilog)
         self.configure(self._parser)
 

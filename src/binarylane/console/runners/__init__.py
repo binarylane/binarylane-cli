@@ -12,13 +12,13 @@ from binarylane.console import Context
 class Runner(ABC):
     """Abstract base class for all Runner implementations"""
 
-    _context: Context
+    context: Context
 
     HELP = "--help"
     CHECK = "--blcli-check"
 
     def __init__(self, context: Context) -> None:
-        self._context = context
+        self.context = context
 
     @property
     @abstractmethod
