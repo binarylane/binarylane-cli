@@ -7,11 +7,12 @@ from typing import Any, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
 
+from binarylane.console import Context
 from binarylane.console.config import Config
 from binarylane.console.parser import Mapping
 from binarylane.console.parser.parser import Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
-from binarylane.console.runners import Context, Runner
+from binarylane.console.runners import Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 
 logger = logging.getLogger(__name__)

@@ -4,9 +4,9 @@ from typing import Any, List
 
 import pytest
 
+from binarylane.console import Context
 from binarylane.console.commands import commands
 from binarylane.console.printers import formatter
-from binarylane.console.runners import Context
 
 
 def ok_response_types() -> List[Any]:

@@ -6,20 +6,7 @@ import sys
 from abc import ABC, abstractmethod
 from typing import List
 
-
-class Context:
-    _names: List[str]
-
-    def __init__(self) -> None:
-        self._names = ["bl"]
-
-    @property
-    def prog(self) -> str:
-        """The 'program' name is used in help output to identify this runner"""
-        return " ".join(self._names)
-
-    def append(self, name: str) -> None:
-        self._names.append(name)
+from binarylane.console import Context
 
 
 class Runner(ABC):

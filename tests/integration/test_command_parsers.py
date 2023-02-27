@@ -6,9 +6,9 @@ import pytest
 
 from tests.runner import TypeRunner
 
+from binarylane.console import Context
 from binarylane.console.commands import commands
 from binarylane.console.parser import Attribute
-from binarylane.console.runners import Context
 from binarylane.console.runners.command import CommandRunner
 
 

@@ -5,8 +5,8 @@ import os
 import sys
 from typing import List
 
+from binarylane.console import Context
 from binarylane.console.app.app import AppRunner
-from binarylane.console.runners import Context
 
 logger = logging.getLogger(__name__)
 
