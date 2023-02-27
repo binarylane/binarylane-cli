@@ -22,10 +22,6 @@ class LazyLoader(Runner):
         self._description = description
 
     @property
-    def prog(self) -> str:
-        return self._context.prog if self._context else ""
-
-    @property
     def module_path(self) -> str:
         return self._module_path
 
