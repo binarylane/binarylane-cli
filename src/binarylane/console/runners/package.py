@@ -45,10 +45,6 @@ class PackageRunner(Runner):
         self._runners = []
 
     @property
-    def prog(self) -> str:
-        return self._context.prog
-
-    @property
     def name(self) -> str:
         return self.package_name if not self._prefix else self._prefix
 
@@ -124,9 +120,9 @@ class PackageRunner(Runner):
             self._context.prog = self._prefix
 
         self.parser = PackageParser(
-            prog=f"{self.prog}",
+            prog=f"{self._context.prog}",
             description=self.format_description(),
-            usage=f"{self.prog} [OPTIONS] COMMAND",
+            usage=f"{self._context.prog} [OPTIONS] COMMAND",
             add_help=False,
             formatter_class=PackageHelpFormatter,
             allow_abbrev=False,
