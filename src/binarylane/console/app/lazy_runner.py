@@ -10,7 +10,7 @@ class LazyRunner(Runner):
     loader: Runner
 
     def __init__(self, loader: Runner) -> None:
-        super().__init__(loader._context)
+        super().__init__(loader.context)
         self.loader = loader
 
     @property

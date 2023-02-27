@@ -23,7 +23,7 @@ class TypeRunner(Runner, Generic[T]):
 
     def __init__(self, runner_type: Type[T]) -> None:
         super().__init__(Context())
-        self._test = runner_type(self._context)
+        self._test = runner_type(self.context)
 
     @property
     def test(self) -> T:
