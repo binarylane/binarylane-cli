@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, List
 
+from binarylane.console import Setting
 from binarylane.console.app.lazy_runner import LazyRunner
 from binarylane.console.config import Config
 from binarylane.console.runners import Runner
@@ -30,10 +31,13 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
   3. Copy the generated API token to the clipboard and paste below.
 """
         )
-        config = Config.load()
-        config.api_token = input("Enter your API access token: ")
+        # Create new config based on context
+        config = Config()
+        config.add_config_source(self.context.config)
+        # Add api-token to it
+        config.set(Setting.ApiToken, input("Enter your API access token: "))
 
-        print(f"Trying to authenticate with {config.api_url} ...")
+        print(f"Trying to authenticate with {config.get(Setting.ApiUrl)} ...")
         if self._try_token(config):
             config.save()
             print("Success! API access token saved.")
@@ -46,7 +50,14 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         from binarylane.api.accounts.get_v2_account import sync_detailed
         from binarylane.client import AuthenticatedClient
 
-        client = AuthenticatedClient(token=config.api_token, base_url=config.api_url, verify_ssl=config.verify_ssl)
+        api_url = Setting.ApiUrl
+        if api_url is None:
+            raise ValueError(Setting.ApiUrl)
+        api_token = Setting.ApiToken or ""
+
+        client = AuthenticatedClient(
+            base_url=api_url, token=api_token, verify_ssl=not bool(config.get(Setting.ApiDevelopment))
+        )
         response = sync_detailed(client=client)
 
         # Check for success

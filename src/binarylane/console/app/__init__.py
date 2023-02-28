@@ -7,6 +7,7 @@ from typing import List
 
 from binarylane.console import Context
 from binarylane.console.app.app import AppRunner
+from binarylane.console.config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,7 @@ class App:
 
     def __init__(self) -> None:
         self.context = Context()
+        self.context.config = Config(True)
         self.runner = AppRunner(self.context)
 
     def run(self, args: List[str]) -> None:

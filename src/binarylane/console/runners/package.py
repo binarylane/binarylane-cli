@@ -4,12 +4,17 @@ import importlib
 import logging
 from abc import abstractmethod
 from argparse import ArgumentParser, HelpFormatter
-from typing import List, NoReturn, Sequence
+from typing import TYPE_CHECKING, List, NoReturn, Sequence, TypeAlias
 from binarylane.pycompat.functools import cached_property
 
 from binarylane.console import Context
 from binarylane.console.runners import Runner
 from binarylane.console.runners.module import ModuleRunner
+
+if TYPE_CHECKING:
+    import argparse
+
+    ArgumentGroup: TypeAlias = argparse._ArgumentGroup  # pylint: disable=protected-access
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +41,7 @@ class PackageRunner(Runner):
     """PackageRunner imports a list of runners from specified package."""
 
     parser: ArgumentParser
+    _options: ArgumentGroup
     _prefix: str
     _runners: List[Runner]
 
@@ -115,6 +121,10 @@ class PackageRunner(Runner):
                 self._get_command(runner), help=runner.format_description(), add_help=False
             ).set_defaults(runner=runner)
 
+    @abstractmethod
+    def process(self, parsed: argparse.Namespace) -> None:
+        ...
+
     def run(self, args: List[str]) -> None:
         if self._prefix:
             self.context.prog = self._prefix
@@ -128,8 +138,8 @@ class PackageRunner(Runner):
             allow_abbrev=False,
         )
 
-        options = self.parser.add_argument_group(title="Options")
-        options.add_argument("--help", help="Display available commands and descriptions", action="help")
+        self._options = self.parser.add_argument_group(title="Options")
+        self._options.add_argument("--help", help="Display available commands and descriptions", action="help")
         self.configure()
 
         logger.debug("PackageRunner for %s (%s). Received arguments: %s", self.name, self.package_path, args)
@@ -141,10 +151,14 @@ class PackageRunner(Runner):
             args.remove(self.HELP)
             extra += [self.HELP]
 
-        # See if a runner was selected
+        # Parse and process common options
         parsed, left = self.parser.parse_known_args(args)
-        if "runner" in parsed:
-            return parsed.runner.run(left + extra)
+        runner = vars(parsed).pop("runner", None)
+        self.process(parsed)
+
+        # Execute selected runner, if any
+        if runner:
+            return runner.run(left + extra)
 
         if Runner.CHECK in left:
             for runner in self._runners:

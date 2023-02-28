@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import argparse
 from typing import List, Sequence
 from binarylane.pycompat.functools import cached_property
 
+from binarylane.console import Setting
 from binarylane.console.app.lazy_loader import LazyLoader
+from binarylane.console.config import Config
 from binarylane.console.runners import Runner
 from binarylane.console.runners.package import PackageRunner
 
@@ -49,3 +52,17 @@ class AppRunner(PackageRunner):
             args = args[1:] + [self.HELP]
 
         return super().run(args)
+
+    def configure(self) -> None:
+        super().configure()
+        config_section, api_url = self.context[Setting.ConfigSection], self.context[Setting.ApiUrl]
+        self._options.add_argument(
+            "--context", metavar="NAME", help=f'Name of authentication context to use (default: "{config_section}")'
+        )
+        self._options.add_argument("--api-token", metavar="VALUE", help="API token to use with BinaryLane API")
+        self._options.add_argument("--api-url", metavar="URL", help=f'URL of BinaryLane API (default: "{api_url}")')
+
+    def process(self, parsed: argparse.Namespace) -> None:
+        # Only run this once, at the top level
+        if not self._prefix:
+            self.context.config = Config(parsed)

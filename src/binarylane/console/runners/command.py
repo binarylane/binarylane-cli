@@ -7,8 +7,7 @@ from typing import Any, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
 
-from binarylane.console import Context
-from binarylane.console.config import Config
+from binarylane.console import Context, Setting
 from binarylane.console.parser import Mapping
 from binarylane.console.parser.parser import Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
@@ -22,7 +21,6 @@ class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
 
     _parser: Parser
-    _config: Config
     _client: AuthenticatedClient
 
     _print_curl: Optional[bool]
@@ -31,7 +29,6 @@ class CommandRunner(Runner):
 
     def __init__(self, context: Context) -> None:
         super().__init__(context)
-        self._config = Config.load()
         prog = f"{self.context.prog} {self.name}"
         self._parser = Parser(prog=prog, description=self.description, epilog=self._epilog)
         self.configure(self._parser)
@@ -131,8 +128,9 @@ class CommandRunner(Runner):
 
         self.process(parsed)
 
+        ctx = self.context
         self._client = AuthenticatedClient(
-            self._config.api_url, self._config.api_token, verify_ssl=self._config.verify_ssl
+            ctx[Setting.ApiUrl], ctx.get(Setting.ApiToken), verify_ssl=not ctx.get(Setting.ApiDevelopment)
         )
         parsed.client = self._client
 

@@ -39,10 +39,4 @@ class TypeRunner(Runner, Generic[T]):
 
     def run(self, args: List[str]) -> None:
         assert self._test is not None
-
-        # Use a stock config
-        config = getattr(self._test, "_config", None)
-        if isinstance(config, Config):
-            config.api_token = "example_token"
-
         self._test.run(args)

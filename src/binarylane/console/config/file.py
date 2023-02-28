@@ -1,27 +1,27 @@
-"""Provided typed access to user configuration values"""
-
 from __future__ import annotations
 
+import configparser
 import os
 import sys
-from configparser import ConfigParser, SectionProxy
 from pathlib import Path
+from typing import Optional
+
+from binarylane.console import ConfigSource
 
 
-class Config:
-    """User configuration manager"""
-
+class FileConfig(ConfigSource):
     _DIRNAME = "binarylane"
     _FILENAME = "config.ini"
-    _SECTION = "bl"
     _API_TOKEN = "api-token"
+    section_name: str
 
-    _parser: ConfigParser
+    _parser: configparser.ConfigParser
 
     def __init__(self) -> None:
-        self._parser = ConfigParser()
+        self._parser = configparser.ConfigParser()
         self._migrate()
         self._read()
+        self.section_name = configparser.DEFAULTSECT
 
     @staticmethod
     def _get_config_home() -> Path:
@@ -94,10 +94,10 @@ class Config:
             self._parser.write(file)
 
     @property
-    def _context(self) -> SectionProxy:
-        if self._SECTION not in self._parser:
-            self._parser[self._SECTION] = {}
-        return self._parser[self._SECTION]
+    def _context(self) -> configparser.SectionProxy:
+        if self.section_name not in self._parser:
+            self._parser[self.section_name] = {}
+        return self._parser[self.section_name]
 
     @property
     def api_url(self) -> str:
@@ -131,7 +131,5 @@ class Config:
 
         return True
 
-    @classmethod
-    def load(cls) -> "Config":
-        """Create instance of Config() and load configuration file(s)"""
-        return cls()
+    def get(self, name: str) -> Optional[str]:
+        return self._context.get(name)
