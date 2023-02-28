@@ -11,7 +11,7 @@ from binarylane.console.config import Config, EnvironmentConfig
 
 @pytest.fixture()
 def config() -> Generator[Config, None, None]:
-    yield Config(True).add_config_source(EnvironmentConfig())
+    yield Config()
 
     # Remove any environment variables created by testcase
     for key in os.environ:
@@ -37,13 +37,14 @@ def config() -> Generator[Config, None, None]:
 )
 def test_development_environment_variable(config: Config, value: str, expected: Union[bool, Type[Exception]]) -> None:
     os.environ["BL_API_DEVELOPMENT"] = value
+    config.add_config_source(EnvironmentConfig())
 
     if expected is not ValueError:
         assert expected == bool(config.get(Setting.ApiDevelopment))
         return
 
     with pytest.raises(ValueError) as exc:
-        config.get(Setting.ApiDevelopment)
+        bool(config.get(Setting.ApiDevelopment))
     assert exc.match("Not a boolean: " + value)
 
 

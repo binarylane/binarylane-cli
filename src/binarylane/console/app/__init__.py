@@ -17,7 +17,7 @@ class App:
 
     def __init__(self) -> None:
         self.context = Context()
-        self.context.config = Config(True)
+        self.context.config = Config()
         self.runner = AppRunner(self.context)
 
     def run(self, args: List[str]) -> None:

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Generic, List, Type, TypeVar
 
-from binarylane.console import Context
+from binarylane.console import Context, Setting
 from binarylane.console.config import Config
 from binarylane.console.runners import Runner
 
@@ -23,6 +23,11 @@ class TypeRunner(Runner, Generic[T]):
 
     def __init__(self, runner_type: Type[T]) -> None:
         super().__init__(Context())
+        # Use default config, plus a token
+        config = Config()
+        config.set(Setting.ApiToken, "example_token")
+        self.context.config = config
+
         self._test = runner_type(self.context)
 
     @property

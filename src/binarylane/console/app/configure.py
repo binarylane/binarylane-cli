@@ -32,7 +32,7 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
 """
         )
         # Create new config based on context
-        config = Config()
+        config = Config(default_config=False)
         config.add_config_source(self.context.config)
         # Add api-token to it
         config.set(Setting.ApiToken, input("Enter your API access token: "))
