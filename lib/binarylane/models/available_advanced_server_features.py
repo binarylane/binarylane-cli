@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Type, TypeVar
 import attr
 
 from binarylane.models.advanced_feature import AdvancedFeature
-from binarylane.models.cpu_model import CpuModel
+from binarylane.models.processor_model import ProcessorModel
 from binarylane.models.vm_machine_type import VmMachineType
 
 T = TypeVar("T", bound="AvailableAdvancedServerFeatures")
@@ -15,12 +15,12 @@ T = TypeVar("T", bound="AvailableAdvancedServerFeatures")
 class AvailableAdvancedServerFeatures:
     """
     Attributes:
-        processor_models (List[CpuModel]): A list of the processor models available for this server.
+        processor_models (List[ProcessorModel]): A list of the processor models available for this server.
         machine_types (List[VmMachineType]): A list of the machine types available for this server.
         advanced_features (List[AdvancedFeature]): A list of the advanced features available for this server.
     """
 
-    processor_models: List[CpuModel]
+    processor_models: List[ProcessorModel]
     machine_types: List[VmMachineType]
     advanced_features: List[AdvancedFeature]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
@@ -62,7 +62,7 @@ class AvailableAdvancedServerFeatures:
         processor_models = []
         _processor_models = d.pop("processor_models")
         for processor_models_item_data in _processor_models:
-            processor_models_item = CpuModel.from_dict(processor_models_item_data)
+            processor_models_item = ProcessorModel.from_dict(processor_models_item_data)
 
             processor_models.append(processor_models_item)
 

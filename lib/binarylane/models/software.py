@@ -13,7 +13,7 @@ T = TypeVar("T", bound="Software")
 class Software:
     """
     Attributes:
-        id (str): The ID of this software.
+        id (int): The ID of this software.
         enabled (bool): Software that is not enabled is not available to be added to servers but may be retained by
             servers that currently use it.
         name (str): The name of this software.
@@ -26,7 +26,7 @@ class Software:
         group (Union[Unset, None, str]): Software in the same group may not be licensed together.
     """
 
-    id: str
+    id: int
     enabled: bool
     name: str
     description: str

@@ -216,7 +216,7 @@ Valid values (when converted to GB by multiplying the value provided by 1024):
 
         json_body_license_.add_primitive(
             "software_id",
-            str,
+            int,
             option_name="software-id",
             required=True,
             description="""The ID of the software to license.""",

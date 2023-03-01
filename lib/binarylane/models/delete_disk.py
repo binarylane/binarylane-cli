@@ -15,11 +15,11 @@ class DeleteDisk:
 
     Attributes:
         type (DeleteDiskType):
-        disk_id (str): The ID of the existing disk. See server.disks for a list of IDs.
+        disk_id (int): The ID of the existing disk. See server.disks for a list of IDs.
     """
 
     type: DeleteDiskType
-    disk_id: str
+    disk_id: int
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:

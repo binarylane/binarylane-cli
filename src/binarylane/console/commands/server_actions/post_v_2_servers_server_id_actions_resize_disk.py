@@ -61,7 +61,7 @@ class Command(ActionRunner):
 
         json_body.add_primitive(
             "disk_id",
-            str,
+            int,
             option_name="disk-id",
             required=True,
             description="""The ID of the existing disk. See server.disks for a list of IDs.""",

@@ -11,11 +11,11 @@ T = TypeVar("T", bound="License")
 class License:
     """
     Attributes:
-        software_id (str): The ID of the software to license.
+        software_id (int): The ID of the software to license.
         count (int): The number of licences.
     """
 
-    software_id: str
+    software_id: int
     count: int
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

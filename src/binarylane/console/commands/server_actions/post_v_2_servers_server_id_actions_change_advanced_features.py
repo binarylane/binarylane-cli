@@ -73,7 +73,7 @@ class Command(ActionRunner):
 
         json_body.add_primitive(
             "processor_model",
-            Union[Unset, None, str],
+            Union[Unset, None, int],
             option_name="processor-model",
             required=False,
             description="""Do not provide or set to null to keep existing processor model.""",
