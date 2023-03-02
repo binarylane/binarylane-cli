@@ -13,19 +13,15 @@ T = TypeVar("T", bound="Disk")
 class Disk:
     """
     Attributes:
-        id (str): The ID of this disk.
-        size_gigabytes (float): If this is a disk on a server this value is the size of the disk in GB. If this is a
-            disk in a backup image this value is the compressed size of the disk image in GB.
+        id (int): The ID of this disk.
+        size_gigabytes (float): The size of the disk in GB.
         primary (bool): A primary disk is treated differently from other disks.
-        min_disk_size (Union[Unset, None, int]): This value is only available for disks in a backup image and is the
-            minimum disk size in GB required to restore this disk image.
         description (Union[Unset, None, str]): A description of this disk.
     """
 
-    id: str
+    id: int
     size_gigabytes: float
     primary: bool
-    min_disk_size: Union[Unset, None, int] = UNSET
     description: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
@@ -33,7 +29,6 @@ class Disk:
         id = self.id
         size_gigabytes = self.size_gigabytes
         primary = self.primary
-        min_disk_size = self.min_disk_size
         description = self.description
 
         field_dict: Dict[str, Any] = {}
@@ -45,8 +40,6 @@ class Disk:
                 "primary": primary,
             }
         )
-        if min_disk_size is not UNSET:
-            field_dict["min_disk_size"] = min_disk_size
         if description is not UNSET:
             field_dict["description"] = description
 
@@ -61,15 +54,12 @@ class Disk:
 
         primary = d.pop("primary")
 
-        min_disk_size = d.pop("min_disk_size", UNSET)
-
         description = d.pop("description", UNSET)
 
         disk = cls(
             id=id,
             size_gigabytes=size_gigabytes,
             primary=primary,
-            min_disk_size=min_disk_size,
             description=description,
         )
 

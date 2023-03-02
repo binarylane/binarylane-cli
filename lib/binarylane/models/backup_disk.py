@@ -6,26 +6,29 @@ import attr
 
 from binarylane.types import UNSET, Unset
 
-T = TypeVar("T", bound="CpuModel")
+T = TypeVar("T", bound="BackupDisk")
 
 
 @attr.s(auto_attribs=True)
-class CpuModel:
+class BackupDisk:
     """
     Attributes:
-        id (str): The ID of this CPU model.
-        name (str): The name of this CPU model.
-        description (Union[Unset, None, str]): A description of this CPU model.
+        id (int): The ID of this backup disk.
+        size_gigabytes (float): This is the compressed size of the disk image in GB.
+        min_disk_size (int): This is the minimum disk size in GB required to restore this disk image.
+        description (Union[Unset, None, str]): A description of this disk.
     """
 
-    id: str
-    name: str
+    id: int
+    size_gigabytes: float
+    min_disk_size: int
     description: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         id = self.id
-        name = self.name
+        size_gigabytes = self.size_gigabytes
+        min_disk_size = self.min_disk_size
         description = self.description
 
         field_dict: Dict[str, Any] = {}
@@ -33,7 +36,8 @@ class CpuModel:
         field_dict.update(
             {
                 "id": id,
-                "name": name,
+                "size_gigabytes": size_gigabytes,
+                "min_disk_size": min_disk_size,
             }
         )
         if description is not UNSET:
@@ -46,18 +50,21 @@ class CpuModel:
         d = src_dict.copy()
         id = d.pop("id")
 
-        name = d.pop("name")
+        size_gigabytes = d.pop("size_gigabytes")
+
+        min_disk_size = d.pop("min_disk_size")
 
         description = d.pop("description", UNSET)
 
-        cpu_model = cls(
+        backup_disk = cls(
             id=id,
-            name=name,
+            size_gigabytes=size_gigabytes,
+            min_disk_size=min_disk_size,
             description=description,
         )
 
-        cpu_model.additional_properties = d
-        return cpu_model
+        backup_disk.additional_properties = d
+        return backup_disk
 
     @property
     def additional_keys(self) -> List[str]:

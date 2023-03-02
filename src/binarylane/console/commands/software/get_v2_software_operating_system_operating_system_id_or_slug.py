@@ -7,6 +7,7 @@ from binarylane.api.software.get_v2_software_operating_system_operating_system_i
 from binarylane.models.links import Links
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.softwares_response import SoftwaresResponse
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 
 if TYPE_CHECKING:
     from binarylane.client import Client
@@ -27,13 +28,9 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "id",
-            "enabled",
             "name",
             "description",
             "cost_per_licence_per_month",
-            "minimum_licence_count",
-            "maximum_licence_count",
-            "licence_step_count",
         ]
 
     @property
@@ -84,10 +81,11 @@ class Command(ListRunner):
         self,
         client: Client,
         request: object,
-    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SoftwaresResponse]]:
+    ) -> Tuple[HTTPStatus, Union[None, ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
         assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: SoftwaresResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
         page = 0
         per_page = 25

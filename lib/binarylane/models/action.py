@@ -34,17 +34,13 @@ class Action:
             'steps' and this may also contain information about the current and completed steps.
         completed_at (Union[Unset, None, datetime.datetime]): The timestamp in ISO8601 format of when processing of this
             action completed. If this value is null the action is currently in progress.
-        resource_type (Union[Unset, None, ResourceType]): The resource type (if any) associated with this action. The
-            resource type also determines which (if any) of the resource_id or resource_uuid fields are populated.
+        resource_type (Union[Unset, None, ResourceType]): The resource type (if any) associated with this action.
         resource_id (Union[Unset, None, int]): The resource id of the resource (if any) associated with this action.
-            This is only populated when the resource type has an integer identifier.
-        resource_uuid (Union[Unset, None, str]): The resource id of the resource (if any) associated with this action.
-            This is only populated when the resource type has a UUID identifier.
         region (Union[Unset, None, Region]): The region (if any) of the resource associated with this action.
         region_slug (Union[Unset, None, str]): The region slug (if any) of the resource associated with this action.
         result_data (Union[Unset, None, str]): Returned information from a completed action. For example: a successful
             completed 'ping' action will have the ping value in ms in this field.
-        blocking_invoice_id (Union[Unset, None, str]): If this Action is currently blocked by an invoice that requires
+        blocking_invoice_id (Union[Unset, None, int]): If this Action is currently blocked by an invoice that requires
             payment this property will be set.
         user_interaction_required (Union[Unset, None, UserInteractionRequired]): If this is not null the action is
             waiting on a response from the user.
@@ -58,11 +54,10 @@ class Action:
     completed_at: Union[Unset, None, datetime.datetime] = UNSET
     resource_type: Union[Unset, None, ResourceType] = UNSET
     resource_id: Union[Unset, None, int] = UNSET
-    resource_uuid: Union[Unset, None, str] = UNSET
     region: Union[Unset, None, Region] = UNSET
     region_slug: Union[Unset, None, str] = UNSET
     result_data: Union[Unset, None, str] = UNSET
-    blocking_invoice_id: Union[Unset, None, str] = UNSET
+    blocking_invoice_id: Union[Unset, None, int] = UNSET
     user_interaction_required: Union[Unset, None, UserInteractionRequired] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
@@ -84,7 +79,6 @@ class Action:
             resource_type = self.resource_type.value if self.resource_type else None
 
         resource_id = self.resource_id
-        resource_uuid = self.resource_uuid
         region: Union[Unset, None, Dict[str, Any]] = UNSET
         if not isinstance(self.region, Unset):
             region = self.region.to_dict() if self.region else None
@@ -115,8 +109,6 @@ class Action:
             field_dict["resource_type"] = resource_type
         if resource_id is not UNSET:
             field_dict["resource_id"] = resource_id
-        if resource_uuid is not UNSET:
-            field_dict["resource_uuid"] = resource_uuid
         if region is not UNSET:
             field_dict["region"] = region
         if region_slug is not UNSET:
@@ -163,8 +155,6 @@ class Action:
 
         resource_id = d.pop("resource_id", UNSET)
 
-        resource_uuid = d.pop("resource_uuid", UNSET)
-
         _region = d.pop("region", UNSET)
         region: Union[Unset, None, Region]
         if _region is None:
@@ -198,7 +188,6 @@ class Action:
             completed_at=completed_at,
             resource_type=resource_type,
             resource_id=resource_id,
-            resource_uuid=resource_uuid,
             region=region,
             region_slug=region_slug,
             result_data=result_data,

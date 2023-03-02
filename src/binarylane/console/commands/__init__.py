@@ -1591,6 +1591,21 @@ class GetV2ServersServerIdUserData(ModuleRunner):
 
 
 @register_command
+class GetV2ServersServerIdConsole(ModuleRunner):
+    @property
+    def name(self) -> str:
+        return "server console"
+
+    @property
+    def description(self) -> str:
+        return ""
+
+    @property
+    def module_path(self) -> str:
+        return ".commands.servers.get_v2_servers_server_id_console"
+
+
+@register_command
 class GetV2Sizes(ModuleRunner):
     @property
     def name(self) -> str:

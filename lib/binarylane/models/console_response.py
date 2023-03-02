@@ -4,39 +4,29 @@ from typing import Any, Dict, List, Type, TypeVar
 
 import attr
 
-T = TypeVar("T", bound="RescueConsole")
+from binarylane.models.console import Console
+
+T = TypeVar("T", bound="ConsoleResponse")
 
 
 @attr.s(auto_attribs=True)
-class RescueConsole:
+class ConsoleResponse:
     """
     Attributes:
-        url (str): The URL for the embedded version of the rescue console.
-        fullscreen_url (str): The URL for the full screen version of the rescue console.
-        width (int): Rescue console native width.
-        height (int): Rescue console native height.
+        console (Console):
     """
 
-    url: str
-    fullscreen_url: str
-    width: int
-    height: int
+    console: Console
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        url = self.url
-        fullscreen_url = self.fullscreen_url
-        width = self.width
-        height = self.height
+        console = self.console.to_dict()
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "url": url,
-                "fullscreen_url": fullscreen_url,
-                "width": width,
-                "height": height,
+                "console": console,
             }
         )
 
@@ -45,23 +35,14 @@ class RescueConsole:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        url = d.pop("url")
+        console = Console.from_dict(d.pop("console"))
 
-        fullscreen_url = d.pop("fullscreen_url")
-
-        width = d.pop("width")
-
-        height = d.pop("height")
-
-        rescue_console = cls(
-            url=url,
-            fullscreen_url=fullscreen_url,
-            width=width,
-            height=height,
+        console_response = cls(
+            console=console,
         )
 
-        rescue_console.additional_properties = d
-        return rescue_console
+        console_response.additional_properties = d
+        return console_response
 
     @property
     def additional_keys(self) -> List[str]:

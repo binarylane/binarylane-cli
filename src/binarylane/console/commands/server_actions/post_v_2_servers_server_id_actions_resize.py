@@ -266,7 +266,7 @@ Submit an empty array to disable deployment of default keys.""",
 
         json_body_change_licenses_license_.add_primitive(
             "software_id",
-            str,
+            int,
             option_name="software-id",
             required=True,
             description="""The ID of the software to license.""",

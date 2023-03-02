@@ -60,7 +60,6 @@ class Command(ListRunner):
             "networks": """A list of the networks of the server.""",
             "disks": """A list of the disks that are currently attached to the server.""",
             "backup_settings": """Detailed backup settings for the server.""",
-            "rescue_console": """Details of the rescue console for this server.""",
             "failover_ips": """A list of any assigned failover IP addresses for this server.""",
             "host": """Summary information about the host of this server.""",
             "password_change_supported": """If this is true the password_reset server action can be called to change a user's password. If this is false the password_reset server action will merely clear the root/administrator password allowing the password to be changed via the web console.""",

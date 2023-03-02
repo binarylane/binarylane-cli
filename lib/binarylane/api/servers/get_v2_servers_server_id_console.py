@@ -1,23 +1,24 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, cast
 
 import httpx
 
 from binarylane import errors
 from binarylane.client import Client
+from binarylane.models.console_response import ConsoleResponse
 from binarylane.models.problem_details import ProblemDetails
-from binarylane.models.software_response import SoftwareResponse
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import Response
 
 
 def _get_kwargs(
-    software_id: int,
+    server_id: int,
     *,
     client: Client,
 ) -> Dict[str, Any]:
-    url = "{}/v2/software/{software_id}".format(client.base_url, software_id=software_id)
+    url = "{}/v2/servers/{server_id}/console".format(client.base_url, server_id=server_id)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
@@ -31,22 +32,33 @@ def _get_kwargs(
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[ProblemDetails, SoftwareResponse]]:
+def _parse_response(
+    *, client: Client, response: httpx.Response
+) -> Optional[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
     if response.status_code == HTTPStatus.OK:
-        response_200 = SoftwareResponse.from_dict(response.json())
+        response_200 = ConsoleResponse.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.BAD_REQUEST:
+        response_400 = ValidationProblemDetails.from_dict(response.json())
+
+        return response_400
     if response.status_code == HTTPStatus.NOT_FOUND:
         response_404 = ProblemDetails.from_dict(response.json())
 
         return response_404
+    if response.status_code == HTTPStatus.UNAUTHORIZED:
+        response_401 = cast(Any, None)
+        return response_401
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(f"Unexpected status code: {response.status_code}")
     else:
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[ProblemDetails, SoftwareResponse]]:
+def _build_response(
+    *, client: Client, response: httpx.Response
+) -> Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -56,25 +68,24 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 
 def sync_detailed(
-    software_id: int,
+    server_id: int,
     *,
     client: Client,
-) -> Response[Union[ProblemDetails, SoftwareResponse]]:
-    """Fetch Existing Software
-
+) -> Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
+    """
     Args:
-        software_id (int): The ID of the software to fetch.
+        server_id (int): The target server id.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ProblemDetails, SoftwareResponse]]
+        Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
-        software_id=software_id,
+        server_id=server_id,
         client=client,
     )
 
@@ -87,49 +98,47 @@ def sync_detailed(
 
 
 def sync(
-    software_id: int,
+    server_id: int,
     *,
     client: Client,
-) -> Optional[Union[ProblemDetails, SoftwareResponse]]:
-    """Fetch Existing Software
-
+) -> Optional[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
+    """
     Args:
-        software_id (int): The ID of the software to fetch.
+        server_id (int): The target server id.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ProblemDetails, SoftwareResponse]]
+        Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]
     """
 
     return sync_detailed(
-        software_id=software_id,
+        server_id=server_id,
         client=client,
     ).parsed
 
 
 async def asyncio_detailed(
-    software_id: int,
+    server_id: int,
     *,
     client: Client,
-) -> Response[Union[ProblemDetails, SoftwareResponse]]:
-    """Fetch Existing Software
-
+) -> Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
+    """
     Args:
-        software_id (int): The ID of the software to fetch.
+        server_id (int): The target server id.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ProblemDetails, SoftwareResponse]]
+        Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
-        software_id=software_id,
+        server_id=server_id,
         client=client,
     )
 
@@ -140,26 +149,25 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    software_id: int,
+    server_id: int,
     *,
     client: Client,
-) -> Optional[Union[ProblemDetails, SoftwareResponse]]:
-    """Fetch Existing Software
-
+) -> Optional[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
+    """
     Args:
-        software_id (int): The ID of the software to fetch.
+        server_id (int): The target server id.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[ProblemDetails, SoftwareResponse]]
+        Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]
     """
 
     return (
         await asyncio_detailed(
-            software_id=software_id,
+            server_id=server_id,
             client=client,
         )
     ).parsed

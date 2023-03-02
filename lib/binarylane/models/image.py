@@ -21,7 +21,9 @@ class Image:
     """
     Attributes:
         id (int): The ID of this image.
-        name (str): The name of this image.
+        name (str): If this is an operating system image, this is the name of the operating system version. If this is a
+            backup image, this is the label of the backup if it exists, otherwise it is the UTC timestamp of the creation of
+            the image.
         type (ImageType):
             | Value | Description |
             | ----- | ----------- |
@@ -49,7 +51,8 @@ class Image:
         distribution (Union[Unset, None, str]): If this is an operating system image, this is the name of the
             distribution. If this is a backup image, this is the name of the distribution the server is using.
         full_name (Union[Unset, None, str]): If this is an operating system image, this is the name and version of the
-            distribution. If this is a backup image, this is the name and version of the distribution the server is using.
+            distribution. If this is a backup image, this is the server hostname and label of the backup if it exists,
+            otherwise it is the server hostname and UTC timestamp of the creation of the image.
         slug (Union[Unset, None, str]): If this is an operating system image this is a slug which may be used as an
             alternative to the ID as a reference.
         created_at (Union[Unset, None, datetime.datetime]): If this is a backup image this is the date and time in

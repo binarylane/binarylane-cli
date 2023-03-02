@@ -15,13 +15,13 @@ class ResizeDisk:
 
     Attributes:
         type (ResizeDiskType):
-        disk_id (str): The ID of the existing disk. See server.disks for a list of IDs.
+        disk_id (int): The ID of the existing disk. See server.disks for a list of IDs.
         size_gigabytes (int): The new size of the disk in GB. If increasing the size of the disk the server must have
             sufficient unallocated storage space.
     """
 
     type: ResizeDiskType
-    disk_id: str
+    disk_id: int
     size_gigabytes: int
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
