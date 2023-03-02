@@ -27,4 +27,5 @@ def test_command_parser(command_runner: Type[CommandRunner]) -> None:
     Attribute.raise_on_unsupported = True
 
     runner = TypeRunner(command_runner)
+    assert runner.test.description, f"{type(runner.test)} does not have a description"
     runner.run([CommandRunner.CHECK])
