@@ -31,11 +31,11 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
 """
         )
         # Add supplied token to config
-        config = self.context.config
+        config = self.context
         config.set(Option.API_TOKEN, input("Enter your API access token: "))
 
         # Test the supplied token:
-        print(f"Trying to authenticate with {config.get(Option.API_URL)} ...")
+        print(f"Trying to authenticate with {config.api_url} ...")
         if self._try_token(config):
             config.save()
             print("Success! API access token saved.")
@@ -48,15 +48,12 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         from binarylane.api.accounts.get_v2_account import sync_detailed
         from binarylane.client import AuthenticatedClient
 
-        api_url = config.get(Option.API_URL)
-        if api_url is None:
-            raise ValueError(Option.API_URL)
-        api_token = config.get(Option.API_TOKEN)
-        if api_token is None or not str(api_token):
-            api_token = "unconfigured"
-
         client = AuthenticatedClient(
-            base_url=api_url, token=api_token, verify_ssl=not bool(config.get(Option.API_DEVELOPMENT))
+            base_url=config.api_url,
+            token=config.api_token,
+            verify_ssl=not config.api_development,
+            timeout=5.0,
+            raise_on_unexpected_status=False,
         )
         response = sync_detailed(client=client)
 

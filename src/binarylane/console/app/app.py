@@ -5,7 +5,6 @@ from typing import List, Sequence
 from binarylane.pycompat.functools import cached_property
 
 from binarylane.console.app.lazy_loader import LazyLoader
-from binarylane.console.config import Config, Option
 from binarylane.console.runners import Runner
 from binarylane.console.runners.package import PackageRunner
 
@@ -54,7 +53,7 @@ class AppRunner(PackageRunner):
 
     def configure(self) -> None:
         super().configure()
-        config_section, api_url = self.context[Option.CONFIG_SECTION], self.context[Option.API_URL]
+        config_section, api_url = self.context.config_section, self.context.api_url
         self._options.add_argument(
             "--context", metavar="NAME", help=f'Name of authentication context to use (default: "{config_section}")'
         )
@@ -64,4 +63,4 @@ class AppRunner(PackageRunner):
     def process(self, parsed: argparse.Namespace) -> None:
         # Only run this once, at the top level
         if not self._prefix:
-            self.context.config = Config(init=parsed)
+            self.context.initialize(parsed)

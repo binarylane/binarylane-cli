@@ -5,6 +5,7 @@ from typing import List, Optional, Type, TypeVar, Union, overload
 
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.config._options import Options
 from binarylane.console.config._value import Value
 from binarylane.console.config.commandline_source import CommandlineSource
 from binarylane.console.config.default_source import DefaultSource
@@ -17,8 +18,12 @@ from binarylane.console.config.source import Source
 T = TypeVar("T", bound=Source)
 
 
-class Config:
+class Config(Options):
     _config_sources: List[Source]
+
+    @property
+    def _option_source(self) -> Source:
+        return self
 
     def __init__(self, *, init: Optional[Namespace] = None, default_config: bool = True) -> None:
         self._config_sources = []
@@ -26,9 +31,11 @@ class Config:
         if default_config is True:
             self.add_config_source(DefaultSource())
 
-        if init is None:
-            return
+        if init is not None:
+            self.initialize(init)
 
+    def initialize(self, init: Namespace) -> None:
+        # Load configuration sources
         self.add_config_source(FileSource())
         self.add_config_source(EnvironmentSource())
         self.add_config_source(CommandlineSource(init))
