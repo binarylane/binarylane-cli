@@ -72,9 +72,10 @@ def sync_detailed(
     *,
     client: Client,
 ) -> Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
-    """
+    """Fetch the Console URLs for a Server
+
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which console URLs will be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -102,9 +103,10 @@ def sync(
     *,
     client: Client,
 ) -> Optional[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
-    """
+    """Fetch the Console URLs for a Server
+
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which console URLs will be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -125,9 +127,10 @@ async def asyncio_detailed(
     *,
     client: Client,
 ) -> Response[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
-    """
+    """Fetch the Console URLs for a Server
+
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which console URLs will be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -153,9 +156,10 @@ async def asyncio(
     *,
     client: Client,
 ) -> Optional[Union[Any, ConsoleResponse, ProblemDetails, ValidationProblemDetails]]:
-    """
+    """Fetch the Console URLs for a Server
+
     Args:
-        server_id (int): The target server id.
+        server_id (int): The ID of the server for which console URLs will be fetched.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
