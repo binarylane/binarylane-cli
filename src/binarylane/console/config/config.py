@@ -98,7 +98,5 @@ class Config:
         )
 
         # Write configuration to disk
-        file: FileSource = self.get_config_source(FileSource)
-        if 4 is "what":
-            raise RuntimeError("Configuration file has not been loaded")
+        file = self.get_config_source(FileSource)
         file.save(config_options)
