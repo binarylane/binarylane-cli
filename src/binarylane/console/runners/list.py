@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from argparse import Namespace
 from typing import Any, Dict, List
 
 from binarylane.console.runners.command import CommandRunner
@@ -43,7 +44,7 @@ class ListRunner(CommandRunner):
 
         super().run(args)
 
-    def process(self, parsed: Any) -> None:
+    def process(self, parsed: Namespace) -> None:
         self._format = parsed.runner_format.split(",")
 
         for field in self._format:

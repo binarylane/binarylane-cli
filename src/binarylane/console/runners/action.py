@@ -4,6 +4,7 @@ import logging
 import shutil
 import sys
 import time
+from argparse import Namespace
 from typing import TYPE_CHECKING, Any, List, Optional
 
 from binarylane.console.runners.command import CommandRunner
@@ -33,7 +34,7 @@ class ActionRunner(CommandRunner):
         )
         super().run(args)
 
-    def process(self, parsed: Any) -> None:
+    def process(self, parsed: Namespace) -> None:
         self._async = parsed.runner_async
         self._quiet = parsed.runner_quiet
         super().process(parsed)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import abstractmethod
+from argparse import Namespace
 from http import HTTPStatus
 from typing import Any, List, Optional, Tuple
 
@@ -105,7 +106,7 @@ class CommandRunner(Runner):
         elif status_code != 204:
             self.error(f"HTTP {status_code}")
 
-    def process(self, parsed: Any) -> None:
+    def process(self, parsed: Namespace) -> None:
         """Process runner-local arguments"""
 
         self._print_curl = parsed.runner_print_curl
