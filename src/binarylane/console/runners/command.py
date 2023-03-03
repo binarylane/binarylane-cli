@@ -129,22 +129,22 @@ class CommandRunner(Runner):
 
         self.process(parsed)
 
-        # NOTE: on handling when `ctx.get(Setting.ApiToken) is None` - i.e. has not been provided:
+        # NOTE: on handling when `ctx.get(Option.API_TOKEN) is None` - i.e. has not been provided:
         #
         # 1. The code-generated endpoints currently all have AuthenticatedClient as a parameter, regardless of
         #    whether the given endpoint actually requires authentication, however there are endpoints returning
         #    non-customer specific information like `bl size list`, `bl region list` that do not require
         #    authentication to get a HTTP 200 response from. For this reason, we currently must create an
         #    AuthenticatedClient() object for every request.
-        # 2. The code-generated AuthenticatedClient is generated with `token:  `str` rather than `Optional[str]`
-        #    which makes sense, so we need to provide /a/ str.
+        # 2. The code-generated AuthenticatedClient is generated with `token: str` rather than `Optional[str]`
+        #    which makes sense, so we need to provide /something/.
         # 3. If token is "" then httpx will raise LocalProtocolError about the "Authorization: Bearer " header.
         # 4. If static type-checking is ignored and AuthenticatedClient is provided with `token=None`, then
         #    that value is coerced to str resulting in "Authorization: Bearer None" but that will look like a bug.
         # 5. Since "" is not accepted by httpx, for clarity we use a value of "unconfigured" for this situation.
         # 6. If the called endpoint does require an API token the response will be HTTP 401. Our response() method
         #    will then display a message requesting a token be provided via `bl configure`. If endpoint is
-        #    publically accessable, the "Authorization: Bearer unconfigured" header is ignored and the response
+        #    publicly accessable, the "Authorization: Bearer unconfigured" header is ignored and the response
         #    will be HTTP 200, which can then be processed as normal.
         #
         # TLDR: when user has not provided an API token, because of current limitations with generated

@@ -14,7 +14,7 @@ from binarylane.console.config.option import Option
 from binarylane.console.config.runtime_source import RuntimeSource
 from binarylane.console.config.source import Source
 
-SourceT = TypeVar("SourceT", bound=Source)
+T = TypeVar("T", bound=Source)
 
 
 class Config:
@@ -61,16 +61,14 @@ class Config:
         return self
 
     @overload
-    def get_config_source(self, source_type: Type[SourceT]) -> SourceT:
+    def get_config_source(self, source_type: Type[T]) -> T:
         ...
 
     @overload
-    def get_config_source(self, source_type: Type[SourceT], default: SourceT) -> SourceT:
+    def get_config_source(self, source_type: Type[T], default: Optional[T]) -> Optional[T]:
         ...
 
-    def get_config_source(
-        self, source_type: Type[SourceT], default: Union[Unset, None, SourceT] = UNSET
-    ) -> Optional[SourceT]:
+    def get_config_source(self, source_type: Type[T], default: Union[Unset, None, T] = UNSET) -> Optional[T]:
         for source in self._config_sources:
             if isinstance(source, source_type):
                 return source
