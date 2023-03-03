@@ -3,8 +3,8 @@ from __future__ import annotations
 import os
 from typing import ClassVar, Optional
 
-from binarylane.console.config.option import Option
-from binarylane.console.config.source import Source
+from binarylane.config.option import Option
+from binarylane.config.source import Source
 
 
 class EnvironmentSource(Source):

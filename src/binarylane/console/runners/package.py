@@ -7,7 +7,7 @@ from argparse import ArgumentParser, HelpFormatter
 from typing import TYPE_CHECKING, List, NoReturn, Sequence, TypeAlias
 from binarylane.pycompat.functools import cached_property
 
-from binarylane.console.context import Context
+from binarylane.console import Context
 from binarylane.console.runners import Runner
 from binarylane.console.runners.module import ModuleRunner
 

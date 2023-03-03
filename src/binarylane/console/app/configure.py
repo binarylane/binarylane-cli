@@ -3,8 +3,9 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, List
 
+from binarylane.config import Config, Option
+
 from binarylane.console.app.lazy_runner import LazyRunner
-from binarylane.console.config import Config, Option
 from binarylane.console.runners import Runner
 
 if TYPE_CHECKING:

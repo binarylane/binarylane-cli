@@ -3,17 +3,16 @@ from __future__ import annotations
 from argparse import Namespace
 from typing import List, Optional, Type, TypeVar, Union, overload
 
+from binarylane.config._options import Options
+from binarylane.config._value import Value
+from binarylane.config.commandline_source import CommandlineSource
+from binarylane.config.default_source import DefaultSource
+from binarylane.config.environment_source import EnvironmentSource
+from binarylane.config.file_source import FileSource
+from binarylane.config.option import Option
+from binarylane.config.runtime_source import RuntimeSource
+from binarylane.config.source import Source
 from binarylane.types import UNSET, Unset
-
-from binarylane.console.config._options import Options
-from binarylane.console.config._value import Value
-from binarylane.console.config.commandline_source import CommandlineSource
-from binarylane.console.config.default_source import DefaultSource
-from binarylane.console.config.environment_source import EnvironmentSource
-from binarylane.console.config.file_source import FileSource
-from binarylane.console.config.option import Option
-from binarylane.console.config.runtime_source import RuntimeSource
-from binarylane.console.config.source import Source
 
 T = TypeVar("T", bound=Source)
 

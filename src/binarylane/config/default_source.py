@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import ClassVar, Dict, Optional
 
-from binarylane.console.config.option import Option
-from binarylane.console.config.source import Source
+from binarylane.config.option import Option
+from binarylane.config.source import Source
 
 
 class DefaultSource(Source):

@@ -8,7 +8,7 @@ from typing import Any, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
 
-from binarylane.console.context import Context
+from binarylane.console import Context
 from binarylane.console.parser import Mapping
 from binarylane.console.parser.parser import Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer

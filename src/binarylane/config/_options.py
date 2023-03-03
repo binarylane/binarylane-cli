@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from binarylane.console.config.option import Option
-from binarylane.console.config.source import Source
+from binarylane.config.option import Option
+from binarylane.config.source import Source
 
 
 class Options(ABC):
+    """Typed access to value of each configuration option"""
+
     @property
     @abstractmethod
     def _option_source(self) -> Source:

@@ -5,8 +5,8 @@ from typing import Generator, Type, Union
 
 import pytest
 
-from binarylane.console.config import Config, Option
-from binarylane.console.config.environment_source import EnvironmentSource
+from binarylane.config import Config, Option
+from binarylane.config.environment_source import EnvironmentSource
 
 
 @pytest.fixture()

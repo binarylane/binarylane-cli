@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import Generic, List, Type, TypeVar
 
-from binarylane.console.config import Config, Option
-from binarylane.console.context import Context
+from binarylane.config import Option
+
+from binarylane.console import Context
 from binarylane.console.runners import Runner
 
 T = TypeVar("T", bound=Runner)

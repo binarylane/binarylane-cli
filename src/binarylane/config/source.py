@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, Protocol
 
-from binarylane.console.config.option import Option
+from binarylane.config.option import Option
 
 
 class Source(Protocol):
