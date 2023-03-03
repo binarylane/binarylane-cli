@@ -3,10 +3,11 @@ from __future__ import annotations
 import os
 from typing import ClassVar, Optional
 
-from binarylane.console import ConfigSource
+from binarylane.console.config.option import Option
+from binarylane.console.config.source import Source
 
 
-class EnvironmentConfig(ConfigSource):
+class EnvironmentSource(Source):
     prefix: ClassVar[str] = "BL_"
 
     def __init__(self) -> None:
@@ -15,5 +16,5 @@ class EnvironmentConfig(ConfigSource):
     def _get_name(self, key: str) -> str:
         return key[len(self.prefix) :].lower().replace("_", "-")
 
-    def get(self, name: str) -> Optional[str]:
-        return self._items.get(name)
+    def get(self, name: Option) -> Optional[str]:
+        return self._items.get(name, None)

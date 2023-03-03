@@ -5,9 +5,9 @@ import os
 import sys
 from typing import List
 
-from binarylane.console import Context
 from binarylane.console.app.app import AppRunner
 from binarylane.console.config import Config
+from binarylane.console.context import Context
 
 logger = logging.getLogger(__name__)
 

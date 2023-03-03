@@ -4,12 +4,13 @@ import configparser
 import os
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional
 
-from binarylane.console import ConfigSource
+from binarylane.console.config.option import Option
+from binarylane.console.config.source import Source
 
 
-class FileConfig(ConfigSource):
+class FileSource(Source):
     _DIRNAME = "binarylane"
     _FILENAME = "config.ini"
     _API_TOKEN = "api-token"
@@ -61,10 +62,10 @@ class FileConfig(ConfigSource):
 
         # Read legacy config
         with open(migrate_filename, encoding="utf-8") as file:
-            self._context[self._API_TOKEN] = file.read().strip()
+            api_token = file.read().strip()
 
         # Write current config format
-        self.save()
+        self.save({Option.API_TOKEN: api_token})
 
         # Remove legacy config
         migrate_filename.unlink()
@@ -86,50 +87,27 @@ class FileConfig(ConfigSource):
             raise ValueError(f"Not a boolean: {env_override}")
         return self._parser.BOOLEAN_STATES[env_override.lower()]
 
-    def save(self) -> None:
-        """Write contents of _parser to disk"""
+    def save(self, config_options: Dict[Option, Optional[str]]) -> None:
+        # Update the section with provided options:
+        for option, value in config_options.items():
+            if value is not None:
+                # ConfigParser needs actual str, not _Value
+                self._section[option] = str(value)
+            # A value of None means "use default", and so should be removed from the section
+            else:
+                self._section.pop(option, None)
+
+        # Write the updated config to disk
         config_dir = self._get_config_dir()
         config_dir.mkdir(mode=0o700, exist_ok=True)
         with open(config_dir / self._FILENAME, "w", encoding="utf-8") as file:
             self._parser.write(file)
 
     @property
-    def _context(self) -> configparser.SectionProxy:
+    def _section(self) -> configparser.SectionProxy:
         if self.section_name not in self._parser:
             self._parser[self.section_name] = {}
         return self._parser[self.section_name]
 
-    @property
-    def api_url(self) -> str:
-        """URL of BinaryLane API"""
-        env_override = os.getenv("BL_API_URL")
-        if env_override:
-            return env_override
-
-        return "https://api.binarylane.com.au"
-
-    @property
-    def api_token(self) -> str:
-        """Obtain user's API token from environment variable or configuration file"""
-        token = os.getenv("BL_API_TOKEN")
-        if token:
-            return token
-
-        return self._context.get(self._API_TOKEN)
-
-    @api_token.setter
-    def api_token(self, value: str) -> None:
-        self._context[self._API_TOKEN] = value
-
-    @property
-    def verify_ssl(self) -> bool:
-        """Verify SSL certificates when making API requests"""
-
-        # Skip validation if we're in development mode
-        if self._get_is_development():
-            return False
-
-        return True
-
-    def get(self, name: str) -> Optional[str]:
-        return self._context.get(name)
+    def get(self, name: Option) -> Optional[str]:
+        return self._section.get(name, None)

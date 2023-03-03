@@ -6,7 +6,7 @@ import sys
 from abc import ABC, abstractmethod
 from typing import List
 
-from binarylane.console import Context
+from binarylane.console.context import Context
 
 
 class Runner(ABC):

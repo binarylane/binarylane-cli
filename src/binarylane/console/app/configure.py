@@ -3,9 +3,8 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, List
 
-from binarylane.console import Setting
 from binarylane.console.app.lazy_runner import LazyRunner
-from binarylane.console.config import Config
+from binarylane.console.config import Config, Option
 from binarylane.console.runners import Runner
 
 if TYPE_CHECKING:
@@ -31,13 +30,12 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
   3. Copy the generated API token to the clipboard and paste below.
 """
         )
-        # Create new config based on context
-        config = Config(default_config=False)
-        config.add_config_source(self.context.config)
-        # Add api-token to it
-        config.set(Setting.ApiToken, input("Enter your API access token: "))
+        # Add supplied token to config
+        config = self.context.config
+        config.set(Option.API_TOKEN, input("Enter your API access token: "))
 
-        print(f"Trying to authenticate with {config.get(Setting.ApiUrl)} ...")
+        # Test the supplied token:
+        print(f"Trying to authenticate with {config.get(Option.API_URL)} ...")
         if self._try_token(config):
             config.save()
             print("Success! API access token saved.")
@@ -50,13 +48,15 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         from binarylane.api.accounts.get_v2_account import sync_detailed
         from binarylane.client import AuthenticatedClient
 
-        api_url = Setting.ApiUrl
+        api_url = config.get(Option.API_URL)
         if api_url is None:
-            raise ValueError(Setting.ApiUrl)
-        api_token = Setting.ApiToken or ""
+            raise ValueError(Option.API_URL)
+        api_token = config.get(Option.API_TOKEN)
+        if api_token is None or not str(api_token):
+            api_token = "unconfigured"
 
         client = AuthenticatedClient(
-            base_url=api_url, token=api_token, verify_ssl=not bool(config.get(Setting.ApiDevelopment))
+            base_url=api_url, token=api_token, verify_ssl=not bool(config.get(Option.API_DEVELOPMENT))
         )
         response = sync_detailed(client=client)
 

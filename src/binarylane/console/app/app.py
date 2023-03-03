@@ -4,9 +4,8 @@ import argparse
 from typing import List, Sequence
 from binarylane.pycompat.functools import cached_property
 
-from binarylane.console import Setting
 from binarylane.console.app.lazy_loader import LazyLoader
-from binarylane.console.config import Config
+from binarylane.console.config import Config, Option
 from binarylane.console.runners import Runner
 from binarylane.console.runners.package import PackageRunner
 
@@ -55,7 +54,7 @@ class AppRunner(PackageRunner):
 
     def configure(self) -> None:
         super().configure()
-        config_section, api_url = self.context[Setting.ConfigSection], self.context[Setting.ApiUrl]
+        config_section, api_url = self.context[Option.CONFIG_SECTION], self.context[Option.API_URL]
         self._options.add_argument(
             "--context", metavar="NAME", help=f'Name of authentication context to use (default: "{config_section}")'
         )

@@ -5,8 +5,8 @@ from typing import Generator, Type, Union
 
 import pytest
 
-from binarylane.console import Setting
-from binarylane.console.config import Config, EnvironmentConfig
+from binarylane.console.config import Config, Option
+from binarylane.console.config.environment_source import EnvironmentSource
 
 
 @pytest.fixture()
@@ -22,7 +22,7 @@ def config() -> Generator[Config, None, None]:
 @pytest.mark.parametrize(
     "value,expected",
     [
-        ("", False),
+        ("", ValueError),
         ("0", False),
         ("no", False),
         ("off", False),
@@ -37,16 +37,16 @@ def config() -> Generator[Config, None, None]:
 )
 def test_development_environment_variable(config: Config, value: str, expected: Union[bool, Type[Exception]]) -> None:
     os.environ["BL_API_DEVELOPMENT"] = value
-    config.add_config_source(EnvironmentConfig())
+    config.add_config_source(EnvironmentSource())
 
     if expected is not ValueError:
-        assert expected == bool(config.get(Setting.ApiDevelopment))
+        assert expected == bool(config.get(Option.API_DEVELOPMENT))
         return
 
     with pytest.raises(ValueError) as exc:
-        bool(config.get(Setting.ApiDevelopment))
+        bool(config.get(Option.API_DEVELOPMENT))
     assert exc.match("Not a boolean: " + value)
 
 
 def test_development_default(config: Config) -> None:
-    assert bool(config.get(Setting.ApiDevelopment)) is False
+    assert bool(config.get(Option.API_DEVELOPMENT)) is False

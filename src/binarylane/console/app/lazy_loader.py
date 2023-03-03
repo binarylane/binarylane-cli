@@ -4,8 +4,8 @@ import importlib
 import logging
 from typing import List, Type
 
-from binarylane.console import Context
 from binarylane.console.app.lazy_runner import LazyRunner
+from binarylane.console.context import Context
 from binarylane.console.runners import Runner
 
 logger = logging.getLogger(__name__)

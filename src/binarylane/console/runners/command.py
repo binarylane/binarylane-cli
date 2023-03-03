@@ -7,7 +7,8 @@ from typing import Any, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
 
-from binarylane.console import Context, Setting
+from binarylane.console.config import Option
+from binarylane.console.context import Context
 from binarylane.console.parser import Mapping
 from binarylane.console.parser.parser import Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
@@ -155,9 +156,9 @@ class CommandRunner(Runner):
         # message requesting `bl configure`; while public endpoints would use the token-less Client() instead.
 
         self._client = AuthenticatedClient(
-            self.context[Setting.ApiUrl],
-            self.context.get(Setting.ApiToken, "unconfigured"),
-            verify_ssl=not self.context.get(Setting.ApiDevelopment),
+            self.context[Option.API_URL],
+            self.context.get(Option.API_TOKEN, "unconfigured"),
+            verify_ssl=not self.context.get(Option.API_DEVELOPMENT),
         )
         parsed.client = self._client
 

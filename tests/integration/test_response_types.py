@@ -4,8 +4,8 @@ from typing import Any, List
 
 import pytest
 
-from binarylane.console import Context
 from binarylane.console.commands import commands
+from binarylane.console.context import Context
 from binarylane.console.printers import formatter
 
 
