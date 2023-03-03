@@ -29,7 +29,7 @@ class Command(CommandRunner):
 
     @property
     def description(self) -> str:
-        return """"""
+        return """Fetch the Console URLs for a Server"""
 
     @property
     def reference_url(self) -> str:
@@ -43,7 +43,7 @@ class Command(CommandRunner):
             int,
             required=True,
             option_name=None,
-            description="""The target server id.""",
+            description="""The ID of the server for which console URLs will be fetched.""",
         )
 
         return mapping

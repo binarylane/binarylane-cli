@@ -1598,7 +1598,7 @@ class GetV2ServersServerIdConsole(ModuleRunner):
 
     @property
     def description(self) -> str:
-        return ""
+        return "Fetch the Console URLs for a Server"
 
     @property
     def module_path(self) -> str:
