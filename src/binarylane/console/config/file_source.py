@@ -75,18 +75,6 @@ class FileSource(Source):
         if config_file.exists():
             self._parser.read(config_file)
 
-    def _get_is_development(self) -> bool:
-        env_override = os.getenv("BL_API_DEVELOPMENT")
-
-        # Map both None and "" to False
-        if not env_override:
-            return False
-
-        # From ConfigParser
-        if env_override.lower() not in self._parser.BOOLEAN_STATES:
-            raise ValueError(f"Not a boolean: {env_override}")
-        return self._parser.BOOLEAN_STATES[env_override.lower()]
-
     def save(self, config_options: Dict[Option, Optional[str]]) -> None:
         # Update the section with provided options:
         for option, value in config_options.items():
