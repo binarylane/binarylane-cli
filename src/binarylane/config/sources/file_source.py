@@ -6,8 +6,7 @@ import sys
 from pathlib import Path
 from typing import Dict, Optional
 
-from binarylane.config.option import Option
-from binarylane.config.source import Source
+from binarylane.config.types import Option, Source
 
 
 class FileSource(Source):
@@ -18,10 +17,9 @@ class FileSource(Source):
 
     _parser: configparser.ConfigParser
 
-    def __init__(self) -> None:
+    def __init__(self, config_file: Optional[Path] = None) -> None:
         self._parser = configparser.ConfigParser()
-        self._migrate()
-        self._read()
+        self._read(config_file)
         self.section_name = configparser.DEFAULTSECT
 
     @staticmethod
@@ -54,24 +52,9 @@ class FileSource(Source):
     def _get_config_dir(self) -> Path:
         return self._get_config_home() / self._DIRNAME
 
-    def _migrate(self) -> None:
-        # NOTE: legacy config was always in ~/.config, even on Windows
-        migrate_filename = Path(os.path.expanduser("~/.config/python-blcli"))
-        if not migrate_filename.is_file():
-            return
-
-        # Read legacy config
-        with open(migrate_filename, encoding="utf-8") as file:
-            api_token = file.read().strip()
-
-        # Write current config format
-        self.save({Option.API_TOKEN: api_token})
-
-        # Remove legacy config
-        migrate_filename.unlink()
-
-    def _read(self) -> None:
-        config_file = self._get_config_dir() / self._FILENAME
+    def _read(self, config_file: Optional[Path] = None) -> None:
+        if config_file is None:
+            config_file = self._get_config_dir() / self._FILENAME
         if config_file.exists():
             self._parser.read(config_file)
 

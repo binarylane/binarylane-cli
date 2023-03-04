@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from binarylane.config.config import Config
-from binarylane.config.option import Option
+from binarylane.config.repository import Repository
+from binarylane.config.types import Option, Source
 
 __all__ = [
-    "Config",
+    "Repository",
     "Option",
+    "Source",
 ]

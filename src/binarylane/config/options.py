@@ -1,18 +1,28 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from configparser import ConfigParser
+from typing import ClassVar
 
-from binarylane.config.option import Option
-from binarylane.config.source import Source
+from binarylane.config.types import Option, Source
 
 
 class Options(ABC):
     """Typed access to value of each configuration option"""
 
+    UNCONFIGURED_TOKEN: ClassVar[str] = "unconfigured"
+
     @property
     @abstractmethod
     def _option_source(self) -> Source:
         ...
+
+    @staticmethod
+    def to_bool(string: str) -> bool:
+        value = ConfigParser.BOOLEAN_STATES.get(string.lower())
+        if value is not None:
+            return value
+        raise ValueError(f"Not a boolean: {string}")
 
     @property
     def api_url(self) -> str:
@@ -52,7 +62,7 @@ class Options(ABC):
         # message requesting `bl configure`; while public endpoints would use the token-less Client() instead.
 
         if value is None:
-            value = "unconfigured"
+            return self.UNCONFIGURED_TOKEN
         return value
 
     @property
@@ -60,7 +70,7 @@ class Options(ABC):
         value = self._option_source.get(Option.API_DEVELOPMENT)
         if value is None:
             return False
-        return bool(value)
+        return self.to_bool(value)
 
     @property
     def config_section(self) -> str:

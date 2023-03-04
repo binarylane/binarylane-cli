@@ -25,7 +25,7 @@ class TypeRunner(Runner, Generic[T]):
     def __init__(self, runner_type: Type[T]) -> None:
         super().__init__(Context())
         # Use default config, plus a token
-        self.context.set(Option.API_TOKEN, "example_token")
+        self.context.add_option(Option.API_TOKEN, "example_token")
 
         self._test = runner_type(self.context)
 
