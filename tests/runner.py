@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from typing import Generic, List, Type, TypeVar
 
-from binarylane.config import Option
-
 from binarylane.console import Context
 from binarylane.console.runners import Runner
 
@@ -25,7 +23,7 @@ class TypeRunner(Runner, Generic[T]):
     def __init__(self, runner_type: Type[T]) -> None:
         super().__init__(Context())
         # Use default config, plus a token
-        self.context.add_option(Option.API_TOKEN, "example_token")
+        self.context.api_token = "example_token"
 
         self._test = runner_type(self.context)
 

@@ -4,8 +4,8 @@ from typing import Optional, Type, Union
 
 import pytest
 
-from binarylane.config import Option
-from binarylane.config import Repository as Config
+from binarylane.config import Config
+from binarylane.config.options import Option
 from binarylane.config.sources import RuntimeSource
 
 
@@ -104,7 +104,7 @@ def test_value_conversion(value: Optional[str], expected: Union[bool, Type[Excep
         config.add_source(RuntimeSource({Option.API_DEVELOPMENT: value}))
 
     # In str context, value is unmodified:
-    assert value == config.get(Option.API_DEVELOPMENT)
+    assert value == config.get_option(Option.API_DEVELOPMENT)
 
     # In boolean context, convert to expected (True/False) ...
     if expected is not ValueError:

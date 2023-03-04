@@ -2,38 +2,47 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from configparser import ConfigParser
-from typing import ClassVar
+from enum import Enum
+from typing import ClassVar, Optional
 
-from binarylane.config.types import Option, Source
+
+class Option(str, Enum):
+    API_URL = "api-url"
+    API_TOKEN = "api-token"
+    API_DEVELOPMENT = "api-development"
+    CONFIG_SECTION = "context"
 
 
-class Options(ABC):
+class ConfigBase(ABC):
     """Typed access to value of each configuration option"""
 
     UNCONFIGURED_TOKEN: ClassVar[str] = "unconfigured"
 
-    @property
     @abstractmethod
-    def _option_source(self) -> Source:
+    def get_option(self, name: Option) -> Optional[str]:
+        ...
+
+    @abstractmethod
+    def add_option(self, name: Option, value: str) -> ConfigBase:
         ...
 
     @staticmethod
-    def to_bool(string: str) -> bool:
-        value = ConfigParser.BOOLEAN_STATES.get(string.lower())
+    def to_bool(name: str) -> bool:
+        value = ConfigParser.BOOLEAN_STATES.get(name.lower())
         if value is not None:
             return value
-        raise ValueError(f"Not a boolean: {string}")
+        raise ValueError(f"Not a boolean: {name}")
 
     @property
     def api_url(self) -> str:
-        value = self._option_source.get(Option.API_URL)
+        value = self.get_option(Option.API_URL)
         if value is None:
             raise RuntimeError(f"{Option.API_URL} is not defined")
         return value
 
     @property
     def api_token(self) -> str:
-        value = self._option_source.get(Option.API_TOKEN)
+        value = self.get_option(Option.API_TOKEN)
 
         # NOTE: on handling when `get(Option.API_TOKEN) is None` - i.e. has not been configured:
         #
@@ -65,16 +74,20 @@ class Options(ABC):
             return self.UNCONFIGURED_TOKEN
         return value
 
+    @api_token.setter
+    def api_token(self, value: str) -> None:
+        self.add_option(Option.API_TOKEN, value)
+
     @property
     def api_development(self) -> bool:
-        value = self._option_source.get(Option.API_DEVELOPMENT)
+        value = self.get_option(Option.API_DEVELOPMENT)
         if value is None:
             return False
         return self.to_bool(value)
 
     @property
     def config_section(self) -> str:
-        value = self._option_source.get(Option.CONFIG_SECTION)
+        value = self.get_option(Option.CONFIG_SECTION)
         if value is None:
             raise RuntimeError(f"{Option.CONFIG_SECTION} is not defined")
         return value

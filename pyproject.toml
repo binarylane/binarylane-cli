@@ -50,7 +50,7 @@ known_compat=["binarylane.pycompat"]
 known_first_party=["binarylane"]
 known_local_folder=["binarylane.console"]
 add_imports=['from __future__ import annotations']
-atomic=true
+combine_as_imports=true
 
 
 [tool.black]
@@ -84,6 +84,9 @@ explicit_package_bases = true
 exclude = [
     'src/binarylane/console/actions\.py$',  # from python 3.9
 ]
+
+[tool.pyright]
+extraPaths = [ 'src', 'lib' ]
 
 [build-system]
 requires = ["poetry-core"]

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, List
 
-from binarylane.config import Option, Repository
+from binarylane.config import Config
 
 from binarylane.console.app.lazy_runner import LazyRunner
 from binarylane.console.runners import Runner
@@ -33,7 +33,7 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         )
         # Add supplied token to config
         config = self.context
-        config.add_option(Option.API_TOKEN, input("Enter your API access token: "))
+        config.api_token = input("Enter your API access token: ")
 
         # Test the supplied token:
         print(f"Trying to authenticate with {config.api_url} ...")
@@ -43,7 +43,7 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         else:
             self.error("Invalid API token")
 
-    def _try_token(self, config: Repository) -> bool:
+    def _try_token(self, config: Config) -> bool:
         """Return bool indicating if API is accessible with current configuration"""
 
         from binarylane.api.accounts.get_v2_account import sync_detailed

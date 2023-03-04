@@ -1,15 +1,51 @@
 from __future__ import annotations
 
+import argparse
 import configparser
 import os
 import sys
+from abc import ABC
 from pathlib import Path
-from typing import Dict, Optional
+from typing import ClassVar, Dict, Optional
+from binarylane.pycompat.typing import Protocol
 
-from binarylane.config.types import Option, Source
+
+class _SourceBase(ABC):
+    _config: Dict[str, str]
+
+    def get(self, name: str) -> Optional[str]:
+        return self._config.get(name, None)
 
 
-class FileSource(Source):
+class CommandlineSource(_SourceBase):
+    def __init__(self, config: argparse.Namespace) -> None:
+        self._config = {key.replace("_", "-"): str(value) for key, value in vars(config).items() if value is not None}
+
+
+class DefaultSource(_SourceBase):
+    def __init__(self) -> None:
+        self._config = {
+            "api-url": "https://api.binarylane.com.au",
+            "context": "bl",
+        }
+
+
+class EnvironmentSource(_SourceBase):
+    prefix: ClassVar[str] = "BL_"
+
+    def __init__(self) -> None:
+        self._config = {self._get_name(key): value for key, value in os.environ.items() if key.startswith(self.prefix)}
+
+    def _get_name(self, key: str) -> str:
+        return key[len(self.prefix) :].lower().replace("_", "-")
+
+
+class RuntimeSource(_SourceBase):
+    def __init__(self, config: Dict[str, str]) -> None:
+        self._config = config
+
+
+class FileSource:
     _DIRNAME = "binarylane"
     _FILENAME = "config.ini"
     _API_TOKEN = "api-token"
@@ -58,7 +94,7 @@ class FileSource(Source):
         if config_file.exists():
             self._parser.read(config_file)
 
-    def save(self, config_options: Dict[Option, Optional[str]]) -> None:
+    def save(self, config_options: Dict[str, Optional[str]]) -> None:
         # Update the section with provided options:
         for option, value in config_options.items():
             if value is not None:
@@ -80,5 +116,10 @@ class FileSource(Source):
             self._parser[self.section_name] = {}
         return self._parser[self.section_name]
 
-    def get(self, name: Option) -> Optional[str]:
+    def get(self, name: str) -> Optional[str]:
         return self._section.get(name, None)
+
+
+class Source(Protocol):
+    def get(self, name: str) -> Optional[str]:
+        ...

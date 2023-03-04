@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from binarylane.config import Repository
+from binarylane.config import Config
 
 
-class Context(Repository):
+class Context(Config):
     def __init__(self) -> None:
         super().__init__(default_source=True)
         self._prog = "bl"
