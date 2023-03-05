@@ -6,24 +6,28 @@ from enum import Enum
 from typing import ClassVar, Optional
 
 
-class Option(str, Enum):
+class OptionName(str, Enum):
     API_URL = "api-url"
     API_TOKEN = "api-token"
     API_DEVELOPMENT = "api-development"
     CONFIG_SECTION = "context"
 
 
-class ConfigBase(ABC):
+class OptionAttributes(ABC):
     """Typed access to value of each configuration option"""
 
     UNCONFIGURED_TOKEN: ClassVar[str] = "unconfigured"
 
     @abstractmethod
-    def get_option(self, name: Option) -> Optional[str]:
+    def get_option(self, name: OptionName) -> Optional[str]:
         ...
 
     @abstractmethod
-    def add_option(self, name: Option, value: str) -> ConfigBase:
+    def required_option(self, name: OptionName) -> str:
+        ...
+
+    @abstractmethod
+    def add_option(self, name: OptionName, value: str) -> None:
         ...
 
     @staticmethod
@@ -35,14 +39,11 @@ class ConfigBase(ABC):
 
     @property
     def api_url(self) -> str:
-        value = self.get_option(Option.API_URL)
-        if value is None:
-            raise RuntimeError(f"{Option.API_URL} is not defined")
-        return value
+        return self.required_option(OptionName.API_URL)
 
     @property
     def api_token(self) -> str:
-        value = self.get_option(Option.API_TOKEN)
+        value = self.get_option(OptionName.API_TOKEN)
 
         # NOTE: on handling when `get(Option.API_TOKEN) is None` - i.e. has not been configured:
         #
@@ -76,18 +77,15 @@ class ConfigBase(ABC):
 
     @api_token.setter
     def api_token(self, value: str) -> None:
-        self.add_option(Option.API_TOKEN, value)
+        self.add_option(OptionName.API_TOKEN, value)
 
     @property
     def api_development(self) -> bool:
-        value = self.get_option(Option.API_DEVELOPMENT)
+        value = self.get_option(OptionName.API_DEVELOPMENT)
         if value is None:
             return False
         return self.to_bool(value)
 
     @property
     def config_section(self) -> str:
-        value = self.get_option(Option.CONFIG_SECTION)
-        if value is None:
-            raise RuntimeError(f"{Option.CONFIG_SECTION} is not defined")
-        return value
+        return self.required_option(OptionName.CONFIG_SECTION)

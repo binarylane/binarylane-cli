@@ -63,4 +63,4 @@ class AppRunner(PackageRunner):
     def process(self, parsed: argparse.Namespace) -> None:
         # Only run this once, at the top level
         if not self._prefix:
-            self.context.initialize(parsed)
+            self.context.initialize(commandline=parsed)

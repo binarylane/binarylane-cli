@@ -7,7 +7,6 @@ import sys
 from abc import ABC
 from pathlib import Path
 from typing import ClassVar, Dict, Optional
-from binarylane.pycompat.typing import Protocol
 
 
 class _SourceBase(ABC):
@@ -40,22 +39,21 @@ class EnvironmentSource(_SourceBase):
         return key[len(self.prefix) :].lower().replace("_", "-")
 
 
-class RuntimeSource(_SourceBase):
-    def __init__(self, config: Dict[str, str]) -> None:
-        self._config = config
-
-
 class FileSource:
     _DIRNAME = "binarylane"
     _FILENAME = "config.ini"
-    _API_TOKEN = "api-token"
+    _path: Path
     section_name: str
 
     _parser: configparser.ConfigParser
 
     def __init__(self, config_file: Optional[Path] = None) -> None:
+        if config_file is None:
+            config_file = self._get_config_dir() / self._FILENAME
+        self._path = config_file
+
         self._parser = configparser.ConfigParser()
-        self._read(config_file)
+        self._read()
         self.section_name = configparser.DEFAULTSECT
 
     @staticmethod
@@ -88,11 +86,9 @@ class FileSource:
     def _get_config_dir(self) -> Path:
         return self._get_config_home() / self._DIRNAME
 
-    def _read(self, config_file: Optional[Path] = None) -> None:
-        if config_file is None:
-            config_file = self._get_config_dir() / self._FILENAME
-        if config_file.exists():
-            self._parser.read(config_file)
+    def _read(self) -> None:
+        if self._path.exists():
+            self._parser.read(self._path)
 
     def save(self, config_options: Dict[str, Optional[str]]) -> None:
         # Update the section with provided options:
@@ -104,10 +100,12 @@ class FileSource:
             else:
                 self._section.pop(option, None)
 
-        # Write the updated config to disk
-        config_dir = self._get_config_dir()
+        # Ensure config directory exists
+        config_dir = self._path.parent
         config_dir.mkdir(mode=0o700, exist_ok=True)
-        with open(config_dir / self._FILENAME, "w", encoding="utf-8") as file:
+
+        # Write the updated config to disk
+        with open(self._path, "w", encoding="utf-8") as file:
             self._parser.write(file)
 
     @property
@@ -120,6 +118,6 @@ class FileSource:
         return self._section.get(name, None)
 
 
-class Source(Protocol):
-    def get(self, name: str) -> Optional[str]:
-        ...
+class RuntimeSource(_SourceBase):
+    def __init__(self, config: Dict[str, str]) -> None:
+        self._config = config
