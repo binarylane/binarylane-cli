@@ -42,6 +42,7 @@ test = "pytest tests"
 check = "task isort && task black && task mypy && task pylint && task test && task safety"
 
 [tool.isort]
+py_version = 37
 line_length = 120
 profile = "black"
 sections=['FUTURE', 'STDLIB', 'COMPAT', 'THIRDPARTY', 'FIRSTPARTY', 'LOCALFOLDER']
@@ -49,10 +50,11 @@ no_lines_before=["COMPAT"]
 known_compat=["binarylane.pycompat"]
 known_first_party=["binarylane"]
 known_local_folder=["binarylane.console"]
+add_imports=["from __future__ import annotations"]
 
 [tool.black]
 line-length = 120
-target_version = ['py37', 'py38', 'py39']
+target_version = ["py37"]
 
 [tool.pylint.format]
 max-line-length = 120
