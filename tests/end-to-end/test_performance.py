@@ -26,11 +26,12 @@ class RelativeBenchmark:
         return int(Timer(stmt=function, setup=function).timeit(runs) / runs * 1000)
 
     def _baseline_operation(self) -> None:
-        files = (get_project_dir() / "lib" / "binarylane").glob("**/*.py")
+        lib_root = get_project_dir() / "lib" / "binarylane"
+        files = lib_root.glob("**/*.py")
 
         with zipfile.ZipFile(os.devnull, "w", compression=zipfile.ZIP_DEFLATED) as zip:
             for file in files:
-                zip.write(file)
+                zip.write(file, file.relative_to(lib_root))
 
     def get_relative_performance(self, function: Callable[..., Any]) -> float:
         """Provides a performance score for function, relative to a baseline task (lower = faster).
