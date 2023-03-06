@@ -50,8 +50,6 @@ known_compat=["binarylane.pycompat"]
 known_first_party=["binarylane"]
 known_local_folder=["binarylane.console"]
 add_imports=['from __future__ import annotations']
-combine_as_imports=true
-
 
 [tool.black]
 line-length = 120
