@@ -82,6 +82,9 @@ exclude = [
     'src/binarylane/console/actions\.py$',  # from python 3.9
 ]
 
+[tool.pyright]
+extraPaths = ["lib"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
