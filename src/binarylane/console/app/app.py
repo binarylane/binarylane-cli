@@ -77,7 +77,9 @@ class CommandNode:
         return f"Access {name} commands" if not self.has_runner(name) else self.get_runner(name).description
 
     def __repr__(self) -> str:
-        return f"CommandGroup(full_name='{self.full_name}', children={list(self.children.keys())}, runners={list(self.runners.keys())})"
+        children = list(self.children.keys())
+        runners = list(self.runners.keys())
+        return f"CommandGroup(full_name='{self.full_name}', children={children}, runners={runners})"
 
 
 class App(Runner):
@@ -102,6 +104,10 @@ class App(Runner):
             child.add_runner(runner)
 
     @property
+    def prog(self) -> str:
+        return self.parser.prog
+
+    @property
     def name(self) -> str:
         return "bl"
 
@@ -111,7 +117,7 @@ class App(Runner):
 
     @property
     def runners(self) -> Sequence[Runner]:
-        return [cls for cls in importlib.import_module(f"..commands", package=__package__).commands] + [
+        return [cls(self) for cls in importlib.import_module("..commands", package=__package__).commands] + [
             LazyLoader(self, ".app.configure", "configure", "Configure access to BinaryLane API"),
             LazyLoader(self, ".app.version", "version", "Show the current version"),
         ]
@@ -124,7 +130,7 @@ class App(Runner):
         options.add_argument("--help", help="Display available commands and descriptions", action="help")
 
     def update_parser(self, full_name: str) -> None:
-        self.parser.prog = f"{self.prog} {full_name}"
+        self.parser.prog = f"{self.name} {full_name}"
         self.parser.usage = f"{self.parser.prog} [OPTIONS] COMMAND"
         self.parser.description = f"Access {full_name} commands"
 
@@ -138,18 +144,17 @@ class App(Runner):
         while len(args) and not is_option(args[0]):
             name = args.pop(0)
 
+            # Check name is valid (identifies a runner or child node):
+            if name not in node.get_names():
+                self.parser.error(f"argument COMMAND: invalid choice: '{name}'")
+
             # If we have found a runner, we are done
             if node.has_runner(name):
                 return node.get_runner(name).run(args)
 
-            # If we have a matching child node, continue descent
-            elif node.has_child(name):
-                node = node.get_child(name)
-                self.update_parser(node.full_name)
-
-            # Otherwise, name is invalid
-            else:
-                self.parser.error(f"invalid choice: '{name}'")
+            # Otherwise, continue descent
+            node = node.get_child(name)
+            self.update_parser(node.full_name)
 
         # STEP 2: runner was not selected. If args contains anything other than HELP, there are invalid option(s)
         if len(args) and self.HELP not in args:
@@ -170,9 +175,9 @@ class App(Runner):
 
         # Setup parser
         self.parser = AppParser(
-            prog=self.prog,
+            prog=self.name,
             description=self.description,
-            usage=f"{self.prog} [OPTIONS] COMMAND",
+            usage=f"{self.name} [OPTIONS] COMMAND",
             add_help=False,
             formatter_class=AppHelpFormatter,
             allow_abbrev=False,
