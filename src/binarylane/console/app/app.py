@@ -128,6 +128,7 @@ class App(Runner):
 
         options = self.parser.add_argument_group(title="Options")
         options.add_argument("--help", help="Display available commands and descriptions", action="help")
+        options.add_argument("--context", help=SUPPRESS)  # for test_app.py ; --context will be implemented later
 
     def update_parser(self, full_name: str) -> None:
         self.parser.prog = f"{self.name} {full_name}"
