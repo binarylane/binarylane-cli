@@ -2,31 +2,15 @@ from __future__ import annotations
 
 import importlib
 import logging
-from argparse import REMAINDER, SUPPRESS, ArgumentParser, HelpFormatter
-from typing import Dict, List, NoReturn, Optional, Sequence
+from argparse import SUPPRESS
+from dataclasses import dataclass
+from typing import Any, Dict, List, Optional, Sequence
 
 from binarylane.console.app.lazy_loader import LazyLoader
+from binarylane.console.parser import Mapping, Parser
 from binarylane.console.runners import Runner
 
 logger = logging.getLogger(__name__)
-
-# The 24 character width of the metavar ensures a fixed left-column size
-COMMAND_METAVAR = "!" * 24
-
-SEPARATOR = " "
-
-
-class AppHelpFormatter(HelpFormatter):
-    """Remove command metavar from help"""
-
-    def format_help(self) -> str:
-        return super().format_help().replace(f"  {COMMAND_METAVAR}\n", "")
-
-
-class AppParser(ArgumentParser):
-    def error(self, message: str) -> NoReturn:
-        """Use normal COMMAND metavar when reporting an error"""
-        super().error(message.replace(COMMAND_METAVAR, "COMMAND"))
 
 
 class CommandNode:
@@ -82,6 +66,11 @@ class CommandNode:
         return f"CommandGroup(full_name='{self.full_name}', children={children}, runners={runners})"
 
 
+@dataclass
+class AppRequest:
+    command: List[str]
+
+
 class App(Runner):
     """
     AppRunner is the 'root' runner for the application. In normal usage, all command line arguments are passed
@@ -89,7 +78,7 @@ class App(Runner):
     appropriate runner for the supplied arguments.
     """
 
-    parser: AppParser
+    parser: Parser
     command_tree: CommandNode
 
     def __init__(self, parent: Optional[Runner] = None) -> None:
@@ -123,9 +112,11 @@ class App(Runner):
         ]
 
     def configure(self) -> None:
-        # nargs=REMAINDER is used so that "command" will contain command name + arguments and parameters
-        self.parser.add_argument("command", metavar=COMMAND_METAVAR, help=SUPPRESS, nargs=REMAINDER)
+        # Add COMMAND argument:
+        mapping = self.parser.set_mapping(Mapping(AppRequest))
+        mapping.add_primitive("command", List[Any], option_name=None, required=True, description=SUPPRESS)
 
+        # Add global options:
         options = self.parser.add_argument_group(title="Options")
         options.add_argument("--help", help="Display available commands and descriptions", action="help")
         options.add_argument("--context", help=SUPPRESS)  # for test_app.py ; --context will be implemented later
@@ -147,7 +138,8 @@ class App(Runner):
 
             # Check name is valid (identifies a runner or child node):
             if name not in node.get_names():
-                self.parser.error(f"argument COMMAND: invalid choice: '{name}'")
+                choices = ", ".join(f"'{name}'" for name in node.get_names())
+                self.parser.error(f"argument COMMAND: invalid choice: '{name}' (choose from {choices})")
 
             # If we have found a runner, we are done
             if node.has_runner(name):
@@ -161,12 +153,9 @@ class App(Runner):
         if len(args) and self.HELP not in args:
             self.parser.error(f"unrecognized arguments: {' '.join([word for word in args if is_option(word)])}")
 
-        # STEP 3: Parsing has terminated at a node with no remaining args, so display "Available Commands" help
-        # FIXME: this is basically the same as binarylane.console.parser.Parser.add_group_help()
-        group = self.parser.add_argument_group(title="Available Commands")
-        for name in node.get_names():
-            group.add_argument(name, help=node.get_description(name), nargs="*")
-        group.add_argument(COMMAND_METAVAR, help="", nargs="*")
+        # STEP 3: Parsing has terminated at a node with no remaining args, so display the node's commands
+        command_descriptions = {name: node.get_description(name) for name in node.get_names()}
+        self.parser.add_group_help(title="Available Commands", entries=command_descriptions)
         return self.parser.print_help()
 
     def run(self, args: List[str]) -> None:
@@ -175,14 +164,7 @@ class App(Runner):
             args = args[1:] + [self.HELP]
 
         # Setup parser
-        self.parser = AppParser(
-            prog=self.name,
-            description=self.description,
-            usage=f"{self.name} [OPTIONS] COMMAND",
-            add_help=False,
-            formatter_class=AppHelpFormatter,
-            allow_abbrev=False,
-        )
+        self.parser = Parser(self.name, self.description)
         self.configure()
 
         # We need to hide the --help parameter from argparse, so that we can pass it to a subrunner
@@ -199,9 +181,9 @@ class App(Runner):
             check = True
 
         # Parse args
-        parsed = self.parser.parse_args(args)
+        parsed = self.parser.parse(args)
         if check:
             for runner in self.runners:
                 runner.run([Runner.CHECK])
             return
-        self.parse_command(list(parsed.command) + extra)
+        self.parse_command(list(parsed.mapped_object.command) + extra)

@@ -16,9 +16,11 @@ def test_app_program_name(capsys: CaptureFixture[str]) -> None:
     captured = capsys.readouterr()
     assert "usage: bl server kernel list" in captured.err
 
+
 def test_app_option_at_start() -> None:
     # Does not error:
     App().run(["--context", "bl", "server"])
+
 
 def test_app_option_at_end() -> None:
     # Currently not supported
