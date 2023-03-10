@@ -7,9 +7,9 @@ from dataclasses import dataclass
 from typing import Any, List, Optional, Sequence
 
 from binarylane.console.app.command_node import CommandNode
-from binarylane.console.app.lazy_loader import LazyLoader
 from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.runners import Runner
+from binarylane.console.runners.lazy_loader import LazyLoader
 
 logger = logging.getLogger(__name__)
 
@@ -56,8 +56,8 @@ class App(Runner):
     @property
     def _runners(self) -> Sequence[Runner]:
         return [cls(self) for cls in importlib.import_module("..commands", package=__package__).commands] + [
-            LazyLoader(self, ".app.configure", "configure", "Configure access to BinaryLane API"),
-            LazyLoader(self, ".app.version", "version", "Show the current version"),
+            LazyLoader(self, "..commands.configure", "configure", "Configure access to BinaryLane API"),
+            LazyLoader(self, "..commands.version", "version", "Show the current version"),
         ]
 
     def configure(self) -> None:

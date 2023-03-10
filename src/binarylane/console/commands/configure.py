@@ -1,15 +1,11 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, List
+from typing import List
 
-from binarylane.console.app.lazy_runner import LazyRunner
 from binarylane.console.config import Config
 from binarylane.console.runners import Runner
-
-if TYPE_CHECKING:
-    from binarylane.api.accounts.get_v2_account import sync_detailed
-    from binarylane.client import AuthenticatedClient
+from binarylane.console.runners.lazy_runner import LazyRunner
 
 logger = logging.getLogger(__name__)
 

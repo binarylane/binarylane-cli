@@ -28,7 +28,7 @@ class {{ class_name(endpoint.name) }}(ModuleRunner):
 
     @property
     def module_path(self) -> str:
-        return '.commands.{{ key }}.{{ python_identifier(endpoint.name) }}'
+        return '.commands.api.{{ python_identifier(endpoint.name) }}'
 
 {% endfor %}
 {% endfor %}
