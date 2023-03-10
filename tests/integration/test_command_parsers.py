@@ -6,13 +6,13 @@ import pytest
 
 from tests.runner import TypeRunner
 
-from binarylane.console.commands import commands
+from binarylane.console.commands.api import commands
 from binarylane.console.parser import Attribute
 from binarylane.console.runners.command import CommandRunner
 
 
 def get_all_command_runners() -> List[Type[CommandRunner]]:
-    types = []
+    types: List[Type[CommandRunner]] = []
     for command_type in commands:
         types.append(command_type().command_runner_type)
     return types
