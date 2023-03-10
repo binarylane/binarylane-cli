@@ -3,10 +3,9 @@ from __future__ import annotations
 import logging
 from typing import List
 
-from binarylane.console.runners.lazy_runner import LazyRunner
 from binarylane.console.config import Config
 from binarylane.console.runners import Runner
-
+from binarylane.console.runners.lazy_runner import LazyRunner
 
 logger = logging.getLogger(__name__)
 

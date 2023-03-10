@@ -7,9 +7,9 @@ from dataclasses import dataclass
 from typing import Any, List, Optional, Sequence
 
 from binarylane.console.app.command_node import CommandNode
-from binarylane.console.runners.lazy_loader import LazyLoader
 from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.runners import Runner
+from binarylane.console.runners.lazy_loader import LazyLoader
 
 logger = logging.getLogger(__name__)
 
