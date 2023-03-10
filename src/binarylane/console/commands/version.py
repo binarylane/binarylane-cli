@@ -4,7 +4,7 @@ import importlib
 from typing import List, Optional
 from binarylane.pycompat.importlib import metadata
 
-from binarylane.console.app.lazy_runner import LazyRunner
+from binarylane.console.runners.lazy_runner import LazyRunner
 
 
 class VersionRunner(LazyRunner):

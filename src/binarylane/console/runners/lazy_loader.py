@@ -38,7 +38,7 @@ class LazyLoader(Runner):
     @property
     def runner_type(self) -> Type[Runner]:
         """Runner that will be executed by run()"""
-        return importlib.import_module(f".{self.module_path}", package=__package__).Command
+        return importlib.import_module(self.module_path, package=__package__).Command
 
     @property
     def runner(self) -> Runner:
