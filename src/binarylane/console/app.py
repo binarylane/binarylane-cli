@@ -14,16 +14,15 @@ logger = logging.getLogger(__name__)
 Command = Union["Node", Descriptor]
 
 
-@dataclass
-class AppRequest:
-    command: List[str]
-
-
 class App(Runner):
     """
     App is the 'root' runner for the application. In normal usage, all command line arguments are passed directly
     to run(). The primary function of this class is to invoke the appropriate runner for the supplied arguments.
     """
+
+    @dataclass
+    class Request:
+        command: List[str]
 
     _parser: Parser
     _tree: Node
@@ -52,7 +51,7 @@ class App(Runner):
 
     def configure(self) -> None:
         # Add COMMAND argument:
-        mapping = self._parser.set_mapping(Mapping(AppRequest))
+        mapping = self._parser.set_mapping(Mapping(App.Request))
         mapping.add_primitive("command", List[Any], option_name=None, required=True, description=SUPPRESS)
 
         # Add global options:
