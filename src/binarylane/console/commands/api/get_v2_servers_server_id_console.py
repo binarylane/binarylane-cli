@@ -24,14 +24,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "console"
-
-    @property
-    def description(self) -> str:
-        return """Fetch the Console URLs for a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Servers/paths/~1v2~1servers~1%7Bserver_id%7D~1console/get"
 

@@ -28,14 +28,6 @@ class CommandRequest:
 
 class Command(ActionRunner):
     @property
-    def name(self) -> str:
-        return "change-vpc-ipv4"
-
-    @property
-    def description(self) -> str:
-        return """Change the IPv4 Address for a Server in a VPC"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#ChangeVpcIpv4/post"
 

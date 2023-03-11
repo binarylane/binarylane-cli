@@ -26,14 +26,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "create"
-
-    @property
-    def description(self) -> str:
-        return """Create a New VPC"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Vpcs/paths/~1v2~1vpcs/post"
 

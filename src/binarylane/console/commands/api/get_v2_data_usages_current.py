@@ -41,14 +41,6 @@ If you have more than one server, please see our data pooling policy: this value
         }
 
     @property
-    def name(self) -> str:
-        return "list"
-
-    @property
-    def description(self) -> str:
-        return """Fetch all Current Data Usage (Transfer) for All Servers"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/DataUsages/paths/~1v2~1data_usages~1current/get"
 

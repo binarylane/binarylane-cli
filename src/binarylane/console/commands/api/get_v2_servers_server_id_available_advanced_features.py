@@ -23,14 +23,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "list"
-
-    @property
-    def description(self) -> str:
-        return """Fetch the Currently Available Advanced Features for a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Servers/paths/~1v2~1servers~1%7Bserver_id%7D~1available_advanced_features/get"
 

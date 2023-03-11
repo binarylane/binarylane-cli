@@ -29,14 +29,6 @@ class CommandRequest:
 
 class Command(ActionRunner):
     @property
-    def name(self) -> str:
-        return "change-reverse-name"
-
-    @property
-    def description(self) -> str:
-        return """Change the Reverse Name for an IPv4 Address on a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#ChangeReverseName/post"
 

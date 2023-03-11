@@ -4,15 +4,19 @@ from typing import List
 
 import pytest
 
-from binarylane.console.commands.api import commands
+from tests.runner import TypeRunner
+
+from binarylane.console.commands.api import descriptors
 from binarylane.console.printers import formatter
+from binarylane.console.runners.command import CommandRunner
 
 
 def ok_response_types() -> List[type]:
-    types: List[type] = []
-    for command_type in commands:
-        types.append(command_type().command_runner.ok_response_type)
-    return types
+    return [
+        TypeRunner[CommandRunner](t.runner_type).test.ok_response_type
+        for t in descriptors
+        if issubclass(t.runner_type, CommandRunner)
+    ]
 
 
 @pytest.fixture(params=ok_response_types())

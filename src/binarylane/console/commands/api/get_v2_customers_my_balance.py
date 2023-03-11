@@ -19,14 +19,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "balance"
-
-    @property
-    def description(self) -> str:
-        return """Fetch Current Balance Information"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Customers/paths/~1v2~1customers~1my~1balance/get"
 

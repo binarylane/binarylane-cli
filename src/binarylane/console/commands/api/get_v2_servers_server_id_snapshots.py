@@ -71,14 +71,6 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self) -> str:
-        return "list"
-
-    @property
-    def description(self) -> str:
-        return """List all Snapshots for a Server"""
-
-    @property
     def reference_url(self) -> str:
         return (
             "https://api.binarylane.com.au/reference/#tag/Servers/paths/~1v2~1servers~1%7Bserver_id%7D~1snapshots/get"

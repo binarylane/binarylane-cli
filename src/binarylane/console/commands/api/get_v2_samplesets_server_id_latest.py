@@ -26,14 +26,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "get"
-
-    @property
-    def description(self) -> str:
-        return """Fetch the Latest Performance and Usage Data Sample Set for a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/SampleSets/paths/~1v2~1samplesets~1%7Bserver_id%7D~1latest/get"
 

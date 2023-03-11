@@ -27,14 +27,6 @@ class CommandRequest:
 
 class Command(ActionLinkRunner):
     @property
-    def name(self) -> str:
-        return "create"
-
-    @property
-    def description(self) -> str:
-        return """Create a New Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Servers/paths/~1v2~1servers/post"
 

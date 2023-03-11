@@ -18,14 +18,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "refresh-nameserver-cache"
-
-    @property
-    def description(self) -> str:
-        return """Refresh Cached Nameserver Domain Records"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Domains/paths/~1v2~1domains~1refresh_nameserver_cache/post"
 

@@ -37,14 +37,6 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self) -> str:
-        return "list"
-
-    @property
-    def description(self) -> str:
-        return """List All Existing VPCs"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Vpcs/paths/~1v2~1vpcs/get"
 

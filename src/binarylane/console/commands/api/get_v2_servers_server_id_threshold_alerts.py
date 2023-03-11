@@ -53,14 +53,6 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self) -> str:
-        return "get"
-
-    @property
-    def description(self) -> str:
-        return """Fetch the Currently Set Threshold Alerts for a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Servers/paths/~1v2~1servers~1%7Bserver_id%7D~1threshold_alerts/get"
 

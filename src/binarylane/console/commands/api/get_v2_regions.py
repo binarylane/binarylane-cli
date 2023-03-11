@@ -38,14 +38,6 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self) -> str:
-        return "list"
-
-    @property
-    def description(self) -> str:
-        return """List all Regions"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Regions/paths/~1v2~1regions/get"
 

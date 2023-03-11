@@ -25,14 +25,6 @@ class CommandRequest:
 
 class Command(ActionRunner):
     @property
-    def name(self) -> str:
-        return "update"
-
-    @property
-    def description(self) -> str:
-        return """Create New or Update Existing IPv6 Name Server Records"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ReverseNames/paths/~1v2~1reverse_names~1ipv6/post"
 
