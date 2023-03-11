@@ -19,18 +19,18 @@ class AppRequest:
     command: List[str]
 
 
-class App:
+class App(Runner):
     """
     App is the 'root' runner for the application. In normal usage, all command line arguments are passed directly
     to run(). The primary function of this class is to invoke the appropriate runner for the supplied arguments.
     """
 
-    _context: Context
     _parser: Parser
     _tree: Node
 
     def __init__(self) -> None:
-        self._context = Context("bl", "bl is a command-line interface for the BinaryLane API")
+        context = Context("bl", "bl is a command-line interface for the BinaryLane API")
+        super().__init__(context)
 
         # Add each descriptor into our tree
         self._tree = Node()
@@ -38,7 +38,7 @@ class App:
             self._tree.add(descriptor)
 
         # Setup parser
-        self._parser = Parser(self._context.name, self._context.description)
+        self._parser = Parser(context.name, context.description)
         self.configure()
 
     # Helper to update context + parser usage strings
