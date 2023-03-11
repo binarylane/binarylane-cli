@@ -21,14 +21,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "list"
-
-    @property
-    def description(self) -> str:
-        return """Fetch all Existing IPv6 Name Server Records"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ReverseNames/paths/~1v2~1reverse_names~1ipv6/get"
 

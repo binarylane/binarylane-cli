@@ -28,14 +28,6 @@ class CommandRequest:
 
 class Command(ActionRunner):
     @property
-    def name(self) -> str:
-        return "shutdown"
-
-    @property
-    def description(self) -> str:
-        return """Request a Server Perform a Shutdown"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#Shutdown/post"
 

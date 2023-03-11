@@ -31,14 +31,6 @@ class CommandRequest:
 
 class Command(ActionRunner):
     @property
-    def name(self) -> str:
-        return "change-offsite-backup-location"
-
-    @property
-    def description(self) -> str:
-        return """Change the Offsite Backup Location of a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#ChangeOffsiteBackupLocation/post"
 

@@ -28,14 +28,6 @@ class CommandRequest:
 
 class Command(ActionRunner):
     @property
-    def name(self) -> str:
-        return "enable-ipv6"
-
-    @property
-    def description(self) -> str:
-        return """Enable IPv6 for a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#EnableIpv6/post"
 

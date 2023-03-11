@@ -49,14 +49,6 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self) -> str:
-        return "operating-system"
-
-    @property
-    def description(self) -> str:
-        return """List All Available Software for an Existing Operating System"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Software/paths/~1v2~1software~1operating_system~1%7Boperating_system_id_or_slug%7D/get"
 

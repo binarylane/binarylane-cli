@@ -31,14 +31,6 @@ class CommandRequest:
 
 class Command(ActionRunner):
     @property
-    def name(self) -> str:
-        return "change-threshold-alerts"
-
-    @property
-    def description(self) -> str:
-        return """Set or Update the Threshold Alerts for a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#ChangeThresholdAlerts/post"
 

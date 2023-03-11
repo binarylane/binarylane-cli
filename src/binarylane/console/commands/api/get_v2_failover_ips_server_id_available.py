@@ -24,14 +24,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "available"
-
-    @property
-    def description(self) -> str:
-        return """Fetch a List of all Failover IPs that are Available to be Assigned to a Server"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/FailoverIps/paths/~1v2~1failover_ips~1%7Bserver_id%7D~1available/get"
 

@@ -4,17 +4,15 @@ import importlib
 from typing import List, Optional
 from binarylane.pycompat.importlib import metadata
 
-from binarylane.console.runners.lazy_runner import LazyRunner
+from binarylane.console.runners import Runner
 
 
-class VersionRunner(LazyRunner):
-    """Display blcli package version"""
-
+class VersionRunner(Runner):
     def run(self, args: List[str]) -> None:
         package = __package__
         version = self._distribution_version("binarylane-cli") or self._module_version(package) or "dev"
 
-        print(self.prog, version)
+        print(self._context.prog, version)
 
     def _distribution_version(self, package: str) -> Optional[str]:
         try:

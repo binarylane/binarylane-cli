@@ -30,14 +30,6 @@ class CommandRequest:
 
 class Command(ActionRunner):
     @property
-    def name(self) -> str:
-        return "change-source-and-destination-check"
-
-    @property
-    def description(self) -> str:
-        return """Enable or Disable Network Source and Destination Checks for a Server in a VPC"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/ServerActions/paths/~1v2~1servers~1%7Bserver_id%7D~1actions#ChangeSourceAndDestinationCheck/post"
 

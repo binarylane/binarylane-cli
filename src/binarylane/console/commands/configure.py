@@ -5,12 +5,11 @@ from typing import List
 
 from binarylane.console.config import Config
 from binarylane.console.runners import Runner
-from binarylane.console.runners.lazy_runner import LazyRunner
 
 logger = logging.getLogger(__name__)
 
 
-class ConfigureRunner(LazyRunner):
+class ConfigureRunner(Runner):
     """Interactive runner to request, verify, and store API token to configuration file"""
 
     def run(self, args: List[str]) -> None:

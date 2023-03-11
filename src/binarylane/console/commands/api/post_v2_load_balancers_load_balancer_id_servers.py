@@ -26,14 +26,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "create"
-
-    @property
-    def description(self) -> str:
-        return """Add Servers to an Existing Load Balancer"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/LoadBalancers/paths/~1v2~1load_balancers~1%7Bload_balancer_id%7D~1servers/post"
 

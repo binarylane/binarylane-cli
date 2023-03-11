@@ -44,14 +44,6 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self) -> str:
-        return "list"
-
-    @property
-    def description(self) -> str:
-        return """List All Available Software"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Software/paths/~1v2~1software/get"
 

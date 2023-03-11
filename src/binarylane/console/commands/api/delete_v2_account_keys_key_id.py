@@ -22,14 +22,6 @@ class CommandRequest:
 
 class Command(CommandRunner):
     @property
-    def name(self) -> str:
-        return "delete"
-
-    @property
-    def description(self) -> str:
-        return """Delete an Existing SSH Key"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Keys/paths/~1v2~1account~1keys~1%7Bkey_id%7D/delete"
 

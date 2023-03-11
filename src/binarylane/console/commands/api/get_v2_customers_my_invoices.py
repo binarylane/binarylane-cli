@@ -53,14 +53,6 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self) -> str:
-        return "list"
-
-    @property
-    def description(self) -> str:
-        return """Fetch Invoices"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/Customers/paths/~1v2~1customers~1my~1invoices/get"
 

@@ -36,14 +36,6 @@ class Command(ListRunner):
         }
 
     @property
-    def name(self) -> str:
-        return "availability"
-
-    @property
-    def description(self) -> str:
-        return """Fetch Load Balancer Availability and Pricing"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/LoadBalancers/paths/~1v2~1load_balancers~1availability/get"
 

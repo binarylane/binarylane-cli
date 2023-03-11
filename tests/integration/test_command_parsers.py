@@ -12,10 +12,7 @@ from binarylane.console.runners.command import CommandRunner
 
 
 def get_all_command_runners() -> List[Type[CommandRunner]]:
-    types: List[Type[CommandRunner]] = []
-    for command_type in commands:
-        types.append(command_type().command_runner_type)
-    return types
+    return [t.runner_type for t in commands if issubclass(t.runner_type, CommandRunner)]
 
 
 @pytest.fixture(params=get_all_command_runners())
@@ -27,5 +24,9 @@ def test_command_parser(command_runner: Type[CommandRunner]) -> None:
     Attribute.raise_on_unsupported = True
 
     runner = TypeRunner(command_runner)
-    assert runner.test.description, f"{type(runner.test)} does not have a description"
     runner.run([CommandRunner.CHECK])
+
+
+def test_command_descriptions() -> None:
+    for descriptor in commands:
+        assert descriptor.description, f"{descriptor.name} does not have a description"
