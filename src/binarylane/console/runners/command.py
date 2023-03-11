@@ -8,11 +8,9 @@ from typing import Any, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
 
-from binarylane.console import Context
-from binarylane.console.parser import Mapping
-from binarylane.console.parser.parser import Parser
+from binarylane.console.parser import Mapping, Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
-from binarylane.console.runners import Runner
+from binarylane.console.runners import Context, Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 
 logger = logging.getLogger(__name__)
@@ -30,8 +28,7 @@ class CommandRunner(Runner):
 
     def __init__(self, context: Context) -> None:
         super().__init__(context)
-        prog = f"{self.context.prog} {self.name}"
-        self._parser = Parser(prog=prog, description=self.description, epilog=self._epilog)
+        self._parser = Parser(prog=self._context.prog, description=self._context.description, epilog=self._epilog)
         self.configure(self._parser)
 
         self._parser.add_argument(
@@ -120,19 +117,19 @@ class CommandRunner(Runner):
 
     def run(self, args: List[str]) -> None:
         # Checks have already been performed during __init__
-        if args == [Runner.CHECK]:
+        if args == [self.CHECK]:
             return
 
-        logger.debug("Command parser for %s. args: %s", self.name, args)
+        logger.debug("Command parser for %s. args: %s", self._context.name, args)
         parsed = self._parser.parse(args)
         logger.debug("Parsing succeeded, have %s", parsed)
 
         self.process(parsed)
 
         self._client = AuthenticatedClient(
-            self.context.api_url,
-            self.context.api_token,
-            verify_ssl=not self.context.api_development,
+            self._context.api_url,
+            self._context.api_token,
+            verify_ssl=not self._context.api_development,
             timeout=5.0,
             raise_on_unexpected_status=False,
         )

@@ -14,9 +14,10 @@ attrs = "^22.2.0"
 python-dateutil = "^2.8.2"
 "backports.cached-property" = { version = "^1.0.2", python = "<3.8" }
 typing-extensions = { version = "^4.0.0", python = "<3.8" }
+importlib-metadata = { version = "*", python = "<3.8" }
 
 [tool.poetry.scripts]
-bl = "binarylane.console.app:main"
+bl = "binarylane.console.__main__:main"
 
 [tool.poetry.group.dev.dependencies]
 taskipy = "^1.10.3"
@@ -42,6 +43,7 @@ test = "pytest tests"
 check = "task isort && task black && task mypy && task pylint && task test && task safety"
 
 [tool.isort]
+py_version = 37
 line_length = 120
 profile = "black"
 sections=['FUTURE', 'STDLIB', 'COMPAT', 'THIRDPARTY', 'FIRSTPARTY', 'LOCALFOLDER']
@@ -49,11 +51,11 @@ no_lines_before=["COMPAT"]
 known_compat=["binarylane.pycompat"]
 known_first_party=["binarylane"]
 known_local_folder=["binarylane.console"]
-add_imports=['from __future__ import annotations']
+add_imports=["from __future__ import annotations"]
 
 [tool.black]
 line-length = 120
-target_version = ['py37', 'py38', 'py39']
+target_version = ["py37"]
 
 [tool.pylint.format]
 max-line-length = 120
@@ -84,7 +86,7 @@ exclude = [
 ]
 
 [tool.pyright]
-extraPaths = [ 'src', 'lib', 'tests' ]
+extraPaths = ["lib"]
 
 [build-system]
 requires = ["poetry-core"]

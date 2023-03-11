@@ -1,38 +1,51 @@
-""" Runners handle the overall CLI behaviour - parse input, perform an action, and display result """
 from __future__ import annotations
 
-import re
+import importlib
 import sys
 from abc import ABC, abstractmethod
-from typing import List
+from dataclasses import dataclass
+from typing import ClassVar, List, Type
 
-from binarylane.console import Context
+from binarylane.config import Config
+
+
+class Context(Config):
+    name: str
+    description: str
+
+    def __init__(self, name: str, description: str) -> None:
+        super().__init__(default_source=True)
+        self.name = name
+        self.description = description
+
+    @property
+    def prog(self) -> str:
+        return f"bl {self.name}"
+
+
+@dataclass
+class Descriptor:
+    module_path: str
+    name: str
+    description: str
+
+    @property
+    def runner_type(self) -> Type[Runner]:
+        module = importlib.import_module("binarylane.console" + self.module_path)
+        command_type = getattr(module, "Command", None)
+        if command_type is None:
+            raise RuntimeError(f"{module.__name__} does not contain Command class")
+        return command_type
 
 
 class Runner(ABC):
-    """Abstract base class for all Runner implementations"""
+    HELP: ClassVar[str] = "--help"
+    CHECK: ClassVar[str] = "--blcli-check"
 
-    context: Context
-
-    HELP = "--help"
-    CHECK = "--blcli-check"
+    _context: Context
 
     def __init__(self, context: Context) -> None:
-        self.context = context
-
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        """CLI name that is used to invoke the runner"""
-
-    @property
-    @abstractmethod
-    def description(self) -> str:
-        """Description of what this runner does"""
-
-    def format_description(self) -> str:
-        """Many API operation summaries are title-cased (like a headline), rather than as a sentence."""
-        return re.sub(" ([A-Z])([a-z])", lambda m: " " + m.group(1).lower() + m.group(2), self.description)
+        self._context = context
 
     @abstractmethod
     def run(self, args: List[str]) -> None:

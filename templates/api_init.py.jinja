@@ -1,34 +1,22 @@
 """ Contains methods for accessing the API """
 from __future__ import annotations
 
-from typing import List, Type
-import importlib
+from typing import List
+import re
 
-from binarylane.console.runners.module import ModuleRunner
+from binarylane.console.runners import Descriptor
 
-__all__ = ['commands']
-commands : List[Type[ModuleRunner]] = []
+__all__ = ['descriptors']
+descriptors : List[Descriptor] = []
 
-def register_command(cls: Type[ModuleRunner]) -> Type[ModuleRunner]:
-    commands.append(cls)
-    return cls
+def add_descriptor(module_path: str, name: str, description: str) -> None:
+    # Many API operation summaries are written title-cased (like a headline), rather than as a sentence.
+    description = re.sub(r" ([A-Z])([a-z]+\b)", lambda m: " " + m.group(1).lower() + m.group(2), description)
 
+    descriptors.append(Descriptor(module_path, name, description))
 
 {% for key, value in endpoint_collections_by_tag | dictsort %}
 {% for endpoint in value.endpoints if endpoint.data['x-cli-command'] %}
-@register_command
-class {{ class_name(endpoint.name) }}(ModuleRunner):
-    @property
-    def name(self) -> str:
-        return '{{ endpoint.data['x-cli-command'] }}'
-
-    @property
-    def description(self) -> str:
-        return '{{ endpoint.summary }}'
-
-    @property
-    def module_path(self) -> str:
-        return '.commands.{{ key }}.{{ python_identifier(endpoint.name) }}'
-
+add_descriptor('.commands.api.{{ python_identifier(endpoint.name) }}', '{{ endpoint.data['x-cli-command'] }}', '{{ endpoint.summary }}',)
 {% endfor %}
 {% endfor %}
