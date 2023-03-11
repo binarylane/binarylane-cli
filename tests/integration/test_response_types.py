@@ -6,7 +6,7 @@ import pytest
 
 from tests.runner import TypeRunner
 
-from binarylane.console.commands.api import commands
+from binarylane.console.commands.api import descriptors
 from binarylane.console.printers import formatter
 from binarylane.console.runners.command import CommandRunner
 
@@ -14,7 +14,7 @@ from binarylane.console.runners.command import CommandRunner
 def ok_response_types() -> List[type]:
     return [
         TypeRunner[CommandRunner](t.runner_type).test.ok_response_type
-        for t in commands
+        for t in descriptors
         if issubclass(t.runner_type, CommandRunner)
     ]
 

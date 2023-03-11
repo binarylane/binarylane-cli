@@ -6,13 +6,13 @@ import pytest
 
 from tests.runner import TypeRunner
 
-from binarylane.console.commands.api import commands
+from binarylane.console.commands.api import descriptors
 from binarylane.console.parser import Attribute
 from binarylane.console.runners.command import CommandRunner
 
 
 def get_all_command_runners() -> List[Type[CommandRunner]]:
-    return [t.runner_type for t in commands if issubclass(t.runner_type, CommandRunner)]
+    return [t.runner_type for t in descriptors if issubclass(t.runner_type, CommandRunner)]
 
 
 @pytest.fixture(params=get_all_command_runners())
@@ -28,5 +28,5 @@ def test_command_parser(command_runner: Type[CommandRunner]) -> None:
 
 
 def test_command_descriptions() -> None:
-    for descriptor in commands:
+    for descriptor in descriptors:
         assert descriptor.description, f"{descriptor.name} does not have a description"
