@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Dict, Optional
 
-from binarylane.config import sources
 from binarylane.config.options import OptionAttributes, OptionName
 from binarylane.config.repository import Repository
+from binarylane.config.sources import FileSource
 
 
 class Config(Repository, OptionAttributes):
@@ -21,5 +21,5 @@ class Config(Repository, OptionAttributes):
         )
 
         # Write configuration to disk
-        file = self.get_source(sources.FileSource)
+        file = self.get_source(FileSource)
         file.save(config_options)

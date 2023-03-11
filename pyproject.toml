@@ -86,7 +86,7 @@ exclude = [
 ]
 
 [tool.pyright]
-extraPaths = ["lib"]
+extraPaths = ["src", "lib"]
 
 [build-system]
 requires = ["poetry-core"]
