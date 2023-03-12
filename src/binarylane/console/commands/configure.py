@@ -17,6 +17,8 @@ class ConfigureRunner(Runner):
         if args == [Runner.CHECK]:
             return
 
+        self.parse(args)
+
         print(
             """
 To get started with the BinaryLane CLI, you must obtain an API token for the CLI to authenticate with:

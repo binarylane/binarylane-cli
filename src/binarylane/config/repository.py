@@ -26,7 +26,7 @@ class Repository:
         if default_source is True:
             self.add_source(src.DefaultSource())
 
-    def initialize(self, *, commandline: Namespace, config_file: Optional[Path] = None) -> None:
+    def initialize(self, *, commandline: Namespace, config_file: Optional[Path] = src.FileSource.DEFAULT_PATH) -> None:
         try:
             # Check for existing commandline to see if we have initialized previously
             self.get_source(src.CommandlineSource)

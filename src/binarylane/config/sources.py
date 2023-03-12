@@ -40,15 +40,16 @@ class EnvironmentSource(_SourceBase):
 
 
 class FileSource:
+    DEFAULT_PATH = Path("__DEFAULT__")
     _DIRNAME = "binarylane"
     _FILENAME = "config.ini"
-    _path: Path
+    _path: Optional[Path]
     section_name: str
 
     _parser: configparser.ConfigParser
 
     def __init__(self, config_file: Optional[Path] = None) -> None:
-        if config_file is None:
+        if config_file is self.DEFAULT_PATH:
             config_file = self._get_config_dir() / self._FILENAME
         self._path = config_file
 
@@ -87,10 +88,16 @@ class FileSource:
         return self._get_config_home() / self._DIRNAME
 
     def _read(self) -> None:
+        if self._path is None:
+            return
+
         if self._path.exists():
             self._parser.read(self._path)
 
     def save(self, config_options: Dict[str, Optional[str]]) -> None:
+        if self._path is None:
+            raise ValueError("Cannot save when FileSource.config_file is None")
+
         # Update the section with provided options:
         for option, value in config_options.items():
             if value is not None:

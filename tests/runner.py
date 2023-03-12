@@ -27,7 +27,7 @@ class TypeRunner(Runner, Generic[T]):
         # Use default config, plus a token
         commandline = Namespace()
         commandline.api_token = "example_token"
-        self._context.initialize(commandline=commandline, config_file=Path(os.path.devnull))
+        self._context.initialize(commandline=commandline, config_file=None)
 
         self._test = runner_type(self._context)
 
