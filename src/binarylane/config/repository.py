@@ -27,10 +27,16 @@ class Repository:
             self.add_source(src.DefaultSource())
 
     def initialize(self, *, commandline: Namespace, config_file: Optional[Path] = None) -> None:
-        # Add standard configuration sources
-        self.add_source(src.FileSource(config_file))
-        self.add_source(src.EnvironmentSource())
-        self.add_source(src.CommandlineSource(commandline))
+        try:
+            # Check for existing commandline to see if we have initialized previously
+            self.get_source(src.CommandlineSource)
+            # If we have, add second command line source
+            self.add_source(src.CommandlineSource(commandline))
+        except KeyError:
+            # Otherwise, perform initialization
+            self.add_source(src.FileSource(config_file))
+            self.add_source(src.EnvironmentSource())
+            self.add_source(src.CommandlineSource(commandline))
 
         # After all sources added, tell FileSource which section to use:
         self.get_source(src.FileSource).section_name = self.required_option(OptionName.CONFIG_SECTION)

@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from argparse import SUPPRESS
 from dataclasses import dataclass
-from typing import Any, Dict, Iterator, List, Optional, Union
+from typing import Any, ClassVar, Dict, Iterator, List, Optional, Union
 
 from binarylane.console.commands import descriptors
 from binarylane.console.parser import Mapping, Namespace, Parser
@@ -20,15 +20,14 @@ class App(Runner):
     to run(). The primary function of this class is to invoke the appropriate runner for the supplied arguments.
     """
 
+    HELP_DESCRIPTION: ClassVar[str] = "Display available commands and descriptions"
+
     @dataclass
     class Request:
         command: List[str]
 
-    _parser: Parser
-    _tree: Node
-
     def __init__(self) -> None:
-        context = Context("bl", "bl is a command-line interface for the BinaryLane API")
+        context = Context("", "bl is a command-line interface for the BinaryLane API")
         super().__init__(context)
 
         # Add each descriptor into our tree
@@ -36,37 +35,27 @@ class App(Runner):
         for descriptor in dict(sorted({d.name: d for d in descriptors}.items())).values():
             self._tree.add(descriptor)
 
-        # Setup parser
-        self._parser = Parser(context.name, context.description)
-        self.configure()
+        self._update_context(self._tree)
 
     # Helper to update context + parser usage strings
     def _update_context(self, source: Command) -> None:
         self._context.name = source.name
         self._context.description = source.description
 
-        self._parser.prog = f"bl {source.name}"
-        self._parser.usage = f"{self._parser.prog} [OPTIONS] COMMAND"
+        self._parser.prog = self._context.prog
+        self._parser.usage = f"{self._context.prog} [OPTIONS] COMMAND"
         self._parser.description = f"Access {source.name} commands"
 
-    def configure(self) -> None:
+        if isinstance(source, Node):
+            command_descriptions = {word: source[word].description for word in source}
+            self._parser.add_group_help(title="Available Commands", entries=command_descriptions)
+
+    def configure(self, parser: Parser) -> None:
         # Add COMMAND argument:
-        mapping = self._parser.set_mapping(Mapping(App.Request))
+        mapping = parser.set_mapping(Mapping(App.Request))
         mapping.add_primitive("command", List[Any], option_name=None, required=True, description=SUPPRESS)
 
-        # Add global options:
-        options = self._parser.add_argument_group(title="Options")
-        options.add_argument("--help", help="Display command options and descriptions", action="store_true")
-
-        config_section, api_url = self._context.config_section, self._context.api_url
-        options.add_argument(
-            "--context", metavar="NAME", help=f'Name of authentication context to use (default: "{config_section}")'
-        )
-        options.add_argument("--api-token", metavar="VALUE", help="API token to use with BinaryLane API")
-        options.add_argument("--api-url", metavar="URL", help=f'URL of BinaryLane API (default: "{api_url}")')
-
     def process(self, parsed: Namespace) -> None:
-        self._context.initialize(commandline=parsed)
         args: List[str] = parsed.mapped_object.command
 
         # Helper to check if word is an option (as opposed to positional argument)
@@ -94,14 +83,11 @@ class App(Runner):
             # Otherwise, continue descent
             node = child
 
-        # STEP 2: runner was not selected. If args contains anything other than HELP, there are invalid option(s)
-        if len(args) and Runner.HELP not in args:
-            self._parser.error(f"unrecognized arguments: {' '.join([word for word in args if is_option(word)])}")
+        # STEP 2: runner was not selected. Parse remaining args to ensure provided options are valid
+        self.parse(args)
 
-        # STEP 3: Parsing has terminated at a node with no remaining args, so display the node's commands
-        command_descriptions = {word: node[word].description for word in node}
-        self._parser.add_group_help(title="Available Commands", entries=command_descriptions)
-        return self._parser.print_help()
+        # STEP 3: All arguments parsed successfully, display the node's available commands
+        self._parser.print_help()
 
     def run(self, args: List[str]) -> None:
         # If CHECK is requested, skip parsing and execute all runners with CHECK instead:
@@ -119,7 +105,7 @@ class App(Runner):
         if Runner.HELP in args:
             args += [args.pop(args.index(Runner.HELP))]
 
-        parsed = self._parser.parse(args)
+        parsed = self.parse(args)
         self.process(parsed)
 
 

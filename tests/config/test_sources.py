@@ -14,6 +14,7 @@ def test_commandline_get() -> None:
     parsed = parser.parse_args([f"--{OptionName.API_TOKEN}", "test_token"])
 
     source = CommandlineSource(parsed)
+    print(f"{OptionName.API_TOKEN}", parsed, source._config)
 
     assert source.get(OptionName.API_TOKEN) == "test_token"
     assert source.get(OptionName.API_URL) is None

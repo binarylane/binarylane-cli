@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import logging
 from abc import abstractmethod
-from argparse import Namespace
 from http import HTTPStatus
-from typing import Any, List, Optional, Tuple
+from typing import Any, ClassVar, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
 
-from binarylane.console.parser import Mapping, Parser
+from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
 from binarylane.console.runners import Context, Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
@@ -19,6 +18,8 @@ logger = logging.getLogger(__name__)
 class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
 
+    OPTIONS: ClassVar[str] = "Command Options"
+
     _parser: Parser
     _client: AuthenticatedClient
 
@@ -28,35 +29,9 @@ class CommandRunner(Runner):
 
     def __init__(self, context: Context) -> None:
         super().__init__(context)
-        self._parser = Parser(prog=self._context.prog, description=self._context.description, epilog=self._epilog)
-        self.configure(self._parser)
 
-        self._parser.add_argument(
-            "--help", dest="runner_print_help", action="help", help="Display command options and descriptions"
-        )
-        self._parser.add_argument(
-            "--curl", dest="runner_print_curl", action="store_true", help="Display API request as a 'curl' command-line"
-        )
-        self._parser.add_argument(
-            "--no-header",
-            dest="runner_header",
-            action="store_false",
-            default=True,
-            help="Display columns without field labels",
-        )
-        printers = tuple(item.name.lower() for item in PrinterType)
-        self._parser.add_argument(
-            "--output",
-            dest="runner_output",
-            default="table",
-            metavar="OUTPUT",
-            choices=printers,
-            help='Desired output format [%(choices)s] (Default: "%(default)s")',
-        )
         self._output = None
         self._header = None
-
-        self._parser.configure()
 
     @abstractmethod
     def create_mapping(self) -> Mapping:
@@ -65,6 +40,27 @@ class CommandRunner(Runner):
     def configure(self, parser: Parser) -> None:
         mapping = self.create_mapping()
         parser.set_mapping(mapping)
+
+        self._options = parser
+        self._options.add_argument(
+            "--curl", dest="runner_print_curl", action="store_true", help="Display API request as a 'curl' command-line"
+        )
+        self._options.add_argument(
+            "--no-header",
+            dest="runner_header",
+            action="store_false",
+            default=True,
+            help="Display columns without field labels",
+        )
+        printers = tuple(item.name.lower() for item in PrinterType)
+        self._options.add_argument(
+            "--output",
+            dest="runner_output",
+            default="table",
+            metavar="OUTPUT",
+            choices=printers,
+            help='Desired output format [%(choices)s] (Default: "%(default)s")',
+        )
 
     @abstractmethod
     def request(self, client: Client, request: object) -> Tuple[HTTPStatus, object]:
@@ -103,7 +99,6 @@ class CommandRunner(Runner):
             self.error(f"HTTP {status_code}")
 
     def process(self, parsed: Namespace) -> None:
-        """Process runner-local arguments"""
 
         self._print_curl = parsed.runner_print_curl
         if self._output is None:
@@ -111,21 +106,16 @@ class CommandRunner(Runner):
         if self._header is None:
             self._header = parsed.runner_header
 
-        for key in list(vars(parsed)):
-            if key.startswith("runner_"):
-                del parsed.__dict__[key]
-
     def run(self, args: List[str]) -> None:
         # Checks have already been performed during __init__
         if args == [self.CHECK]:
             return
 
         logger.debug("Command parser for %s. args: %s", self._context.name, args)
-        parsed = self._parser.parse(args)
+        parsed = self.parse(args)
         logger.debug("Parsing succeeded, have %s", parsed)
 
         self.process(parsed)
-
         self._client = AuthenticatedClient(
             self._context.api_url,
             self._context.api_token,

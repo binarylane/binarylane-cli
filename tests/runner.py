@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import os
+from argparse import Namespace
+from pathlib import Path
 from typing import Generic, List, Type, TypeVar
 
 from binarylane.console.runners import Context, Runner
@@ -22,7 +25,10 @@ class TypeRunner(Runner, Generic[T]):
     def __init__(self, runner_type: Type[T]) -> None:
         super().__init__(Context("type", ""))
         # Use default config, plus a token
-        self._context.api_token = "example_token"
+        commandline = Namespace()
+        commandline.api_token = "example_token"
+        self._context.initialize(commandline=commandline, config_file=Path(os.path.devnull))
+
         self._test = runner_type(self._context)
 
     @property

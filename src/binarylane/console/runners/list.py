@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from argparse import Namespace
 from typing import Any, Dict, List
 
+from binarylane.console.parser import Namespace, Parser
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -24,9 +24,11 @@ class ListRunner(CommandRunner):
     def fields(self) -> Dict[str, str]:
         """Map of field name: description for all available fields"""
 
-    def run(self, args: List[str]) -> None:
-        self._parser.add_group_help(title="Available fields", entries=self.fields)
-        self._parser.add_argument(
+    def configure(self, parser: Parser) -> None:
+        super().configure(parser)
+
+        parser.add_group_help(title="Available fields", entries=self.fields)
+        self._options.add_argument(
             "--format",
             dest="runner_format",
             help="Comma-separated list of fields to display. (Default: %(default)s)",
@@ -34,7 +36,7 @@ class ListRunner(CommandRunner):
             default=",".join(self.default_format),
         )
 
-        self._parser.add_argument(
+        self._options.add_argument(
             "-1",
             "--single-column",
             dest="runner_single_column",
@@ -42,9 +44,9 @@ class ListRunner(CommandRunner):
             help=f"List one {self.default_format[0]} per line.",
         )
 
-        super().run(args)
-
     def process(self, parsed: Namespace) -> None:
+        super().process(parsed)
+
         self._format = parsed.runner_format.split(",")
 
         for field in self._format:
