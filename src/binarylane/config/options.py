@@ -12,6 +12,9 @@ class OptionName(str, Enum):
     API_DEVELOPMENT = "api-development"
     CONFIG_SECTION = "context"
 
+    def __str__(self) -> str:
+        return self.value
+
 
 class OptionAttributes(ABC):
     """Typed access to value of each configuration option"""
