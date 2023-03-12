@@ -4,7 +4,7 @@ import importlib
 import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import ClassVar, List, Optional, Sequence, Type
+from typing import ClassVar, List, Sequence, Type
 
 from binarylane.config import Config
 
@@ -12,7 +12,6 @@ from binarylane.console.parser import Namespace, Parser
 
 
 class Context(Config):
-    _parser: Optional[Parser] = None
     name: str
     description: str
 
@@ -26,7 +25,6 @@ class Context(Config):
         return f"bl {self.name}".rstrip()
 
     def configure(self, parser: Parser) -> None:
-        self._parser = parser
         default = Config()
         config_section, api_url = default.config_section, default.api_url
 
