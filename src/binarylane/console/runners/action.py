@@ -24,10 +24,11 @@ class ActionRunner(CommandRunner):
 
     def configure(self, parser: Parser) -> None:
         super().configure(parser)
-        self._options.add_argument(
+
+        parser.add_argument(
             "--async", action="store_true", dest="runner_async", help="Do not wait for requested action to complete"
         )
-        self._options.add_argument(
+        parser.add_argument(
             "--quiet",
             action="store_true",
             dest="runner_quiet",

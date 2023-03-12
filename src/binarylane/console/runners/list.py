@@ -28,15 +28,14 @@ class ListRunner(CommandRunner):
         super().configure(parser)
 
         parser.add_group_help(title="Available fields", entries=self.fields)
-        self._options.add_argument(
+        parser.add_argument(
             "--format",
             dest="runner_format",
             help="Comma-separated list of fields to display. (Default: %(default)s)",
             metavar="FIELD,FIELD,...",
             default=",".join(self.default_format),
         )
-
-        self._options.add_argument(
+        parser.add_argument(
             "-1",
             "--single-column",
             dest="runner_single_column",

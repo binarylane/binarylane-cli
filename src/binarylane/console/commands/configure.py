@@ -46,13 +46,8 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         from binarylane.api.accounts.get_v2_account import sync_detailed
         from binarylane.client import AuthenticatedClient
 
-        client = AuthenticatedClient(
-            base_url=config.api_url,
-            token=config.api_token,
-            verify_ssl=not config.api_development,
-            timeout=5.0,
-            raise_on_unexpected_status=False,
-        )
+        verify_ssl = not config.api_development
+        client = AuthenticatedClient(base_url=config.api_url, token=config.api_token, verify_ssl=verify_ssl)
         response = sync_detailed(client=client)
 
         # Check for success

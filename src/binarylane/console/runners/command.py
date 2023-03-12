@@ -3,13 +3,13 @@ from __future__ import annotations
 import logging
 from abc import abstractmethod
 from http import HTTPStatus
-from typing import Any, ClassVar, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
 
 from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
-from binarylane.console.runners import Context, Runner
+from binarylane.console.runners import Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 
 logger = logging.getLogger(__name__)
@@ -18,20 +18,12 @@ logger = logging.getLogger(__name__)
 class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
 
-    OPTIONS: ClassVar[str] = "Command Options"
-
     _parser: Parser
     _client: AuthenticatedClient
 
     _print_curl: Optional[bool]
-    _output: Optional[str]
-    _header: Optional[bool]
-
-    def __init__(self, context: Context) -> None:
-        super().__init__(context)
-
-        self._output = None
-        self._header = None
+    _output: Optional[str] = None
+    _header: Optional[bool] = None
 
     @abstractmethod
     def create_mapping(self) -> Mapping:
@@ -41,11 +33,10 @@ class CommandRunner(Runner):
         mapping = self.create_mapping()
         parser.set_mapping(mapping)
 
-        self._options = parser
-        self._options.add_argument(
+        parser.add_argument(
             "--curl", dest="runner_print_curl", action="store_true", help="Display API request as a 'curl' command-line"
         )
-        self._options.add_argument(
+        parser.add_argument(
             "--no-header",
             dest="runner_header",
             action="store_false",
@@ -53,7 +44,7 @@ class CommandRunner(Runner):
             help="Display columns without field labels",
         )
         printers = tuple(item.name.lower() for item in PrinterType)
-        self._options.add_argument(
+        parser.add_argument(
             "--output",
             dest="runner_output",
             default="table",
@@ -99,7 +90,6 @@ class CommandRunner(Runner):
             self.error(f"HTTP {status_code}")
 
     def process(self, parsed: Namespace) -> None:
-
         self._print_curl = parsed.runner_print_curl
         if self._output is None:
             self._output = parsed.runner_output
@@ -116,21 +106,15 @@ class CommandRunner(Runner):
         logger.debug("Parsing succeeded, have %s", parsed)
 
         self.process(parsed)
-        self._client = AuthenticatedClient(
-            self._context.api_url,
-            self._context.api_token,
-            verify_ssl=not self._context.api_development,
-            timeout=5.0,
-            raise_on_unexpected_status=False,
-        )
-        parsed.client = self._client
+        verify_ssl = not self._context.api_development
+        self._client = AuthenticatedClient(self._context.api_url, self._context.api_token, verify_ssl=verify_ssl)
 
         # CurlCommand does not execute the request, so there is no response to display
         if self._print_curl:
             with CurlCommand() as curl:
-                self.request(parsed.client, parsed.mapped_object)
+                self.request(self._client, parsed.mapped_object)
                 print(curl.shell)
                 return
 
-        status_code, received = self.request(parsed.client, parsed.mapped_object)
+        status_code, received = self.request(self._client, parsed.mapped_object)
         self.response(status_code, received)
