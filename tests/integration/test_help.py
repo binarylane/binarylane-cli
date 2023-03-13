@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 from pytest import CaptureFixture
 
-from .conftest import App
+from tests.integration.conftest import App
 
 
 def test_app_root_help(app: App, capsys: CaptureFixture[str]) -> None:
