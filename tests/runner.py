@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import os
 from argparse import Namespace
-from pathlib import Path
 from typing import Generic, List, Type, TypeVar
 
 from binarylane.console.runners import Context, Runner
