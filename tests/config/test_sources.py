@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 from typing import MutableMapping
 
-from binarylane.config.options import OptionName
+from binarylane.config import OptionName
 from binarylane.config.sources import CommandlineSource, DefaultSource, EnvironmentSource, FileSource, RuntimeSource
 
 

@@ -6,8 +6,7 @@ from typing import MutableMapping
 
 import pytest
 
-from binarylane.config import Config
-from binarylane.config.options import OptionName
+from binarylane.config import Config, OptionName
 
 
 def test_default_values() -> None:
