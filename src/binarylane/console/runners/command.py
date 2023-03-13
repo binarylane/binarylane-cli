@@ -11,6 +11,7 @@ from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
 from binarylane.console.runners import Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
+from binarylane.console.util import create_client
 
 logger = logging.getLogger(__name__)
 
@@ -106,8 +107,7 @@ class CommandRunner(Runner):
         logger.debug("Parsing succeeded, have %s", parsed)
 
         self.process(parsed)
-        verify_ssl = not self._context.api_development
-        self._client = AuthenticatedClient(self._context.api_url, self._context.api_token, verify_ssl=verify_ssl)
+        self._client = create_client(self._context)
 
         # CurlCommand does not execute the request, so there is no response to display
         if self._print_curl:

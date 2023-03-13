@@ -6,11 +6,12 @@ from typing import List
 from binarylane.config import Config
 
 from binarylane.console.runners import Runner
+from binarylane.console.util import create_client
 
 logger = logging.getLogger(__name__)
 
 
-class ConfigureRunner(Runner):
+class Command(Runner):
     """Interactive runner to request, verify, and store API token to configuration file"""
 
     def run(self, args: List[str]) -> None:
@@ -44,11 +45,8 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         """Return bool indicating if API is accessible with current configuration"""
 
         from binarylane.api.accounts.get_v2_account import sync_detailed
-        from binarylane.client import AuthenticatedClient
 
-        verify_ssl = not config.api_development
-        client = AuthenticatedClient(base_url=config.api_url, token=config.api_token, verify_ssl=verify_ssl)
-        response = sync_detailed(client=client)
+        response = sync_detailed(client=create_client(config))
 
         # Check for success
         if response.status_code == 200:
@@ -58,6 +56,3 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         if response.status_code != 401:
             logger.warning("HTTP %s - %s", response.status_code.value, response.status_code.name)
         return False
-
-
-Command = ConfigureRunner

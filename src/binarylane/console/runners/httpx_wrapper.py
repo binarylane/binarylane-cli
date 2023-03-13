@@ -54,7 +54,8 @@ class CurlCommand(HttpxWrapper):  # pylint: disable=too-few-public-methods
         curl_cmdline = ["curl", "--request", kwargs["method"].upper(), kwargs["url"] + query_string]
 
         for header, value in kwargs.get("headers", {}).items():
-            curl_cmdline += ["--header", f"{header}: {value}"]
+            if header != "User-Agent":
+                curl_cmdline += ["--header", f"{header}: {value}"]
 
         if kwargs.get("json"):
             curl_cmdline += ["--header", "Content-Type: application/json", "--data", json.dumps(kwargs["json"])]

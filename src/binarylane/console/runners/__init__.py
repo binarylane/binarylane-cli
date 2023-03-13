@@ -3,8 +3,10 @@ from __future__ import annotations
 import importlib
 import sys
 from abc import ABC, abstractmethod
+from argparse import SUPPRESS
 from dataclasses import dataclass
 from typing import ClassVar, List, Sequence, Type
+from binarylane.pycompat.actions import BooleanOptionalAction
 
 from binarylane.config import Config
 
@@ -26,13 +28,18 @@ class Context(Config):
 
     def configure(self, parser: Parser) -> None:
         default = Config()
-        config_section, api_url = default.config_section, default.api_url
+        config_section = default.config_section
 
         parser.add_argument(
             "--context", metavar="NAME", help=f'Name of authentication context to use (default: "{config_section}")'
         )
-        parser.add_argument("--api-url", metavar="URL", help=f'URL of BinaryLane API (default: "{api_url}")')
         parser.add_argument("--api-token", metavar="VALUE", help="API token to use with BinaryLane API")
+        parser.add_argument("--api-url", metavar="URL", help=SUPPRESS)
+        parser.add_argument("--api-development", action=BooleanOptionalAction, help=SUPPRESS)
+
+        # Undocumented for now due to poor help formatting
+        parser.add_argument("-c", dest="context", help=SUPPRESS)
+        parser.add_argument("-t", dest="api_token", help=SUPPRESS)
 
 
 @dataclass

@@ -81,9 +81,6 @@ strict_equality = true
 mypy_path = "lib:src"
 namespace_packages = true
 explicit_package_bases = true
-exclude = [
-    'src/binarylane/console/actions\.py$',  # from python 3.9
-]
 
 [tool.pyright]
 extraPaths = ["src", "lib"]
