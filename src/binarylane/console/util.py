@@ -28,4 +28,5 @@ def create_client(config: Config) -> AuthenticatedClient:
 
 
 def get_user_agent():
+    # example result: "binarylane-cli/0.13.0 (Linux/x86_64) CPython/3.10.6"
     return f"{DISTRIBUTION_NAME}/{get_version()} ({system()}/{machine()}) {python_implementation()}/{python_version()}"
