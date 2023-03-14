@@ -1,19 +1,10 @@
 from __future__ import annotations
 from platform import system, machine, python_implementation, python_version
+from binarylane.console.metadata import distribution_name, distribution_version
 
-from binarylane.pycompat.importlib import metadata
 
 from binarylane.client import AuthenticatedClient
 from binarylane.config import Config
-
-DISTRIBUTION_NAME = "binarylane-cli"
-
-
-def get_version() -> str:
-    try:
-        return metadata.distribution(DISTRIBUTION_NAME).version
-    except metadata.PackageNotFoundError:
-        return "dev"
 
 
 def create_client(config: Config) -> AuthenticatedClient:
@@ -29,4 +20,10 @@ def create_client(config: Config) -> AuthenticatedClient:
 
 def get_user_agent():
     # example result: "binarylane-cli/0.13.0 (Linux/x86_64) CPython/3.10.6"
-    return f"{DISTRIBUTION_NAME}/{get_version()} ({system()}/{machine()}) {python_implementation()}/{python_version()}"
+    user_agent = (
+        f"{distribution_name()}/{distribution_version()}",
+        f"({system()}/{machine()})",
+        f"{python_implementation()}/{python_version()}",
+    )
+
+    return " ".join(user_agent)

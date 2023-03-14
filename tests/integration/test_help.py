@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 from pytest import CaptureFixture
+from binarylane.console.metadata import program_description
 
 from tests.integration.conftest import App
 
@@ -11,6 +12,7 @@ def test_app_root_help(app: App, capsys: CaptureFixture[str]) -> None:
         app.run(["--help"])
 
     captured = capsys.readouterr()
+    assert program_description() in captured.out
     assert "Access server commands" in captured.out
 
 

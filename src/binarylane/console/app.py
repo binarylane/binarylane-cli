@@ -9,6 +9,8 @@ from binarylane.console.commands import descriptors
 from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.runners import Context, Descriptor, Runner
 
+from binarylane.console.metadata import program_description
+
 logger = logging.getLogger(__name__)
 
 Command = Union["Node", Descriptor]
@@ -27,7 +29,7 @@ class App(Runner):
         command: List[str]
 
     def __init__(self) -> None:
-        context = Context("", "bl is a command-line interface for the BinaryLane API")
+        context = Context()
         super().__init__(context)
 
         # Add each descriptor into our tree
@@ -44,7 +46,7 @@ class App(Runner):
 
         self._parser.prog = self._context.prog
         self._parser.usage = f"{self._context.prog} [OPTIONS] COMMAND"
-        self._parser.description = f"Access {source.name} commands"
+        self._parser.description = f"Access {source.name} commands" if source.name else program_description()
 
         if isinstance(source, Node):
             command_descriptions = {word: source[word].description for word in source}

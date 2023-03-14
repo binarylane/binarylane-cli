@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from argparse import SUPPRESS
 from dataclasses import dataclass
 from typing import ClassVar, List, Sequence, Type
+from binarylane.console.metadata import program_name
 from binarylane.pycompat.actions import BooleanOptionalAction
 
 from binarylane.config import Config
@@ -17,14 +18,14 @@ class Context(Config):
     name: str
     description: str
 
-    def __init__(self, name: str, description: str) -> None:
+    def __init__(self, name: str = "", description: str = "") -> None:
         super().__init__(default_source=True)
         self.name = name
         self.description = description
 
     @property
     def prog(self) -> str:
-        return f"bl {self.name}".rstrip()
+        return f"{program_name()} {self.name}".rstrip()
 
     def configure(self, parser: Parser) -> None:
         default = Config()

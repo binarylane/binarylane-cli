@@ -21,7 +21,7 @@ class TypeRunner(Runner, Generic[T]):
     _test: T
 
     def __init__(self, runner_type: Type[T]) -> None:
-        super().__init__(Context("type", ""))
+        super().__init__(Context())
         # Use default config, plus a token
         commandline = Namespace()
         commandline.api_token = "example_token"
