@@ -53,9 +53,15 @@ class FileSource:
             config_file = self._get_config_dir() / self._FILENAME
         self._path = config_file
 
-        self._parser = configparser.ConfigParser()
+        self._parser = configparser.ConfigParser(
+            delimiters=("="),
+            comment_prefixes=("#", ";"),
+            empty_lines_in_values=False,
+            interpolation=None,
+            default_section="",  # this effectively disables the default section as `[]` is not a valid section header
+        )
         self._read()
-        self.section_name = configparser.DEFAULTSECT
+        self.section_name = ""
 
     @staticmethod
     def _get_config_home() -> Path:
