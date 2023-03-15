@@ -59,7 +59,7 @@ def test_add_option_adds_runtime_source() -> None:
 
 
 def test_get_option() -> None:
-    repo = Repository(default_source=False)
+    repo = Repository()
     assert repo.get_option(OptionName.API_TOKEN) is None
 
     repo.add_option(OptionName.API_TOKEN, "test")
@@ -67,7 +67,7 @@ def test_get_option() -> None:
 
 
 def test_required_option() -> None:
-    repo = Repository(default_source=False)
+    repo = Repository()
     with pytest.raises(KeyError):
         assert repo.required_option(OptionName.API_TOKEN)
 
@@ -77,22 +77,16 @@ def test_required_option() -> None:
 
 def create_repo(config_file: Optional[Path] = None, commandline: Optional[Namespace] = None) -> Repository:
     repo = Repository()
-    repo.initialize(commandline=commandline or Namespace(), config_file=config_file)
+    if config_file:
+        repo.add_source(FileSource(config_file))
+    repo.add_source(EnvironmentSource())
+    if commandline:
+        repo.add_source(CommandlineSource(commandline))
     return repo
 
 
-def test_initialize_sources() -> None:
-    repo = create_repo()
-
-    for source in (CommandlineSource, DefaultSource, EnvironmentSource, FileSource):
-        assert isinstance(repo.get_source(source), source)
-
-    with pytest.raises(KeyError):
-        repo.get_source(RuntimeSource)
-
-
 def test_get_option_prefers_newer_source() -> None:
-    repo = Repository(default_source=False)
+    repo = Repository()
     repo.add_source(RuntimeSource({OptionName.API_URL: "first", OptionName.API_TOKEN: "first"}))
     repo.add_source(RuntimeSource({OptionName.API_TOKEN: "second", OptionName.CONFIG_SECTION: "second"}))
 
@@ -130,32 +124,4 @@ def test_commandline_has_priority_over_environment(tmp_env: MutableMapping[str, 
     commandline = Namespace()
     commandline.api_token = "commandline"
     repo = create_repo(commandline=commandline)
-    assert repo.get_option(OptionName.API_TOKEN) == "commandline"
-
-
-def test_config_section_read_from_repository(tmp_path: Path, tmp_env: MutableMapping[str, str]) -> None:
-    config_file = tmp_path / "config.ini"
-    with open(config_file, "w") as file:
-        file.write(
-            """\
-[bl]
-api-token = file
-
-[env]
-api-token = env
-
-[commandline]
-api-token = commandline
-"""
-        )
-
-    repo = create_repo(config_file)
-    assert repo.get_option(OptionName.API_TOKEN) == "file"
-
-    tmp_env["BL_CONTEXT"] = "env"
-    repo = create_repo(config_file)
-    assert repo.get_option(OptionName.API_TOKEN) == "env"
-
-    commandline = Namespace(context="commandline")
-    repo = create_repo(config_file, commandline)
     assert repo.get_option(OptionName.API_TOKEN) == "commandline"

@@ -1,10 +1,11 @@
 from __future__ import annotations
-from platform import system, machine, python_implementation, python_version
-from binarylane.console.metadata import distribution_name, distribution_version
 
+from platform import machine, python_implementation, python_version, system
 
 from binarylane.client import AuthenticatedClient
 from binarylane.config import Config
+
+from binarylane.console.metadata import distribution_name, distribution_version
 
 
 def create_client(config: Config) -> AuthenticatedClient:
@@ -18,7 +19,7 @@ def create_client(config: Config) -> AuthenticatedClient:
     )
 
 
-def get_user_agent():
+def get_user_agent() -> str:
     # example result: "binarylane-cli/0.13.0 (Linux/x86_64) CPython/3.10.6"
     user_agent = (
         f"{distribution_name()}/{distribution_version()}",

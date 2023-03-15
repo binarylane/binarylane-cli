@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import pytest
 from pytest import CaptureFixture
-from binarylane.console.metadata import program_description
 
 from tests.integration.conftest import App
+
+from binarylane.console.metadata import program_description
 
 
 def test_app_root_help(app: App, capsys: CaptureFixture[str]) -> None:

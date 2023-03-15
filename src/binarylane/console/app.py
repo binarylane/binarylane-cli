@@ -6,10 +6,9 @@ from dataclasses import dataclass
 from typing import Any, ClassVar, Dict, Iterator, List, Optional, Union
 
 from binarylane.console.commands import descriptors
+from binarylane.console.metadata import program_description
 from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.runners import Context, Descriptor, Runner
-
-from binarylane.console.metadata import program_description
 
 logger = logging.getLogger(__name__)
 

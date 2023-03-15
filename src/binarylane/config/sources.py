@@ -15,6 +15,9 @@ class _SourceBase(ABC):
     def get(self, name: str) -> Optional[str]:
         return self._config.get(name, None)
 
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}({self._config})"
+
 
 class CommandlineSource(_SourceBase):
     def __init__(self, config: argparse.Namespace) -> None:
@@ -61,7 +64,7 @@ class FileSource:
             default_section="",  # this effectively disables the default section as `[]` is not a valid section header
         )
         self._read()
-        self.section_name = ""
+        self.section_name = "bl"
 
     @staticmethod
     def _get_config_home() -> Path:
@@ -126,6 +129,9 @@ class FileSource:
 
     def get(self, name: str) -> Optional[str]:
         return self._section.get(name, None)
+
+    def __repr__(self) -> str:
+        return f"FileSource(config_file={self._path!r}, section_name={self.section_name!r})"
 
 
 class RuntimeSource(_SourceBase):

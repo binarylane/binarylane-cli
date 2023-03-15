@@ -6,22 +6,17 @@ from abc import ABC, abstractmethod
 from argparse import SUPPRESS
 from dataclasses import dataclass
 from typing import ClassVar, List, Sequence, Type
-from binarylane.console.metadata import program_name
 from binarylane.pycompat.actions import BooleanOptionalAction
 
 from binarylane.config import Config
 
+from binarylane.console.metadata import program_name
 from binarylane.console.parser import Namespace, Parser
 
 
 class Context(Config):
-    name: str
-    description: str
-
-    def __init__(self, name: str = "", description: str = "") -> None:
-        super().__init__(default_source=True)
-        self.name = name
-        self.description = description
+    name: str = ""
+    description: str = ""
 
     @property
     def prog(self) -> str:
@@ -79,7 +74,7 @@ class Runner(ABC):
 
     def parse(self, args: Sequence[str]) -> Namespace:
         parsed = self._parser.parse(args)
-        self._context.initialize(commandline=parsed)
+        self._context.add_commandline(parsed)
         return parsed
 
     @abstractmethod
