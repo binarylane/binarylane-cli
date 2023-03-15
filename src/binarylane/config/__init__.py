@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from abc import ABC
 from argparse import Namespace
 from pathlib import Path
 from typing import Dict, Optional
@@ -10,18 +9,18 @@ from binarylane.config.options import OptionAttributes, OptionName
 from binarylane.config.repository import Repository, Source
 
 
-class Config(Repository, OptionAttributes, ABC):
-    def __init__(
-        self,
-        *,
-        default_source: bool = False,
-        user_sources: bool = False,
-        config_file: Optional[Path] = src.FileSource.DEFAULT_PATH,
-    ) -> None:
-        super().__init__(default_source=default_source)
+class _Config(Repository, OptionAttributes):
+    def __init__(self) -> None:
+        super().__init__(default_source=True)
 
-        if not user_sources:
-            return
+
+class DefaultConfig(_Config):
+    pass
+
+
+class UserConfig(_Config):
+    def __init__(self, *, config_file: Optional[Path] = src.FileSource.DEFAULT_PATH) -> None:
+        super().__init__()
 
         self.add_source(src.FileSource(config_file))
         self.add_source(src.EnvironmentSource())
@@ -53,13 +52,3 @@ class Config(Repository, OptionAttributes, ABC):
         # Write configuration to disk
         file = self.get_source(src.FileSource)
         file.save(config_options)
-
-
-class DefaultConfig(Config):
-    def __init__(self) -> None:
-        super().__init__(default_source=True, user_sources=False)
-
-
-class UserConfig(Config):
-    def __init__(self, *, config_file: Optional[Path] = src.FileSource.DEFAULT_PATH) -> None:
-        super().__init__(default_source=True, user_sources=True, config_file=config_file)

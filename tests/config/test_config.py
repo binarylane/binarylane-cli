@@ -6,7 +6,7 @@ from typing import MutableMapping
 
 import pytest
 
-from binarylane.config import Config, DefaultConfig, OptionName, UserConfig
+from binarylane.config import DefaultConfig, OptionName, UserConfig
 from binarylane.config.sources import CommandlineSource, DefaultSource, EnvironmentSource, FileSource
 
 
@@ -18,20 +18,6 @@ def test_default_values() -> None:
     assert config.api_token == "unconfigured"
     assert config.api_development is False
     assert config.config_section == "bl"
-
-
-def test_default_values_without_default_source() -> None:
-    config = Config()
-
-    # Intended behaviour with no sources:
-    with pytest.raises(KeyError):
-        config.api_url
-
-    with pytest.raises(KeyError):
-        config.config_section
-
-    assert config.api_token == "unconfigured"
-    assert config.api_development is False
 
 
 def test_save_production(tmp_path: Path, tmp_env: MutableMapping[str, str]) -> None:

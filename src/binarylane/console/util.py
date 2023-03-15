@@ -3,12 +3,12 @@ from __future__ import annotations
 from platform import machine, python_implementation, python_version, system
 
 from binarylane.client import AuthenticatedClient
-from binarylane.config import Config
+from binarylane.config import UserConfig
 
 from binarylane.console.metadata import distribution_name, distribution_version
 
 
-def create_client(config: Config) -> AuthenticatedClient:
+def create_client(config: UserConfig) -> AuthenticatedClient:
     return AuthenticatedClient(
         base_url=config.api_url,
         token=config.api_token,

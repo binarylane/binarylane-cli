@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import List
 
-from binarylane.config import Config
+from binarylane.config import UserConfig
 
 from binarylane.console.runners import Runner
 from binarylane.console.util import create_client
@@ -41,7 +41,7 @@ To get started with the BinaryLane CLI, you must obtain an API token for the CLI
         else:
             self.error("Invalid API token")
 
-    def _try_token(self, config: Config) -> bool:
+    def _try_token(self, config: UserConfig) -> bool:
         """Return bool indicating if API is accessible with current configuration"""
 
         from binarylane.api.accounts.get_v2_account import sync_detailed
