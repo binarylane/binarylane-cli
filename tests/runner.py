@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+from argparse import Namespace
 from typing import Generic, List, Type, TypeVar
 
-from binarylane.console.config import Config
 from binarylane.console.runners import Context, Runner
 
 T = TypeVar("T", bound=Runner)
@@ -21,7 +21,12 @@ class TypeRunner(Runner, Generic[T]):
     _test: T
 
     def __init__(self, runner_type: Type[T]) -> None:
-        super().__init__(Context("type", ""))
+        super().__init__(Context(config_file=None))
+        # Use default config, plus a token
+        commandline = Namespace()
+        commandline.api_token = "example_token"
+        self._context.add_commandline(commandline)
+
         self._test = runner_type(self._context)
 
     @property
@@ -30,10 +35,4 @@ class TypeRunner(Runner, Generic[T]):
 
     def run(self, args: List[str]) -> None:
         assert self._test is not None
-
-        # Use a stock config
-        config = getattr(self._test, "_config", None)
-        if isinstance(config, Config):
-            config.api_token = "example_token"
-
         self._test.run(args)

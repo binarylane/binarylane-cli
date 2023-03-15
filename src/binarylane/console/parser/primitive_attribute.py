@@ -5,11 +5,10 @@ import logging
 from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
-from binarylane.pycompat import typing
+from binarylane.pycompat import actions, typing
 
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.parser.attribute import Attribute
 
 NoneType = type(None)
@@ -255,6 +254,6 @@ class PrimitiveAttribute(Attribute):
 
         # Use --name , --no-name for booleans rather than --name [true|false]
         if self.attribute_type is bool:
-            kwargs["action"] = BooleanOptionalAction
+            kwargs["action"] = actions.BooleanOptionalAction
 
         return kwargs

@@ -2,21 +2,22 @@
 from __future__ import annotations
 
 import argparse
+from typing import Any, Callable, Iterable, Optional, Sequence, Tuple, Union
 
 
 # New to 3.9 - copied here to import if required
 class BooleanOptionalAction(argparse.Action):
     def __init__(
         self,
-        option_strings,
-        dest,
-        default=None,
-        type=None,  # pylint: disable=redefined-builtin
-        choices=None,
-        required=False,
-        help=None,  # pylint: disable=redefined-builtin
-        metavar=None,
-    ):
+        option_strings: Sequence[str],
+        dest: str,
+        default: Union[object, str, None] = None,
+        type: Union[Callable[[str], object], argparse.FileType, None] = None,  # pylint: disable=redefined-builtin
+        choices: Union[Iterable[object], None] = None,
+        required: bool = False,
+        help: Union[str, None] = None,  # pylint: disable=redefined-builtin
+        metavar: Union[str, Tuple[str, ...], None] = None,
+    ) -> None:
 
         _option_strings = []
         for option_string in option_strings:
@@ -41,9 +42,17 @@ class BooleanOptionalAction(argparse.Action):
             metavar=metavar,
         )
 
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        values: Union[str, Sequence[Any], None],
+        option_string: Optional[str] = None,
+    ) -> None:
+        if option_string is None:
+            return
         if option_string in self.option_strings:
             setattr(namespace, self.dest, not option_string.startswith("--no-"))
 
-    def format_usage(self):
+    def format_usage(self) -> str:
         return " | ".join(self.option_strings)
