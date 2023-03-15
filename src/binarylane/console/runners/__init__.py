@@ -8,13 +8,13 @@ from dataclasses import dataclass
 from typing import ClassVar, List, Sequence, Type
 from binarylane.pycompat.actions import BooleanOptionalAction
 
-from binarylane.config import Config
+from binarylane.config import DefaultConfig, UserConfig
 
 from binarylane.console.metadata import program_name
 from binarylane.console.parser import Namespace, Parser
 
 
-class Context(Config):
+class Context(UserConfig):
     name: str = ""
     description: str = ""
 
@@ -23,7 +23,7 @@ class Context(Config):
         return f"{program_name()} {self.name}".rstrip()
 
     def configure(self, parser: Parser) -> None:
-        default = Config()
+        default = DefaultConfig()
         config_section = default.config_section
 
         parser.add_argument(
