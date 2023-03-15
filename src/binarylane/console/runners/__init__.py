@@ -5,7 +5,7 @@ import sys
 from abc import ABC, abstractmethod
 from argparse import SUPPRESS
 from dataclasses import dataclass
-from typing import ClassVar, List, Sequence, Type
+from typing import ClassVar, List, NoReturn, Optional, Sequence, Type
 from binarylane.pycompat.actions import BooleanOptionalAction
 
 from binarylane.config import DefaultConfig, UserConfig
@@ -82,6 +82,6 @@ class Runner(ABC):
         """Subclasses implement their primary behaviour here"""
 
     @staticmethod
-    def error(message: str) -> None:
-        print("ERROR: ", message, file=sys.stderr)
+    def error(message: str) -> NoReturn:
+        print(f"ERROR: {message}", file=sys.stderr)
         raise SystemExit(-1)
