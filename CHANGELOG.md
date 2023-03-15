@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## v0.14.0 (2023-03-15)
+
+### Bug Fixes
+
+- make importlib-metadata an explicit dependency for py3.7 (#24)
+- add missing description for "server console" command (#18)
+
+### Features
+
+- add --context to allow selecting from multiple API tokens (#15)
+
 ## v0.13.0 (2023-03-02)
 
 ### Features
