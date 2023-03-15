@@ -1,0 +1,23 @@
+{% set return_string = endpoint.response_type() %}
+{% set parsed_responses = (endpoint.responses | length > 0) and return_string != "Any" %}
+{% for response_type in endpoint.responses if response_type.status_code == 200 %}
+{% set _ = response_class.update({'type': response_type.prop}) %}
+{% if endpoint.method != 'get' and response_type.prop.class_info and response_type.prop.class_info.name == 'ActionResponse' %}
+{% set _ = response_class.update({'name': 'ActionRunner'}) %}
+{% endif %}
+{% for prop in response_type.prop.required_properties if prop.name == 'links' and prop.class_info.name == 'ActionsLinks' %}
+{% set _ = response_class.update({'name': 'ActionLinkRunner'}) %}
+{% endfor %}
+{# Check if response contains a list[Model] property; and store it for later #}
+{% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() == 'list' and prop.inner_property.class_info %}
+{% set _ = response_class.update({'name': 'ListRunner', 'list': openapi.models_by_class[prop.inner_property.class_info]}) %}
+{% endfor %}
+{# Second check if there are any non-list values, which means this isnt a list response #}
+{% for prop in response_type.prop.required_properties if response_class.get('list') and prop.name not in ('meta', 'links') and prop.get_instance_type_string() != 'list' %}
+{# This is required because of jinja 'for' variable scope #}
+{% set _ = response_class.update({'name': 'CommandRunner', 'list':None}) %}
+{% endfor %}
+{% endfor %}
+
+from binarylane.console.runners.{{ response_class['name'].lower().replace('runner', '') }} import {{ response_class['name'] }}
+from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, PrimitiveAttribute
