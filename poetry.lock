@@ -432,7 +432,7 @@ files = [
 name = "importlib-metadata"
 version = "4.13.0"
 description = "Read metadata from Python packages"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1403,7 +1403,7 @@ files = [
 name = "zipp"
 version = "3.11.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1418,4 +1418,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7.2"
-content-hash = "71dd6b4ea5fc898131253bffa4dc51731395389fece1a954ed98121ace564823"
+content-hash = "a9e0540e7aff0334a6622530ae8d5bc0fbf9aa2310b8898266ff0f5635b270f8"

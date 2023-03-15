@@ -23,7 +23,7 @@ class ChangeAdvancedFeatures:
             existing advanced features. Provide an empty array to disable all advanced features, otherwise provide an array
             with selected advanced features. If provided, any currently enabled advanced features that aren't included will
             be disabled.
-        processor_model (Union[Unset, None, str]): Do not provide or set to null to keep existing processor model.
+        processor_model (Union[Unset, None, int]): Do not provide or set to null to keep existing processor model.
         automatic_processor_model (Union[Unset, None, bool]): Set to true to use best available processor model. If this
             is provided the processor_model property must not be provided.
         machine_type (Union[Unset, None, VmMachineType]): Do not provide or set to null to keep existing machine type.
@@ -34,7 +34,7 @@ class ChangeAdvancedFeatures:
 
     type: ChangeAdvancedFeaturesType
     enabled_advanced_features: Union[Unset, None, List[AdvancedFeature]] = UNSET
-    processor_model: Union[Unset, None, str] = UNSET
+    processor_model: Union[Unset, None, int] = UNSET
     automatic_processor_model: Union[Unset, None, bool] = UNSET
     machine_type: Union[Unset, None, VmMachineType] = UNSET
     automatic_machine_type: Union[Unset, None, bool] = UNSET

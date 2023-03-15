@@ -85,10 +85,20 @@ def generate_commands(temp_dir: Path, openapi_path: Path) -> None:
 
     # Move the "api" package (discarding the models, etc) from temporary directory
     # to the correct location for commands package in our source tree
-    commands_dir = get_project_dir() / "src" / "binarylane" / "console" / "commands"
-    if commands_dir.is_dir():
-        shutil.rmtree(commands_dir)
-    (build_package / "api").rename(commands_dir)
+    commands_dir = get_project_dir() / "src" / "binarylane" / "console" / "commands" / "api"
+    mkempty(commands_dir)
+
+    # Move the generated api/__init__.py to our directory
+    build_package /= "api"
+    (build_package / "__init__.py").rename(commands_dir / "__init__.py")
+
+    # Now combine the api/$tag/$operation.py files into a single directory
+    for module in build_package.glob("*/*.py"):
+        if module.name == "__init__.py":
+            continue
+        if (commands_dir / module.name).exists():
+            raise RuntimeError(f"Module name {module.name} conflict")
+        module.rename(commands_dir / module.name)
 
 
 def get_project_dir() -> Path:

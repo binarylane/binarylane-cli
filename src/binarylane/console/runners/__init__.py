@@ -1,47 +1,85 @@
-""" Runners handle the overall CLI behaviour - parse input, perform an action, and display result """
 from __future__ import annotations
 
-import re
+import importlib
 import sys
 from abc import ABC, abstractmethod
-from typing import List, NoReturn, Optional
+from argparse import SUPPRESS
+from dataclasses import dataclass
+from typing import ClassVar, List, NoReturn, Optional, Sequence, Type
+from binarylane.pycompat.actions import BooleanOptionalAction
+
+from binarylane.config import DefaultConfig, UserConfig
+
+from binarylane.console.metadata import program_name
+from binarylane.console.parser import Namespace, Parser
 
 
-class Runner(ABC):
-    """Abstract base class for all Runner implementations"""
-
-    HELP = "--help"
-    CHECK = "--blcli-check"
-    _parent: Optional[Runner]
-
-    def __init__(self, parent: Optional[Runner] = None) -> None:
-        self._parent = parent
+class Context(UserConfig):
+    name: str = ""
+    description: str = ""
 
     @property
     def prog(self) -> str:
-        """The 'program' name is used in help output to identify this runner"""
-        return (self._parent.prog + " " if self._parent else "") + self.name
+        return f"{program_name()} {self.name}".rstrip()
+
+    def configure(self, parser: Parser) -> None:
+        default = DefaultConfig()
+        config_section = default.config_section
+
+        parser.add_argument(
+            "--context", metavar="NAME", help=f'Name of authentication context to use (default: "{config_section}")'
+        )
+        parser.add_argument("--api-token", metavar="VALUE", help="API token to use with BinaryLane API")
+        parser.add_argument("--api-url", metavar="URL", help=SUPPRESS)
+        parser.add_argument("--api-development", action=BooleanOptionalAction, help=SUPPRESS)
+
+        # Undocumented for now due to poor help formatting
+        parser.add_argument("-c", dest="context", help=SUPPRESS)
+        parser.add_argument("-t", dest="api_token", help=SUPPRESS)
+
+
+@dataclass
+class Descriptor:
+    module_path: str
+    name: str
+    description: str
 
     @property
-    @abstractmethod
-    def name(self) -> str:
-        """CLI name that is used to invoke the runner"""
+    def runner_type(self) -> Type[Runner]:
+        module = importlib.import_module("binarylane.console" + self.module_path)
+        command_type = getattr(module, "Command", None)
+        if command_type is None:
+            raise RuntimeError(f"{module.__name__} does not contain Command class")
+        return command_type
 
-    @property
-    @abstractmethod
-    def description(self) -> str:
-        """Description of what this runner does"""
 
-    def format_description(self) -> str:
-        """Many API operation summaries are title-cased (like a headline), rather than as a sentence."""
-        return re.sub(" ([A-Z])([a-z])", lambda m: " " + m.group(1).lower() + m.group(2), self.description)
+class Runner(ABC):
+    HELP: ClassVar[str] = "--help"
+    HELP_DESCRIPTION: ClassVar[str] = "Display command options and descriptions"
+    CHECK: ClassVar[str] = "--blcli-check"
+
+    _context: Context
+    _parser: Parser
+
+    def __init__(self, context: Context) -> None:
+        self._parser = Parser(context.prog, context.description)
+        self._parser.add_argument("--help", help=self.HELP_DESCRIPTION, action="help")
+
+        self._context = context
+        self._context.configure(self._parser)
+        self.configure(self._parser)
+
+    def configure(self, parser: Parser) -> None:
+        """Subclasses add arguments to parser here"""
+
+    def parse(self, args: Sequence[str]) -> Namespace:
+        parsed = self._parser.parse(args)
+        self._context.add_commandline(parsed)
+        return parsed
 
     @abstractmethod
     def run(self, args: List[str]) -> None:
         """Subclasses implement their primary behaviour here"""
-
-    def __call__(self, args: List[str]) -> None:
-        self.run(args)
 
     @staticmethod
     def error(message: str) -> NoReturn:

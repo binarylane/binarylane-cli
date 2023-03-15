@@ -4,8 +4,8 @@ from typing import Any, Dict, List, Type, TypeVar
 
 import attr
 
+from binarylane.models.backup_disk import BackupDisk
 from binarylane.models.backup_slot import BackupSlot
-from binarylane.models.disk import Disk
 
 T = TypeVar("T", bound="BackupInfo")
 
@@ -28,7 +28,7 @@ class BackupInfo:
         locked (bool): If this is true the backup is locked and cannot be replaced.
         iso (bool): If this is true the backup is an ISO image and cannot be restored. ISO images may only be attached
             for use as a boot disk or an additional disk.
-        disks (List[Disk]): A list of the individual disks that make up this backup.
+        backup_disks (List[BackupDisk]): A list of the individual disks that make up this backup.
     """
 
     type: BackupSlot
@@ -36,7 +36,7 @@ class BackupInfo:
     offsite: bool
     locked: bool
     iso: bool
-    disks: List[Disk]
+    backup_disks: List[BackupDisk]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -46,11 +46,11 @@ class BackupInfo:
         offsite = self.offsite
         locked = self.locked
         iso = self.iso
-        disks = []
-        for disks_item_data in self.disks:
-            disks_item = disks_item_data.to_dict()
+        backup_disks = []
+        for backup_disks_item_data in self.backup_disks:
+            backup_disks_item = backup_disks_item_data.to_dict()
 
-            disks.append(disks_item)
+            backup_disks.append(backup_disks_item)
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -61,7 +61,7 @@ class BackupInfo:
                 "offsite": offsite,
                 "locked": locked,
                 "iso": iso,
-                "disks": disks,
+                "backup_disks": backup_disks,
             }
         )
 
@@ -80,12 +80,12 @@ class BackupInfo:
 
         iso = d.pop("iso")
 
-        disks = []
-        _disks = d.pop("disks")
-        for disks_item_data in _disks:
-            disks_item = Disk.from_dict(disks_item_data)
+        backup_disks = []
+        _backup_disks = d.pop("backup_disks")
+        for backup_disks_item_data in _backup_disks:
+            backup_disks_item = BackupDisk.from_dict(backup_disks_item_data)
 
-            disks.append(disks_item)
+            backup_disks.append(backup_disks_item)
 
         backup_info = cls(
             type=type,
@@ -93,7 +93,7 @@ class BackupInfo:
             offsite=offsite,
             locked=locked,
             iso=iso,
-            disks=disks,
+            backup_disks=backup_disks,
         )
 
         backup_info.additional_properties = d

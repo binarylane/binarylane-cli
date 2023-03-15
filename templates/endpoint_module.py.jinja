@@ -147,14 +147,6 @@ class Command({{ response_class['name'] }}):
 {% endif %}
 
     @property
-    def name(self) -> str:
-        return '{{ endpoint.data['x-cli-command'].split(' ')[-1] }}'
-
-    @property
-    def description(self) -> str:
-        return """{{ endpoint.summary }}"""
-
-    @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/{{ endpoint.data["tags"][0] }}/paths/{{ endpoint.path.replace("/","~1").replace("{","%7B").replace("}","%7D") }}/{{ endpoint.method }}"
 

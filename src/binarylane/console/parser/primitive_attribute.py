@@ -5,11 +5,10 @@ import logging
 from datetime import datetime
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
-from binarylane.pycompat import typing
+from binarylane.pycompat import actions, typing
 
 from binarylane.types import UNSET, Unset
 
-from binarylane.console.actions import BooleanOptionalAction
 from binarylane.console.parser.attribute import Attribute
 
 NoneType = type(None)
@@ -34,6 +33,7 @@ class PrimitiveAttribute(Attribute):
     _dest: str
     _action: Optional[Type[argparse.Action]]
     _default_value: object = UNSET
+    _nargs: Optional[str]
 
     def __init__(
         self,
@@ -49,7 +49,7 @@ class PrimitiveAttribute(Attribute):
         parent: Optional[ObjectAttribute] = None,
     ) -> None:
         # Partial construction needed to perform unboxing:
-        self._array = False
+        self._nargs = None
         self._alternate_types = []
         self.required = required
         attribute_type = self._unbox_type(attribute_type_hint)
@@ -191,7 +191,11 @@ class PrimitiveAttribute(Attribute):
         if inner_type is None:
             raise NotImplementedError(f"unsupported list type. type={type_hint} inner_type={inner_type}")
 
-        self._array = True
+        if inner_type is Any:
+            inner_type = str
+            self._nargs = argparse.REMAINDER
+        else:
+            self._nargs = argparse.ZERO_OR_MORE
         return inner_type
 
     def _unbox_union(self, type_hint: object) -> type:
@@ -244,12 +248,12 @@ class PrimitiveAttribute(Attribute):
 
         # For array input, support both "--ssh-keys 1 2 3" and "--ssh-keys 1 --ssh-keys 2"
         # Since nargs is zero or more, Empty array can be created via just "--ssh-keys"
-        if self._array:
-            kwargs["nargs"] = argparse.ZERO_OR_MORE
+        if self._nargs:
+            kwargs["nargs"] = self._nargs
             kwargs["action"] = "append"
 
         # Use --name , --no-name for booleans rather than --name [true|false]
         if self.attribute_type is bool:
-            kwargs["action"] = BooleanOptionalAction
+            kwargs["action"] = actions.BooleanOptionalAction
 
         return kwargs

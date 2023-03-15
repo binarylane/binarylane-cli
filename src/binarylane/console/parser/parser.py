@@ -62,7 +62,10 @@ class Parser(argparse.ArgumentParser):
         self._keywords.append(keyword)
 
     def add_group_help(self, *, title: str, description: Optional[str] = None, entries: Dict[str, str]) -> None:
+        # App calls add_group_help(title='Available Commands') repeatedly, we need to replace its contents
+        self.remove_group(title)
         group = self.add_group(title, description)
+
         for key, value in entries.items():
             # FIXME: Use HelpFormatter to create an epilog instead
             #
@@ -114,6 +117,12 @@ class Parser(argparse.ArgumentParser):
         if group_name not in self._groups:
             self._groups[group_name] = self.add_argument_group(title=group_name, description=description)
         return self._groups[group_name]
+
+    def remove_group(self, group_name: str) -> None:
+        if group_name not in self._groups:
+            return
+        del self._groups[group_name]
+        self._action_groups = [g for g in self._action_groups if g.title != group_name]
 
     def add_to_group(self, group_name: Union[str, bool], name_or_flag: str, type_: type, **kwargs: Any) -> None:
         self._argument_names.append(name_or_flag)

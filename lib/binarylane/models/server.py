@@ -16,7 +16,6 @@ from binarylane.models.image import Image
 from binarylane.models.kernel import Kernel
 from binarylane.models.networks import Networks
 from binarylane.models.region import Region
-from binarylane.models.rescue_console import RescueConsole
 from binarylane.models.selected_size_options import SelectedSizeOptions
 from binarylane.models.server_status import ServerStatus
 from binarylane.models.size import Size
@@ -52,7 +51,6 @@ class Server:
         networks (Networks): A list of the networks of the server.
         disks (List[Disk]): A list of the disks that are currently attached to the server.
         backup_settings (BackupSettings): Detailed backup settings for the server.
-        rescue_console (RescueConsole): Details of the rescue console for this server.
         failover_ips (List[str]): A list of any assigned failover IP addresses for this server.
         host (Host): Summary information about the host of this server.
         password_change_supported (bool): If this is true the password_reset server action can be called to change a
@@ -91,7 +89,6 @@ class Server:
     networks: Networks
     disks: List[Disk]
     backup_settings: BackupSettings
-    rescue_console: RescueConsole
     failover_ips: List[str]
     host: Host
     password_change_supported: bool
@@ -136,8 +133,6 @@ class Server:
             disks.append(disks_item)
 
         backup_settings = self.backup_settings.to_dict()
-
-        rescue_console = self.rescue_console.to_dict()
 
         failover_ips = self.failover_ips
 
@@ -189,7 +184,6 @@ class Server:
                 "networks": networks,
                 "disks": disks,
                 "backup_settings": backup_settings,
-                "rescue_console": rescue_console,
                 "failover_ips": failover_ips,
                 "host": host,
                 "password_change_supported": password_change_supported,
@@ -254,8 +248,6 @@ class Server:
             disks.append(disks_item)
 
         backup_settings = BackupSettings.from_dict(d.pop("backup_settings"))
-
-        rescue_console = RescueConsole.from_dict(d.pop("rescue_console"))
 
         failover_ips = cast(List[str], d.pop("failover_ips"))
 
@@ -333,7 +325,6 @@ class Server:
             networks=networks,
             disks=disks,
             backup_settings=backup_settings,
-            rescue_console=rescue_console,
             failover_ips=failover_ips,
             host=host,
             password_change_supported=password_change_supported,
