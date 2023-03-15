@@ -56,6 +56,8 @@ class FileSource:
             config_file = self._get_config_dir() / self._FILENAME
         self._path = config_file
 
+        # ConfigParser with default settings supports a lot of different features. We have disabled them
+        # to narrow the configuration file format, to simplify a potential migration to a different config format.
         self._parser = configparser.ConfigParser(
             delimiters=("="),
             comment_prefixes=("#", ";"),
