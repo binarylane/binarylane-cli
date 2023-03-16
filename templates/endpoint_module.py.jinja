@@ -127,7 +127,60 @@ class CommandRequest:
 
 class Command({{ response_class['name'] }}):
 {% if response_class.get('list') %}
-{% include "list_response.jinja" %}
+{% set list_response = response_class.get('list') %}
+
+    def response(self, status_code: int, received: Any) -> None:
+        if status_code == 200 and isinstance(received, {{ response_class['type'].get_type_string() }}):
+            self._printer.print(received.{{ response_class['property'].python_name }}, self._format)
+        else:
+            super().response(status_code, received)
+
+    {% set entity = endpoint.data['x-cli-entity'] %}
+    {% if entity %}
+    def lookup(self, value: str) -> Optional[int]:
+        status_code, received = self.request(self._create_client(), CommandRequest())
+        if status_code != 200:
+            super().response(status_code, received)
+
+        assert isinstance(received, {{ response_class['type'].get_type_string() }})
+        for item in received.{{ response_class['property'].python_name }}:
+            if item.{{ entity['ref'] }} == value:
+                return item.{{ entity['id'] }}
+        else:
+            return None
+    {% endif %}
+
+    @property
+    def default_format(self) -> List[str]:
+        {% set format = [] %}
+        {% for name, prop in list_response.data.properties.items() if prop['x-cli-format'] %}
+        {% set _ = format.append("%04d/%s" % (prop['x-cli-format'], name)) %}
+        {% endfor %}
+        {# if response object does not specify which properties to use, display required primitives #}
+        {% if not format %}
+        {% for prop in list_response.required_properties if prop.is_base_type %}
+        {% set _ = format.append("%04d/%s" % (loop.index, prop.name)) %}
+        {% endfor %}
+        {% endif %}
+        {% if not format %}
+        {% include "default_format is empty" %}
+        {% endif %}
+        return [
+            {% for entry in format|sort %}
+            '{{ entry.split('/')[1] }}',
+            {% endfor %}
+        ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            {% for prop in list_response.required_properties %}
+            '{{ prop.name }}': """{{ prop.description }}""",
+            {% endfor %}
+            {% for prop in list_response.optional_properties %}
+            '{{ prop.name }}': """{{ prop.description }}""",
+            {% endfor %}
+        }
 {% endif %}
 
     @property
