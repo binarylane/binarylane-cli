@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.server_actions.get_v2_servers_server_id_actions import sync_detailed
 from binarylane.models.actions_response import ActionsResponse
@@ -23,6 +23,12 @@ class CommandRequest:
 
 
 class Command(ListRunner):
+    def response(self, status_code: int, received: Any) -> None:
+        if not isinstance(received, ActionsResponse):
+            return super().response(status_code, received)
+
+        return self._printer.print(received.actions, self._format)
+
     @property
     def default_format(self) -> List[str]:
         return [

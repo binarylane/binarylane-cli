@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from http import HTTPStatus
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.images.get_v2_images import sync_detailed
 from binarylane.models.image_query_type import ImageQueryType
@@ -23,6 +23,12 @@ class CommandRequest:
 
 
 class Command(ListRunner):
+    def response(self, status_code: int, received: Any) -> None:
+        if not isinstance(received, ImagesResponse):
+            return super().response(status_code, received)
+
+        return self._printer.print(received.images, self._format)
+
     @property
     def default_format(self) -> List[str]:
         return [
