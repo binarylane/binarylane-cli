@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import abstractmethod
-from typing import Any, Dict, List
+from typing import Dict, List
 
 from binarylane.console.parser import Namespace, Parser
 from binarylane.console.runners.command import CommandRunner

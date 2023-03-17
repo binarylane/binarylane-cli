@@ -14,7 +14,11 @@ DEFAULT_HEADING = "response"
 def format_response(response: Any, show_header: bool, fields: Optional[List[str]] = None) -> List[List[str]]:
     """Convert structured response object into a 'table' (where the length of each inner list is the same)"""
 
-    # ListRunner provide the "extracted" list property directly
+    # ListRunner provide the "extracted" list directly, in other cases we need to extract it ourselves
+    if not isinstance(response, list):
+        response = _extract_primary(response)
+        fields = fields or [DEFAULT_HEADING]
+
     if isinstance(response, list):
         if fields is None:
             raise TypeError("fields is required to display list response")
@@ -29,15 +33,13 @@ def format_response(response: Any, show_header: bool, fields: Optional[List[str]
         ]
         return data
 
-    primary = _extract_primary(response)
-
-    if isinstance(primary, str):
+    if isinstance(response, str):
         data = [[DEFAULT_HEADING]] if show_header else []
-        data += [[primary]]
+        data += [[response]]
 
     else:
         data = [["name", "value"]] if show_header else []
-        data += [_flatten(item, True) for item in primary.to_dict().items()]
+        data += [_flatten(item, True) for item in response.to_dict().items()]
 
     return data
 
