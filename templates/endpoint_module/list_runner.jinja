@@ -10,7 +10,6 @@
 
         return self._printer.print(received.{{ response_class['property'].python_name }}, self._format)
 
-
     @property
     def default_format(self) -> List[str]:
         {% set format = [] %}
