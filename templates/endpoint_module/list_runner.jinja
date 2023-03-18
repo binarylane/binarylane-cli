@@ -1,5 +1,15 @@
 {% set list_response = response_class.get('list') %}
 
+    def response(self, status_code: int, received: Any) -> None:
+        {#
+        When API client library knows the operation's 200 response type,
+        it will either create an instance of that type or raise an exception.
+        #}
+        if not isinstance(received, {{ response_class['type'].get_type_string() }}):
+            return super().response(status_code, received)
+
+        return self._printer.print(received.{{ response_class['property'].python_name }}, self._format)
+
     @property
     def default_format(self) -> List[str]:
         {% set format = [] %}

@@ -27,7 +27,7 @@ included template is finished.
 
 class Command({{ response_class['name'] }}):
 {% if response_class.get('list') %}
-{% include "endpoint_module/list_response.jinja" %}
+{% include "endpoint_module/list_runner.jinja" %}
 {% endif %}
 
     @property

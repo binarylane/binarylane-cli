@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import typing
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Dict, List, Optional, Sequence
 
 logger = logging.getLogger(__name__)
 
@@ -14,45 +14,32 @@ DEFAULT_HEADING = "response"
 def format_response(response: Any, show_header: bool, fields: Optional[List[str]] = None) -> List[List[str]]:
     """Convert structured response object into a 'table' (where the length of each inner list is the same)"""
 
-    primary = _extract_primary(response)
-    primary_type = type(primary)
+    # ListRunner provide the "extracted" list directly, in other cases we need to extract it ourselves
+    if not isinstance(response, list):
+        response = _extract_primary(response)
+        fields = fields or [DEFAULT_HEADING]
 
-    if isinstance(primary, list):
-        for key, value in getattr(primary_type, "__annotations__", {DEFAULT_HEADING: "value"}).items():
-            logger.debug(
-                "key=%(key)s value=%(value)s dict?%(is_dict)s origin:%(origin)s",
-                {
-                    "key": key,
-                    "value": value,
-                    "is_dict": hasattr(value, "to_dict"),
-                    "origin": getattr(value, "__origin__", None),
-                },
-            )
-
-        header = fields or [
-            key
-            for key, value in getattr(primary_type, "__annotations__", {"response": "value"}).items()
-            if key != "additional_properties"
-            and not hasattr(value, "to_dict")
-            and not getattr(value, "__origin__", None) in (Union, list)
-        ]
+    if isinstance(response, list):
+        if fields is None:
+            raise TypeError("fields is required to display list response")
 
         def object_to_list(row: Dict[str, Any], columns: List[str]) -> List[Any]:
             """Extract each field in `columns` from `row` into a list, in the same order as `columns`"""
             return [row.get(prop) for prop in columns]
 
-        data = [header] if show_header else []
+        data = [fields] if show_header else []
         data += [
-            _flatten([item] if isinstance(item, str) else object_to_list(item.to_dict(), header)) for item in primary
+            _flatten([item] if isinstance(item, str) else object_to_list(item.to_dict(), fields)) for item in response
         ]
+        return data
 
-    elif isinstance(primary, str):
+    if isinstance(response, str):
         data = [[DEFAULT_HEADING]] if show_header else []
-        data += [[primary]]
+        data += [[response]]
 
     else:
         data = [["name", "value"]] if show_header else []
-        data += [_flatten(item, True) for item in primary.to_dict().items()]
+        data += [_flatten(item, True) for item in response.to_dict().items()]
 
     return data
 
