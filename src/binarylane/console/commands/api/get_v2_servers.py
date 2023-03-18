@@ -8,6 +8,8 @@ from binarylane.models.links import Links
 from binarylane.models.servers_response import ServersResponse
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.util import create_client
+
 if TYPE_CHECKING:
     from binarylane.client import Client
 
@@ -81,7 +83,7 @@ class Command(ListRunner):
         }
 
     def lookup(self, value: str) -> Optional[int]:
-        status_code, received = self.request(self._create_client(), CommandRequest())
+        status_code, received = self.request(create_client(self._context), CommandRequest())
         if status_code != 200:
             super().response(status_code, received)
 

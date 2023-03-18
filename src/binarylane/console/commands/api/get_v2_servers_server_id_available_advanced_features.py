@@ -31,7 +31,7 @@ class Command(CommandRunner):
         mapping = Mapping(CommandRequest)
 
         def _lookup_server_id(value: str) -> Union[None, int]:
-            return api_get_v2_servers.Command(self).lookup(value)
+            return api_get_v2_servers.Command(self._context).lookup(value)
 
         mapping.add_primitive(
             "server_id",
