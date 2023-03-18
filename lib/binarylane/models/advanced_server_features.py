@@ -27,7 +27,7 @@ class AdvancedServerFeatures:
 
         enabled_advanced_features (List[AdvancedFeature]): A list of the currently enabled advanced features for this
             server.
-        processor_model (Union[Unset, None, str]): The ID of the processor model (and therefore CPU flags) available for
+        processor_model (Union[Unset, None, int]): The ID of the processor model (and therefore CPU flags) available for
             this server.
             A null value indicates automatic selection of the best processor model supported by the host node.
             This does not change the physical CPU, only the CPU flags available to the operating system.
@@ -38,7 +38,7 @@ class AdvancedServerFeatures:
 
     video_device: VideoDevice
     enabled_advanced_features: List[AdvancedFeature]
-    processor_model: Union[Unset, None, str] = UNSET
+    processor_model: Union[Unset, None, int] = UNSET
     machine_type: Union[Unset, None, VmMachineType] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 

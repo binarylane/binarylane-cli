@@ -13,7 +13,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    software_id: str,
+    software_id: int,
     *,
     client: Client,
 ) -> Dict[str, Any]:
@@ -56,14 +56,14 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 
 def sync_detailed(
-    software_id: str,
+    software_id: int,
     *,
     client: Client,
 ) -> Response[Union[ProblemDetails, SoftwareResponse]]:
     """Fetch Existing Software
 
     Args:
-        software_id (str): The ID of the software to fetch.
+        software_id (int): The ID of the software to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -87,14 +87,14 @@ def sync_detailed(
 
 
 def sync(
-    software_id: str,
+    software_id: int,
     *,
     client: Client,
 ) -> Optional[Union[ProblemDetails, SoftwareResponse]]:
     """Fetch Existing Software
 
     Args:
-        software_id (str): The ID of the software to fetch.
+        software_id (int): The ID of the software to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -111,14 +111,14 @@ def sync(
 
 
 async def asyncio_detailed(
-    software_id: str,
+    software_id: int,
     *,
     client: Client,
 ) -> Response[Union[ProblemDetails, SoftwareResponse]]:
     """Fetch Existing Software
 
     Args:
-        software_id (str): The ID of the software to fetch.
+        software_id (int): The ID of the software to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -140,14 +140,14 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    software_id: str,
+    software_id: int,
     *,
     client: Client,
 ) -> Optional[Union[ProblemDetails, SoftwareResponse]]:
     """Fetch Existing Software
 
     Args:
-        software_id (str): The ID of the software to fetch.
+        software_id (int): The ID of the software to fetch.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

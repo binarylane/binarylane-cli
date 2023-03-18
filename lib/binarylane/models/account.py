@@ -16,7 +16,6 @@ class Account:
     """
     Attributes:
         email (str): The email address registered for this account.
-        uuid (str): The ID of this account.
         email_verified (bool): Whether this account has been verified. Un-verified accounts are subject to some
             restrictions.
         status (AccountStatus):
@@ -35,7 +34,6 @@ class Account:
     """
 
     email: str
-    uuid: str
     email_verified: bool
     status: AccountStatus
     tax_code: TaxCode
@@ -44,7 +42,6 @@ class Account:
 
     def to_dict(self) -> Dict[str, Any]:
         email = self.email
-        uuid = self.uuid
         email_verified = self.email_verified
         status = self.status.value
 
@@ -61,7 +58,6 @@ class Account:
         field_dict.update(
             {
                 "email": email,
-                "uuid": uuid,
                 "email_verified": email_verified,
                 "status": status,
                 "tax_code": tax_code,
@@ -75,8 +71,6 @@ class Account:
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
         email = d.pop("email")
-
-        uuid = d.pop("uuid")
 
         email_verified = d.pop("email_verified")
 
@@ -93,7 +87,6 @@ class Account:
 
         account = cls(
             email=email,
-            uuid=uuid,
             email_verified=email_verified,
             status=status,
             tax_code=tax_code,

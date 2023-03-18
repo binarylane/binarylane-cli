@@ -1,0 +1,89 @@
+    def request(self,
+        {% if endpoint.requires_security %}
+        client: AuthenticatedClient,
+        {% else %}
+        client: Client,
+        {% endif %}
+        request: object,
+
+        {% set paginated=False %}
+        {% if endpoint.query_parameters %}
+        {% set paginated='page' in endpoint.query_parameters.keys() and 'per_page' in endpoint.query_parameters.keys() %}
+        {% endif %}
+        {# regex not available, so we handle both types separately #}
+        {% set return_string = endpoint.response_type().replace('[Any, ', '[None, ').replace(' Any, ', ' None, ') %}
+        {% if not return_string.startswith("Union[") %}
+        {% set return_string = "Union[{}]".format(return_string) %}
+        {% endif %}
+        {% if "None, " not in return_string %}
+        {% set return_string = return_string.replace("Union[", "Union[None, ") %}
+        {% endif %}
+        ) -> Tuple[HTTPStatus, {{ return_string }}]:
+            assert isinstance(request, CommandRequest)
+
+            {% for response_type in endpoint.responses %}
+            # {{ response_type.status_code }}: {{ response_type.prop.get_type_string() }}
+            {% endfor %}
+            {% if paginated %}
+            page = 0
+            per_page = 25
+            has_next = True
+            {% for response_type in endpoint.responses if response_type.status_code == 200 %}
+            response: Optional[{{ response_type.prop.class_info.name }}] = None
+            {% endfor %}
+
+            while has_next:
+                page += 1
+                page_response = sync_detailed(
+            {% else %}
+            page_response = sync_detailed(
+            {% endif %}
+                {% for parameter in endpoint.path_parameters.values() %}
+                {{ parameter.python_name }} = request.{{ parameter.python_name }},
+                {% endfor %}
+                client = client,
+
+                {% if endpoint.json_body %}
+                {% if endpoint.json_body.get_instance_type_string() == 'list' %}
+                json_body = request.{{ endpoint.tag }},
+
+                {% elif endpoint.json_body.class_info %}
+                json_body = request.json_body,
+
+                {% endif %}
+                {% endif %}
+
+                {% if endpoint.query_parameters %}
+                {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
+                    {{ property.python_name }} = request.{{ property.python_name }},
+                {% endfor %}
+                {% endif %}
+            {% if not paginated %}
+            )
+            return page_response.status_code, page_response.parsed
+            {% else %}
+                page = page,
+                per_page = per_page,
+                )
+
+                status_code = page_response.status_code
+                if status_code != 200:
+                    return status_code, page_response.parsed
+
+                assert isinstance(page_response.parsed, {{ response_class['type'].get_type_string() }})
+                has_next = isinstance(page_response.parsed.links, Links) and isinstance(page_response.parsed.links.pages.next_, str)
+                if not response:
+                    response = page_response.parsed
+                else:
+                {% for response_type in endpoint.responses if response_type.status_code == 200 %}
+                {% for prop in response_type.prop.required_properties if prop.name not in ('meta') %}
+                {% if prop.get_instance_type_string() == 'list' %}
+                    response.{{ prop.python_name }} += page_response.parsed.{{ prop.python_name }}
+                {% else %}
+                    {{ fail('unsupported', prop.prop.get_instance_type_string()) }}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+
+            return status_code, response
+            {% endif %}

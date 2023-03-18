@@ -19,8 +19,8 @@ def test_format_list() -> None:
     ns2 = "ns2.binarylane.com.au"
     dns = [ns1, ns2]
 
-    assert formatter.format_response(dns, True) == [[formatter.DEFAULT_HEADING], [ns1], [ns2]]
-    assert formatter.format_response(dns, False) == [[ns1], [ns2]]
+    assert formatter.format_response(dns, True, ["value"]) == [["value"], [ns1], [ns2]]
+    assert formatter.format_response(dns, False, ["value"]) == [[ns1], [ns2]]
 
 
 def test_format_primary_list() -> None:

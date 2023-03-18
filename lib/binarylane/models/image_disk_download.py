@@ -11,13 +11,13 @@ T = TypeVar("T", bound="ImageDiskDownload")
 class ImageDiskDownload:
     """
     Attributes:
-        id (str): The ID of the disk that this download URL refers to.
+        id (int): The ID of this backup disk.
         compressed_url (str): The URL of the compressed disk image. It is always preferable to download the compressed
             disk image if at all possible.
         raw_url (str): The URL of the raw (uncompressed) disk image.
     """
 
-    id: str
+    id: int
     compressed_url: str
     raw_url: str
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)

@@ -1,0 +1,40 @@
+{# Can import pretty liberally, as the generator will remove unused imports #}
+from typing import Any, Dict, List, Optional, Union, Tuple, Type, cast, TYPE_CHECKING
+
+import httpx
+from http import HTTPStatus
+
+from binarylane.types import Response, UNSET, Unset
+from binarylane.models.links import Links
+
+from binarylane.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync_detailed
+
+{% for relative in endpoint.relative_imports %}
+{{ relative.replace('...', 'binarylane.') }}
+{% endfor %}
+
+{% macro relative_imports(prop) %}
+{% for relative in prop.relative_imports %}
+{{ relative.replace('..', 'binarylane.') }}
+{% endfor %}
+{% for relative in prop.lazy_imports %}
+{{ relative.replace('..', 'binarylane.') }}
+{% endfor %}
+{% if prop.class_info %}
+{% for p in prop.required_properties + prop.optional_properties %}
+{% if p.class_info in openapi.models_by_class %}
+{{ relative_imports(openapi.models_by_class[p.class_info]) }}
+{% endif %}
+{% if p.get_instance_type_string() == 'list' and p.inner_property.class_info in openapi.models_by_class %}
+{{ relative_imports(openapi.models_by_class[p.inner_property.class_info]) }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endmacro %}
+{% if endpoint.json_body %}
+{{ relative_imports(endpoint.json_body) }}
+{% endif %}
+
+if TYPE_CHECKING:
+    from binarylane.console.parser import Parser
+    from binarylane.client import Client

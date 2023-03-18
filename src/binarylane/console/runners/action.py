@@ -4,8 +4,9 @@ import logging
 import shutil
 import sys
 import time
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
+from binarylane.console.parser import Namespace, Parser
 from binarylane.console.runners.command import CommandRunner
 
 if TYPE_CHECKING:
@@ -21,22 +22,23 @@ class ActionRunner(CommandRunner):
     _async: Optional[bool]
     _quiet: Optional[bool]
 
-    def run(self, args: List[str]) -> None:
-        self._parser.add_argument(
+    def configure(self, parser: Parser) -> None:
+        super().configure(parser)
+
+        parser.add_argument(
             "--async", action="store_true", dest="runner_async", help="Do not wait for requested action to complete"
         )
-        self._parser.add_argument(
+        parser.add_argument(
             "--quiet",
             action="store_true",
             dest="runner_quiet",
             help="Do not show progress while waiting for requested action to complete",
         )
-        super().run(args)
 
-    def process(self, parsed: Any) -> None:
+    def process(self, parsed: Namespace) -> None:
+        super().process(parsed)
         self._async = parsed.runner_async
         self._quiet = parsed.runner_quiet
-        super().process(parsed)
 
     def _progress(self, progress: str) -> None:
         if self._quiet:
