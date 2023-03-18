@@ -17,7 +17,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute
+from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute, PrimitiveAttribute
 from binarylane.console.runners.actionlink import ActionLinkRunner
 
 
@@ -38,30 +38,34 @@ class Command(ActionLinkRunner):
 
         json_body = mapping.add_json_body(CreateLoadBalancerRequest)
 
-        json_body.add_primitive(
-            "name",
-            str,
-            option_name="name",
-            required=True,
-            description="""The hostname of the load balancer.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                str,
+                required=True,
+                option_name="name",
+                description="""The hostname of the load balancer.""",
+            )
         )
 
         json_body_forwarding_rule = json_body.add(
             ListAttribute(
                 "forwarding_rules",
                 ForwardingRule,
+                required=False,
                 option_name="forwarding-rules",
                 description="""The rules that control which traffic the load balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.""",
-                required=False,
             )
         )
 
-        json_body_forwarding_rule.add_primitive(
-            "entry_protocol",
-            LoadBalancerRuleProtocol,
-            option_name="entry-protocol",
-            required=True,
-            description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.""",
+        json_body_forwarding_rule.add(
+            PrimitiveAttribute(
+                "entry_protocol",
+                LoadBalancerRuleProtocol,
+                required=True,
+                option_name="entry-protocol",
+                description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.""",
+            )
         )
 
         json_body_health_check = json_body.add(
@@ -74,36 +78,44 @@ class Command(ActionLinkRunner):
             )
         )
 
-        json_body_health_check.add_primitive(
-            "protocol",
-            Union[Unset, None, HealthCheckProtocol],
-            option_name="protocol",
-            required=False,
-            description="""Leave null to accept the default HTTP protocol.""",
+        json_body_health_check.add(
+            PrimitiveAttribute(
+                "protocol",
+                Union[Unset, None, HealthCheckProtocol],
+                required=False,
+                option_name="protocol",
+                description="""Leave null to accept the default HTTP protocol.""",
+            )
         )
 
-        json_body_health_check.add_primitive(
-            "path",
-            Union[Unset, None, str],
-            option_name="path",
-            required=False,
-            description="""Leave null to accept the default '/' path.""",
+        json_body_health_check.add(
+            PrimitiveAttribute(
+                "path",
+                Union[Unset, None, str],
+                required=False,
+                option_name="path",
+                description="""Leave null to accept the default '/' path.""",
+            )
         )
 
-        json_body.add_primitive(
-            "server_ids",
-            Union[Unset, None, List[int]],
-            option_name="server-ids",
-            required=False,
-            description="""A list of server IDs to assign to this load balancer.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "server_ids",
+                Union[Unset, None, List[int]],
+                required=False,
+                option_name="server-ids",
+                description="""A list of server IDs to assign to this load balancer.""",
+            )
         )
 
-        json_body.add_primitive(
-            "region",
-            Union[Unset, None, str],
-            option_name="region",
-            required=False,
-            description="""Leave null to create an anycast load balancer.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "region",
+                Union[Unset, None, str],
+                required=False,
+                option_name="region",
+                description="""Leave null to create an anycast load balancer.""",
+            )
         )
 
         return mapping

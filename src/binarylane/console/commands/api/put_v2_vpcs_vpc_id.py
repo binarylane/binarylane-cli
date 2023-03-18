@@ -14,7 +14,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import ListAttribute, Mapping
+from binarylane.console.parser import ListAttribute, Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -35,56 +35,66 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "vpc_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The target vpc id.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "vpc_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The target vpc id.""",
+            )
         )
 
         json_body = mapping.add_json_body(UpdateVpcRequest)
 
-        json_body.add_primitive(
-            "name",
-            str,
-            option_name="name",
-            required=True,
-            description="""A name to help identify this VPC.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                str,
+                required=True,
+                option_name="name",
+                description="""A name to help identify this VPC.""",
+            )
         )
 
         json_body_route_entry_request = json_body.add(
             ListAttribute(
                 "route_entries",
                 RouteEntryRequest,
+                required=False,
                 option_name="route-entries",
                 description="""The route entries that control how network traffic is directed through the VPC environment.""",
-                required=False,
             )
         )
 
-        json_body_route_entry_request.add_primitive(
-            "router",
-            str,
-            option_name="router",
-            required=True,
-            description="""The server that will receive traffic sent to the destination property in this VPC.""",
+        json_body_route_entry_request.add(
+            PrimitiveAttribute(
+                "router",
+                str,
+                required=True,
+                option_name="router",
+                description="""The server that will receive traffic sent to the destination property in this VPC.""",
+            )
         )
 
-        json_body_route_entry_request.add_primitive(
-            "destination",
-            str,
-            option_name="destination",
-            required=True,
-            description="""The destination address for this route entry. This may be in CIDR format.""",
+        json_body_route_entry_request.add(
+            PrimitiveAttribute(
+                "destination",
+                str,
+                required=True,
+                option_name="destination",
+                description="""The destination address for this route entry. This may be in CIDR format.""",
+            )
         )
 
-        json_body_route_entry_request.add_primitive(
-            "description",
-            Union[Unset, None, str],
-            option_name="description",
-            required=False,
-            description="""An optional description for the route.""",
+        json_body_route_entry_request.add(
+            PrimitiveAttribute(
+                "description",
+                Union[Unset, None, str],
+                required=False,
+                option_name="description",
+                description="""An optional description for the route.""",
+            )
         )
 
         return mapping

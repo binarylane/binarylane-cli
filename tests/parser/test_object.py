@@ -8,8 +8,8 @@ import pytest
 from binarylane.types import UNSET, Unset
 from tests.parser import TestRequest, create_parser
 
-from binarylane.console.parser import Mapping, ObjectAttribute
-from binarylane.console.parser.parser import Parser
+from binarylane.console.parser import Mapping, ObjectAttribute, Parser
+from binarylane.console.parser import PrimitiveAttribute as Primitive
 
 TEST = "test"
 REQUIRED_ARGUMENTS = ["--size", "std-min", "--region", "syd", "--image", "ubuntu"]
@@ -50,24 +50,26 @@ class SshKeyRequest(TestRequest):
 def parser() -> Parser:
     parser = create_parser()
     json_body = parser.set_mapping(Mapping(CreateServerRequest))
-    json_body.add_primitive("size", str, option_name="size", required=True, description=TEST)
-    json_body.add_primitive("region", str, option_name="region", required=True, description=TEST)
-    json_body.add_primitive("image", str, option_name="image", required=True, description=TEST)
-    json_body.add_primitive("name", Union[None, Unset, str], option_name="name", required=False, description=TEST)
-    json_body.add_primitive("vpc_id", Union[None, Unset, int], option_name="vpc-id", required=False, description=TEST)
-    json_body.add_primitive(
-        "port_blocking", Union[None, Unset, bool], option_name="port-blocking", required=False, description=TEST
-    )
+
+    def opt(type_: type) -> object:
+        return Union[None, Unset, type_]
+
+    json_body.add(Primitive("size", str, option_name="size", required=True, description=TEST))
+    json_body.add(Primitive("region", str, option_name="region", required=True, description=TEST))
+    json_body.add(Primitive("image", str, option_name="image", required=True, description=TEST))
+    json_body.add(Primitive("name", opt(str), option_name="name", required=False, description=TEST))
+    json_body.add(Primitive("vpc_id", opt(int), option_name="vpc-id", required=False, description=TEST))
+    json_body.add(Primitive("port_blocking", opt(bool), option_name="port-blocking", required=False, description=TEST))
 
     options = json_body.add(ObjectAttribute("options", SizeOptionsRequest, required=False, description=TEST))
-    options.add_primitive("disk", Union[None, Unset, int], option_name="disk", required=False, description=TEST)
-    options.add_primitive("memory", Union[None, Unset, int], option_name="memory", required=False, description=TEST)
-    options.add_primitive("transfer", Union[None, Unset, int], option_name="transfer", required=False, description=TEST)
+    options.add(Primitive("disk", opt(int), option_name="disk", required=False, description=TEST))
+    options.add(Primitive("memory", opt(int), option_name="memory", required=False, description=TEST))
+    options.add(Primitive("transfer", opt(int), option_name="transfer", required=False, description=TEST))
 
     old_ssh_key = json_body.add(ObjectAttribute("old_ssh_key", SshKeyRequest, required=False, description=TEST))
-    old_ssh_key.add_primitive("public_key", str, option_name="public-key", required=True, description=TEST)
-    old_ssh_key.add_primitive("name", str, option_name="name", required=True, description=TEST)
-    old_ssh_key.add_primitive("default", bool, option_name="default", required=False, description=TEST)
+    old_ssh_key.add(Primitive("public_key", str, option_name="public-key", required=True, description=TEST))
+    old_ssh_key.add(Primitive("name", str, option_name="name", required=True, description=TEST))
+    old_ssh_key.add(Primitive("default", bool, option_name="default", required=False, description=TEST))
 
     return parser
 

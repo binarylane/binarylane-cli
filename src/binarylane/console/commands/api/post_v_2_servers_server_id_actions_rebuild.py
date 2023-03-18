@@ -15,7 +15,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping, ObjectAttribute
+from binarylane.console.parser import Mapping, ObjectAttribute, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -36,29 +36,35 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+            )
         )
 
         json_body = mapping.add_json_body(Rebuild)
 
-        json_body.add_primitive(
-            "type",
-            RebuildType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                RebuildType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "image",
-            Union[None, Unset, int, str],
-            option_name="image",
-            required=False,
-            description="""The Operating System ID or slug or Backup image ID to use as a base for the rebuild.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "image",
+                Union[None, Unset, int, str],
+                required=False,
+                option_name="image",
+                description="""The Operating System ID or slug or Backup image ID to use as a base for the rebuild.""",
+            )
         )
 
         json_body_image_options = json_body.add(
@@ -71,38 +77,46 @@ class Command(ActionRunner):
             )
         )
 
-        json_body_image_options.add_primitive(
-            "name",
-            Union[Unset, None, str],
-            option_name="name",
-            required=False,
-            description="""The hostname for the server. Leave null to accept the auto-generated permalink.""",
+        json_body_image_options.add(
+            PrimitiveAttribute(
+                "name",
+                Union[Unset, None, str],
+                required=False,
+                option_name="name",
+                description="""The hostname for the server. Leave null to accept the auto-generated permalink.""",
+            )
         )
 
-        json_body_image_options.add_primitive(
-            "ssh_keys",
-            Union[Unset, None, List[Union[int, str]]],
-            option_name="ssh-keys",
-            required=False,
-            description="""This may be either the existing SSH Keys IDs or fingerprints.
+        json_body_image_options.add(
+            PrimitiveAttribute(
+                "ssh_keys",
+                Union[Unset, None, List[Union[int, str]]],
+                required=False,
+                option_name="ssh-keys",
+                description="""This may be either the existing SSH Keys IDs or fingerprints.
 If this is null or not provided any SSH keys that have been marked as default will be deployed (if the operating system supports SSH Keys).
 Submit an empty array to disable deployment of default keys.""",
+            )
         )
 
-        json_body_image_options.add_primitive(
-            "user_data",
-            Union[Unset, None, str],
-            option_name="user-data",
-            required=False,
-            description="""If provided this will be used to initialise the new server. This must be left null if the Image does not support UserData, see DistributionInfo.Features for more information.""",
+        json_body_image_options.add(
+            PrimitiveAttribute(
+                "user_data",
+                Union[Unset, None, str],
+                required=False,
+                option_name="user-data",
+                description="""If provided this will be used to initialise the new server. This must be left null if the Image does not support UserData, see DistributionInfo.Features for more information.""",
+            )
         )
 
-        json_body_image_options.add_primitive(
-            "password",
-            Union[Unset, None, str],
-            option_name="password",
-            required=False,
-            description="""If this is provided the default remote user account's password will be set to this value. If this is null a random password will be generated and emailed to the account email address.""",
+        json_body_image_options.add(
+            PrimitiveAttribute(
+                "password",
+                Union[Unset, None, str],
+                required=False,
+                option_name="password",
+                description="""If this is provided the default remote user account's password will be set to this value. If this is null a random password will be generated and emailed to the account email address.""",
+            )
         )
 
         return mapping

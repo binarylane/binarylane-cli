@@ -13,7 +13,7 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
@@ -83,19 +83,23 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "type",
-            Union[Unset, None, ImageQueryType],
-            required=False,
-            option_name="type",
-            description="""Queries for distribution will include images that have pre-installed applications.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "type",
+                Union[Unset, None, ImageQueryType],
+                required=False,
+                option_name="type",
+                description="""Queries for distribution will include images that have pre-installed applications.""",
+            )
         )
-        mapping.add_primitive(
-            "private",
-            Union[Unset, None, bool],
-            required=False,
-            option_name="private",
-            description="""Provide 'true' to only list private images. 'false' has no effect.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "private",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="private",
+                description="""Provide 'true' to only list private images. 'false' has no effect.""",
+            )
         )
         return mapping
 

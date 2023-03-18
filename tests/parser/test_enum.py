@@ -9,8 +9,7 @@ import pytest
 from binarylane.types import UNSET, Unset
 from tests.parser import TestRequest, create_parser
 
-from binarylane.console.parser import Mapping, ObjectAttribute
-from binarylane.console.parser.parser import Parser
+from binarylane.console.parser import Mapping, ObjectAttribute, Parser, PrimitiveAttribute
 
 TEST = "test"
 
@@ -47,7 +46,7 @@ class Child(TestRequest):
 def test_single_value_enum_does_not_require_configuration() -> None:
     parser = create_parser()
     request = parser.set_mapping(Mapping(Ping))
-    request.add_primitive("type", PingType, option_name="type", required=True, description=TEST)
+    request.add(PrimitiveAttribute("type", PingType, option_name="type", required=True, description=TEST))
 
     # "--type ping" is not required; single-value enum will default to its only value
     assert parser.parse([]).mapped_object.to_dict() == {"type": "ping"}
@@ -74,9 +73,8 @@ class Feature(str, Enum):
 def feature_parser() -> Parser:
     parser = create_parser()
     request = parser.set_mapping(Mapping(ChangeFeatures))
-    request.add_primitive(
-        "features", Union[Unset, None, List[Feature]], option_name="features", required=False, description=TEST
-    )
+    type_ = Union[Unset, None, List[Feature]]
+    request.add(PrimitiveAttribute("features", type_, option_name="features", required=False, description=TEST))
     return parser
 
 
@@ -124,12 +122,12 @@ def test_mixed_item_list_of_enum(feature_parser: Parser) -> None:
 def nested_parser() -> Parser:
     parser = create_parser()
     request = parser.set_mapping(Mapping(Parent))
-    request.add_primitive("type", PingType, option_name="type", required=True, description=TEST)
+    request.add(PrimitiveAttribute("type", PingType, option_name="type", required=True, description=TEST))
 
     parent = request.add(ObjectAttribute("child", Child, required=False, option_name="child", description=TEST))
-    parent.add_primitive("type", PingType, option_name="type", required=True, description=TEST)
-    parent.add_primitive("name", str, option_name="name", required=True, description=TEST)
-    parent.add_primitive("description", str, option_name="description", required=False, description=TEST)
+    parent.add(PrimitiveAttribute("type", PingType, option_name="type", required=True, description=TEST))
+    parent.add(PrimitiveAttribute("name", str, option_name="name", required=True, description=TEST))
+    parent.add(PrimitiveAttribute("description", str, option_name="description", required=False, description=TEST))
 
     return parser
 

@@ -12,7 +12,7 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -32,20 +32,23 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The target server id.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The target server id.""",
+            )
         )
 
-        mapping.add_primitive(
-            "data_interval",
-            Union[Unset, None, DataInterval],
-            required=False,
-            option_name="data-interval",
-            description="""
+        mapping.add(
+            PrimitiveAttribute(
+                "data_interval",
+                Union[Unset, None, DataInterval],
+                required=False,
+                option_name="data-interval",
+                description="""
 | Value | Description |
 | ----- | ----------- |
 | five-minute | 5 Minutes |
@@ -56,6 +59,7 @@ class Command(CommandRunner):
 | month | 1 Month |
 
 """,
+            )
         )
         return mapping
 

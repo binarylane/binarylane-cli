@@ -5,31 +5,20 @@
         {% macro option_name(prop) %}option_name = "{{ prop.name.replace('_','-') }}",{% endmacro %}
 
         {% for property in endpoint.path_parameters.values() %}
-        mapping.add_primitive(
+        mapping.add(PrimitiveAttribute(
             "{{ property.python_name }}",
             {{ property.get_type_string() }},
             required = True,
             option_name = None,
             {{ description_argument(property) }}
-            )
+        ))
         {% endfor %}
 
         {% if endpoint.json_body %}
-        {#
-            FIXME: BL API is not supposed to have any of these, but currently failover-ip update uses it.
-        #}
         {% if endpoint.json_body.get_instance_type_string() == 'list' %}
-        mapping.add_primitive(
-            "{{ endpoint.tag }}",
-            {{ endpoint.json_body.get_type_string() }},
-            option_name='value',
-            required = True,
-            {{ description_argument(endpoint.json_body) }}
-            warning="request body is {{ endpoint.json_body.get_type_string() }}",
-            )
+        {{ unsupported('json_body cannot be a list') }}
 
         {% elif endpoint.json_body.class_info %}
-
         {% macro add_object_to_parser(parser, prop) %}
         {% for property in prop.required_properties + prop.optional_properties %}
         {% if property.get_instance_type_string() == "list" and property.inner_property.class_info in openapi.models_by_class %}
@@ -38,9 +27,9 @@
         {{ subparser }} = {{ parser }}.add(ListAttribute(
             "{{ property.python_name }}",
             {{ property.inner_property.get_type_string(no_optional=True) }},
+            required={{ property.required }},
             {{ option_name(property) }}
             {{ description_argument(property) }}
-            required = {{ property.required }},
         ))
         {{ add_object_to_parser(subparser, openapi.models_by_class[property.inner_property.class_info]) }}
         {% elif property.class_info in openapi.models_by_class %}
@@ -56,13 +45,13 @@
         {{ add_object_to_parser(subparser, openapi.models_by_class[property.class_info]) }}
         {% else %}
 
-        {{ parser }}.add_primitive(
-            "{{  property.python_name }}",
+        {{ parser }}.add(PrimitiveAttribute(
+            "{{ property.python_name }}",
             {{ property.get_type_string() }},
-            {{ option_name(property) }}
             required={{ property.required }},
+            {{ option_name(property) }}
             {{ description_argument(property) }}
-        )
+        ))
         {% endif %}
         {% endfor %}
         {% endmacro %}
@@ -77,13 +66,13 @@
 
         {% if endpoint.query_parameters %}
         {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
-        mapping.add_primitive(
-                "{{ property.python_name }}",
-                {{ property.get_type_string() }},
-                required={{ property.required }},
-                {{ option_name(property) }}
-                {{ description_argument(property) }}
-                )
+        mapping.add(PrimitiveAttribute(
+            "{{ property.python_name }}",
+            {{ property.get_type_string() }},
+            required={{ property.required }},
+            {{ option_name(property) }}
+            {{ description_argument(property) }}
+        ))
         {% endfor %}
         {% endif %}
         {% endif %}

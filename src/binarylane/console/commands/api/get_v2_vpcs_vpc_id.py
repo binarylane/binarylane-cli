@@ -10,7 +10,7 @@ from binarylane.models.vpc_response import VpcResponse
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -29,12 +29,14 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "vpc_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The target vpc id.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "vpc_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The target vpc id.""",
+            )
         )
 
         return mapping

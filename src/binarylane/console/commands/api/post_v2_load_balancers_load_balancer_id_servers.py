@@ -11,7 +11,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -32,22 +32,26 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "load_balancer_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the load balancer to which servers should be added.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "load_balancer_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the load balancer to which servers should be added.""",
+            )
         )
 
         json_body = mapping.add_json_body(ServerIdsRequest)
 
-        json_body.add_primitive(
-            "server_ids",
-            List[int],
-            option_name="server-ids",
-            required=True,
-            description="""A list of server IDs.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "server_ids",
+                List[int],
+                required=True,
+                option_name="server-ids",
+                description="""A list of server IDs.""",
+            )
         )
 
         return mapping

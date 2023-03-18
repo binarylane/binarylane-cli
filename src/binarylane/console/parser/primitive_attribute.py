@@ -32,6 +32,7 @@ class PrimitiveAttribute(Attribute):
     _alternate_types: List[type]
     _dest: str
     _action: Optional[Type[argparse.Action]]
+    _metavar: str
     _default_value: object = UNSET
     _nargs: Optional[str]
 
@@ -41,12 +42,9 @@ class PrimitiveAttribute(Attribute):
         attribute_type_hint: object,
         *,
         option_name: Optional[str],
-        dest: Optional[str] = None,
         required: bool,
         description: Optional[str] = None,
         action: Optional[Type[argparse.Action]] = None,
-        metavar: Optional[str] = None,
-        parent: Optional[ObjectAttribute] = None,
     ) -> None:
         # Partial construction needed to perform unboxing:
         self._nargs = None
@@ -63,10 +61,9 @@ class PrimitiveAttribute(Attribute):
             description=description,
         )
 
-        self._dest = dest or option_name or attribute_name
+        self._dest = attribute_name
         self._action = action
-        self._metavar = metavar or (option_name or attribute_name).upper()
-        self.parent = parent
+        self._metavar = (option_name or attribute_name).replace("-", "_").upper()
 
     @property
     def usage(self) -> Optional[str]:
@@ -84,6 +81,10 @@ class PrimitiveAttribute(Attribute):
 
     def configure(self, parser: Parser) -> None:
         """Call Parser.add_argument on parser with appropriate configuration"""
+
+        # Ensure "dest" cannot conflict with any other attribute in the tree when flattened into parsed object
+        if self.option_name:
+            self._dest = parser.create_dest()
 
         # argparse keyword arguments are built up in `kwargs` during method execution
         kwargs = self._create_kwargs()
@@ -235,7 +236,7 @@ class PrimitiveAttribute(Attribute):
         """Arguments that are passed unmodified to argparse"""
         kwargs: Dict[str, Any] = {}
 
-        if self._dest != self.option_name and self.option_name:
+        if self.option_name:
             kwargs["dest"] = self._dest
         if self.description is not None:
             kwargs["help"] = self.description
