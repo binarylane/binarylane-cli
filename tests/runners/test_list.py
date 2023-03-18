@@ -1,13 +1,15 @@
 from __future__ import annotations
+
 from http import HTTPStatus
 from typing import Dict, List, Tuple
 
-from binarylane.console.parser import Mapping
 import pytest
 
-
 from binarylane.client import Client
-from binarylane.console.runners import Context, list as list_runner
+
+from binarylane.console.parser import Mapping
+from binarylane.console.runners import Context
+from binarylane.console.runners import list as list_runner
 
 
 class ListRunner(list_runner.ListRunner):
@@ -36,6 +38,7 @@ class ListRunner(list_runner.ListRunner):
     @property
     def reference_url(self) -> str:
         raise NotImplementedError
+
     # END DO-NOTHING REQUIRED METHODS
 
     @property

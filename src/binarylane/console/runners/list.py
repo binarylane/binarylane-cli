@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import fnmatch
+import re
 from abc import abstractmethod
 from typing import Dict, List
-import fnmatch, re
 
 from binarylane.console.parser import Namespace, Parser
 from binarylane.console.runners.command import CommandRunner
@@ -32,7 +33,8 @@ class ListRunner(CommandRunner):
         parser.add_argument(
             "--format",
             dest="runner_format",
-            help="Comma-separated list of fields to display. Wildcards are supported: e.g. --format \"*\" will display all fields. (default: \"%(default)s\")",
+            help='Comma-separated list of fields to display. Wildcards are supported: \
+                e.g. --format "*" will display all fields. (default: "%(default)s")',
             metavar="FIELD,...",
             default=",".join(self.default_format),
         )
@@ -60,8 +62,8 @@ class ListRunner(CommandRunner):
         # 2. when a glob is used, ordered the same way as the "Available Fields" help
         # 3. not contain any duplicate fields
         # set() does not maintain insertion order, but dict() does, so we create a dict and then extract the keys()
-        format: str = parsed.runner_format
-        self._format = list({match: None for f in format.split(",") for match in self._matching_fields(f)}.keys())
+        fmt: str = parsed.runner_format
+        self._format = list({match: None for item in fmt.split(",") for match in self._matching_fields(item)}.keys())
 
         if parsed.runner_single_column:
             self._format = self.default_format[:1]
