@@ -13,6 +13,9 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+from binarylane.console.parser import ListAttribute, Mapping
+from binarylane.console.runners.command import CommandRunner
+
 
 class CommandRequest:
     load_balancer_id: int

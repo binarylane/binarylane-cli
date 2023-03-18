@@ -17,6 +17,7 @@
 {# This is required because of jinja 'for' variable scope #}
 {% set _ = response_class.update({'name': 'CommandRunner', 'list': None, 'property': None}) %}
 {% endfor %}
+{% endfor %}
 
 from binarylane.console.runners.{{ response_class['name'].lower().replace('runner', '') }} import {{ response_class['name'] }}
 from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, PrimitiveAttribute
@@ -25,7 +26,6 @@ from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, P
 {% if response_class.get('list') %}
 from binarylane.models.{{ response_class['list'].class_info.module_name }} import {{ response_class['list'].class_info.name }}
 {% endif %}
-{% endfor %}
 
 {# Import any command runners required to perform lookups #}
 {% for property in endpoint.path_parameters.values() %}
@@ -34,6 +34,6 @@ from binarylane.models.{{ response_class['list'].class_info.module_name }} impor
 {% if not lookup_endpoint %}
 {{ fail('lookup command not found', param['x-cli-lookup']) }}
 {% endif %}
-import binarylane.console.commands.{{ lookup_endpoint.tag }}.{{ python_identifier(lookup_endpoint.name) }} as {{ lookup_endpoint.tag }}_{{ python_identifier(lookup_endpoint.name) }}
+import binarylane.console.commands.api.{{ python_identifier(lookup_endpoint.name) }} as api_{{ python_identifier(lookup_endpoint.name) }}
 {% endfor %}
 {% endfor %}

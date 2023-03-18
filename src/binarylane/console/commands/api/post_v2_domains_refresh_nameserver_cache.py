@@ -8,6 +8,9 @@ from binarylane.api.domains.post_v2_domains_refresh_nameserver_cache import sync
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+from binarylane.console.parser import Mapping
+from binarylane.console.runners.command import CommandRunner
+
 
 class CommandRequest:
     pass

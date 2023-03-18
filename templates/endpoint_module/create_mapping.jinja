@@ -15,7 +15,7 @@
         {% endif %}
         {% set _ = lookup_command.append(param['x-cli-lookup']) %}
         def _lookup_{{ property.python_name }}(value: str) -> Union[None, {{ property.get_type_string() }}]:
-            return {{ lookup_endpoint.tag }}_{{ python_identifier(lookup_endpoint.name) }}.Command(self).lookup(value)
+            return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(value)
         {% endfor %}
 
         mapping.add_primitive(

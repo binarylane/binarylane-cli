@@ -10,6 +10,9 @@ from binarylane.models.proceed_request import ProceedRequest
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+from binarylane.console.parser import Mapping
+from binarylane.console.runners.command import CommandRunner
+
 
 class CommandRequest:
     action_id: int
