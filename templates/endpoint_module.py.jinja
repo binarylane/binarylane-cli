@@ -1,5 +1,24 @@
 from __future__ import annotations
 
+{# BEGIN: manual mapping of parameters to lookup operations #}
+{% set lookup_map = {
+    "server_id": "server list",
+} %}
+{% set entity_map = {
+    "server list": {"id": "id", "ref": "name"},
+} %}
+{% for parameter_name in lookup_map %}
+{% for param in (endpoint.data.parameters or []) if param.param_in == "path" and param.name == parameter_name %}
+{% set _ = param.__setattr__("x-cli-lookup", lookup_map[parameter_name]) %}
+{% endfor %}
+{% endfor %}
+{% for command_name in entity_map %}
+{% if endpoint.data["x-cli-command"] == command_name %}
+{% set _ = endpoint.data.__setattr__("x-cli-entity", entity_map[command_name]) %}
+{% endif %}
+{% endfor %}
+{# ENDOF: manual mapping of parameters to lookup operations #}
+
 {% if endpoint.json_body and endpoint.json_body.template.startswith('union_') %}
 {# endpoint_init.py.jinja has same check and will not generate a ModuleRunner #}
 # json_body unions are not implmemented
