@@ -97,19 +97,6 @@ class CommandRunner(Runner):
         if self._header is None:
             self._header = parsed.runner_header
 
-<<<<<<< HEAD
-        for key in list(vars(parsed)):
-            if key.startswith("runner_"):
-                del parsed.__dict__[key]
-
-    def _create_client(self) -> AuthenticatedClient:
-        self._client = AuthenticatedClient(
-            self._config.api_url, self._config.api_token, verify_ssl=self._config.verify_ssl
-        )
-        return self._client
-
-=======
->>>>>>> main
     def run(self, args: List[str]) -> None:
         # Checks have already been performed during __init__
         if args == [self.CHECK]:
@@ -120,11 +107,7 @@ class CommandRunner(Runner):
         logger.debug("Parsing succeeded, have %s", parsed)
 
         self.process(parsed)
-<<<<<<< HEAD
-        parsed.client = self._create_client()
-=======
         self._client = create_client(self._context)
->>>>>>> main
 
         # CurlCommand does not execute the request, so there is no response to display
         if self._print_curl:
