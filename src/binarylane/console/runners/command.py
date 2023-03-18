@@ -51,7 +51,7 @@ class CommandRunner(Runner):
             default="table",
             metavar="OUTPUT",
             choices=printers,
-            help='Desired output format [%(choices)s] (Default: "%(default)s")',
+            help='Desired output format [%(choices)s] (default: "%(default)s")',
         )
 
     @abstractmethod
