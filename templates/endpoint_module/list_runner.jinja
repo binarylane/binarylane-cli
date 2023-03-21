@@ -1,0 +1,43 @@
+{% set list_response = response_class.get('list') %}
+
+    def response(self, status_code: int, received: Any) -> None:
+        {#
+        When API client library knows the operation's 200 response type,
+        it will either create an instance of that type or raise an exception.
+        #}
+        if not isinstance(received, {{ response_class['type'].get_type_string() }}):
+            return super().response(status_code, received)
+
+        return self._printer.print(received.{{ response_class['property'].python_name }}, self._format)
+
+    @property
+    def default_format(self) -> List[str]:
+        {% set format = [] %}
+        {% for name, prop in list_response.data.properties.items() if prop['x-cli-format'] %}
+        {% set _ = format.append("%04d/%s" % (prop['x-cli-format'], name)) %}
+        {% endfor %}
+        {# if response object does not specify which properties to use, display required primitives #}
+        {% if not format %}
+        {% for prop in list_response.required_properties if prop.is_base_type %}
+        {% set _ = format.append("%04d/%s" % (loop.index, prop.name)) %}
+        {% endfor %}
+        {% endif %}
+        {% if not format %}
+        {% include "default_format is empty" %}
+        {% endif %}
+        return [
+            {% for entry in format|sort %}
+            '{{ entry.split('/')[1] }}',
+            {% endfor %}
+        ]
+
+    @property
+    def fields(self) -> Dict[str, str]:
+        return {
+            {% for prop in list_response.required_properties %}
+            '{{ prop.name }}': """{{ prop.description }}""",
+            {% endfor %}
+            {% for prop in list_response.optional_properties %}
+            '{{ prop.name }}': """{{ prop.description }}""",
+            {% endfor %}
+        }

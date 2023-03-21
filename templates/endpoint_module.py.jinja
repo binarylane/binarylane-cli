@@ -6,240 +6,35 @@ from __future__ import annotations
 # Type: {{ endpoint.json_body.get_instance_type_string() }}
 
 {% else %}
-{# Can import pretty liberally, as the generator will remove unused imports #}
-from typing import Any, Dict, List, Optional, Union, Tuple, Type, cast, TYPE_CHECKING
+{% include "endpoint_module/imports.jinja" %}
 
-import httpx
-from http import HTTPStatus
+{#
+Included Jinja templates can mutate existing variables, but cannot set new values -
+i.e. templates act like python functions, with `set` being a local variable assignment.
 
-from binarylane.types import Response, UNSET, Unset
-from binarylane.models.links import Links
+For that reason, we `set` variables needed later prior to include and the included
+template will mutate that object, allowing access to the modified object after the
+included template is finished.
+#}
 
-from binarylane.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync_detailed
-
-{% for relative in endpoint.relative_imports %}
-{{ relative.replace('...', 'binarylane.') }}
-{% endfor %}
-
-{% macro relative_imports(prop) %}
-{% for relative in prop.relative_imports %}
-{{ relative.replace('..', 'binarylane.') }}
-{% endfor %}
-{% for relative in prop.lazy_imports %}
-{{ relative.replace('..', 'binarylane.') }}
-{% endfor %}
-{% if prop.class_info %}
-{% for p in prop.required_properties + prop.optional_properties %}
-{% if p.class_info in openapi.models_by_class %}
-{{ relative_imports(openapi.models_by_class[p.class_info]) }}
-{% endif %}
-{% if p.get_instance_type_string() == 'list' and p.inner_property.class_info in openapi.models_by_class %}
-{{ relative_imports(openapi.models_by_class[p.inner_property.class_info]) }}
-{% endif %}
-{% endfor %}
-{% endif %}
-{% endmacro %}
-{% if endpoint.json_body %}
-{{ relative_imports(endpoint.json_body) }}
-{% endif %}
-
-if TYPE_CHECKING:
-    from binarylane.console.parser import Parser
-    from binarylane.client import Client
-
-
-{% set return_string = endpoint.response_type() %}
-{% set parsed_responses = (endpoint.responses | length > 0) and return_string != "Any" %}
 {% set response_class = {'name': 'CommandRunner'} %}
-{% for response_type in endpoint.responses if response_type.status_code == 200 %}
-{% set _ = response_class.update({'type': response_type.prop}) %}
-{% if endpoint.method != 'get' and response_type.prop.class_info and response_type.prop.class_info.name == 'ActionResponse' %}
-{% set _ = response_class.update({'name': 'ActionRunner'}) %}
-{% endif %}
-{% for prop in response_type.prop.required_properties if prop.name == 'links' and prop.class_info.name == 'ActionsLinks' %}
-{% set _ = response_class.update({'name': 'ActionLinkRunner'}) %}
-{% endfor %}
-{# Check if response contains a list[Model] property; and store it for later #}
-{% for prop in response_type.prop.required_properties if prop.name not in ('meta', 'links') and prop.get_instance_type_string() == 'list' and prop.inner_property.class_info %}
-{% set _ = response_class.update({'name': 'ListRunner', 'list': openapi.models_by_class[prop.inner_property.class_info]}) %}
-{% endfor %}
-{# Second check if there are any non-list values, which means this isnt a list response #}
-{% for prop in response_type.prop.required_properties if response_class.get('list') and prop.name not in ('meta', 'links') and prop.get_instance_type_string() != 'list' %}
-{# This is required because of jinja 'for' variable scope #}
-{% set _ = response_class.update({'name': 'CommandRunner', 'list':None}) %}
-{% endfor %}
-{% endfor %}
+{% include "endpoint_module/response_class.jinja" %}
 
-from binarylane.console.runners.{{ response_class['name'].lower().replace('runner', '') }} import {{ response_class['name'] }}
-from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, PrimitiveAttribute
-
-
-class CommandRequest:
 {% set req_parameters=[] %}
 {% set opt_parameters=[] %}
-{% for parameter in endpoint.path_parameters.values() %}
-{% set _ = req_parameters.append((parameter.python_name, parameter.get_type_string())) %}
-{% endfor %}
-{% if endpoint.json_body %}
-{% if endpoint.json_body.get_instance_type_string() == 'list' %}
-    {% set _ = req_parameters.append((endpoint.tag, endpoint.json_body.get_type_string())) %}
-{% elif endpoint.json_body.class_info %}
-    {% set _ = req_parameters.append(('json_body', endpoint.json_body.get_type_string())) %}
-{% endif %}
-{% endif %}
-{% for parameter in endpoint.query_parameters.values() if parameter.name not in ('page', 'per_page') %}
-    {% set _ = opt_parameters.append(parameter.to_string()) %}
-{% endfor %}
-{% if req_parameters or opt_parameters %}
-{% for item in req_parameters %}
-    {{ item[0] }}: {{ item[1] }}
-{% endfor %}
-{% for item in opt_parameters %}
-    {{ item }}
-{% endfor %}
-
-{% if req_parameters %}
-    def __init__(self{% for item in req_parameters %}, {{ item[0] }}: {{ item[1] }}{% endfor %}) -> None:
-{% for item in req_parameters %}
-        self.{{ item[0] }} = {{ item[0] }}
-{% endfor %}
-{% endif %}
-{% else %}
-    pass
-{% endif %}
+{% include "endpoint_module/command_request.jinja" %}
 
 
 class Command({{ response_class['name'] }}):
 {% if response_class.get('list') %}
-{% set list_response = response_class.get('list') %}
-
-    @property
-    def default_format(self) -> List[str]:
-        {% set format = [] %}
-        {% for name, prop in list_response.data.properties.items() if prop['x-cli-format'] %}
-        {% set _ = format.append("%04d/%s" % (prop['x-cli-format'], name)) %}
-        {% endfor %}
-        {# if response object does not specify which properties to use, display required primitives #}
-        {% if not format %}
-        {% for prop in list_response.required_properties if prop.is_base_type %}
-        {% set _ = format.append("%04d/%s" % (loop.index, prop.name)) %}
-        {% endfor %}
-        {% endif %}
-        {% if not format %}
-        {% include "default_format is empty" %}
-        {% endif %}
-        return [
-            {% for entry in format|sort %}
-            '{{ entry.split('/')[1] }}',
-            {% endfor %}
-        ]
-
-    @property
-    def fields(self) -> Dict[str, str]:
-        return {
-            {% for prop in list_response.required_properties %}
-            '{{ prop.name }}': """{{ prop.description }}""",
-            {% endfor %}
-            {% for prop in list_response.optional_properties %}
-            '{{ prop.name }}': """{{ prop.description }}""",
-            {% endfor %}
-        }
+{% include "endpoint_module/list_runner.jinja" %}
 {% endif %}
 
     @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/{{ endpoint.data["tags"][0] }}/paths/{{ endpoint.path.replace("/","~1").replace("{","%7B").replace("}","%7D") }}/{{ endpoint.method }}"
 
-    def create_mapping(self) -> Mapping:
-        mapping = Mapping(CommandRequest)
-        {% if (req_parameters + opt_parameters) %}
-        {% macro description_argument(prop) %}{% if prop.description %}description="""{{ prop.description.replace("    ","") }}""",{% endif %}{% endmacro %}
-        {% macro option_name(prop) %}option_name = "{{ prop.name.replace('_','-') }}",{% endmacro %}
-
-        {% for property in endpoint.path_parameters.values() %}
-        mapping.add_primitive(
-            "{{ property.python_name }}",
-            {{ property.get_type_string() }},
-            required = True,
-            option_name = None,
-            {{ description_argument(property) }}
-            )
-        {% endfor %}
-
-        {% if endpoint.json_body %}
-        {#
-            FIXME: BL API is not supposed to have any of these, but currently failover-ip update uses it.
-        #}
-        {% if endpoint.json_body.get_instance_type_string() == 'list' %}
-        mapping.add_primitive(
-            "{{ endpoint.tag }}",
-            {{ endpoint.json_body.get_type_string() }},
-            option_name='value',
-            required = True,
-            {{ description_argument(endpoint.json_body) }}
-            warning="request body is {{ endpoint.json_body.get_type_string() }}",
-            )
-
-        {% elif endpoint.json_body.class_info %}
-
-        {% macro add_object_to_parser(parser, prop) %}
-        {% for property in prop.required_properties + prop.optional_properties %}
-        {% if property.get_instance_type_string() == "list" and property.inner_property.class_info in openapi.models_by_class %}
-        {% set subparser = parser + "_" + property.inner_property.class_info.module_name %}
-
-        {{ subparser }} = {{ parser }}.add(ListAttribute(
-            "{{ property.python_name }}",
-            {{ property.inner_property.get_type_string(no_optional=True) }},
-            {{ option_name(property) }}
-            {{ description_argument(property) }}
-            required = {{ property.required }},
-        ))
-        {{ add_object_to_parser(subparser, openapi.models_by_class[property.inner_property.class_info]) }}
-        {% elif property.class_info in openapi.models_by_class %}
-        {% set subparser = parser + "_" + property.class_info.module_name %}
-
-        {{ subparser }} = {{ parser }}.add(ObjectAttribute(
-            "{{ property.python_name }}",
-            {{ property.get_type_string(no_optional=True) }},
-            {{ option_name(property) }}
-            required = {{ property.required }},
-            {{ description_argument(prop.data.properties[property.name]) }}
-        ))
-        {{ add_object_to_parser(subparser, openapi.models_by_class[property.class_info]) }}
-        {% else %}
-
-        {{ parser }}.add_primitive(
-            "{{  property.python_name }}",
-            {{ property.get_type_string() }},
-            {{ option_name(property) }}
-            required={{ property.required }},
-            {{ description_argument(property) }}
-        )
-        {% endif %}
-        {% endfor %}
-        {% endmacro %}
-
-        json_body = mapping.add_json_body({{ endpoint.json_body.get_type_string() }})
-        {{ add_object_to_parser('json_body', endpoint.json_body) }}
-
-        {% else %}
-        # Unknown {{ endpoint.json_body.get_instance_type_string() }} {{ endpoint.json_body.template }}
-        {% endif %}
-        {% endif %}
-
-        {% if endpoint.query_parameters %}
-        {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
-        mapping.add_primitive(
-                "{{ property.python_name }}",
-                {{ property.get_type_string() }},
-                required={{ property.required }},
-                {{ option_name(property) }}
-                {{ description_argument(property) }}
-                )
-        {% endfor %}
-        {% endif %}
-        {% endif %}
-        return mapping
+{% include "endpoint_module/create_mapping.jinja" %}
 
     @property
     def ok_response_type(self) -> type:
@@ -249,93 +44,6 @@ class Command({{ response_class['name'] }}):
         return type(None)
         {% endif %}
 
-    def request(self,
-        {% if endpoint.requires_security %}
-        client: AuthenticatedClient,
-        {% else %}
-        client: Client,
-        {% endif %}
-        request: object,
+{% include "endpoint_module/request.jinja" %}
 
-        {% set paginated=False %}
-        {% if endpoint.query_parameters %}
-        {% set paginated='page' in endpoint.query_parameters.keys() and 'per_page' in endpoint.query_parameters.keys() %}
-        {% endif %}
-        {# regex not available, so we handle both types separately #}
-        {% set return_string = endpoint.response_type().replace('[Any, ', '[None, ').replace(' Any, ', ' None, ') %}
-        {% if not return_string.startswith("Union[") %}
-        {% set return_string = "Union[{}]".format(return_string) %}
-        {% endif %}
-        {% if "None, " not in return_string %}
-        {% set return_string = return_string.replace("Union[", "Union[None, ") %}
-        {% endif %}
-        ) -> Tuple[HTTPStatus, {{ return_string }}]:
-            assert isinstance(request, CommandRequest)
-
-            {% for response_type in endpoint.responses %}
-            # {{ response_type.status_code }}: {{ response_type.prop.get_type_string() }}
-            {% endfor %}
-            {% if paginated %}
-            page = 0
-            per_page = 25
-            has_next = True
-            {% for response_type in endpoint.responses if response_type.status_code == 200 %}
-            response: Optional[{{ response_type.prop.class_info.name }}] = None
-            {% endfor %}
-
-            while has_next:
-                page += 1
-                page_response = sync_detailed(
-            {% else %}
-            page_response = sync_detailed(
-            {% endif %}
-                {% for parameter in endpoint.path_parameters.values() %}
-                {{ parameter.python_name }} = request.{{ parameter.python_name }},
-                {% endfor %}
-                client = client,
-
-                {% if endpoint.json_body %}
-                {% if endpoint.json_body.get_instance_type_string() == 'list' %}
-                json_body = request.{{ endpoint.tag }},
-
-                {% elif endpoint.json_body.class_info %}
-                json_body = request.json_body,
-
-                {% endif %}
-                {% endif %}
-
-                {% if endpoint.query_parameters %}
-                {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
-                    {{ property.python_name }} = request.{{ property.python_name }},
-                {% endfor %}
-                {% endif %}
-            {% if not paginated %}
-            )
-            return page_response.status_code, page_response.parsed
-            {% else %}
-                page = page,
-                per_page = per_page,
-                )
-
-                status_code = page_response.status_code
-                if status_code != 200:
-                    return status_code, page_response.parsed
-
-                assert isinstance(page_response.parsed, {{ response_class['type'].get_type_string() }})
-                has_next = isinstance(page_response.parsed.links, Links) and isinstance(page_response.parsed.links.pages.next_, str)
-                if not response:
-                    response = page_response.parsed
-                else:
-                {% for response_type in endpoint.responses if response_type.status_code == 200 %}
-                {% for prop in response_type.prop.required_properties if prop.name not in ('meta') %}
-                {% if prop.get_instance_type_string() == 'list' %}
-                    response.{{ prop.python_name }} += page_response.parsed.{{ prop.python_name }}
-                {% else %}
-                    {{ fail('unsupported', prop.prop.get_instance_type_string()) }}
-                {% endif %}
-                {% endfor %}
-                {% endfor %}
-
-            return status_code, response
-            {% endif %}
 {% endif %}
