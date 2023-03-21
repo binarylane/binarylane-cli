@@ -17,6 +17,9 @@ from binarylane.console.util import create_client
 
 logger = logging.getLogger(__name__)
 
+_DEFAULT_OUTPUT = "table"
+_DEFAULT_HEADER = True
+
 
 class CommandRunner(Runner):
     """CommandRunner parses input, executes API operation and displays the result"""
@@ -25,8 +28,8 @@ class CommandRunner(Runner):
     _client: AuthenticatedClient
 
     _print_curl: Optional[bool]
-    _output: Optional[str] = None
-    _header: Optional[bool] = None
+    _output: str = _DEFAULT_OUTPUT
+    _header: bool = _DEFAULT_HEADER
 
     @abstractmethod
     def create_mapping(self) -> Mapping:
@@ -43,14 +46,14 @@ class CommandRunner(Runner):
             "--no-header",
             dest="runner_header",
             action="store_false",
-            default=True,
+            default=_DEFAULT_HEADER,
             help="Display columns without field labels",
         )
         printers = tuple(item.name.lower() for item in PrinterType)
         parser.add_argument(
             "--output",
             dest="runner_output",
-            default="table",
+            default=_DEFAULT_OUTPUT,
             metavar="OUTPUT",
             choices=printers,
             help='Desired output format [%(choices)s] (default: "%(default)s")',
@@ -73,8 +76,6 @@ class CommandRunner(Runner):
     @property
     def _printer(self) -> Printer:
         """Create printer of requested type"""
-        if self._output is None or self._header is None:
-            raise ValueError(f"output={self._output} header={self._header}")
         printer = create_printer(self._output)
         printer.header = self._header
         return printer
@@ -85,22 +86,24 @@ class CommandRunner(Runner):
 
     def response(self, status_code: int, received: Any) -> None:
         """Format and display response received from API operation"""
+
+        # For successful responses, hand received object to printer
+        if status_code < 300 and received:
+            self._printer.print(received)
+            return
+
+        # For 401 Unauthorized, provide advice on how to resolve
         if status_code == 401:
             self.error(ExitCode.TOKEN, 'Unable to authenticate with API - please run "bl configure" to get started.')
 
-        # No response can be due to a `204 No Content` response, but also when
-        # a response is not documented
+        # If no response is available, report an API error (unless it is `204 No Content`)
         if received is None:
             if status_code != 204:
                 self.error(ExitCode.API, f"HTTP {status_code}")
             return
 
-        # For successful responses, hand received object to printer
-        if status_code < 300:
-            self._printer.print(received)
-
         #
-        # Otherwise, we have received an error response: extract relevant details for display
+        # We have received an error response: extract relevant details for display
         #
 
         # BinaryLane API spec does not currently have correct type on all errors - some are documented as
@@ -128,10 +131,8 @@ class CommandRunner(Runner):
 
     def process(self, parsed: Namespace) -> None:
         self._print_curl = parsed.runner_print_curl
-        if self._output is None:
-            self._output = parsed.runner_output
-        if self._header is None:
-            self._header = parsed.runner_header
+        self._output = parsed.runner_output
+        self._header = parsed.runner_header
 
     def run(self, args: List[str]) -> None:
         # Checks have already been performed during __init__
