@@ -73,15 +73,14 @@ class ActionRunner(CommandRunner):
             status = f"{received.action.type}: {step} ({received.action.progress.percent_complete}%) ... "
             self._progress(status)
 
+            # If action has completed, provide final status and return to caller
             if received.action.completed_at:
                 self._progress(f"{received.action.status}.\n")
-                break
+                return
 
             time.sleep(5)
             response = sync_detailed(received.action.id, client=self._client)
             status_code, received = response.status_code, response.parsed
 
-        else:
-            logger.warning("Failed to get action")
-            super().response(status_code, received)
-        return
+        # Action did not complete so something went wrong - use standard error handling routine:
+        super().response(status_code, received)

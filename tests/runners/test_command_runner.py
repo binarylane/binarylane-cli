@@ -7,8 +7,8 @@ import pytest
 from _pytest.capture import CaptureFixture
 
 from binarylane.client import Client
-from tests.models.problem_details import ProblemDetails
-from tests.models.validation_problem_details import ValidationProblemDetails
+from binarylane.models.problem_details import ProblemDetails
+from binarylane.models.validation_problem_details import ValidationProblemDetails, ValidationProblemDetailsErrors
 from tests.runner import TypeRunner
 
 from binarylane.console.parser import Mapping
@@ -32,7 +32,7 @@ class CommandRunner(command.CommandRunner):
 
 
 def test_response_handles_validation_errors(capsys: CaptureFixture[str]) -> None:
-    problem = ValidationProblemDetails("Server not found", {"server_id": ["Server not found."]})
+    problem = ValidationProblemDetails.from_dict({"title": "Server not found", "errors": {"server_id": ["Server not found."]}})
     runner = TypeRunner(CommandRunner)
 
     with pytest.raises(SystemExit):
@@ -43,8 +43,7 @@ def test_response_handles_validation_errors(capsys: CaptureFixture[str]) -> None
 
 
 def test_response_handles_problem_errors(capsys: CaptureFixture[str]) -> None:
-    problem = ProblemDetails("Server not found")
-    problem.additional_properties["errors"] = {"server_id": ["Server not found."]}
+    problem = ProblemDetails.from_dict({"title": "Server not found", "errors": {"server_id": ["Server not found."]}})
     runner = TypeRunner(CommandRunner)
 
     with pytest.raises(SystemExit):
@@ -55,8 +54,7 @@ def test_response_handles_problem_errors(capsys: CaptureFixture[str]) -> None:
 
 
 def test_response_handles_detail_error(capsys: CaptureFixture[str]) -> None:
-    problem = ProblemDetails("Server not found")
-    problem.detail = "Unable to locate server with ID 1."
+    problem = ProblemDetails.from_dict({"title":"Server not found", "detail": "Unable to locate server with ID 1."})
     runner = TypeRunner(CommandRunner)
 
     with pytest.raises(SystemExit):
@@ -67,7 +65,7 @@ def test_response_handles_detail_error(capsys: CaptureFixture[str]) -> None:
 
 
 def test_response_handles_title_error(capsys: CaptureFixture[str]) -> None:
-    problem = ProblemDetails("Server not found.")
+    problem = ProblemDetails.from_dict({"title":"Server not found."})
     runner = TypeRunner(CommandRunner)
 
     with pytest.raises(SystemExit):

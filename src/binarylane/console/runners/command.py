@@ -6,10 +6,12 @@ from http import HTTPStatus
 from typing import Any, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
+from binarylane.models.problem_details import ProblemDetails
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 
 from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
-from binarylane.console.runners import Runner
+from binarylane.console.runners import ExitCode, Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 from binarylane.console.util import create_client
 
@@ -84,37 +86,45 @@ class CommandRunner(Runner):
     def response(self, status_code: int, received: Any) -> None:
         """Format and display response received from API operation"""
         if status_code == 401:
-            self.error('Unable to authenticate with API - please run "bl configure" to get started.')
+            self.error(ExitCode.TOKEN, 'Unable to authenticate with API - please run "bl configure" to get started.')
 
         # No response can be due to a `204 No Content` response, but also when
         # a response is not documented
         if received is None:
             if status_code != 204:
-                self.error(f"HTTP {status_code}")
+                self.error(ExitCode.API, f"HTTP {status_code}")
             return
 
-        # FIXME: use openapi response spec to determine how to handle errors
-        if status_code >= 400 and received:
-            # BinaryLane API does not have correct type on all errors - some are typed as ProblemDetails but
-            # actually return ValidationProblemDetails - so need to handle when errors are in additionalProperties
-            errors = received["errors"] if "errors" in received else getattr(received, "errors", None)
-
-            if errors:
-                # errors is a map of list of error messages, convert to a list of error messages
-                for key in errors:
-                    errors[key] = ", ".join([msg.lower().rstrip(".") for msg in errors[key]])
-                self._parser.error("; ".join(f"argument {key.upper()}: {errors[key]}" for key in errors))
-
-            # Otherwise, try and find a string we can display
-            for attr in ("detail", "title"):
-                value = getattr(received, attr, None)
-                if value:
-                    self._parser.error(value)
-
-        if received:
+        # For successful responses, hand received object to printer
+        if status_code < 300:
             self._printer.print(received)
-        elif status_code != 204:
-            self.error(f"HTTP {status_code}")
+
+        #
+        # Otherwise, we have received an error response: extract relevant details for display
+        #
+
+        # BinaryLane API spec does not have currently have correct type on all errors - some are documented as
+        # ProblemDetails but actually provide ValidationProblemDetails:
+        if isinstance(received, ProblemDetails) and "errors" in received:
+            received = ValidationProblemDetails.from_dict(received.to_dict())
+
+        # If we have validation errors, combine them and display as parser error:
+        if isinstance(received, ValidationProblemDetails) and received.errors:
+
+            def list2str(value: List[str]) -> str:
+                return ", ".join([msg.lower().rstrip(".") for msg in value])
+
+            errors = {key: list2str(value) for key, value in received.errors.additional_properties.items()}
+            self._parser.error("; ".join(f"argument {key.upper()}: {errors[key]}" for key in errors))
+
+        # try and find a string we can display
+        for attr in ("detail", "title"):
+            value = getattr(received, attr, None)
+            if value:
+                self._parser.error(value)
+
+        # Couldn't find anything, just provide the status code
+        self.error(ExitCode.API, f"HTTP {status_code}")
 
     def process(self, parsed: Namespace) -> None:
         self._print_curl = parsed.runner_print_curl

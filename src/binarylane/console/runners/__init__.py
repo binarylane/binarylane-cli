@@ -1,4 +1,5 @@
 from __future__ import annotations
+from enum import Enum
 
 import importlib
 import sys
@@ -52,6 +53,11 @@ class Descriptor:
             raise RuntimeError(f"{module.__name__} does not contain Command class")
         return command_type
 
+class ExitCode(int, Enum):
+    ARGUMENT = 2        # ArgumentParser.error() uses this
+    TOKEN = 3           # 401 Unauthorized response
+    API = 4             # Did not understand API response
+
 
 class Runner(ABC):
     HELP: ClassVar[str] = "--help"
@@ -82,6 +88,6 @@ class Runner(ABC):
         """Subclasses implement their primary behaviour here"""
 
     @staticmethod
-    def error(message: str) -> NoReturn:
+    def error(code: ExitCode, message: str) -> NoReturn:
         print(f"ERROR: {message}", file=sys.stderr)
-        raise SystemExit(-1)
+        raise SystemExit(code.value)
