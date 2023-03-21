@@ -32,7 +32,9 @@ class CommandRunner(command.CommandRunner):
 
 
 def test_response_handles_validation_errors(capsys: CaptureFixture[str]) -> None:
-    problem = ValidationProblemDetails.from_dict({"title": "Server not found", "errors": {"server_id": ["Server not found."]}})
+    problem = ValidationProblemDetails.from_dict(
+        {"title": "Server not found", "errors": {"server_id": ["Server not found."]}}
+    )
     runner = TypeRunner(CommandRunner)
 
     with pytest.raises(SystemExit):
@@ -54,7 +56,7 @@ def test_response_handles_problem_errors(capsys: CaptureFixture[str]) -> None:
 
 
 def test_response_handles_detail_error(capsys: CaptureFixture[str]) -> None:
-    problem = ProblemDetails.from_dict({"title":"Server not found", "detail": "Unable to locate server with ID 1."})
+    problem = ProblemDetails.from_dict({"title": "Server not found", "detail": "Unable to locate server with ID 1."})
     runner = TypeRunner(CommandRunner)
 
     with pytest.raises(SystemExit):
@@ -65,7 +67,7 @@ def test_response_handles_detail_error(capsys: CaptureFixture[str]) -> None:
 
 
 def test_response_handles_title_error(capsys: CaptureFixture[str]) -> None:
-    problem = ProblemDetails.from_dict({"title":"Server not found."})
+    problem = ProblemDetails.from_dict({"title": "Server not found."})
     runner = TypeRunner(CommandRunner)
 
     with pytest.raises(SystemExit):

@@ -1,11 +1,11 @@
 from __future__ import annotations
-from enum import Enum
 
 import importlib
 import sys
 from abc import ABC, abstractmethod
 from argparse import SUPPRESS
 from dataclasses import dataclass
+from enum import Enum
 from typing import ClassVar, List, NoReturn, Optional, Sequence, Type
 from binarylane.pycompat.actions import BooleanOptionalAction
 
@@ -53,10 +53,11 @@ class Descriptor:
             raise RuntimeError(f"{module.__name__} does not contain Command class")
         return command_type
 
+
 class ExitCode(int, Enum):
-    ARGUMENT = 2        # ArgumentParser.error() uses this
-    TOKEN = 3           # 401 Unauthorized response
-    API = 4             # Did not understand API response
+    ARGUMENT = 2  # ArgumentParser.error() uses this
+    TOKEN = 3  # 401 Unauthorized response
+    API = 4  # Did not understand API response
 
 
 class Runner(ABC):
