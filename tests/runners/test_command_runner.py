@@ -30,14 +30,6 @@ class CommandRunner(command.CommandRunner):
     def reference_url(self) -> str:
         return "https://github.com/binarylane/binarylane-cli"
 
-    @property
-    def name(self) -> str:
-        return "cmd"
-
-    @property
-    def description(self) -> str:
-        return "Test command runner"
-
 
 def test_response_handles_validation_errors(capsys: CaptureFixture[str]) -> None:
     problem = ValidationProblemDetails("Server not found", {"server_id": ["Server not found."]})
@@ -47,7 +39,7 @@ def test_response_handles_validation_errors(capsys: CaptureFixture[str]) -> None
         runner.test.response(400, problem)
 
     captured = capsys.readouterr()
-    assert "test cmd: error: argument SERVER_ID: server not found" in captured.err
+    assert "bl: error: argument SERVER_ID: server not found" in captured.err
 
 
 def test_response_handles_problem_errors(capsys: CaptureFixture[str]) -> None:
@@ -59,7 +51,7 @@ def test_response_handles_problem_errors(capsys: CaptureFixture[str]) -> None:
         runner.test.response(400, problem)
 
     captured = capsys.readouterr()
-    assert "test cmd: error: argument SERVER_ID: server not found" in captured.err
+    assert "bl: error: argument SERVER_ID: server not found" in captured.err
 
 
 def test_response_handles_detail_error(capsys: CaptureFixture[str]) -> None:
@@ -71,7 +63,7 @@ def test_response_handles_detail_error(capsys: CaptureFixture[str]) -> None:
         runner.test.response(400, problem)
 
     captured = capsys.readouterr()
-    assert "test cmd: error: Unable to locate server with ID 1." in captured.err
+    assert "bl: error: Unable to locate server with ID 1." in captured.err
 
 
 def test_response_handles_title_error(capsys: CaptureFixture[str]) -> None:
@@ -82,7 +74,8 @@ def test_response_handles_title_error(capsys: CaptureFixture[str]) -> None:
         runner.test.response(400, problem)
 
     captured = capsys.readouterr()
-    assert "test cmd: error: Server not found." in captured.err
+    assert "bl: error: Server not found." in captured.err
+
 
 def test_response_handles_none_error(capsys: CaptureFixture[str]) -> None:
     runner = TypeRunner(CommandRunner)
@@ -92,6 +85,7 @@ def test_response_handles_none_error(capsys: CaptureFixture[str]) -> None:
 
     captured = capsys.readouterr()
     assert "ERROR: HTTP 400" in captured.err
+
 
 def test_response_handles_nocontent(capsys: CaptureFixture[str]) -> None:
     runner = TypeRunner(CommandRunner)
