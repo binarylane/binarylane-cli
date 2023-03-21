@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v0.15.0 (2023-03-21)
+
+### Features
+
+- handle API response error in same manner as CLI parser error (#10)
+- add globbing support to ListRunner --format option (#29)
+
 ## v0.14.0 (2023-03-15)
 
 ### Bug Fixes
