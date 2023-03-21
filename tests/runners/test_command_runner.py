@@ -7,12 +7,11 @@ import pytest
 from _pytest.capture import CaptureFixture
 
 from binarylane.client import Client
-from binarylane.console.parser import Namespace
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from tests.runner import TypeRunner
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, Namespace
 from binarylane.console.runners import command
 
 
@@ -102,5 +101,4 @@ def test_response_handles_ok(capsys: CaptureFixture[str]) -> None:
 
     runner.test.response(200, "str result")
 
-    assert "str result" in capsys.readouterr().out 
-
+    assert "str result" in capsys.readouterr().out
