@@ -10,7 +10,7 @@ from binarylane.models.proceed_request import ProceedRequest
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -31,22 +31,26 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "action_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the action for which this is a response.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "action_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the action for which this is a response.""",
+            )
         )
 
         json_body = mapping.add_json_body(ProceedRequest)
 
-        json_body.add_primitive(
-            "proceed",
-            bool,
-            option_name="proceed",
-            required=True,
-            description="""Please see the documentation for each type of interaction for the effect of providing 'true' or 'false' here.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "proceed",
+                bool,
+                required=True,
+                option_name="proceed",
+                description="""Please see the documentation for each type of interaction for the effect of providing 'true' or 'false' here.""",
+            )
         )
 
         return mapping

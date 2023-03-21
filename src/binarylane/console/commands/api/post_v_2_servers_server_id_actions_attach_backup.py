@@ -13,7 +13,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -34,29 +34,35 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+            )
         )
 
         json_body = mapping.add_json_body(AttachBackup)
 
-        json_body.add_primitive(
-            "type",
-            AttachBackupType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                AttachBackupType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "image",
-            int,
-            option_name="image",
-            required=True,
-            description="""Only attaching backup images is currently supported.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "image",
+                int,
+                required=True,
+                option_name="image",
+                description="""Only attaching backup images is currently supported.""",
+            )
         )
 
         return mapping

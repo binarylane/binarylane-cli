@@ -76,10 +76,10 @@ class Parser(argparse.ArgumentParser):
             # default: SUPPRESS so that `dest` is not added to parsed namespace object
             # help: description of the field
             group.add_argument(
-                self._create_dest(), metavar=key, nargs=argparse.SUPPRESS, default=argparse.SUPPRESS, help=value
+                self.create_dest(), metavar=key, nargs=argparse.SUPPRESS, default=argparse.SUPPRESS, help=value
             ).required = False
 
-    def _create_dest(self) -> str:
+    def create_dest(self) -> str:
         """Obtain a unique dest value"""
         self._dest_counter += 1
         return f"_dest_{self._dest_counter}"
@@ -136,7 +136,7 @@ class Parser(argparse.ArgumentParser):
         # Place argument in appropriate group:
         group = self._groups[group_name]
 
-        # argparse wont accept required for a po=True
+        # argparse wont accept required for a positional argument
         if name_or_flag[0] not in self.prefix_chars and "required" in kwargs:
             del kwargs["required"]
 

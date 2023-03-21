@@ -7,8 +7,8 @@ import pytest
 from binarylane.types import UNSET, Unset
 from tests.parser import create_parser
 
-from binarylane.console.parser import Mapping
-from binarylane.console.parser.parser import Parser
+from binarylane.console.parser import Mapping, Parser
+from binarylane.console.parser import PrimitiveAttribute as Primitive
 
 TEST = "test"
 
@@ -22,7 +22,7 @@ def parser() -> Parser:
     parser = create_parser()
 
     request = parser.set_mapping(Mapping(PortBlockingRequest))
-    request.add_primitive("port_blocking", bool, option_name="port-blocking", required=False, description=TEST)
+    request.add(Primitive("port_blocking", bool, option_name="port-blocking", required=False, description=TEST))
 
     return parser
 

@@ -11,7 +11,7 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
@@ -87,12 +87,14 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "hostname",
-            Union[Unset, None, str],
-            required=False,
-            option_name="hostname",
-            description="""Providing a hostname restricts the results to the server that has this hostname (case insensitive). If this parameter is provided at most 1 server will be returned.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "hostname",
+                Union[Unset, None, str],
+                required=False,
+                option_name="hostname",
+                description="""Providing a hostname restricts the results to the server that has this hostname (case insensitive). If this parameter is provided at most 1 server will be returned.""",
+            )
         )
         return mapping
 

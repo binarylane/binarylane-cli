@@ -12,7 +12,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -33,22 +33,26 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The target server id.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The target server id.""",
+            )
         )
 
         json_body = mapping.add_json_body(FailoverIpsRequest)
 
-        json_body.add_primitive(
-            "failover_ips",
-            List[str],
-            option_name="failover-ips",
-            required=True,
-            description="""The list of failover IP addresses to assign to this server. This overwrites the current list, so any current failover IP addresses that are omitted will be removed from the server.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "failover_ips",
+                List[str],
+                required=True,
+                option_name="failover-ips",
+                description="""The list of failover IP addresses to assign to this server. This overwrites the current list, so any current failover IP addresses that are omitted will be removed from the server.""",
+            )
         )
 
         return mapping

@@ -15,7 +15,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -36,29 +36,35 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+            )
         )
 
         json_body = mapping.add_json_body(ChangeIpv6ReverseNameservers)
 
-        json_body.add_primitive(
-            "type",
-            ChangeIpv6ReverseNameserversType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                ChangeIpv6ReverseNameserversType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "ipv6_reverse_nameservers",
-            List[str],
-            option_name="ipv6-reverse-nameservers",
-            required=True,
-            description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "ipv6_reverse_nameservers",
+                List[str],
+                required=True,
+                option_name="ipv6-reverse-nameservers",
+                description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
+            )
         )
 
         return mapping

@@ -10,7 +10,7 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -30,20 +30,24 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server to be cancelled.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server to be cancelled.""",
+            )
         )
 
-        mapping.add_primitive(
-            "reason",
-            Union[Unset, None, str],
-            required=False,
-            option_name="reason",
-            description="""The reason for cancelling the server.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "reason",
+                Union[Unset, None, str],
+                required=False,
+                option_name="reason",
+                description="""The reason for cancelling the server.""",
+            )
         )
         return mapping
 

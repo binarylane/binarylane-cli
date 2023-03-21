@@ -14,7 +14,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -35,37 +35,45 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+            )
         )
 
         json_body = mapping.add_json_body(AddDisk)
 
-        json_body.add_primitive(
-            "type",
-            AddDiskType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                AddDiskType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "size_gigabytes",
-            int,
-            option_name="size-gigabytes",
-            required=True,
-            description="""The size of the new disk in GB. The server must have at least this much unallocated storage space.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "size_gigabytes",
+                int,
+                required=True,
+                option_name="size-gigabytes",
+                description="""The size of the new disk in GB. The server must have at least this much unallocated storage space.""",
+            )
         )
 
-        json_body.add_primitive(
-            "description",
-            Union[Unset, None, str],
-            option_name="description",
-            required=False,
-            description="""An optional description for the disk. If this is null a default description will be added. Submit an empty string to prevent the default description being added.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "description",
+                Union[Unset, None, str],
+                required=False,
+                option_name="description",
+                description="""An optional description for the disk. If this is null a default description will be added. Submit an empty string to prevent the default description being added.""",
+            )
         )
 
         return mapping

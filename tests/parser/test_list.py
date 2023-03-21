@@ -8,8 +8,7 @@ import pytest
 from binarylane.types import UNSET, Unset
 from tests.parser import TestRequest, create_parser
 
-from binarylane.console.parser import ListAttribute, Mapping
-from binarylane.console.parser.parser import Parser
+from binarylane.console.parser import ListAttribute, Mapping, Parser, PrimitiveAttribute
 
 REQUIRED_ARGUMENTS = ["--name", "test"]
 TEST = "test"
@@ -38,15 +37,15 @@ class RouteEntryRequest(TestRequest):
 def parser() -> Parser:
     parser = create_parser()
     request = parser.set_mapping(Mapping(CreateVpcRequest))
-    request.add_primitive("name", str, option_name="name", required=True, description=TEST)
-    request.add_primitive("ip_range", str, option_name="ip-range", required=False, description=TEST)
+    request.add(PrimitiveAttribute("name", str, option_name="name", required=True, description=TEST))
+    request.add(PrimitiveAttribute("ip_range", str, option_name="ip-range", required=False, description=TEST))
 
     route_list = request.add(
         ListAttribute("route_entries", RouteEntryRequest, required=False, description="Route Entries")
     )
-    route_list.add_primitive("router", str, option_name="router", required=True, description=TEST)
-    route_list.add_primitive("destination", str, option_name="destination", required=True, description=TEST)
-    route_list.add_primitive("description", str, option_name="description", required=False, description=TEST)
+    route_list.add(PrimitiveAttribute("router", str, option_name="router", required=True, description=TEST))
+    route_list.add(PrimitiveAttribute("destination", str, option_name="destination", required=True, description=TEST))
+    route_list.add(PrimitiveAttribute("description", str, option_name="description", required=False, description=TEST))
 
     return parser
 

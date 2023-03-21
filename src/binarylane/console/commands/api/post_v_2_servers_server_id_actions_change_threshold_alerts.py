@@ -16,7 +16,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import ListAttribute, Mapping
+from binarylane.console.parser import ListAttribute, Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -37,39 +37,44 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+            )
         )
 
         json_body = mapping.add_json_body(ChangeThresholdAlerts)
 
-        json_body.add_primitive(
-            "type",
-            ChangeThresholdAlertsType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                ChangeThresholdAlertsType,
+                required=True,
+                option_name="type",
+            )
         )
 
         json_body_threshold_alert_request = json_body.add(
             ListAttribute(
                 "threshold_alerts",
                 ThresholdAlertRequest,
+                required=True,
                 option_name="threshold-alerts",
                 description="""Any alert type not listed will not be updated.""",
-                required=True,
             )
         )
 
-        json_body_threshold_alert_request.add_primitive(
-            "alert_type",
-            ThresholdAlertType,
-            option_name="alert-type",
-            required=True,
-            description="""
+        json_body_threshold_alert_request.add(
+            PrimitiveAttribute(
+                "alert_type",
+                ThresholdAlertType,
+                required=True,
+                option_name="alert-type",
+                description="""
 | Value | Description |
 | ----- | ----------- |
 | cpu | The alert is based off the average percentage of all CPU; 100% is the maximum possible even with multiple processors. A high average will prevent the server from responding quickly. |
@@ -81,22 +86,27 @@ class Command(ActionRunner):
 | memory-used | The alert is based off the virtual memory consumed as a percentage of your physical memory. Virtual memory includes the swap file so the percentage may exceed 100% indicating that the server has run out of physical memory and is relying on swap space, which will generally cause poor performance. |
 
 """,
+            )
         )
 
-        json_body_threshold_alert_request.add_primitive(
-            "enabled",
-            Union[Unset, None, bool],
-            option_name="enabled",
-            required=False,
-            description="""Do not provide or leave null to keep existing status.""",
+        json_body_threshold_alert_request.add(
+            PrimitiveAttribute(
+                "enabled",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="enabled",
+                description="""Do not provide or leave null to keep existing status.""",
+            )
         )
 
-        json_body_threshold_alert_request.add_primitive(
-            "value",
-            Union[Unset, None, int],
-            option_name="value",
-            required=False,
-            description="""Do not provide or leave null to keep existing value.""",
+        json_body_threshold_alert_request.add(
+            PrimitiveAttribute(
+                "value",
+                Union[Unset, None, int],
+                required=False,
+                option_name="value",
+                description="""Do not provide or leave null to keep existing value.""",
+            )
         )
 
         return mapping
