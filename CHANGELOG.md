@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.15.1 (2023-03-21)
+
+### Fixes
+
+- error handling for HTTP 200 (#31)
+
 ## v0.15.0 (2023-03-21)
 
 ### Features
