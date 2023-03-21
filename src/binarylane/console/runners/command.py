@@ -103,8 +103,8 @@ class CommandRunner(Runner):
         # Otherwise, we have received an error response: extract relevant details for display
         #
 
-        # BinaryLane API spec does not have currently have correct type on all errors - some are documented as
-        # ProblemDetails but actually provide ValidationProblemDetails:
+        # BinaryLane API spec does not currently have correct type on all errors - some are documented as
+        # ProblemDetails but actually emit ValidationProblemDetails, so we may need to convert the response:
         if isinstance(received, ProblemDetails) and "errors" in received:
             received = ValidationProblemDetails.from_dict(received.to_dict())
 
