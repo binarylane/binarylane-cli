@@ -7,8 +7,9 @@ import pytest
 from _pytest.capture import CaptureFixture
 
 from binarylane.client import Client
+from binarylane.console.parser import Namespace
 from binarylane.models.problem_details import ProblemDetails
-from binarylane.models.validation_problem_details import ValidationProblemDetails, ValidationProblemDetailsErrors
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 from tests.runner import TypeRunner
 
 from binarylane.console.parser import Mapping
@@ -94,3 +95,12 @@ def test_response_handles_nocontent(capsys: CaptureFixture[str]) -> None:
 
     captured = capsys.readouterr()
     assert captured.err == "" and captured.out == ""
+
+
+def test_response_handles_ok(capsys: CaptureFixture[str]) -> None:
+    runner = TypeRunner(CommandRunner)
+
+    runner.test.response(200, "str result")
+
+    assert "str result" in capsys.readouterr().out 
+
