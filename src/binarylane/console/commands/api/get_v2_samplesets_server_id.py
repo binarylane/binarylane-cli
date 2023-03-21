@@ -15,7 +15,7 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
@@ -61,20 +61,23 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The target server id.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The target server id.""",
+            )
         )
 
-        mapping.add_primitive(
-            "data_interval",
-            Union[Unset, None, DataInterval],
-            required=False,
-            option_name="data-interval",
-            description="""
+        mapping.add(
+            PrimitiveAttribute(
+                "data_interval",
+                Union[Unset, None, DataInterval],
+                required=False,
+                option_name="data-interval",
+                description="""
 | Value | Description |
 | ----- | ----------- |
 | five-minute | 5 Minutes |
@@ -85,20 +88,25 @@ class Command(ListRunner):
 | month | 1 Month |
 
 """,
+            )
         )
-        mapping.add_primitive(
-            "start",
-            Union[Unset, None, datetime.datetime],
-            required=False,
-            option_name="start",
-            description="""The start of the window of samples to retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week before end for intervals larger than 5 minutes, or 1 day for 5 minute intervals.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "start",
+                Union[Unset, None, datetime.datetime],
+                required=False,
+                option_name="start",
+                description="""The start of the window of samples to retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week before end for intervals larger than 5 minutes, or 1 day for 5 minute intervals.""",
+            )
         )
-        mapping.add_primitive(
-            "end",
-            Union[Unset, None, datetime.datetime],
-            required=False,
-            option_name="end",
-            description="""The start of the window of samples to retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week or 1 day after start date depending on the selected data interval (or the current time if start is not provided). Can't be more than 1 year from start.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "end",
+                Union[Unset, None, datetime.datetime],
+                required=False,
+                option_name="end",
+                description="""The start of the window of samples to retrieve, ISO8601 format (eg 2022-12-30T22:50:00Z). Defaults to 1 week or 1 day after start date depending on the selected data interval (or the current time if start is not provided). Can't be more than 1 year from start.""",
+            )
         )
         return mapping
 

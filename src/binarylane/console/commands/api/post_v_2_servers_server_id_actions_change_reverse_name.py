@@ -14,7 +14,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -35,37 +35,45 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+            )
         )
 
         json_body = mapping.add_json_body(ChangeReverseName)
 
-        json_body.add_primitive(
-            "type",
-            ChangeReverseNameType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                ChangeReverseNameType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "ipv4_address",
-            str,
-            option_name="ipv4-address",
-            required=True,
-            description="""The IPv4 address to set or clear the reverse name for.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "ipv4_address",
+                str,
+                required=True,
+                option_name="ipv4-address",
+                description="""The IPv4 address to set or clear the reverse name for.""",
+            )
         )
 
-        json_body.add_primitive(
-            "reverse_name",
-            Union[Unset, None, str],
-            option_name="reverse-name",
-            required=False,
-            description="""Leave this null to clear the custom reverse name.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "reverse_name",
+                Union[Unset, None, str],
+                required=False,
+                option_name="reverse-name",
+                description="""Leave this null to clear the custom reverse name.""",
+            )
         )
 
         return mapping

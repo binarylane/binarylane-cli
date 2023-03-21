@@ -17,7 +17,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -38,69 +38,85 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+            )
         )
 
         json_body = mapping.add_json_body(ChangeAdvancedFeatures)
 
-        json_body.add_primitive(
-            "type",
-            ChangeAdvancedFeaturesType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                ChangeAdvancedFeaturesType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "enabled_advanced_features",
-            Union[Unset, None, List[AdvancedFeature]],
-            option_name="enabled-advanced-features",
-            required=False,
-            description="""Do not provide or set to null to keep existing advanced features. Provide an empty array to disable all advanced features, otherwise provide an array with selected advanced features. If provided, any currently enabled advanced features that aren't included will be disabled.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "enabled_advanced_features",
+                Union[Unset, None, List[AdvancedFeature]],
+                required=False,
+                option_name="enabled-advanced-features",
+                description="""Do not provide or set to null to keep existing advanced features. Provide an empty array to disable all advanced features, otherwise provide an array with selected advanced features. If provided, any currently enabled advanced features that aren't included will be disabled.""",
+            )
         )
 
-        json_body.add_primitive(
-            "processor_model",
-            Union[Unset, None, int],
-            option_name="processor-model",
-            required=False,
-            description="""Do not provide or set to null to keep existing processor model.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "processor_model",
+                Union[Unset, None, int],
+                required=False,
+                option_name="processor-model",
+                description="""Do not provide or set to null to keep existing processor model.""",
+            )
         )
 
-        json_body.add_primitive(
-            "automatic_processor_model",
-            Union[Unset, None, bool],
-            option_name="automatic-processor-model",
-            required=False,
-            description="""Set to true to use best available processor model. If this is provided the processor_model property must not be provided.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "automatic_processor_model",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="automatic-processor-model",
+                description="""Set to true to use best available processor model. If this is provided the processor_model property must not be provided.""",
+            )
         )
 
-        json_body.add_primitive(
-            "machine_type",
-            Union[Unset, None, VmMachineType],
-            option_name="machine-type",
-            required=False,
-            description="""Do not provide or set to null to keep existing machine type.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "machine_type",
+                Union[Unset, None, VmMachineType],
+                required=False,
+                option_name="machine-type",
+                description="""Do not provide or set to null to keep existing machine type.""",
+            )
         )
 
-        json_body.add_primitive(
-            "automatic_machine_type",
-            Union[Unset, None, bool],
-            option_name="automatic-machine-type",
-            required=False,
-            description="""Set to true to use best available machine type. If this is provided the machine_type property must not be provided.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "automatic_machine_type",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="automatic-machine-type",
+                description="""Set to true to use best available machine type. If this is provided the machine_type property must not be provided.""",
+            )
         )
 
-        json_body.add_primitive(
-            "video_device",
-            Union[Unset, None, VideoDevice],
-            option_name="video-device",
-            required=False,
-            description="""Do not provide or set to null to keep existing video device.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "video_device",
+                Union[Unset, None, VideoDevice],
+                required=False,
+                option_name="video-device",
+                description="""Do not provide or set to null to keep existing video device.""",
+            )
         )
 
         return mapping

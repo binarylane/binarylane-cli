@@ -13,7 +13,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import ListAttribute, Mapping
+from binarylane.console.parser import ListAttribute, Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -34,12 +34,14 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "load_balancer_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the load balancer to which forwarding rules should be added.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "load_balancer_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the load balancer to which forwarding rules should be added.""",
+            )
         )
 
         json_body = mapping.add_json_body(ForwardingRulesRequest)
@@ -48,18 +50,20 @@ class Command(CommandRunner):
             ListAttribute(
                 "forwarding_rules",
                 ForwardingRule,
+                required=True,
                 option_name="forwarding-rules",
                 description="""The rules that control which traffic the load balancer will forward to servers in the pool.""",
-                required=True,
             )
         )
 
-        json_body_forwarding_rule.add_primitive(
-            "entry_protocol",
-            LoadBalancerRuleProtocol,
-            option_name="entry-protocol",
-            required=True,
-            description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.""",
+        json_body_forwarding_rule.add(
+            PrimitiveAttribute(
+                "entry_protocol",
+                LoadBalancerRuleProtocol,
+                required=True,
+                option_name="entry-protocol",
+                description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.""",
+            )
         )
 
         return mapping

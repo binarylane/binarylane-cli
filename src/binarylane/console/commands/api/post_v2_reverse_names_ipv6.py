@@ -12,7 +12,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -33,12 +33,14 @@ class Command(ActionRunner):
 
         json_body = mapping.add_json_body(ReverseNameserversRequest)
 
-        json_body.add_primitive(
-            "reverse_nameservers",
-            List[str],
-            option_name="reverse-nameservers",
-            required=True,
-            description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "reverse_nameservers",
+                List[str],
+                required=True,
+                option_name="reverse-nameservers",
+                description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
+            )
         )
 
         return mapping

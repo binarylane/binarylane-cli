@@ -14,7 +14,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -35,45 +35,55 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+            )
         )
 
         json_body = mapping.add_json_body(CloneUsingBackup)
 
-        json_body.add_primitive(
-            "type",
-            CloneUsingBackupType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                CloneUsingBackupType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "image_id",
-            int,
-            option_name="image-id",
-            required=True,
-            description="""The ID of the image to clone. Only backup type images are currently supported. This must be a backup of the server ID in the action endpoint URL.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "image_id",
+                int,
+                required=True,
+                option_name="image-id",
+                description="""The ID of the image to clone. Only backup type images are currently supported. This must be a backup of the server ID in the action endpoint URL.""",
+            )
         )
 
-        json_body.add_primitive(
-            "target_server_id",
-            int,
-            option_name="target-server-id",
-            required=True,
-            description="""The target server ID. This server's current disks will be wiped and replaced with the selected backup image.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "target_server_id",
+                int,
+                required=True,
+                option_name="target-server-id",
+                description="""The target server ID. This server's current disks will be wiped and replaced with the selected backup image.""",
+            )
         )
 
-        json_body.add_primitive(
-            "name",
-            Union[Unset, None, str],
-            option_name="name",
-            required=False,
-            description="""The new hostname for the target server. If this is not supplied the target server's existing hostname will be used.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                Union[Unset, None, str],
+                required=False,
+                option_name="name",
+                description="""The new hostname for the target server. If this is not supplied the target server's existing hostname will be used.""",
+            )
         )
 
         return mapping

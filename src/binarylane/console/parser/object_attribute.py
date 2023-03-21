@@ -2,23 +2,23 @@ from __future__ import annotations
 
 import argparse
 import logging
-from typing import TYPE_CHECKING, List, Optional, Type
+from typing import TYPE_CHECKING, List, Optional, TypeVar
 
 from binarylane.types import UNSET
 
 from binarylane.console.parser.attribute import Attribute
-from binarylane.console.parser.primitive_attribute import PrimitiveAttribute
 
 if TYPE_CHECKING:
     from binarylane.console.parser.parser import Parser
 
 logger = logging.getLogger(__name__)
 
+T = TypeVar("T", bound=Attribute)
+
 
 class ObjectAttribute(Attribute):
     _init_parameters: List[str]
     _attributes: List[Attribute]
-    prefix: str = ""
 
     def __init__(
         self,
@@ -36,7 +36,6 @@ class ObjectAttribute(Attribute):
             option_name=option_name or attribute_name,
             description=description,
         )
-        self.prefix = attribute_name
 
         self._init_parameters = []
         self._attributes = []
@@ -63,56 +62,15 @@ class ObjectAttribute(Attribute):
     def init_attributes(self) -> List[Attribute]:
         return [attr for attr in self.attributes if attr.attribute_name in self._init_parameters]
 
-    def add_primitive(
-        self,
-        attribute_name: str,
-        attribute_type_hint: object,
-        *,
-        option_name: Optional[str],
-        required: bool,
-        description: Optional[str] = None,
-        warning: Optional[str] = None,
-        action: Optional[Type[argparse.Action]] = None,
-    ) -> None:
-
-        if warning:
-            self._unsupported(warning)
-
-        if required:
-            self._init_parameters.append(attribute_name)
-
-        dest = attribute_name
-
-        if self.prefix:
-            dest = f"{self.prefix}_{dest}"
-
-        self._attributes.append(
-            PrimitiveAttribute(
-                attribute_name=attribute_name,
-                attribute_type_hint=attribute_type_hint,
-                option_name=option_name,
-                dest=dest,
-                required=required and self.required,
-                description=description,
-                action=action,
-                metavar=(option_name or attribute_name).replace("-", "_").upper(),
-                parent=self,
-            )
-        )
-
-    def add(self, obj: ObjectAttribute) -> ObjectAttribute:
-        obj._set_parent(self)  # pylint: disable=protected-access
-        self._attributes.append(obj)
-
+    def add(self, obj: T) -> T:
         if obj.required:
             self._init_parameters.append(obj.attribute_name)
+        if not self.required:
+            obj.required = False
 
+        obj.parent = self
+        self._attributes.append(obj)
         return obj
-
-    def _set_parent(self, obj: ObjectAttribute) -> None:
-        self.parent = obj
-        if obj.prefix:
-            self.prefix = f"{obj.prefix}_{self.attribute_name}"
 
     def configure(self, parser: Parser) -> None:
         existing_arguments = parser.argument_names

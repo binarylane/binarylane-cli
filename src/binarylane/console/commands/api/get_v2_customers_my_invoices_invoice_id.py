@@ -10,7 +10,7 @@ from binarylane.models.problem_details import ProblemDetails
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -29,12 +29,14 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "invoice_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the invoice to fetch.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "invoice_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the invoice to fetch.""",
+            )
         )
 
         return mapping

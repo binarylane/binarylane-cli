@@ -14,7 +14,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute
+from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute, PrimitiveAttribute
 from binarylane.console.runners.actionlink import ActionLinkRunner
 
 
@@ -35,68 +35,84 @@ class Command(ActionLinkRunner):
 
         json_body = mapping.add_json_body(CreateServerRequest)
 
-        json_body.add_primitive(
-            "size",
-            str,
-            option_name="size",
-            required=True,
-            description="""The slug of the selected size.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "size",
+                str,
+                required=True,
+                option_name="size",
+                description="""The slug of the selected size.""",
+            )
         )
 
-        json_body.add_primitive(
-            "image",
-            Union[int, str],
-            option_name="image",
-            required=True,
-            description="""The slug or id of the selected operating system.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "image",
+                Union[int, str],
+                required=True,
+                option_name="image",
+                description="""The slug or id of the selected operating system.""",
+            )
         )
 
-        json_body.add_primitive(
-            "region",
-            str,
-            option_name="region",
-            required=True,
-            description="""The slug of the selected region.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "region",
+                str,
+                required=True,
+                option_name="region",
+                description="""The slug of the selected region.""",
+            )
         )
 
-        json_body.add_primitive(
-            "name",
-            Union[Unset, None, str],
-            option_name="name",
-            required=False,
-            description="""The hostname of your server, such as vps01.yourcompany.com. If not provided, the server will be created with a random name.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                Union[Unset, None, str],
+                required=False,
+                option_name="name",
+                description="""The hostname of your server, such as vps01.yourcompany.com. If not provided, the server will be created with a random name.""",
+            )
         )
 
-        json_body.add_primitive(
-            "backups",
-            Union[Unset, None, bool],
-            option_name="backups",
-            required=False,
-            description="""If true this will enable two daily backups for the server. Options.daily_backups will override this value if provided. Setting this to false has no effect.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "backups",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="backups",
+                description="""If true this will enable two daily backups for the server. Options.daily_backups will override this value if provided. Setting this to false has no effect.""",
+            )
         )
 
-        json_body.add_primitive(
-            "ipv6",
-            Union[Unset, None, bool],
-            option_name="ipv6",
-            required=False,
-            description="""If true this will enable IPv6 for this server.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "ipv6",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="ipv6",
+                description="""If true this will enable IPv6 for this server.""",
+            )
         )
 
-        json_body.add_primitive(
-            "vpc_id",
-            Union[Unset, None, int],
-            option_name="vpc-id",
-            required=False,
-            description="""Leave null to use default (public) network for the selected region.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "vpc_id",
+                Union[Unset, None, int],
+                required=False,
+                option_name="vpc-id",
+                description="""Leave null to use default (public) network for the selected region.""",
+            )
         )
 
-        json_body.add_primitive(
-            "ssh_keys",
-            Union[Unset, None, List[Union[int, str]]],
-            option_name="ssh-keys",
-            required=False,
-            description="""This may be either the SSH keys Ids or fingerprints. If this is null or not provided any SSH keys that have been marked as default will be deployed (if the operating system supports SSH keys). Submit an empty array to disable deployment of default keys.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "ssh_keys",
+                Union[Unset, None, List[Union[int, str]]],
+                required=False,
+                option_name="ssh-keys",
+                description="""This may be either the SSH keys Ids or fingerprints. If this is null or not provided any SSH keys that have been marked as default will be deployed (if the operating system supports SSH keys). Submit an empty array to disable deployment of default keys.""",
+            )
         )
 
         json_body_size_options_request = json_body.add(
@@ -109,52 +125,63 @@ class Command(ActionLinkRunner):
             )
         )
 
-        json_body_size_options_request.add_primitive(
-            "daily_backups",
-            Union[Unset, None, int],
-            option_name="daily-backups",
-            required=False,
-            description="""Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server.""",
+        json_body_size_options_request.add(
+            PrimitiveAttribute(
+                "daily_backups",
+                Union[Unset, None, int],
+                required=False,
+                option_name="daily-backups",
+                description="""Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server.""",
+            )
         )
 
-        json_body_size_options_request.add_primitive(
-            "weekly_backups",
-            Union[Unset, None, int],
-            option_name="weekly-backups",
-            required=False,
-            description="""Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server.""",
+        json_body_size_options_request.add(
+            PrimitiveAttribute(
+                "weekly_backups",
+                Union[Unset, None, int],
+                required=False,
+                option_name="weekly-backups",
+                description="""Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server.""",
+            )
         )
 
-        json_body_size_options_request.add_primitive(
-            "monthly_backups",
-            Union[Unset, None, int],
-            option_name="monthly-backups",
-            required=False,
-            description="""Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server.""",
+        json_body_size_options_request.add(
+            PrimitiveAttribute(
+                "monthly_backups",
+                Union[Unset, None, int],
+                required=False,
+                option_name="monthly-backups",
+                description="""Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server.""",
+            )
         )
 
-        json_body_size_options_request.add_primitive(
-            "offsite_backups",
-            Union[Unset, None, bool],
-            option_name="offsite-backups",
-            required=False,
-            description="""Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server.""",
+        json_body_size_options_request.add(
+            PrimitiveAttribute(
+                "offsite_backups",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="offsite-backups",
+                description="""Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server.""",
+            )
         )
 
-        json_body_size_options_request.add_primitive(
-            "ipv4_addresses",
-            Union[Unset, None, int],
-            option_name="ipv4-addresses",
-            required=False,
-            description="""The total count of IPv4 addresses for this server. If specified this is the absolute value, not just the additional IPv4 addresses above what is included in the size. Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server. Must not exceed the size.ipv4_addresses_max value.""",
+        json_body_size_options_request.add(
+            PrimitiveAttribute(
+                "ipv4_addresses",
+                Union[Unset, None, int],
+                required=False,
+                option_name="ipv4-addresses",
+                description="""The total count of IPv4 addresses for this server. If specified this is the absolute value, not just the additional IPv4 addresses above what is included in the size. Leave null to accept the default for the size if this is a new server or to keep the current value if this is a resize of an existing server. Must not exceed the size.ipv4_addresses_max value.""",
+            )
         )
 
-        json_body_size_options_request.add_primitive(
-            "memory",
-            Union[Unset, None, int],
-            option_name="memory",
-            required=False,
-            description="""The total memory in MB for this server.
+        json_body_size_options_request.add(
+            PrimitiveAttribute(
+                "memory",
+                Union[Unset, None, int],
+                required=False,
+                option_name="memory",
+                description="""The total memory in MB for this server.
 If specified this is the absolute value, not just the additional memory above what is included in the size.
 Leave null to accept the default for the size if this is a new server or a resize to a different base size, or to keep the current value if this a resize with the same base size but different options.
 
@@ -163,14 +190,16 @@ Valid values:
 - &gt; 2048MB must be a multiple of 1024
 - &gt; 16384MB must be a multiple of 2048
 - &gt; 24576MB must be a multiple of 4096""",
+            )
         )
 
-        json_body_size_options_request.add_primitive(
-            "disk",
-            Union[Unset, None, int],
-            option_name="disk",
-            required=False,
-            description="""The total storage in GB for this server.
+        json_body_size_options_request.add(
+            PrimitiveAttribute(
+                "disk",
+                Union[Unset, None, int],
+                required=False,
+                option_name="disk",
+                description="""The total storage in GB for this server.
 If specified this is the absolute value, not just the additional storage above what is included in the size.
 Leave null to accept the default for the size if this is a new server or a resize to a different base size, or to keep the current value if this a resize with the same base size but different options.
 
@@ -178,14 +207,16 @@ Valid values for sizes that do not provide a value for options.restricted_storag
 - must be a multiple of 5
 - &gt; 60GB must be a multiple of 10
 - &gt; 200GB must be a multiple of 100""",
+            )
         )
 
-        json_body_size_options_request.add_primitive(
-            "transfer",
-            Union[Unset, None, float],
-            option_name="transfer",
-            required=False,
-            description="""The total transfer per month in TB for this server.
+        json_body_size_options_request.add(
+            PrimitiveAttribute(
+                "transfer",
+                Union[Unset, None, float],
+                required=False,
+                option_name="transfer",
+                description="""The total transfer per month in TB for this server.
 If specified this is the absolute value, not just the additional transfer above what is included in the size.
 Leave null to accept the default for the size if this is a new server or a resize to a different base size, or to keep the current value if this a resize with the same base size but different options.
 
@@ -194,56 +225,67 @@ Valid values (when converted to GB by multiplying the value provided by 1024):
 - &gt; 30GB must be a multiple of 10
 - &gt; 200GB must be a multiple of 100
 - &gt; 2000GB must be a multiple of 1000""",
+            )
         )
 
         json_body_license_ = json_body.add(
             ListAttribute(
                 "licenses",
                 License,
+                required=False,
                 option_name="licenses",
                 description="""The desired set of licenses.""",
-                required=False,
             )
         )
 
-        json_body_license_.add_primitive(
-            "software_id",
-            int,
-            option_name="software-id",
-            required=True,
-            description="""The ID of the software to license.""",
+        json_body_license_.add(
+            PrimitiveAttribute(
+                "software_id",
+                int,
+                required=True,
+                option_name="software-id",
+                description="""The ID of the software to license.""",
+            )
         )
 
-        json_body_license_.add_primitive(
-            "count",
-            int,
-            option_name="count",
-            required=True,
-            description="""The number of licences.""",
+        json_body_license_.add(
+            PrimitiveAttribute(
+                "count",
+                int,
+                required=True,
+                option_name="count",
+                description="""The number of licences.""",
+            )
         )
 
-        json_body.add_primitive(
-            "user_data",
-            Union[Unset, None, str],
-            option_name="user-data",
-            required=False,
-            description="""If provided this will be used to initialise the new server. This must be left null if the Image does not support UserData, see DistributionInfo.Features for more information.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "user_data",
+                Union[Unset, None, str],
+                required=False,
+                option_name="user-data",
+                description="""If provided this will be used to initialise the new server. This must be left null if the Image does not support UserData, see DistributionInfo.Features for more information.""",
+            )
         )
 
-        json_body.add_primitive(
-            "port_blocking",
-            Union[Unset, None, bool],
-            option_name="port-blocking",
-            required=False,
-            description="""Port blocking of outgoing connections for email, SSH and Remote Desktop (TCP ports 22, 25, and 3389) is enabled by default for all new servers. If this is false port blocking will be disabled. Disabling port blocking is only available to reviewed accounts.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "port_blocking",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="port-blocking",
+                description="""Port blocking of outgoing connections for email, SSH and Remote Desktop (TCP ports 22, 25, and 3389) is enabled by default for all new servers. If this is false port blocking will be disabled. Disabling port blocking is only available to reviewed accounts.""",
+            )
         )
 
-        json_body.add_primitive(
-            "password",
-            Union[Unset, None, str],
-            option_name="password",
-            required=False,
-            description="""If this is provided the default remote user account's password will be set to this value. If this is null a random password will be generated and emailed to the account email address.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "password",
+                Union[Unset, None, str],
+                required=False,
+                option_name="password",
+                description="""If this is provided the default remote user account's password will be set to this value. If this is null a random password will be generated and emailed to the account email address.""",
+            )
         )
 
         return mapping

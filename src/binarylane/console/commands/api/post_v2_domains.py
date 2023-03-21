@@ -12,7 +12,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -33,20 +33,24 @@ class Command(CommandRunner):
 
         json_body = mapping.add_json_body(DomainRequest)
 
-        json_body.add_primitive(
-            "name",
-            str,
-            option_name="name",
-            required=True,
-            description="""The domain name to add to the DNS management system.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                str,
+                required=True,
+                option_name="name",
+                description="""The domain name to add to the DNS management system.""",
+            )
         )
 
-        json_body.add_primitive(
-            "ip_address",
-            Union[Unset, None, str],
-            option_name="ip-address",
-            required=False,
-            description="""An optional IPv4 address that will be used to create an A record for the root domain.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "ip_address",
+                Union[Unset, None, str],
+                required=False,
+                option_name="ip-address",
+                description="""An optional IPv4 address that will be used to create an A record for the root domain.""",
+            )
         )
 
         return mapping
