@@ -34,6 +34,26 @@ class SingleStoreAction(argparse.Action):
 
 
 class ListAttribute(ObjectAttribute):
+    def __init__(
+        self,
+        attribute_name: str,
+        attribute_type: type,
+        *,
+        required: bool,
+        option_name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> None:
+        # pylint: disable=duplicate-code
+        super().__init__(
+            attribute_name,
+            attribute_type,
+            required=required,
+            option_name=option_name,
+            description=description,
+        )
+        # A list can be empty, so in the command-line sense list item attributes are never required:
+        self.required = False
+
     @property
     def keyword(self) -> str:
         keyword = self.attribute_name
@@ -91,6 +111,6 @@ class ListAttribute(ObjectAttribute):
             result.append(super().construct(subparser, parsed))
             remainder = getattr(parsed, self.attribute_name)
 
-        if not result:
+        if not result and not self.init:
             return UNSET
         return result

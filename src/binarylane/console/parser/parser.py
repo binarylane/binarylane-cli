@@ -85,7 +85,7 @@ class Parser(argparse.ArgumentParser):
         return f"_dest_{self._dest_counter}"
 
     def _format_usage(self) -> str:
-        mapping_usage = []
+        mapping_usage: List[str] = []
         if self._mapping:
             attributes = self._mapping.attributes
             for attr in attributes:

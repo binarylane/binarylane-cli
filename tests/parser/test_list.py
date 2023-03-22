@@ -33,6 +33,15 @@ class RouteEntryRequest(TestRequest):
         self.destination = destination
 
 
+def add_route_entries(request: Mapping, *, required: bool) -> None:
+    route_list = request.add(
+        ListAttribute("route_entries", RouteEntryRequest, required=required, description="Route Entries")
+    )
+    route_list.add(PrimitiveAttribute("router", str, option_name="router", required=True, description=TEST))
+    route_list.add(PrimitiveAttribute("destination", str, option_name="destination", required=True, description=TEST))
+    route_list.add(PrimitiveAttribute("description", str, option_name="description", required=False, description=TEST))
+
+
 @pytest.fixture
 def parser() -> Parser:
     parser = create_parser()
@@ -40,12 +49,7 @@ def parser() -> Parser:
     request.add(PrimitiveAttribute("name", str, option_name="name", required=True, description=TEST))
     request.add(PrimitiveAttribute("ip_range", str, option_name="ip-range", required=False, description=TEST))
 
-    route_list = request.add(
-        ListAttribute("route_entries", RouteEntryRequest, required=False, description="Route Entries")
-    )
-    route_list.add(PrimitiveAttribute("router", str, option_name="router", required=True, description=TEST))
-    route_list.add(PrimitiveAttribute("destination", str, option_name="destination", required=True, description=TEST))
-    route_list.add(PrimitiveAttribute("description", str, option_name="description", required=False, description=TEST))
+    add_route_entries(request, required=False)
 
     return parser
 
@@ -145,3 +149,34 @@ def test_invalid_list_item_has_correct_prog(parser: Parser) -> None:
         parser.parse(REQUIRED_ARGUMENTS + ["+route", "--router", "1"])
 
     assert "bl test: error: " in exc.value.message
+
+
+class RequiredListRequest(TestRequest):
+    name: str
+    route_entries: List[RouteEntryRequest]
+
+    def __init__(self, name: str, route_entries: List[RouteEntryRequest]) -> None:
+        self.name = name
+        self.route_entries = route_entries
+
+
+@pytest.fixture
+def required_parser() -> Parser:
+    parser = create_parser()
+    request = parser.set_mapping(Mapping(RequiredListRequest))
+    request.add(PrimitiveAttribute("name", str, option_name="name", required=True, description=TEST))
+
+    add_route_entries(request, required=True)
+
+    return parser
+
+
+def test_empty_required_list(required_parser: Parser) -> None:
+    parsed = required_parser.parse(REQUIRED_ARGUMENTS)
+
+    assert parsed.mapped_object.to_dict() == {"name": "test", "route_entries": []}
+
+
+def test_required_list_usage(required_parser: Parser) -> None:
+    required_parser.parse(REQUIRED_ARGUMENTS)
+    assert required_parser.format_usage() == "usage: bl test [OPTIONS] --name NAME [+route ... ]\n"
