@@ -22,7 +22,7 @@ class Command(ListRunner):
         if not isinstance(received, UnpaidFailedInvoicesResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.invoices, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:

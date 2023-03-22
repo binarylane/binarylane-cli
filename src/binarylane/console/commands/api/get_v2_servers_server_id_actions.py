@@ -27,7 +27,7 @@ class Command(ListRunner):
         if not isinstance(received, ActionsResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.actions, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:
