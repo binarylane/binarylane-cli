@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.15.2 (2023-03-22)
+
+### Fixes
+
+- partially revert #28 as it breaks --output json for lists (#32)
+
 ## v0.15.1 (2023-03-21)
 
 ### Fixes
