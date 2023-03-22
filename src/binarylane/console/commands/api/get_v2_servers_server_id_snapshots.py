@@ -27,7 +27,7 @@ class Command(ListRunner):
         if not isinstance(received, SnapshotsResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.snapshots, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:

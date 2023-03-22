@@ -14,14 +14,11 @@ DEFAULT_HEADING = "response"
 def format_response(response: Any, show_header: bool, fields: Optional[List[str]] = None) -> List[List[str]]:
     """Convert structured response object into a 'table' (where the length of each inner list is the same)"""
 
-    # ListRunner provide the "extracted" list directly, in other cases we need to extract it ourselves
-    if not isinstance(response, list):
-        response = _extract_primary(response)
-        fields = fields or [DEFAULT_HEADING]
+    response = _extract_primary(response)
 
     if isinstance(response, list):
         if fields is None:
-            raise TypeError("fields is required to display list response")
+            fields = [DEFAULT_HEADING]
 
         def object_to_list(row: Dict[str, Any], columns: List[str]) -> List[Any]:
             """Extract each field in `columns` from `row` into a list, in the same order as `columns`"""
