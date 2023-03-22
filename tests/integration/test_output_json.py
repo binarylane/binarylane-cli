@@ -26,10 +26,7 @@ def vpc() -> Vpc:
 
 def test_list_response(vpc: Vpc, capsys: CaptureFixture[str]) -> None:
     runner = TypeRunner[ListRunner](vpc_list.Command)
-    response = runner.test.ok_response_type(
-        meta=Meta(total=1),
-        vpcs=[vpc]
-    )
+    response = runner.test.ok_response_type(meta=Meta(total=1), vpcs=[vpc])
 
     runner.test.process(runner.test.parse(["--output", "json"]))
     runner.test.response(200, response)
@@ -40,9 +37,10 @@ def test_list_response(vpc: Vpc, capsys: CaptureFixture[str]) -> None:
         ' "Test Route"}]}]}\n'
     )
 
+
 def test_get_response(vpc: Vpc, capsys: CaptureFixture[str]) -> None:
     runner = TypeRunner[CommandRunner](vpc_get.Command)
-    response = runner.test.ok_response_type(        vpc=vpc    )
+    response = runner.test.ok_response_type(vpc=vpc)
 
     runner.test.process(runner.test.parse(["--output", "json", "1"]))
     runner.test.response(200, response)
