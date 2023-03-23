@@ -17,7 +17,6 @@ T = TypeVar("T", bound=Attribute)
 
 
 class ObjectAttribute(Attribute):
-    _init_parameters: List[str]
     _attributes: List[Attribute]
 
     def __init__(
@@ -36,8 +35,6 @@ class ObjectAttribute(Attribute):
             option_name=option_name or attribute_name,
             description=description,
         )
-
-        self._init_parameters = []
         self._attributes = []
 
     @property
@@ -60,11 +57,9 @@ class ObjectAttribute(Attribute):
 
     @property
     def init_attributes(self) -> List[Attribute]:
-        return [attr for attr in self.attributes if attr.attribute_name in self._init_parameters]
+        return [attr for attr in self.attributes if attr.init]
 
     def add(self, obj: T) -> T:
-        if obj.required:
-            self._init_parameters.append(obj.attribute_name)
         if not self.required:
             obj.required = False
 
