@@ -86,8 +86,15 @@ class ListAttribute(ObjectAttribute):
         return action
 
     def construct(self, parser: Parser, parsed: argparse.Namespace) -> object:
-        remainder = getattr(parsed, self.attribute_name)
+        remainder = getattr(parsed, self.attribute_name) or []
         delattr(parsed, self.attribute_name)
+
+        # If the last option provided within this item happens to be of type List[T], the parser would not stop at
+        # +keyword (as that's an argument). For this reason, we insert a do-nothing `--keyword+keyword` option before
+        # each additional +keyword to ensure the parser stops.
+        keyword_option = f"--keyword{self.keyword}"
+        for index in [i for i, value in enumerate(remainder) if i and value == self.keyword][::-1]:
+            remainder.insert(index, keyword_option)
 
         result = []
         while remainder:
@@ -106,6 +113,7 @@ class ListAttribute(ObjectAttribute):
 
             super().configure(subparser)
             self.configure(subparser)
+            subparser.add_argument(keyword_option, nargs=0, help=argparse.SUPPRESS)
             parsed = subparser.parse(remainder)
 
             result.append(super().construct(subparser, parsed))
