@@ -109,6 +109,8 @@ class ListAttribute(ObjectAttribute):
             parsed = subparser.parse(remainder)
 
             result.append(super().construct(subparser, parsed))
+            if result[-1] is UNSET:
+                parser.error(f"argument {keyword}: expected one or more arguments")
             remainder = getattr(parsed, self.attribute_name)
 
         if not result and not self.init:
