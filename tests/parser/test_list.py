@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from argparse import ArgumentError
-from typing import List, Union
+from typing import Any, Dict, List, Union
 
 import pytest
 
@@ -180,3 +180,67 @@ def test_empty_required_list(required_parser: Parser) -> None:
 def test_required_list_usage(required_parser: Parser) -> None:
     required_parser.parse(REQUIRED_ARGUMENTS)
     assert required_parser.format_usage() == "usage: bl test [OPTIONS] --name NAME [+route ... ]\n"
+
+
+class ListRequest(TestRequest):
+    sublist: List[Sublist]
+
+    def __init__(self, sublist: List[Sublist]) -> None:
+        self.sublist = sublist
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {"sublist": [sublist.to_dict() if sublist else None for sublist in self.sublist]}
+
+
+class Sublist:
+    name: List[str]
+    description: Union[str, None] = None
+
+    def __init__(self, name: List[str]) -> None:
+        self.name = name
+
+    def to_dict(self) -> Dict[str, Any]:
+        result: Dict[str, Any] = {"name": self.name}
+        if self.description is not None:
+            result["description"] = self.description
+        return result
+
+
+@pytest.fixture
+def sublist_parser() -> Parser:
+    parser = create_parser()
+    mapping = parser.set_mapping(Mapping(ListRequest))
+    attr = mapping.add(ListAttribute("sublist", Sublist, required=True))
+    attr.add(PrimitiveAttribute("name", List[str], required=True, option_name="name"))
+    attr.add(PrimitiveAttribute("description", str, required=False, option_name="description"))
+
+    return parser
+
+
+def test_list_of_list_of_str(sublist_parser: Parser) -> None:
+
+    parsed = sublist_parser.parse(["+sublist", "--description", "test", "--name", "a", "b", "+sublist", "--name", "c"])
+    assert parsed.mapped_object.to_dict() == {
+        "sublist": [
+            {"name": ["a", "b"], "description": "test"},
+            {"name": ["c"]},
+        ]
+    }
+
+
+def test_list_of_empty_list_of_str(sublist_parser: Parser) -> None:
+
+    parsed = sublist_parser.parse(["+sublist", "--name"])
+    assert parsed.mapped_object.to_dict() == {
+        "sublist": [
+            {"name": []},
+        ]
+    }
+
+
+def test_list_of_missing_sublist_is_error(sublist_parser: Parser) -> None:
+
+    with pytest.raises(ArgumentError) as exc:
+        sublist_parser.parse(["+sublist"])
+
+    assert "bl test: error: " in exc.value.message
