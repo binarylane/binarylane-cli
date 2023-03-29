@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v0.15.3 (2023-03-29)
+
+### Fixes
+
+- incorrect parsing of object list when a list primitive immediately preceeds keyword (#38)
+- provide empty list instead of Unset for OpenAPI arrays marked "required" (#35)
+
 ## v0.15.2 (2023-03-22)
 
 ### Fixes
