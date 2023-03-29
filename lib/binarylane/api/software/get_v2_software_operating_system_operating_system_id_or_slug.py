@@ -14,7 +14,7 @@ from binarylane.types import UNSET, Response, Unset
 
 
 def _get_kwargs(
-    operating_system_id_or_slug: str,
+    operating_system_id_or_slug: Union[int, str],
     *,
     client: Client,
     page: Union[Unset, None, int] = 1,
@@ -77,7 +77,7 @@ def _build_response(
 
 
 def sync_detailed(
-    operating_system_id_or_slug: str,
+    operating_system_id_or_slug: Union[int, str],
     *,
     client: Client,
     page: Union[Unset, None, int] = 1,
@@ -86,8 +86,8 @@ def sync_detailed(
     """List All Available Software for an Existing Operating System
 
     Args:
-        operating_system_id_or_slug (str): The ID or slug of the operating system for which
-            available software should be listed.
+        operating_system_id_or_slug (Union[int, str]): The ID or slug of the operating system for
+            which available software should be listed. Example: 5.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -115,7 +115,7 @@ def sync_detailed(
 
 
 def sync(
-    operating_system_id_or_slug: str,
+    operating_system_id_or_slug: Union[int, str],
     *,
     client: Client,
     page: Union[Unset, None, int] = 1,
@@ -124,8 +124,8 @@ def sync(
     """List All Available Software for an Existing Operating System
 
     Args:
-        operating_system_id_or_slug (str): The ID or slug of the operating system for which
-            available software should be listed.
+        operating_system_id_or_slug (Union[int, str]): The ID or slug of the operating system for
+            which available software should be listed. Example: 5.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -146,7 +146,7 @@ def sync(
 
 
 async def asyncio_detailed(
-    operating_system_id_or_slug: str,
+    operating_system_id_or_slug: Union[int, str],
     *,
     client: Client,
     page: Union[Unset, None, int] = 1,
@@ -155,8 +155,8 @@ async def asyncio_detailed(
     """List All Available Software for an Existing Operating System
 
     Args:
-        operating_system_id_or_slug (str): The ID or slug of the operating system for which
-            available software should be listed.
+        operating_system_id_or_slug (Union[int, str]): The ID or slug of the operating system for
+            which available software should be listed. Example: 5.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -182,7 +182,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    operating_system_id_or_slug: str,
+    operating_system_id_or_slug: Union[int, str],
     *,
     client: Client,
     page: Union[Unset, None, int] = 1,
@@ -191,8 +191,8 @@ async def asyncio(
     """List All Available Software for an Existing Operating System
 
     Args:
-        operating_system_id_or_slug (str): The ID or slug of the operating system for which
-            available software should be listed.
+        operating_system_id_or_slug (Union[int, str]): The ID or slug of the operating system for
+            which available software should be listed. Example: 5.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 

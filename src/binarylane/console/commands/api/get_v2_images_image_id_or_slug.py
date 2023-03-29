@@ -15,9 +15,9 @@ from binarylane.console.runners.command import CommandRunner
 
 
 class CommandRequest:
-    image_id_or_slug: str
+    image_id_or_slug: Union[int, str]
 
-    def __init__(self, image_id_or_slug: str) -> None:
+    def __init__(self, image_id_or_slug: Union[int, str]) -> None:
         self.image_id_or_slug = image_id_or_slug
 
 
@@ -32,7 +32,7 @@ class Command(CommandRunner):
         mapping.add(
             PrimitiveAttribute(
                 "image_id_or_slug",
-                str,
+                Union[int, str],
                 required=True,
                 option_name=None,
                 description="""The ID or Slug (if an operating system) of the image to retrieve.""",

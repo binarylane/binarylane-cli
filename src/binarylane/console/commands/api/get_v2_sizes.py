@@ -18,7 +18,7 @@ from binarylane.console.runners.list import ListRunner
 
 class CommandRequest:
     server_id: Union[Unset, None, int] = UNSET
-    image: Union[Unset, None, str] = UNSET
+    image: Union[None, Unset, int, str] = UNSET
 
 
 class Command(ListRunner):
@@ -84,7 +84,7 @@ otherwise not all regions listed will support all operating systems on this size
         mapping.add(
             PrimitiveAttribute(
                 "image",
-                Union[Unset, None, str],
+                Union[None, Unset, int, str],
                 required=False,
                 option_name="image",
                 description="""If null or not provided regions that support the size are included in the returned objects regardless of operating system. If this is provided it must be the id or slug of an operating system image and will cause only valid regions for the size and operating system to be included in the returned objects.""",

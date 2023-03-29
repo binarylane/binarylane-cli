@@ -15,7 +15,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
     json_body: UpdateSshKeyRequest,
@@ -73,7 +73,7 @@ def _build_response(
 
 
 def sync_detailed(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
     json_body: UpdateSshKeyRequest,
@@ -83,7 +83,7 @@ def sync_detailed(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str): The ID or fingerprint of the SSH Key to update.
+        key_id (Union[int, str]): The ID or fingerprint of the SSH Key to update. Example: 5.
         json_body (UpdateSshKeyRequest):
 
     Raises:
@@ -109,7 +109,7 @@ def sync_detailed(
 
 
 def sync(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
     json_body: UpdateSshKeyRequest,
@@ -119,7 +119,7 @@ def sync(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str): The ID or fingerprint of the SSH Key to update.
+        key_id (Union[int, str]): The ID or fingerprint of the SSH Key to update. Example: 5.
         json_body (UpdateSshKeyRequest):
 
     Raises:
@@ -138,7 +138,7 @@ def sync(
 
 
 async def asyncio_detailed(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
     json_body: UpdateSshKeyRequest,
@@ -148,7 +148,7 @@ async def asyncio_detailed(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str): The ID or fingerprint of the SSH Key to update.
+        key_id (Union[int, str]): The ID or fingerprint of the SSH Key to update. Example: 5.
         json_body (UpdateSshKeyRequest):
 
     Raises:
@@ -172,7 +172,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
     json_body: UpdateSshKeyRequest,
@@ -182,7 +182,7 @@ async def asyncio(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str): The ID or fingerprint of the SSH Key to update.
+        key_id (Union[int, str]): The ID or fingerprint of the SSH Key to update. Example: 5.
         json_body (UpdateSshKeyRequest):
 
     Raises:
