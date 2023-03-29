@@ -13,7 +13,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    image_id_or_slug: str,
+    image_id_or_slug: Union[int, str],
     *,
     client: Client,
 ) -> Dict[str, Any]:
@@ -59,14 +59,15 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 
 def sync_detailed(
-    image_id_or_slug: str,
+    image_id_or_slug: Union[int, str],
     *,
     client: Client,
 ) -> Response[Union[Any, ImageResponse, ProblemDetails]]:
     """Fetch an Existing Image
 
     Args:
-        image_id_or_slug (str): The ID or Slug (if an operating system) of the image to retrieve.
+        image_id_or_slug (Union[int, str]): The ID or Slug (if an operating system) of the image
+            to retrieve. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -90,14 +91,15 @@ def sync_detailed(
 
 
 def sync(
-    image_id_or_slug: str,
+    image_id_or_slug: Union[int, str],
     *,
     client: Client,
 ) -> Optional[Union[Any, ImageResponse, ProblemDetails]]:
     """Fetch an Existing Image
 
     Args:
-        image_id_or_slug (str): The ID or Slug (if an operating system) of the image to retrieve.
+        image_id_or_slug (Union[int, str]): The ID or Slug (if an operating system) of the image
+            to retrieve. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -114,14 +116,15 @@ def sync(
 
 
 async def asyncio_detailed(
-    image_id_or_slug: str,
+    image_id_or_slug: Union[int, str],
     *,
     client: Client,
 ) -> Response[Union[Any, ImageResponse, ProblemDetails]]:
     """Fetch an Existing Image
 
     Args:
-        image_id_or_slug (str): The ID or Slug (if an operating system) of the image to retrieve.
+        image_id_or_slug (Union[int, str]): The ID or Slug (if an operating system) of the image
+            to retrieve. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -143,14 +146,15 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    image_id_or_slug: str,
+    image_id_or_slug: Union[int, str],
     *,
     client: Client,
 ) -> Optional[Union[Any, ImageResponse, ProblemDetails]]:
     """Fetch an Existing Image
 
     Args:
-        image_id_or_slug (str): The ID or Slug (if an operating system) of the image to retrieve.
+        image_id_or_slug (Union[int, str]): The ID or Slug (if an operating system) of the image
+            to retrieve. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

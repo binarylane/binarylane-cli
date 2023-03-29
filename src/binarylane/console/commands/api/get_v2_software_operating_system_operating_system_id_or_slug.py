@@ -17,9 +17,9 @@ from binarylane.console.runners.list import ListRunner
 
 
 class CommandRequest:
-    operating_system_id_or_slug: str
+    operating_system_id_or_slug: Union[int, str]
 
-    def __init__(self, operating_system_id_or_slug: str) -> None:
+    def __init__(self, operating_system_id_or_slug: Union[int, str]) -> None:
         self.operating_system_id_or_slug = operating_system_id_or_slug
 
 
@@ -64,7 +64,7 @@ class Command(ListRunner):
         mapping.add(
             PrimitiveAttribute(
                 "operating_system_id_or_slug",
-                str,
+                Union[int, str],
                 required=True,
                 option_name=None,
                 description="""The ID or slug of the operating system for which available software should be listed.""",
