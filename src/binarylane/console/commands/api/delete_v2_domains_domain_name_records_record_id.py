@@ -9,7 +9,7 @@ from binarylane.models.problem_details import ProblemDetails
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -30,20 +30,24 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "domain_name",
-            str,
-            required=True,
-            option_name=None,
-            description="""The domain name for which the record should be deleted.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "domain_name",
+                str,
+                required=True,
+                option_name=None,
+                description="""The domain name for which the record should be deleted.""",
+            )
         )
 
-        mapping.add_primitive(
-            "record_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the record to delete.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "record_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the record to delete.""",
+            )
         )
 
         return mapping

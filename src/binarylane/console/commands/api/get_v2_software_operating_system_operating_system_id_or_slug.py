@@ -12,14 +12,14 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
 class CommandRequest:
-    operating_system_id_or_slug: str
+    operating_system_id_or_slug: Union[int, str]
 
-    def __init__(self, operating_system_id_or_slug: str) -> None:
+    def __init__(self, operating_system_id_or_slug: Union[int, str]) -> None:
         self.operating_system_id_or_slug = operating_system_id_or_slug
 
 
@@ -28,7 +28,7 @@ class Command(ListRunner):
         if not isinstance(received, SoftwaresResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.software, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:
@@ -61,12 +61,14 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "operating_system_id_or_slug",
-            str,
-            required=True,
-            option_name=None,
-            description="""The ID or slug of the operating system for which available software should be listed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "operating_system_id_or_slug",
+                Union[int, str],
+                required=True,
+                option_name=None,
+                description="""The ID or slug of the operating system for which available software should be listed.""",
+            )
         )
 
         return mapping

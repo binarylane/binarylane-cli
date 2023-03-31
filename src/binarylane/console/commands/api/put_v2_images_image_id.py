@@ -13,7 +13,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -34,30 +34,36 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "image_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the image to update.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "image_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the image to update.""",
+            )
         )
 
         json_body = mapping.add_json_body(ImageRequest)
 
-        json_body.add_primitive(
-            "name",
-            Union[Unset, None, str],
-            option_name="name",
-            required=False,
-            description="""Optional: a new display name for this image. Do not provide to leave the display name unchanged, submit an empty string to clear the display name.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                Union[Unset, None, str],
+                required=False,
+                option_name="name",
+                description="""Optional: a new display name for this image. Do not provide to leave the display name unchanged, submit an empty string to clear the display name.""",
+            )
         )
 
-        json_body.add_primitive(
-            "locked",
-            Union[Unset, None, bool],
-            option_name="locked",
-            required=False,
-            description="""Optional: you may choose to lock an individual backup in which case we will not update that backup until you unlock it. Do not provide to leave the locked status unchanged.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "locked",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="locked",
+                description="""Optional: you may choose to lock an individual backup in which case we will not update that backup until you unlock it. Do not provide to leave the locked status unchanged.""",
+            )
         )
 
         return mapping

@@ -18,6 +18,9 @@ class Attribute(ABC):
     parent: Optional[ObjectAttribute]
     attribute_name: str
     attribute_type: type
+    # if init is True, this attribute is required by the parent's __init__ method
+    init: bool
+    # if required is True, this attribute is mandatory in the command-line parsing sense
     required: bool
     option_name: Optional[str]
     description: Optional[str]
@@ -33,6 +36,7 @@ class Attribute(ABC):
     ) -> None:
         self.attribute_name = attribute_name
         self.attribute_type = attribute_type
+        self.init = required
         self.required = required
         self.option_name = option_name
         self.description = description

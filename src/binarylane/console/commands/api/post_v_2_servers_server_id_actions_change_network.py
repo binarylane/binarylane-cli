@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -39,30 +39,36 @@ class Command(ActionRunner):
         def _lookup_server_id(value: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(value)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
-            lookup=_lookup_server_id,
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+                lookup=_lookup_server_id,
+            )
         )
 
         json_body = mapping.add_json_body(ChangeNetwork)
 
-        json_body.add_primitive(
-            "type",
-            ChangeNetworkType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                ChangeNetworkType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "vpc_id",
-            Union[Unset, None, int],
-            option_name="vpc-id",
-            required=False,
-            description="""If this is null the server will be moved into the default public network for the server's region.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "vpc_id",
+                Union[Unset, None, int],
+                required=False,
+                option_name="vpc-id",
+                description="""If this is null the server will be moved into the default public network for the server's region.""",
+            )
         )
 
         return mapping

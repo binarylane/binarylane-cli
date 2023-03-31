@@ -10,14 +10,14 @@ from binarylane.models.ssh_key_response import SshKeyResponse
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
 class CommandRequest:
-    key_id: str
+    key_id: Union[int, str]
 
-    def __init__(self, key_id: str) -> None:
+    def __init__(self, key_id: Union[int, str]) -> None:
         self.key_id = key_id
 
 
@@ -29,12 +29,14 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "key_id",
-            str,
-            required=True,
-            option_name=None,
-            description="""The ID or fingerprint of the SSH Key to fetch.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "key_id",
+                Union[int, str],
+                required=True,
+                option_name=None,
+                description="""The ID or fingerprint of the SSH Key to fetch.""",
+            )
         )
 
         return mapping

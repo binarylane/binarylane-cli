@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -34,21 +34,25 @@ class Command(CommandRunner):
         def _lookup_server_id(value: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(value)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server to be cancelled.""",
-            lookup=_lookup_server_id,
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server to be cancelled.""",
+                lookup=_lookup_server_id,
+            )
         )
 
-        mapping.add_primitive(
-            "reason",
-            Union[Unset, None, str],
-            required=False,
-            option_name="reason",
-            description="""The reason for cancelling the server.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "reason",
+                Union[Unset, None, str],
+                required=False,
+                option_name="reason",
+                description="""The reason for cancelling the server.""",
+            )
         )
         return mapping
 

@@ -13,7 +13,7 @@ from binarylane.console.util import create_client
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
@@ -26,7 +26,7 @@ class Command(ListRunner):
         if not isinstance(received, ServersResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.servers, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:
@@ -101,12 +101,14 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "hostname",
-            Union[Unset, None, str],
-            required=False,
-            option_name="hostname",
-            description="""Providing a hostname restricts the results to the server that has this hostname (case insensitive). If this parameter is provided at most 1 server will be returned.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "hostname",
+                Union[Unset, None, str],
+                required=False,
+                option_name="hostname",
+                description="""Providing a hostname restricts the results to the server that has this hostname (case insensitive). If this parameter is provided at most 1 server will be returned.""",
+            )
         )
         return mapping
 

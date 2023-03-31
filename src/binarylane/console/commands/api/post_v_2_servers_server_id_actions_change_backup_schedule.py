@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -39,46 +39,56 @@ class Command(ActionRunner):
         def _lookup_server_id(value: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(value)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
-            lookup=_lookup_server_id,
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+                lookup=_lookup_server_id,
+            )
         )
 
         json_body = mapping.add_json_body(ChangeBackupSchedule)
 
-        json_body.add_primitive(
-            "type",
-            ChangeBackupScheduleType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                ChangeBackupScheduleType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "backup_hour_of_day",
-            Union[Unset, None, int],
-            option_name="backup-hour-of-day",
-            required=False,
-            description="""Do not provide a value to keep the current setting.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "backup_hour_of_day",
+                Union[Unset, None, int],
+                required=False,
+                option_name="backup-hour-of-day",
+                description="""Do not provide a value to keep the current setting.""",
+            )
         )
 
-        json_body.add_primitive(
-            "backup_day_of_week",
-            Union[Unset, None, int],
-            option_name="backup-day-of-week",
-            required=False,
-            description="""Sunday is 0, Monday is 1 etc. Do not provide a value to keep the current setting.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "backup_day_of_week",
+                Union[Unset, None, int],
+                required=False,
+                option_name="backup-day-of-week",
+                description="""Sunday is 0, Monday is 1 etc. Do not provide a value to keep the current setting.""",
+            )
         )
 
-        json_body.add_primitive(
-            "backup_day_of_month",
-            Union[Unset, None, int],
-            option_name="backup-day-of-month",
-            required=False,
-            description="""Do not provide a value to keep the current setting.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "backup_day_of_month",
+                Union[Unset, None, int],
+                required=False,
+                option_name="backup-day-of-month",
+                description="""Do not provide a value to keep the current setting.""",
+            )
         )
 
         return mapping

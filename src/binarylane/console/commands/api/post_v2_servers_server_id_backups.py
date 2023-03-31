@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -40,55 +40,67 @@ class Command(ActionRunner):
         def _lookup_server_id(value: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(value)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server for which the backup is to be uploaded.""",
-            lookup=_lookup_server_id,
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server for which the backup is to be uploaded.""",
+                lookup=_lookup_server_id,
+            )
         )
 
         json_body = mapping.add_json_body(UploadImageRequest)
 
-        json_body.add_primitive(
-            "replacement_strategy",
-            BackupReplacementStrategy,
-            option_name="replacement-strategy",
-            required=True,
-            description="""The strategy for selecting which backup to replace (if any).""",
+        json_body.add(
+            PrimitiveAttribute(
+                "replacement_strategy",
+                BackupReplacementStrategy,
+                required=True,
+                option_name="replacement-strategy",
+                description="""The strategy for selecting which backup to replace (if any).""",
+            )
         )
 
-        json_body.add_primitive(
-            "url",
-            str,
-            option_name="url",
-            required=True,
-            description="""The source URL for the image to upload. Only HTTP and HTTPS sources are currently supported.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "url",
+                str,
+                required=True,
+                option_name="url",
+                description="""The source URL for the image to upload. Only HTTP and HTTPS sources are currently supported.""",
+            )
         )
 
-        json_body.add_primitive(
-            "backup_type",
-            Union[Unset, None, BackupSlot],
-            option_name="backup-type",
-            required=False,
-            description="""If replacement_strategy is anything other than 'specified', this must be provided.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "backup_type",
+                Union[Unset, None, BackupSlot],
+                required=False,
+                option_name="backup-type",
+                description="""If replacement_strategy is anything other than 'specified', this must be provided.""",
+            )
         )
 
-        json_body.add_primitive(
-            "backup_id_to_replace",
-            Union[Unset, None, int],
-            option_name="backup-id-to-replace",
-            required=False,
-            description="""If replacement_strategy is 'specified' this property must be set to an existing backup.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "backup_id_to_replace",
+                Union[Unset, None, int],
+                required=False,
+                option_name="backup-id-to-replace",
+                description="""If replacement_strategy is 'specified' this property must be set to an existing backup.""",
+            )
         )
 
-        json_body.add_primitive(
-            "label",
-            Union[Unset, None, str],
-            option_name="label",
-            required=False,
-            description="""An optional label to identify the backup.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "label",
+                Union[Unset, None, str],
+                required=False,
+                option_name="label",
+                description="""An optional label to identify the backup.""",
+            )
         )
 
         return mapping

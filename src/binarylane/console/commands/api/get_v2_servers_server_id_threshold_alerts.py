@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
@@ -27,7 +27,7 @@ class Command(ListRunner):
         if not isinstance(received, ThresholdAlertsResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.threshold_alerts, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:
@@ -69,13 +69,15 @@ class Command(ListRunner):
         def _lookup_server_id(value: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(value)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server for which threshold alerts should be fetched.""",
-            lookup=_lookup_server_id,
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server for which threshold alerts should be fetched.""",
+                lookup=_lookup_server_id,
+            )
         )
 
         return mapping

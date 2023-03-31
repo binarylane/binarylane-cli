@@ -20,12 +20,6 @@
 {% endfor %}
 
 from binarylane.console.runners.{{ response_class['name'].lower().replace('runner', '') }} import {{ response_class['name'] }}
-from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, PrimitiveAttribute
-
-{# A list response has a property of type List[T] - we need to import T #}
-{% if response_class.get('list') %}
-from binarylane.models.{{ response_class['list'].class_info.module_name }} import {{ response_class['list'].class_info.name }}
-{% endif %}
 
 {# Import any command runners required to perform lookups #}
 {% for property in endpoint.path_parameters.values() %}

@@ -13,15 +13,15 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
 class CommandRequest:
-    key_id: str
+    key_id: Union[int, str]
     json_body: UpdateSshKeyRequest
 
-    def __init__(self, key_id: str, json_body: UpdateSshKeyRequest) -> None:
+    def __init__(self, key_id: Union[int, str], json_body: UpdateSshKeyRequest) -> None:
         self.key_id = key_id
         self.json_body = json_body
 
@@ -34,31 +34,37 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "key_id",
-            str,
-            required=True,
-            option_name=None,
-            description="""The ID or fingerprint of the SSH Key to update.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "key_id",
+                Union[int, str],
+                required=True,
+                option_name=None,
+                description="""The ID or fingerprint of the SSH Key to update.""",
+            )
         )
 
         json_body = mapping.add_json_body(UpdateSshKeyRequest)
 
-        json_body.add_primitive(
-            "name",
-            str,
-            option_name="name",
-            required=True,
-            description="""A name to help you identify the key.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                str,
+                required=True,
+                option_name="name",
+                description="""A name to help you identify the key.""",
+            )
         )
 
-        json_body.add_primitive(
-            "default",
-            Union[Unset, None, bool],
-            option_name="default",
-            required=False,
-            description="""Do not provide or leave null to leave the default status of the key unchanged.
+        json_body.add(
+            PrimitiveAttribute(
+                "default",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="default",
+                description="""Do not provide or leave null to leave the default status of the key unchanged.
 Optional: If true this will be added to all new server installations (if we support SSH Key injection for the server's operating system).""",
+            )
         )
 
         return mapping

@@ -16,7 +16,7 @@ def _get_kwargs(
     *,
     client: Client,
     server_id: Union[Unset, None, int] = UNSET,
-    image: Union[Unset, None, str] = UNSET,
+    image: Union[None, Unset, int, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Dict[str, Any]:
@@ -28,7 +28,16 @@ def _get_kwargs(
     params: Dict[str, Any] = {}
     params["server_id"] = server_id
 
-    params["image"] = image
+    json_image: Union[None, Unset, int, str]
+    if isinstance(image, Unset):
+        json_image = UNSET
+    elif image is None:
+        json_image = None
+
+    else:
+        json_image = image
+
+    params["image"] = json_image
 
     params["page"] = page
 
@@ -78,7 +87,7 @@ def sync_detailed(
     *,
     client: Client,
     server_id: Union[Unset, None, int] = UNSET,
-    image: Union[Unset, None, str] = UNSET,
+    image: Union[None, Unset, int, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Response[Union[SizesResponse, ValidationProblemDetails]]:
@@ -87,10 +96,11 @@ def sync_detailed(
     Args:
         server_id (Union[Unset, None, int]): If supplied only sizes available for a resize the
             specified server will be returned. This parameter is only available when authenticated.
-        image (Union[Unset, None, str]): If null or not provided regions that support the size are
-            included in the returned objects regardless of operating system. If this is provided it
-            must be the id or slug of an operating system image and will cause only valid regions for
-            the size and operating system to be included in the returned objects.
+        image (Union[None, Unset, int, str]): If null or not provided regions that support the
+            size are included in the returned objects regardless of operating system. If this is
+            provided it must be the id or slug of an operating system image and will cause only valid
+            regions for the size and operating system to be included in the returned objects. Example:
+            5.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -122,7 +132,7 @@ def sync(
     *,
     client: Client,
     server_id: Union[Unset, None, int] = UNSET,
-    image: Union[Unset, None, str] = UNSET,
+    image: Union[None, Unset, int, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Optional[Union[SizesResponse, ValidationProblemDetails]]:
@@ -131,10 +141,11 @@ def sync(
     Args:
         server_id (Union[Unset, None, int]): If supplied only sizes available for a resize the
             specified server will be returned. This parameter is only available when authenticated.
-        image (Union[Unset, None, str]): If null or not provided regions that support the size are
-            included in the returned objects regardless of operating system. If this is provided it
-            must be the id or slug of an operating system image and will cause only valid regions for
-            the size and operating system to be included in the returned objects.
+        image (Union[None, Unset, int, str]): If null or not provided regions that support the
+            size are included in the returned objects regardless of operating system. If this is
+            provided it must be the id or slug of an operating system image and will cause only valid
+            regions for the size and operating system to be included in the returned objects. Example:
+            5.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -159,7 +170,7 @@ async def asyncio_detailed(
     *,
     client: Client,
     server_id: Union[Unset, None, int] = UNSET,
-    image: Union[Unset, None, str] = UNSET,
+    image: Union[None, Unset, int, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Response[Union[SizesResponse, ValidationProblemDetails]]:
@@ -168,10 +179,11 @@ async def asyncio_detailed(
     Args:
         server_id (Union[Unset, None, int]): If supplied only sizes available for a resize the
             specified server will be returned. This parameter is only available when authenticated.
-        image (Union[Unset, None, str]): If null or not provided regions that support the size are
-            included in the returned objects regardless of operating system. If this is provided it
-            must be the id or slug of an operating system image and will cause only valid regions for
-            the size and operating system to be included in the returned objects.
+        image (Union[None, Unset, int, str]): If null or not provided regions that support the
+            size are included in the returned objects regardless of operating system. If this is
+            provided it must be the id or slug of an operating system image and will cause only valid
+            regions for the size and operating system to be included in the returned objects. Example:
+            5.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 
@@ -201,7 +213,7 @@ async def asyncio(
     *,
     client: Client,
     server_id: Union[Unset, None, int] = UNSET,
-    image: Union[Unset, None, str] = UNSET,
+    image: Union[None, Unset, int, str] = UNSET,
     page: Union[Unset, None, int] = 1,
     per_page: Union[Unset, None, int] = 20,
 ) -> Optional[Union[SizesResponse, ValidationProblemDetails]]:
@@ -210,10 +222,11 @@ async def asyncio(
     Args:
         server_id (Union[Unset, None, int]): If supplied only sizes available for a resize the
             specified server will be returned. This parameter is only available when authenticated.
-        image (Union[Unset, None, str]): If null or not provided regions that support the size are
-            included in the returned objects regardless of operating system. If this is provided it
-            must be the id or slug of an operating system image and will cause only valid regions for
-            the size and operating system to be included in the returned objects.
+        image (Union[None, Unset, int, str]): If null or not provided regions that support the
+            size are included in the returned objects regardless of operating system. If this is
+            provided it must be the id or slug of an operating system image and will cause only valid
+            regions for the size and operating system to be included in the returned objects. Example:
+            5.
         page (Union[Unset, None, int]): The selected page. Page numbering starts at 1 Default: 1.
         per_page (Union[Unset, None, int]): The number of results to show per page. Default: 20.
 

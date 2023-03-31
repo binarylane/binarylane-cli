@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -38,38 +38,46 @@ class Command(ActionRunner):
         def _lookup_server_id(value: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(value)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
-            lookup=_lookup_server_id,
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+                lookup=_lookup_server_id,
+            )
         )
 
         json_body = mapping.add_json_body(ResizeDisk)
 
-        json_body.add_primitive(
-            "type",
-            ResizeDiskType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                ResizeDiskType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "disk_id",
-            int,
-            option_name="disk-id",
-            required=True,
-            description="""The ID of the existing disk. See server.disks for a list of IDs.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "disk_id",
+                int,
+                required=True,
+                option_name="disk-id",
+                description="""The ID of the existing disk. See server.disks for a list of IDs.""",
+            )
         )
 
-        json_body.add_primitive(
-            "size_gigabytes",
-            int,
-            option_name="size-gigabytes",
-            required=True,
-            description="""The new size of the disk in GB. If increasing the size of the disk the server must have sufficient unallocated storage space.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "size_gigabytes",
+                int,
+                required=True,
+                option_name="size-gigabytes",
+                description="""The new size of the disk in GB. If increasing the size of the disk the server must have sufficient unallocated storage space.""",
+            )
         )
 
         return mapping

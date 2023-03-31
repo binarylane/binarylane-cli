@@ -12,7 +12,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -33,28 +33,34 @@ class Command(CommandRunner):
 
         json_body = mapping.add_json_body(SshKeyRequest)
 
-        json_body.add_primitive(
-            "public_key",
-            str,
-            option_name="public-key",
-            required=True,
-            description="""The public key in OpenSSH "authorized_keys" format.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "public_key",
+                str,
+                required=True,
+                option_name="public-key",
+                description="""The public key in OpenSSH "authorized_keys" format.""",
+            )
         )
 
-        json_body.add_primitive(
-            "name",
-            str,
-            option_name="name",
-            required=True,
-            description="""A name to help you identify the key.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                str,
+                required=True,
+                option_name="name",
+                description="""A name to help you identify the key.""",
+            )
         )
 
-        json_body.add_primitive(
-            "default",
-            Union[Unset, None, bool],
-            option_name="default",
-            required=False,
-            description="""Optional: If true this will be added to all new server installations (if we support SSH Key injection for the server's operating system).""",
+        json_body.add(
+            PrimitiveAttribute(
+                "default",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="default",
+                description="""Optional: If true this will be added to all new server installations (if we support SSH Key injection for the server's operating system).""",
+            )
         )
 
         return mapping

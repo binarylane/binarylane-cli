@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -39,42 +39,50 @@ class Command(ActionRunner):
         def _lookup_server_id(value: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(value)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
-            lookup=_lookup_server_id,
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+                lookup=_lookup_server_id,
+            )
         )
 
         json_body = mapping.add_json_body(PasswordReset)
 
-        json_body.add_primitive(
-            "type",
-            PasswordResetType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                PasswordResetType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "username",
-            Union[Unset, None, str],
-            option_name="username",
-            required=False,
-            description="""The username of the user to change the password.
+        json_body.add(
+            PrimitiveAttribute(
+                "username",
+                Union[Unset, None, str],
+                required=False,
+                option_name="username",
+                description="""The username of the user to change the password.
 Only valid if the server supports password change actions (check server.password_change_supported via the servers endpoint).
 If omitted and the server supports password change actions this will default to the username of the remote user that was configured when the server was created (normally 'root').""",
+            )
         )
 
-        json_body.add_primitive(
-            "password",
-            Union[Unset, None, str],
-            option_name="password",
-            required=False,
-            description="""If this is provided the specified or default remote user's account password will be set to this value.
+        json_body.add(
+            PrimitiveAttribute(
+                "password",
+                Union[Unset, None, str],
+                required=False,
+                option_name="password",
+                description="""If this is provided the specified or default remote user's account password will be set to this value.
 Only valid if the server supports password change actions (check server.password_change_supported via the servers endpoint).
 If omitted and the server supports password change actions a random password will be generated and emailed to the account email address.""",
+            )
         )
 
         return mapping

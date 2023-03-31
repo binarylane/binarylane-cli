@@ -13,7 +13,7 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
@@ -30,7 +30,7 @@ class Command(ListRunner):
         if not isinstance(received, VpcMembersResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.members, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:
@@ -66,20 +66,23 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "vpc_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The target vpc id.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "vpc_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The target vpc id.""",
+            )
         )
 
-        mapping.add_primitive(
-            "resource_type",
-            Union[Unset, None, ResourceType],
-            required=False,
-            option_name="resource-type",
-            description="""
+        mapping.add(
+            PrimitiveAttribute(
+                "resource_type",
+                Union[Unset, None, ResourceType],
+                required=False,
+                option_name="resource-type",
+                description="""
 | Value | Description |
 | ----- | ----------- |
 | server | Server |
@@ -90,6 +93,7 @@ class Command(ListRunner):
 | registered-domain-name | Registered Domain Name |
 
 """,
+            )
         )
         return mapping
 

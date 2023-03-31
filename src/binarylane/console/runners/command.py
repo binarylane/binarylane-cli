@@ -6,14 +6,19 @@ from http import HTTPStatus
 from typing import Any, List, Optional, Tuple
 
 from binarylane.client import AuthenticatedClient, Client
+from binarylane.models.problem_details import ProblemDetails
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 
 from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
-from binarylane.console.runners import Runner
+from binarylane.console.runners import ExitCode, Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 from binarylane.console.util import create_client
 
 logger = logging.getLogger(__name__)
+
+_DEFAULT_OUTPUT = "table"
+_DEFAULT_HEADER = True
 
 
 class CommandRunner(Runner):
@@ -23,8 +28,8 @@ class CommandRunner(Runner):
     _client: AuthenticatedClient
 
     _print_curl: Optional[bool]
-    _output: Optional[str] = None
-    _header: Optional[bool] = None
+    _output: str = _DEFAULT_OUTPUT
+    _header: bool = _DEFAULT_HEADER
 
     @abstractmethod
     def create_mapping(self) -> Mapping:
@@ -41,14 +46,14 @@ class CommandRunner(Runner):
             "--no-header",
             dest="runner_header",
             action="store_false",
-            default=True,
+            default=_DEFAULT_HEADER,
             help="Display columns without field labels",
         )
         printers = tuple(item.name.lower() for item in PrinterType)
         parser.add_argument(
             "--output",
             dest="runner_output",
-            default="table",
+            default=_DEFAULT_OUTPUT,
             metavar="OUTPUT",
             choices=printers,
             help='Desired output format [%(choices)s] (default: "%(default)s")',
@@ -71,8 +76,6 @@ class CommandRunner(Runner):
     @property
     def _printer(self) -> Printer:
         """Create printer of requested type"""
-        if self._output is None or self._header is None:
-            raise ValueError(f"output={self._output} header={self._header}")
         printer = create_printer(self._output)
         printer.header = self._header
         return printer
@@ -83,19 +86,53 @@ class CommandRunner(Runner):
 
     def response(self, status_code: int, received: Any) -> None:
         """Format and display response received from API operation"""
-        if status_code == 401:
-            self.error('Unable to authenticate with API - please run "bl configure" to get started.')
-        elif received:
+
+        # For successful responses, hand received object to printer
+        if status_code < 300 and received:
             self._printer.print(received)
-        elif status_code != 204:
-            self.error(f"HTTP {status_code}")
+            return
+
+        # For 401 Unauthorized, provide advice on how to resolve
+        if status_code == 401:
+            self.error(ExitCode.TOKEN, 'Unable to authenticate with API - please run "bl configure" to get started.')
+
+        # If no response is available, report an API error (unless it is `204 No Content`)
+        if received is None:
+            if status_code != 204:
+                self.error(ExitCode.API, f"HTTP {status_code}")
+            return
+
+        #
+        # We have received an error response: extract relevant details for display
+        #
+
+        # BinaryLane API spec does not currently have correct type on all errors - some are documented as
+        # ProblemDetails but actually emit ValidationProblemDetails, so we may need to convert the response:
+        if isinstance(received, ProblemDetails) and "errors" in received:
+            received = ValidationProblemDetails.from_dict(received.to_dict())
+
+        # If we have validation errors, combine them and display as parser error:
+        if isinstance(received, ValidationProblemDetails) and received.errors:
+
+            def list2str(value: List[str]) -> str:
+                return ", ".join([msg.lower().rstrip(".") for msg in value])
+
+            errors = {key: list2str(value) for key, value in received.errors.additional_properties.items()}
+            self._parser.error("; ".join(f"argument {key.upper()}: {errors[key]}" for key in errors))
+
+        # try and find a string we can display
+        for attr in ("detail", "title"):
+            value = getattr(received, attr, None)
+            if value:
+                self._parser.error(value)
+
+        # Couldn't find anything, just provide the status code
+        self.error(ExitCode.API, f"HTTP {status_code}")
 
     def process(self, parsed: Namespace) -> None:
         self._print_curl = parsed.runner_print_curl
-        if self._output is None:
-            self._output = parsed.runner_output
-        if self._header is None:
-            self._header = parsed.runner_header
+        self._output = parsed.runner_output
+        self._header = parsed.runner_header
 
     def run(self, args: List[str]) -> None:
         # Checks have already been performed during __init__

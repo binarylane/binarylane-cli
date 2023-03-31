@@ -12,13 +12,13 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
 class CommandRequest:
     server_id: Union[Unset, None, int] = UNSET
-    image: Union[Unset, None, str] = UNSET
+    image: Union[None, Unset, int, str] = UNSET
 
 
 class Command(ListRunner):
@@ -26,7 +26,7 @@ class Command(ListRunner):
         if not isinstance(received, SizesResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.sizes, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:
@@ -72,19 +72,23 @@ otherwise not all regions listed will support all operating systems on this size
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "server_id",
-            Union[Unset, None, int],
-            required=False,
-            option_name="server-id",
-            description="""If supplied only sizes available for a resize the specified server will be returned. This parameter is only available when authenticated.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                Union[Unset, None, int],
+                required=False,
+                option_name="server-id",
+                description="""If supplied only sizes available for a resize the specified server will be returned. This parameter is only available when authenticated.""",
+            )
         )
-        mapping.add_primitive(
-            "image",
-            Union[Unset, None, str],
-            required=False,
-            option_name="image",
-            description="""If null or not provided regions that support the size are included in the returned objects regardless of operating system. If this is provided it must be the id or slug of an operating system image and will cause only valid regions for the size and operating system to be included in the returned objects.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "image",
+                Union[None, Unset, int, str],
+                required=False,
+                option_name="image",
+                description="""If null or not provided regions that support the size are included in the returned objects regardless of operating system. If this is provided it must be the id or slug of an operating system image and will cause only valid regions for the size and operating system to be included in the returned objects.""",
+            )
         )
         return mapping
 

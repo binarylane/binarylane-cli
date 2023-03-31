@@ -7,7 +7,7 @@ from typing import Any, ClassVar, Dict, Iterator, List, Optional, Union
 
 from binarylane.console.commands import descriptors
 from binarylane.console.metadata import program_description
-from binarylane.console.parser import Mapping, Namespace, Parser
+from binarylane.console.parser import Mapping, Namespace, Parser, PrimitiveAttribute
 from binarylane.console.runners import Context, Descriptor, Runner
 
 logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ class App(Runner):
     def configure(self, parser: Parser) -> None:
         # Add COMMAND argument:
         mapping = parser.set_mapping(Mapping(App.Request))
-        mapping.add_primitive("command", List[Any], option_name=None, required=True, description=SUPPRESS)
+        mapping.add(PrimitiveAttribute("command", List[Any], option_name=None, required=True, description=SUPPRESS))
 
     def process(self, parsed: Namespace) -> None:
         args: List[str] = parsed.mapped_object.command

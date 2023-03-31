@@ -12,7 +12,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
 ) -> Dict[str, Any]:
@@ -57,7 +57,7 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 
 def sync_detailed(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
 ) -> Response[Union[Any, ProblemDetails]]:
@@ -66,7 +66,7 @@ def sync_detailed(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str): The ID or fingerprint of the SSH Key to delete.
+        key_id (Union[int, str]): The ID or fingerprint of the SSH Key to delete. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -90,7 +90,7 @@ def sync_detailed(
 
 
 def sync(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
 ) -> Optional[Union[Any, ProblemDetails]]:
@@ -99,7 +99,7 @@ def sync(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str): The ID or fingerprint of the SSH Key to delete.
+        key_id (Union[int, str]): The ID or fingerprint of the SSH Key to delete. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -116,7 +116,7 @@ def sync(
 
 
 async def asyncio_detailed(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
 ) -> Response[Union[Any, ProblemDetails]]:
@@ -125,7 +125,7 @@ async def asyncio_detailed(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str): The ID or fingerprint of the SSH Key to delete.
+        key_id (Union[int, str]): The ID or fingerprint of the SSH Key to delete. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -147,7 +147,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    key_id: str,
+    key_id: Union[int, str],
     *,
     client: Client,
 ) -> Optional[Union[Any, ProblemDetails]]:
@@ -156,7 +156,7 @@ async def asyncio(
      The key_id may be either the Id or the key fingerprint.
 
     Args:
-        key_id (str): The ID or fingerprint of the SSH Key to delete.
+        key_id (Union[int, str]): The ID or fingerprint of the SSH Key to delete. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

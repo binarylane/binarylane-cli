@@ -5,7 +5,8 @@ import sys
 from abc import ABC, abstractmethod
 from argparse import SUPPRESS
 from dataclasses import dataclass
-from typing import ClassVar, List, Sequence, Type
+from enum import Enum
+from typing import ClassVar, List, NoReturn, Optional, Sequence, Type
 from binarylane.pycompat.actions import BooleanOptionalAction
 
 from binarylane.config import DefaultConfig, UserConfig
@@ -53,6 +54,12 @@ class Descriptor:
         return command_type
 
 
+class ExitCode(int, Enum):
+    ARGUMENT = 2  # ArgumentParser.error() uses this
+    TOKEN = 3  # 401 Unauthorized response
+    API = 4  # Did not understand API response
+
+
 class Runner(ABC):
     HELP: ClassVar[str] = "--help"
     HELP_DESCRIPTION: ClassVar[str] = "Display command options and descriptions"
@@ -82,6 +89,6 @@ class Runner(ABC):
         """Subclasses implement their primary behaviour here"""
 
     @staticmethod
-    def error(message: str) -> None:
-        print("ERROR: ", message, file=sys.stderr)
-        raise SystemExit(-1)
+    def error(code: ExitCode, message: str) -> NoReturn:
+        print(f"ERROR: {message}", file=sys.stderr)
+        raise SystemExit(code.value)

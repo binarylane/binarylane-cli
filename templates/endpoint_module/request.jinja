@@ -80,7 +80,7 @@
                 {% if prop.get_instance_type_string() == 'list' %}
                     response.{{ prop.python_name }} += page_response.parsed.{{ prop.python_name }}
                 {% else %}
-                    {{ fail('unsupported', prop.prop.get_instance_type_string()) }}
+                    {{ unsupported("pagination requires list property, not " + prop.prop.get_instance_type_string()) }}
                 {% endif %}
                 {% endfor %}
                 {% endfor %}

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
 
@@ -38,30 +38,36 @@ class Command(ActionRunner):
         def _lookup_server_id(value: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(value)
 
-        mapping.add_primitive(
-            "server_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the server on which the action should be performed.""",
-            lookup=_lookup_server_id,
+        mapping.add(
+            PrimitiveAttribute(
+                "server_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the server on which the action should be performed.""",
+                lookup=_lookup_server_id,
+            )
         )
 
         json_body = mapping.add_json_body(Rename)
 
-        json_body.add_primitive(
-            "type",
-            RenameType,
-            option_name="type",
-            required=True,
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                RenameType,
+                required=True,
+                option_name="type",
+            )
         )
 
-        json_body.add_primitive(
-            "name",
-            str,
-            option_name="name",
-            required=True,
-            description="""The new hostname of your server, such as vps01.yourcompany.com.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                str,
+                required=True,
+                option_name="name",
+                description="""The new hostname of your server, such as vps01.yourcompany.com.""",
+            )
         )
 
         return mapping

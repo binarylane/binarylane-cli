@@ -69,5 +69,3 @@ class ListRunner(CommandRunner):
             self._format = self.default_format[:1]
             self._output = "tsv"
             self._header = False
-
-        super().process(parsed)

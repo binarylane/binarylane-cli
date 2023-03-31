@@ -9,7 +9,7 @@ from binarylane.models.problem_details import ProblemDetails
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -28,12 +28,14 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "load_balancer_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the load balancer to cancel.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "load_balancer_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the load balancer to cancel.""",
+            )
         )
 
         return mapping

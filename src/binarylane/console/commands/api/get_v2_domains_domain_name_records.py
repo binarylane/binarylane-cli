@@ -13,7 +13,7 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.list import ListRunner
 
 
@@ -31,7 +31,7 @@ class Command(ListRunner):
         if not isinstance(received, DomainRecordsResponse):
             return super().response(status_code, received)
 
-        return self._printer.print(received.domain_records, self._format)
+        return self._printer.print(received, self._format)
 
     @property
     def default_format(self) -> List[str]:
@@ -80,20 +80,23 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "domain_name",
-            str,
-            required=True,
-            option_name=None,
-            description="""The domain name for which records should be listed.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "domain_name",
+                str,
+                required=True,
+                option_name=None,
+                description="""The domain name for which records should be listed.""",
+            )
         )
 
-        mapping.add_primitive(
-            "type",
-            Union[Unset, None, DomainRecordType],
-            required=False,
-            option_name="type",
-            description="""
+        mapping.add(
+            PrimitiveAttribute(
+                "type",
+                Union[Unset, None, DomainRecordType],
+                required=False,
+                option_name="type",
+                description="""
 | Value | Description |
 | ----- | ----------- |
 | A | Map an IPv4 address to a hostname. |
@@ -107,13 +110,16 @@ class Command(ListRunner):
 | TXT | Define a string of text that is associated with a hostname. |
 
 """,
+            )
         )
-        mapping.add_primitive(
-            "name",
-            Union[Unset, None, str],
-            required=False,
-            option_name="name",
-            description="""Only return records for this subdomain name.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "name",
+                Union[Unset, None, str],
+                required=False,
+                option_name="name",
+                description="""Only return records for this subdomain name.""",
+            )
         )
         return mapping
 

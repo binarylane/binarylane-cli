@@ -14,7 +14,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
-from binarylane.console.parser import Mapping
+from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
 
@@ -37,94 +37,116 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        mapping.add_primitive(
-            "domain_name",
-            str,
-            required=True,
-            option_name=None,
-            description="""The domain name for which the record should be updated.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "domain_name",
+                str,
+                required=True,
+                option_name=None,
+                description="""The domain name for which the record should be updated.""",
+            )
         )
 
-        mapping.add_primitive(
-            "record_id",
-            int,
-            required=True,
-            option_name=None,
-            description="""The ID of the record to update.""",
+        mapping.add(
+            PrimitiveAttribute(
+                "record_id",
+                int,
+                required=True,
+                option_name=None,
+                description="""The ID of the record to update.""",
+            )
         )
 
         json_body = mapping.add_json_body(DomainRecordRequest)
 
-        json_body.add_primitive(
-            "type",
-            Union[Unset, None, DomainRecordType],
-            option_name="type",
-            required=False,
-            description="""The type of the DNS record.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "type",
+                Union[Unset, None, DomainRecordType],
+                required=False,
+                option_name="type",
+                description="""The type of the DNS record.""",
+            )
         )
 
-        json_body.add_primitive(
-            "name",
-            Union[Unset, None, str],
-            option_name="name",
-            required=False,
-            description="""The subdomain for this record. Use @ for records on the domain itself, and * to create a wildcard record.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "name",
+                Union[Unset, None, str],
+                required=False,
+                option_name="name",
+                description="""The subdomain for this record. Use @ for records on the domain itself, and * to create a wildcard record.""",
+            )
         )
 
-        json_body.add_primitive(
-            "data",
-            Union[Unset, None, str],
-            option_name="data",
-            required=False,
-            description="""A general data field that has different functions depending on the record type.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "data",
+                Union[Unset, None, str],
+                required=False,
+                option_name="data",
+                description="""A general data field that has different functions depending on the record type.""",
+            )
         )
 
-        json_body.add_primitive(
-            "priority",
-            Union[Unset, None, int],
-            option_name="priority",
-            required=False,
-            description="""A priority value that is only relevant for SRV and MX records.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "priority",
+                Union[Unset, None, int],
+                required=False,
+                option_name="priority",
+                description="""A priority value that is only relevant for SRV and MX records.""",
+            )
         )
 
-        json_body.add_primitive(
-            "port",
-            Union[Unset, None, int],
-            option_name="port",
-            required=False,
-            description="""A port value that is only relevant for SRV records.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "port",
+                Union[Unset, None, int],
+                required=False,
+                option_name="port",
+                description="""A port value that is only relevant for SRV records.""",
+            )
         )
 
-        json_body.add_primitive(
-            "ttl",
-            Union[Unset, None, int],
-            option_name="ttl",
-            required=False,
-            description="""This value is the time to live for the record, in seconds.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "ttl",
+                Union[Unset, None, int],
+                required=False,
+                option_name="ttl",
+                description="""This value is the time to live for the record, in seconds.""",
+            )
         )
 
-        json_body.add_primitive(
-            "weight",
-            Union[Unset, None, int],
-            option_name="weight",
-            required=False,
-            description="""The weight value that is only relevant for SRV records.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "weight",
+                Union[Unset, None, int],
+                required=False,
+                option_name="weight",
+                description="""The weight value that is only relevant for SRV records.""",
+            )
         )
 
-        json_body.add_primitive(
-            "flags",
-            Union[Unset, None, int],
-            option_name="flags",
-            required=False,
-            description="""An unsigned integer between 0-255 that is only relevant for CAA records.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "flags",
+                Union[Unset, None, int],
+                required=False,
+                option_name="flags",
+                description="""An unsigned integer between 0-255 that is only relevant for CAA records.""",
+            )
         )
 
-        json_body.add_primitive(
-            "tag",
-            Union[Unset, None, str],
-            option_name="tag",
-            required=False,
-            description="""A parameter tag that is only relevant for CAA records.""",
+        json_body.add(
+            PrimitiveAttribute(
+                "tag",
+                Union[Unset, None, str],
+                required=False,
+                option_name="tag",
+                description="""A parameter tag that is only relevant for CAA records.""",
+            )
         )
 
         return mapping
