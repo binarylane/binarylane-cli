@@ -6,24 +6,19 @@
 
         {% for property in endpoint.path_parameters.values() %}
         {# Check if parameter has a lookup command, and define handler if it does #}
-        {% set lookup_command = [] %}
-        {% for param in endpoint.data.parameters if param.param_in == 'path' and property.name == param.name and param['x-cli-lookup'] %}
-        {% set lookup_endpoint = openapi.endpoints_by_name.get(param['x-cli-lookup']) %}
-        {% if not lookup_endpoint %}
-        {{ fail('lookup command not found', param['x-cli-lookup']) }}
-        {% endif %}
-        {% set _ = lookup_command.append(param['x-cli-lookup']) %}
+        {% set lookup_endpoint = lookup_parameters.get(property.name) %}
+        {% if lookup_endpoint %}
         def lookup_{{ property.python_name }}(ref: str) -> Union[None, {{ property.get_type_string() }}]:
             return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
 
-        {% endfor %}
+        {% endif %}
         mapping.add(PrimitiveAttribute(
             "{{ property.python_name }}",
             {{ property.get_type_string() }},
             required = True,
             option_name = None,
             {{ description_argument(property) }}
-            {% if lookup_command %} lookup = lookup_{{ property.python_name }}, {% endif %}
+            {% if lookup_endpoint %} lookup = lookup_{{ property.python_name }}, {% endif %}
         ))
         {% endfor %}
 

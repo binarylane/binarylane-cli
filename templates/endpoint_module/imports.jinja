@@ -43,12 +43,6 @@ if TYPE_CHECKING:
 from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, PrimitiveAttribute
 
 {# Import any command runners required to perform lookups #}
-{% for property in endpoint.path_parameters.values() %}
-{% for param in endpoint.data.parameters if param.param_in == 'path' and property.name == param.name and param['x-cli-lookup'] %}
-{% set lookup_endpoint = openapi.endpoints_by_name.get(param['x-cli-lookup']) %}
-{% if not lookup_endpoint %}
-{{ fail('lookup command not found', param['x-cli-lookup']) }}
-{% endif %}
+{% for lookup_endpoint in lookup_parameters.values() %}
 import binarylane.console.commands.api.{{ python_identifier(lookup_endpoint.name) }} as api_{{ python_identifier(lookup_endpoint.name) }}
-{% endfor %}
 {% endfor %}
