@@ -66,7 +66,7 @@ class Command(ListRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        def _lookup_server_id(ref: str) -> Union[None, int]:
+        def lookup_server_id(ref: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(ref)
 
         mapping.add(
@@ -76,7 +76,7 @@ class Command(ListRunner):
                 required=True,
                 option_name=None,
                 description="""The ID of the server for which threshold alerts should be fetched.""",
-                lookup=_lookup_server_id,
+                lookup=lookup_server_id,
             )
         )
 

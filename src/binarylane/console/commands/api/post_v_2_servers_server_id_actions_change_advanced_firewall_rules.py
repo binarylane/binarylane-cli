@@ -41,7 +41,7 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        def _lookup_server_id(ref: str) -> Union[None, int]:
+        def lookup_server_id(ref: str) -> Union[None, int]:
             return api_get_v2_servers.Command(self._context).lookup(ref)
 
         mapping.add(
@@ -51,7 +51,7 @@ class Command(ActionRunner):
                 required=True,
                 option_name=None,
                 description="""The ID of the server on which the action should be performed.""",
-                lookup=_lookup_server_id,
+                lookup=lookup_server_id,
             )
         )
 

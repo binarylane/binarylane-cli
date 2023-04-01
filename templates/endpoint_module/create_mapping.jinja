@@ -13,7 +13,7 @@
         {{ fail('lookup command not found', param['x-cli-lookup']) }}
         {% endif %}
         {% set _ = lookup_command.append(param['x-cli-lookup']) %}
-        def _lookup_{{ property.python_name }}(ref: str) -> Union[None, {{ property.get_type_string() }}]:
+        def lookup_{{ property.python_name }}(ref: str) -> Union[None, {{ property.get_type_string() }}]:
             return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
 
         {% endfor %}
@@ -23,7 +23,7 @@
             required = True,
             option_name = None,
             {{ description_argument(property) }}
-            {% if lookup_command %} lookup = _lookup_{{ property.python_name }}, {% endif %}
+            {% if lookup_command %} lookup = lookup_{{ property.python_name }}, {% endif %}
         ))
         {% endfor %}
 
