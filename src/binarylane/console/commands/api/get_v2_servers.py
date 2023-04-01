@@ -82,14 +82,14 @@ class Command(ListRunner):
             "attached_backup": """An object that provides details of any backup image currently attached to the server..""",
         }
 
-    def lookup(self, value: str) -> Optional[int]:
+    def lookup(self, ref: str) -> Optional[int]:
         status_code, received = self.request(create_client(self._context), CommandRequest())
         if status_code != 200:
             super().response(status_code, received)
 
         assert isinstance(received, ServersResponse)
         for item in received.servers:
-            if item.name == value:
+            if item.name == ref:
                 return item.id
         else:
             return None
