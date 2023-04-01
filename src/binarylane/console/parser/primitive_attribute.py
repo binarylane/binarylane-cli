@@ -10,12 +10,10 @@ from binarylane.pycompat import actions, typing
 from binarylane.types import UNSET, Unset
 
 from binarylane.console.parser.attribute import Attribute
-from binarylane.console.parser.lookup import Lookup
 
 NoneType = type(None)
 
 if TYPE_CHECKING:
-    from binarylane.console.parser.object_attribute import ObjectAttribute
     from binarylane.console.parser.parser import Parser
 
 logger = logging.getLogger(__name__)
@@ -25,6 +23,13 @@ PRIMITIVE_TYPES = {int, str, bool, float, datetime, Enum}
 
 def is_primitive_type(type_: type) -> bool:
     return any(issubclass(type_, t) for t in PRIMITIVE_TYPES)
+
+
+class Lookup(typing.Protocol):
+    """Lookup is a function that accepts an entity reference (e.g. its name) and returns that entity's ID"""
+
+    def __call__(self, ref: str) -> Optional[int]:
+        ...
 
 
 class PrimitiveAttribute(Attribute):

@@ -45,8 +45,8 @@ class Command(ActionRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
-        def _lookup_server_id(value: str) -> Union[None, int]:
-            return api_get_v2_servers.Command(self._context).lookup(value)
+        def _lookup_server_id(ref: str) -> Union[None, int]:
+            return api_get_v2_servers.Command(self._context).lookup(ref)
 
         mapping.add(
             PrimitiveAttribute(
