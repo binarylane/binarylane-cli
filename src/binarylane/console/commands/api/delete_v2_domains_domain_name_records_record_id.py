@@ -39,7 +39,6 @@ class Command(CommandRunner):
                 description="""The domain name for which the record should be deleted.""",
             )
         )
-
         mapping.add(
             PrimitiveAttribute(
                 "record_id",

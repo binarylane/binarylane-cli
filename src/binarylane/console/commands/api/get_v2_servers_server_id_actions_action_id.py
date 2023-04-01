@@ -45,7 +45,6 @@ class Command(CommandRunner):
                 lookup=_lookup_server_id,
             )
         )
-
         mapping.add(
             PrimitiveAttribute(
                 "action_id",

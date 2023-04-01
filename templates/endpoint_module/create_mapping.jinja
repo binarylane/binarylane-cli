@@ -5,7 +5,6 @@
         {% macro option_name(prop) %}option_name = "{{ prop.name.replace('_','-') }}",{% endmacro %}
 
         {% for property in endpoint.path_parameters.values() %}
-
         {# Check if parameter has a lookup command, and define handler if it does #}
         {% set lookup_command = [] %}
         {% for param in endpoint.data.parameters if param.param_in == 'path' and property.name == param.name and param['x-cli-lookup'] %}
@@ -16,8 +15,8 @@
         {% set _ = lookup_command.append(param['x-cli-lookup']) %}
         def _lookup_{{ property.python_name }}(ref: str) -> Union[None, {{ property.get_type_string() }}]:
             return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
-        {% endfor %}
 
+        {% endfor %}
         mapping.add(PrimitiveAttribute(
             "{{ property.python_name }}",
             {{ property.get_type_string() }},

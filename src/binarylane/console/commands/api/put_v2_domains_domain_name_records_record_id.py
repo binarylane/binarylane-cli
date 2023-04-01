@@ -46,7 +46,6 @@ class Command(CommandRunner):
                 description="""The domain name for which the record should be updated.""",
             )
         )
-
         mapping.add(
             PrimitiveAttribute(
                 "record_id",
