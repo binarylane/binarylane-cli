@@ -154,24 +154,29 @@ class PrimitiveAttribute(Attribute):
 
         return self._construct(value)
 
+    def lookup(self, value: str) -> object:
+        assert self._lookup is not None
+        try:
+            # See if provided value is already of correct type
+            return self.attribute_type(value)
+        except ValueError:
+            # If not, perform a lookup using the provided value
+            result = self._lookup(value)
+            if result is None:
+                # pylint: disable=raise-missing-from
+                raise argparse.ArgumentError(None, f"{self.attribute_name.upper()}: could not find '{value}'")
+            return result
+
     def _construct(self, value: object) -> object:
         if self.attribute_type is None:
             logger.warning("%s does not have a primitive type, assuming str", self.option_name)
             return value
 
-        # Perform lookup or convert to native type as required
+        # Perform lookup or convert to native type when required
         if self._lookup:
-            try:
-                # See if provided value is already of correct type
-                value = self.attribute_type(value)
-            except ValueError:
-                # If not, perform a lookup using the provided value
-                assert isinstance(value, str)
-                lookup_value = self._lookup(value)
-                if lookup_value is None:
-                    # pylint: disable=raise-missing-from
-                    raise argparse.ArgumentError(None, f"{self.attribute_name.upper()}: could not find '{value}'")
-                value = lookup_value
+            # if we have a lookup, the parser was given attribute_type = str but type analyzer does not know that
+            assert isinstance(value, str)
+            value = self.lookup(value)
 
         # Ensure value is of correct type
         if not isinstance(value, self.attribute_type):
