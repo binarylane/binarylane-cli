@@ -9,7 +9,7 @@ import urllib.error
 import urllib.request
 from argparse import SUPPRESS, ArgumentParser
 from pathlib import Path
-from typing import List, Sequence
+from typing import List, Optional, Sequence
 
 
 def mkempty(directory: Path) -> None:
@@ -70,8 +70,7 @@ def library_eager_imports() -> None:
     """
 
     import_pattern = re.compile("^\\s+from .* import (.*)")
-    forwardref_pattern = re.compile("^(\\s+[a-z0-9_]+: )['\"]([A-Za-z0-9]+)['\"](\\s*)$")
-    docstring_pattern = re.compile(r'^\s*(' + r'"""[^"]*(?!""")|' + r"'''[^'](?!''')" + r')')  #start/end but not both
+    docstring_pattern = re.compile(r"^\s*(" + r'"""[^"]*(?!""")|' + r"'''[^'](?!''')" + r")")  # start/end but not both
     for module in Path.cwd().rglob("*.py"):
 
         # Read module source code lines into a list
@@ -84,7 +83,7 @@ def library_eager_imports() -> None:
         docstring_block = False
         forwardref_types: List[str] = []
         for line_number, line in enumerate(lines):
-            new_value = line[:-1]
+            new_value: Optional[str] = line[:-1]
             indented_import = import_pattern.match(line)
             if docstring_pattern.match(line):
                 docstring_block = not docstring_block
@@ -153,7 +152,7 @@ def library_eager_imports() -> None:
             file.writelines(lines)
 
 
-def library_absolufy_imports():
+def library_absolufy_imports() -> None:
     """
     Convert relative imports within openapi-python-client generated library to absolute.
 
