@@ -71,6 +71,7 @@ def library_eager_imports() -> None:
 
     import_pattern = re.compile("^\\s+(import|from) ")
     forwardref_pattern = re.compile("^(\\s+[a-z0-9_]+: )['\"]([A-Za-z0-9]+)['\"](\\s*)$")
+    docstring_pattern = re.compile(r'^\s*(' + r'"""[^"]*(?!""")|' + r"'''[^'](?!''')" + r')')  #start/end but not both
     for module in Path.cwd().rglob("*.py"):
 
         # Read module source code lines into a list
@@ -80,8 +81,14 @@ def library_eager_imports() -> None:
         # scan through the lines for `IF TYPE_CHECKING:` and once found, dedent the subsequent from+import lines
         # We also convert ForwardRef type annotations to standard annotations and remove non-toplevel imports
         dedent_imports = False
+        docstring_block = False
         for line_number, value in enumerate(lines):
             indented_import = import_pattern.match(value)
+            # Ignore everything inside multi-line docstring block
+            if docstring_pattern.match(value):
+                docstring_block = not docstring_block
+            if docstring_block:
+                continue
 
             # Remove type-checking line and set bool to dedent its imports
             if value == "if TYPE_CHECKING:\n":
