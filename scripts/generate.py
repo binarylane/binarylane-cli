@@ -9,7 +9,7 @@ import urllib.error
 import urllib.request
 from argparse import SUPPRESS, ArgumentParser
 from pathlib import Path
-from typing import Sequence
+from typing import List, Sequence
 
 
 def mkempty(directory: Path) -> None:
@@ -69,7 +69,7 @@ def library_eager_imports() -> None:
     get_type_hints() can resolve the relevant types at runtime
     """
 
-    import_pattern = re.compile("^\\s+(import|from) ")
+    import_pattern = re.compile("^\\s+from .* import (.*)")
     forwardref_pattern = re.compile("^(\\s+[a-z0-9_]+: )['\"]([A-Za-z0-9]+)['\"](\\s*)$")
     docstring_pattern = re.compile(r'^\s*(' + r'"""[^"]*(?!""")|' + r"'''[^'](?!''')" + r')')  #start/end but not both
     for module in Path.cwd().rglob("*.py"):
@@ -82,32 +82,71 @@ def library_eager_imports() -> None:
         # We also convert ForwardRef type annotations to standard annotations and remove non-toplevel imports
         dedent_imports = False
         docstring_block = False
-        for line_number, value in enumerate(lines):
-            indented_import = import_pattern.match(value)
-            # Ignore everything inside multi-line docstring block
-            if docstring_pattern.match(value):
+        forwardref_types: List[str] = []
+        for line_number, line in enumerate(lines):
+            new_value = line[:-1]
+            indented_import = import_pattern.match(line)
+            if docstring_pattern.match(line):
                 docstring_block = not docstring_block
-            if docstring_block:
-                continue
 
             # Remove type-checking line and set bool to dedent its imports
-            if value == "if TYPE_CHECKING:\n":
-                lines[line_number] = ""
+            if line == "if TYPE_CHECKING:\n":
+                new_value = None
                 dedent_imports = True
             # If dedent_imports is enabled, but this line is not an import we are finished dedenting the block
             elif dedent_imports and not indented_import:
                 dedent_imports = False
             # If dedent_imports is enabled, and this is an import from that block; dedent it
-            elif dedent_imports and indented_import:
-                lines[line_number] = textwrap.dedent(value)
+            elif dedent_imports and not docstring_block and indented_import:
+                forwardref_types += list(map(str.strip, indented_import.group(1).split(",")))
+                new_value = textwrap.dedent(line)
             # If this import is indented outside of the TYPE_CHECKING, its an unnecessary import within a function
             elif not dedent_imports and indented_import:
-                lines[line_number] = ""
+                new_value = None
 
-            # If this is an annotated attribute with forward-ref, remove the forwardref quotes:
-            forwardref = forwardref_pattern.match(value)
-            if forwardref:
-                lines[line_number] = forwardref.group(1) + forwardref.group(2) + forwardref.group(3)
+            # Perform any ForwardRef fixups that this line requires
+            pre_forwardref_fixup = new_value
+            if new_value is not None:
+                for type_ in forwardref_types:
+                    new_value = new_value.replace(f'"{type_}"', type_).replace(f"'{type_}'", type_)
+
+            # Removing forwardref from docstring will shorten the line, and potentially allow another word if
+            # the attribute description was long enough to wrap. We fix that up for so that `git diff` will
+            # exactly match the previous implementation.
+
+            # If we are changing this line, we are in a docstring and this line is an attribute: description
+            if new_value and pre_forwardref_fixup != new_value and docstring_block and re.search(": .", line):
+
+                # Grab the next line and remove newline
+                next_line = lines[line_number + 1][:-1]
+
+                # If next line isnt end of the docstring block, and looks like a wrapped description
+                if not docstring_pattern.match(next_line) and re.match(r"^\s+[a-zA-Z]([^:]+)$", next_line):
+
+                    # Remove and store the whitespace indentation from next_line for use later
+                    indentation = ""
+                    while next_line[0] == " ":
+                        indentation += " "
+                        next_line = next_line[1:]
+
+                    LINE_LENGTH = 120
+                    # While our current line is under-length, and there's words left in the next line
+                    while len(new_value) <= LINE_LENGTH and " " in next_line:
+                        # Split a word off
+                        word, remainder = next_line.split(" ", 1)
+                        # If the next word will make the current line too long, we are done
+                        if len(new_value) + len(word) + 1 > LINE_LENGTH:
+                            break
+                        # Add word to current line, and remove it from next line.
+                        new_value += f" {word}"
+                        next_line = remainder
+
+                    # All done, put newlines back and update lines[] with the shortened next line
+                    lines[line_number + 1] = indentation + next_line + "\n"
+
+            # Store whatever modifications we made to the line
+            new_value = new_value + "\n" if new_value is not None else ""
+            lines[line_number] = new_value
 
         # Write our modified module back to disk
         with open(module, "wt") as file:
