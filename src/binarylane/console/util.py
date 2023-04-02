@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from platform import machine, python_implementation, python_version, system
+from typing import TYPE_CHECKING
 
 from binarylane.client import AuthenticatedClient
-from binarylane.config import UserConfig
 
 from binarylane.console.metadata import distribution_name, distribution_version
+
+if TYPE_CHECKING:
+    from binarylane.config import UserConfig
 
 
 def create_client(config: UserConfig) -> AuthenticatedClient:

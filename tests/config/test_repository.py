@@ -6,7 +6,7 @@ from typing import MutableMapping, Optional
 
 import pytest
 
-from binarylane.config.repository import OptionName, Repository
+from binarylane.config import OptionName, Repository
 from binarylane.config.sources import CommandlineSource, DefaultSource, EnvironmentSource, FileSource, RuntimeSource
 
 

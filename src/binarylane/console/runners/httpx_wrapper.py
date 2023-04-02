@@ -3,12 +3,13 @@ from __future__ import annotations
 import json
 import urllib.parse
 from abc import ABC, abstractmethod
-from types import TracebackType
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypeVar
 from binarylane.pycompat import shlex
 
 if TYPE_CHECKING:
-    import httpx
+    from types import TracebackType
+
+    import httpx  # noqa: TC004 - lazy import in HttpxWrapper.__init__()
 
 
 WrapperT = TypeVar("WrapperT", bound="HttpxWrapper")

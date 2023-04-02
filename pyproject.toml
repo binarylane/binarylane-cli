@@ -31,6 +31,16 @@ absolufy-imports = "^0.3.1"
 binarylane-python-client = "^0.13.2a0"
 safety = "^2.3.5"
 
+[tool.poetry.group.flake8.dependencies]
+flake8 = { version = "^6.0.0", python = ">=3.8.1" }
+flake8-type-checking = { version = "^2.4.0", python = ">=3.8.1" }
+flake8-pyproject = { version = "^1.2.3", python = ">=3.8.1" }
+
+[tool.poetry.group.flake8-37.dependencies]
+flake8 = { version = "^5.0.4", python = "<3.8.1" }
+# flake8-type-checking 1.0.3 supports python 3.7, but fails on our codebase
+# leaving it out is fine, since issues will be picked up when testing with 3.8 or later
+flake8-pyproject = { version = "^1.2.3", python = "<3.8.1" }
 
 [tool.taskipy.tasks]
 generate = "python scripts/generate.py"
@@ -40,7 +50,8 @@ mypy = "mypy ."
 pylint = "pylint src"
 safety = "poetry export -f requirements.txt | safety check --bare --stdin"
 test = "pytest tests"
-check = "task isort && task black && task mypy && task pylint && task test && task safety"
+check = "task isort && task black && task flake8 && task mypy && task pylint && task test && task safety"
+flake8 = "flake8 src"
 
 [tool.isort]
 py_version = 37
@@ -81,6 +92,15 @@ strict_equality = true
 mypy_path = "lib:src"
 namespace_packages = true
 explicit_package_bases = true
+
+[tool.flake8]
+max-line-length = 120
+ignore = [
+    "E203",  # Whitespace before ':' - black and flake8 disagree on `foo[len(bar) :]`
+]
+exclude = [
+    "api",  # generated command classes
+]
 
 [tool.pyright]
 extraPaths = ["src", "lib"]
