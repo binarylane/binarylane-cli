@@ -58,7 +58,6 @@ def test_app_invalid_sub_command(app: App, capsys: CaptureFixture[str]) -> None:
 
 
 def test_app_invalid_root_option(app: App, capsys: CaptureFixture[str]) -> None:
-
     with pytest.raises(SystemExit):
         app.run(["--wrong"])
 

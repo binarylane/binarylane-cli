@@ -26,7 +26,6 @@ class HttpxWrapper(ABC):
     _httpx_request: Optional[Callable[..., httpx.Response]]
 
     def __enter__(self: WrapperT) -> WrapperT:
-
         self._httpx_request = httpx.request
         httpx.request = self.request
         return self

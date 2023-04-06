@@ -21,15 +21,15 @@ bl = "binarylane.console.__main__:main"
 
 [tool.poetry.group.dev.dependencies]
 taskipy = "^1.10.3"
-isort = "^5.10.1"
-black = "^22.8.0"
+isort = "*"
+black = "*"
 pylint = "^2.15.2"
-mypy = "^0.991"
+mypy = "*"
 types-python-dateutil = "^2.8.19"
 pytest = "^7.2.0"
 absolufy-imports = "^0.3.1"
 binarylane-python-client = "^0.13.2a0"
-safety = "^2.3.5"
+safety = "*"
 
 
 [tool.taskipy.tasks]
