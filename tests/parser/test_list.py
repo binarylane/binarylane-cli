@@ -218,7 +218,6 @@ def sublist_parser() -> Parser:
 
 
 def test_list_of_list_of_str(sublist_parser: Parser) -> None:
-
     parsed = sublist_parser.parse(["+sublist", "--description", "test", "--name", "a", "b", "+sublist", "--name", "c"])
     assert parsed.mapped_object.to_dict() == {
         "sublist": [
@@ -229,7 +228,6 @@ def test_list_of_list_of_str(sublist_parser: Parser) -> None:
 
 
 def test_list_of_empty_list_of_str(sublist_parser: Parser) -> None:
-
     parsed = sublist_parser.parse(["+sublist", "--name"])
     assert parsed.mapped_object.to_dict() == {
         "sublist": [
@@ -239,7 +237,6 @@ def test_list_of_empty_list_of_str(sublist_parser: Parser) -> None:
 
 
 def test_list_of_missing_sublist_is_error(sublist_parser: Parser) -> None:
-
     with pytest.raises(ArgumentError) as exc:
         sublist_parser.parse(["+sublist"])
 

@@ -25,7 +25,6 @@ class Namespace(argparse.Namespace):
 
 # FIXME: Wrap ArgumentParser instead of subclassing it
 class Parser(argparse.ArgumentParser):
-
     _argument_names: List[str]
     _mapping: Optional[Mapping] = None
     _parsed: Optional[argparse.Namespace] = None
