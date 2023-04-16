@@ -45,13 +45,13 @@ flake8-pyproject = { version = "^1.2.3", python = "<3.8.1" }
 [tool.taskipy.tasks]
 generate = "python scripts/generate.py"
 black = "black ."
+flake8 = "flake8 src"
 isort = "isort ."
 mypy = "mypy ."
 pylint = "pylint src"
 safety = "poetry export -f requirements.txt | safety check --bare --stdin"
 test = "pytest tests"
 check = "task isort && task black && task flake8 && task mypy && task pylint && task test && task safety"
-flake8 = "flake8 src"
 
 [tool.isort]
 py_version = 37
