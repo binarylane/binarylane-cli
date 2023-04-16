@@ -80,10 +80,8 @@ class Runner(ABC):
         """Subclasses add arguments to parser here"""
 
     def parse(self, args: Sequence[str]) -> Namespace:
-        self._parser.configure()
-        parsed = self._parser.process(args)
+        parsed = self._parser.parse(args)
         self._context.add_commandline(parsed)
-        self._parser.construct()
         return parsed
 
     @abstractmethod
