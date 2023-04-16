@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import logging
 import shutil
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Sequence, Union
 
 from binarylane.console.parser.help_formatter import CommandHelpFormatter
 
@@ -102,16 +102,26 @@ class Parser(argparse.ArgumentParser):
 
     def parse(self, args: Sequence[str]) -> Namespace:
         self.configure()
+        parsed = self.process(args)
+        self.construct()
+        return parsed
+
+    def process(self, args: Sequence[str]) -> Namespace:
         self.usage = self._format_usage()
-
         self._parsed = self.parse_args(args, Namespace())
-        if self._mapping:
-            try:
-                self._parsed.mapped_object = self._mapping.construct(self, self._parsed)
-            except argparse.ArgumentError as exc:
-                self.error(exc.message)
-
         return self._parsed
+
+    def construct(self) -> Optional[object]:
+        if not self._mapping:
+            return None
+
+        try:
+            assert self._parsed is not None
+            self._parsed.mapped_object = self._mapping.construct(self, self._parsed)
+        except argparse.ArgumentError as exc:
+            self.error(exc.message)
+
+        return self._parsed.mapped_object
 
     def set_mapping(self, mapping: Mapping) -> Mapping:
         self._mapping = mapping
