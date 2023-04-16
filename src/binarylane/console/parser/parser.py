@@ -3,14 +3,16 @@ from __future__ import annotations
 import argparse
 import logging
 import shutil
-from argparse import HelpFormatter
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Union
 
 from binarylane.console.parser.help_formatter import CommandHelpFormatter
-from binarylane.console.parser.object_attribute import Mapping
 
 if TYPE_CHECKING:
+    from argparse import HelpFormatter
+
     from typing_extensions import TypeAlias
+
+    from binarylane.console.parser.object_attribute import Mapping
 
     ArgumentGroup: TypeAlias = argparse._ArgumentGroup  # pylint: disable=protected-access
 
@@ -23,7 +25,6 @@ class Namespace(argparse.Namespace):
 
 # FIXME: Wrap ArgumentParser instead of subclassing it
 class Parser(argparse.ArgumentParser):
-
     _argument_names: List[str]
     _mapping: Optional[Mapping] = None
     _parsed: Optional[argparse.Namespace] = None

@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import logging
-from typing import List
-
-from binarylane.config import UserConfig
+from typing import TYPE_CHECKING, List
 
 from binarylane.console.runners import ExitCode, Runner
 from binarylane.console.util import create_client
+
+if TYPE_CHECKING:
+    from binarylane.config import UserConfig
 
 logger = logging.getLogger(__name__)
 

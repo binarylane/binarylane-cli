@@ -85,21 +85,7 @@ def _flatten(values: Sequence[Any], single_object: bool = False) -> List[str]:
             if not single_object:
                 item = ", ".join(map(str, item))
             else:
-                item = (
-                    "- "
-                    + "\n- ".join(
-                        [
-                            (
-                                "  ".join(f"{key}: {value}\n" for key, value in i.items())
-                                if isinstance(i, dict)
-                                else str(i)
-                            )
-                            for i in item
-                        ]
-                    )
-                    if item
-                    else ""
-                )
+                item = _flatten_list(item) if item else ""
         if item_type is dict:
             item = _flatten_dict(item, single_object)
 
@@ -111,6 +97,14 @@ def _flatten(values: Sequence[Any], single_object: bool = False) -> List[str]:
             item = item[:max_str] + trunc
         result.append(item)
 
+    return result
+
+
+def _flatten_list(item: List[Any]) -> str:
+    result = "- "
+    result += "\n- ".join(
+        [("  ".join(f"{key}: {value}\n" for key, value in i.items()) if isinstance(i, dict) else str(i)) for i in item]
+    )
     return result
 
 

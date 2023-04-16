@@ -18,7 +18,6 @@ class BooleanOptionalAction(argparse.Action):
         help: Union[str, None] = None,  # pylint: disable=redefined-builtin
         metavar: Union[str, Tuple[str, ...], None] = None,
     ) -> None:
-
         _option_strings = []
         for option_string in option_strings:
             _option_strings.append(option_string)

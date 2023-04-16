@@ -2,18 +2,22 @@ from __future__ import annotations
 
 import logging
 from abc import abstractmethod
-from http import HTTPStatus
-from typing import Any, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
-from binarylane.client import AuthenticatedClient, Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 
-from binarylane.console.parser import Mapping, Namespace, Parser
 from binarylane.console.printers import Printer, PrinterType, create_printer
 from binarylane.console.runners import ExitCode, Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 from binarylane.console.util import create_client
+
+if TYPE_CHECKING:
+    from http import HTTPStatus
+
+    from binarylane.client import AuthenticatedClient, Client
+
+    from binarylane.console.parser import Mapping, Namespace, Parser
 
 logger = logging.getLogger(__name__)
 

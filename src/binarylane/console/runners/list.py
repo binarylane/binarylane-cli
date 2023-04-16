@@ -3,10 +3,12 @@ from __future__ import annotations
 import fnmatch
 import re
 from abc import abstractmethod
-from typing import Dict, List
+from typing import TYPE_CHECKING, Dict, List
 
-from binarylane.console.parser import Namespace, Parser
 from binarylane.console.runners.command import CommandRunner
+
+if TYPE_CHECKING:
+    from binarylane.console.parser import Namespace, Parser
 
 
 class ListRunner(CommandRunner):
