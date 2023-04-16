@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import logging
 import shutil
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Sequence, Union
 
 from binarylane.console.parser.help_formatter import CommandHelpFormatter
 
@@ -32,6 +32,9 @@ class Parser(argparse.ArgumentParser):
     _keywords: List[str]
     _groups: Dict[str, ArgumentGroup]
     _dest_counter: int = 0
+
+    # Optional callback on completion of argument parsing, but prior to constructing mapped_object
+    on_parse_args: Callable[[Namespace], None] = staticmethod(lambda _: None)  # type: ignore
 
     def __init__(self, prog: str, description: Optional[str] = None, epilog: Optional[str] = None) -> None:
         super().__init__(prog=prog, description=description, epilog=epilog, add_help=False, allow_abbrev=False)
@@ -105,6 +108,8 @@ class Parser(argparse.ArgumentParser):
         self.usage = self._format_usage()
 
         self._parsed = self.parse_args(args, Namespace())
+        self.on_parse_args(self._parsed)
+
         if self._mapping:
             try:
                 self._parsed.mapped_object = self._mapping.construct(self, self._parsed)
