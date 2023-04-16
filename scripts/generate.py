@@ -1,14 +1,15 @@
 """Generate updated API bindings and CLI commands from OpenAPI specification document"""
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 import textwrap
 import urllib.error
 import urllib.request
-from argparse import ArgumentParser
+from argparse import SUPPRESS, ArgumentParser
 from pathlib import Path
-from typing import Sequence
+from typing import List, Optional, Sequence
 
 
 def mkempty(directory: Path) -> None:
@@ -34,6 +35,19 @@ def generate_library(temp_dir: Path, openapi_path: Path) -> None:
                 f"""\
             project_name_override: {lib_dir}
             package_name_override: {lib_package.name}
+
+            # Additional post-hooks are used to remove openapi-python-client's use of "lazy" imports
+            post_hooks:
+              # Convert openapi-python-client generated models to use eager import
+              - python ../scripts/generate.py --library-eager-imports
+              # absolufy-imports seems to require isort to be used first
+              - isort --add-import "from __future__ import annotations" .
+              # absolufy-imports cannot recurse on its own, so we do that via generate.py
+              - python ../scripts/generate.py --library-absolufy-imports
+              # Finally, call the standard openapi-python-client post hooks
+              - autoflake -i -r --remove-all-unused-imports --remove-unused-variables --ignore-init-module-imports .
+              - isort .
+              - black .
         """
             )
         )
@@ -45,11 +59,105 @@ def generate_library(temp_dir: Path, openapi_path: Path) -> None:
     # The generated models package init imports all models, which takes too long for short-lived CLI process
     (lib_package / "models" / "__init__.py").write_text("")
 
-    # Use absolute imports and import __future__annotations
-    # Cannot check for returncode 0 as these tools return non-zero when a file is modified
-    lib_modules = list(map(str, lib_package.rglob("*.py")))
-    subprocess.call(["absolufy-imports", "--application-directories", "lib"] + lib_modules)
-    subprocess.call(["isort", "--quiet", "--add-import", "from __future__ import annotations"] + lib_modules)
+
+def library_eager_imports() -> None:
+    """
+    Convert openapi-python-client "lazy" imports to "eager" (normal) imports
+
+    openapi-python-client uses `if TYPE_CHECKING:` to avoid importing other models at runtime, but we need those
+    types to be loaded so that when binarylane.console.parser.formatter calls typing.get_type_hints(),
+    get_type_hints() can resolve the relevant types at runtime
+    """
+
+    import_pattern = re.compile("^\\s+from .* import (.*)")
+    docstring_pattern = re.compile(r"^\s*(" + r'"""[^"]*(?!""")|' + r"'''[^'](?!''')" + r")")  # start/end but not both
+    for module in Path.cwd().rglob("*.py"):
+        # Read module source code lines into a list
+        with open(module, "rt") as file:
+            lines = file.readlines()
+
+        # scan through the lines for `IF TYPE_CHECKING:` and once found, dedent the subsequent from+import lines
+        # We also convert ForwardRef type annotations to standard annotations and remove non-toplevel imports
+        dedent_imports = False
+        docstring_block = False
+        forwardref_types: List[str] = []
+        for line_number, line in enumerate(lines):
+            new_value: Optional[str] = line[:-1]
+            indented_import = import_pattern.match(line)
+            if docstring_pattern.match(line):
+                docstring_block = not docstring_block
+
+            # Remove type-checking line and set bool to dedent its imports
+            if line == "if TYPE_CHECKING:\n":
+                new_value = None
+                dedent_imports = True
+            # If dedent_imports is enabled, but this line is not an import we are finished dedenting the block
+            elif dedent_imports and not indented_import:
+                dedent_imports = False
+            # If dedent_imports is enabled, and this is an import from that block; dedent it
+            elif dedent_imports and not docstring_block and indented_import:
+                forwardref_types += list(map(str.strip, indented_import.group(1).split(",")))
+                new_value = textwrap.dedent(line)
+            # If this import is indented outside of the TYPE_CHECKING, its an unnecessary import within a function
+            elif not dedent_imports and indented_import:
+                new_value = None
+
+            # Perform any ForwardRef fixups that this line requires
+            pre_forwardref_fixup = new_value
+            if new_value is not None:
+                for type_ in forwardref_types:
+                    new_value = new_value.replace(f'"{type_}"', type_).replace(f"'{type_}'", type_)
+
+            # Removing forwardref from docstring will shorten the line, and potentially allow another word if
+            # the attribute description was long enough to wrap. We fix that up for so that `git diff` will
+            # exactly match the previous implementation.
+
+            # If we are changing this line, we are in a docstring and this line is an attribute: description
+            if new_value and pre_forwardref_fixup != new_value and docstring_block and re.search(": .", line):
+                # Grab the next line and remove newline
+                next_line = lines[line_number + 1][:-1]
+
+                # If next line isnt end of the docstring block, and looks like a wrapped description
+                if not docstring_pattern.match(next_line) and re.match(r"^\s+[a-zA-Z]([^:]+)$", next_line):
+                    # Remove and store the whitespace indentation from next_line for use later
+                    indentation = ""
+                    while next_line[0] == " ":
+                        indentation += " "
+                        next_line = next_line[1:]
+
+                    LINE_LENGTH = 120
+                    # While our current line is under-length, and there's words left in the next line
+                    while len(new_value) <= LINE_LENGTH and " " in next_line:
+                        # Split a word off
+                        word, remainder = next_line.split(" ", 1)
+                        # If the next word will make the current line too long, we are done
+                        if len(new_value) + len(word) + 1 > LINE_LENGTH:
+                            break
+                        # Add word to current line, and remove it from next line.
+                        new_value += f" {word}"
+                        next_line = remainder
+
+                    # All done, put newlines back and update lines[] with the shortened next line
+                    lines[line_number + 1] = indentation + next_line + "\n"
+
+            # Store whatever modifications we made to the line
+            new_value = new_value + "\n" if new_value is not None else ""
+            lines[line_number] = new_value
+
+        # Write our modified module back to disk
+        with open(module, "wt") as file:
+            file.writelines(lines)
+
+
+def library_absolufy_imports() -> None:
+    """
+    Convert relative imports within openapi-python-client generated library to absolute.
+
+    This implementation uses absolufy-imports which does not support recursing into a directory. It must be supplied
+    with a list of files to fix, so we generate that list via rglob() and call absolufy-imports.
+    """
+    lib_modules = list(map(str, Path.cwd().rglob("*.py")))
+    subprocess.call(["absolufy-imports", "--application-directories", "."] + lib_modules)
 
 
 def generate_commands(temp_dir: Path, openapi_path: Path) -> None:
@@ -146,7 +254,19 @@ def main(args: Sequence[str]) -> None:
     only.add_argument(
         "--commands", default=False, action="store_true", help="Generate 'src/binarylane/console/commands' only"
     )
+    only.add_argument("--library-eager-imports", default=False, action="store_true", help=SUPPRESS)
+    only.add_argument("--library-absolufy-imports", default=False, action="store_true", help=SUPPRESS)
     request = parser.parse_args(args)
+
+    # This is called by --library to convert the generated library from lazy import to eager
+    if request.library_eager_imports:
+        library_eager_imports()
+        return
+
+    # This is called by --library to convert the generated library imports from relative to absolute
+    if request.library_absolufy_imports:
+        library_absolufy_imports()
+        return
 
     # Enable both if a specific part was not requested
     if not (request.library or request.commands):
