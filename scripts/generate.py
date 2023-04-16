@@ -72,7 +72,6 @@ def library_eager_imports() -> None:
     import_pattern = re.compile("^\\s+from .* import (.*)")
     docstring_pattern = re.compile(r"^\s*(" + r'"""[^"]*(?!""")|' + r"'''[^'](?!''')" + r")")  # start/end but not both
     for module in Path.cwd().rglob("*.py"):
-
         # Read module source code lines into a list
         with open(module, "rt") as file:
             lines = file.readlines()
@@ -115,13 +114,11 @@ def library_eager_imports() -> None:
 
             # If we are changing this line, we are in a docstring and this line is an attribute: description
             if new_value and pre_forwardref_fixup != new_value and docstring_block and re.search(": .", line):
-
                 # Grab the next line and remove newline
                 next_line = lines[line_number + 1][:-1]
 
                 # If next line isnt end of the docstring block, and looks like a wrapped description
                 if not docstring_pattern.match(next_line) and re.match(r"^\s+[a-zA-Z]([^:]+)$", next_line):
-
                     # Remove and store the whitespace indentation from next_line for use later
                     indentation = ""
                     while next_line[0] == " ":
