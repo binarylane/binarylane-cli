@@ -3,14 +3,16 @@ from __future__ import annotations
 import argparse
 import logging
 import shutil
-from argparse import HelpFormatter
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Union
 
 from binarylane.console.parser.help_formatter import CommandHelpFormatter
-from binarylane.console.parser.object_attribute import Mapping
 
 if TYPE_CHECKING:
+    from argparse import HelpFormatter
+
     from typing_extensions import TypeAlias
+
+    from binarylane.console.parser.object_attribute import Mapping
 
     ArgumentGroup: TypeAlias = argparse._ArgumentGroup  # pylint: disable=protected-access
 

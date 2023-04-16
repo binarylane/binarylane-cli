@@ -9,6 +9,11 @@ from binarylane.console.printers.printer import Printer
 from binarylane.console.printers.table_printer import TablePrinter
 from binarylane.console.printers.tsv_printer import TsvPrinter
 
+__all__ = [
+    "Printer",
+    "create_printer",
+]
+
 
 class PrinterType(Enum):
     """Enum of available printer implementations"""

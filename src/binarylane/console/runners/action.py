@@ -4,14 +4,13 @@ import logging
 import shutil
 import sys
 import time
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
-from binarylane.console.parser import Namespace, Parser
 from binarylane.console.runners.command import CommandRunner
 
 if TYPE_CHECKING:
-    from binarylane.api.actions.get_v2_actions_action_id import sync_detailed
-    from binarylane.models.action_response import ActionResponse
+    from binarylane.console.parser import Namespace, Parser
+
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +18,8 @@ logger = logging.getLogger(__name__)
 class ActionRunner(CommandRunner):
     """ActionRunner handles API commands that return ActionResponse, showing progress until the Action completes"""
 
-    _async: Optional[bool]
-    _quiet: Optional[bool]
+    _async: bool = False
+    _quiet: bool = False
 
     def configure(self, parser: Parser) -> None:
         super().configure(parser)

@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from typing import List, Optional, Type, TypeVar
+from typing import TYPE_CHECKING, List, Optional, Type, TypeVar
 from binarylane.pycompat.typing import Protocol
 
 import binarylane.config.sources as src
-from binarylane.config.options import OptionName
+
+if TYPE_CHECKING:
+    from binarylane.config.options import OptionName
 
 
 class Source(Protocol):

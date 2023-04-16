@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from argparse import Namespace
-from pathlib import Path
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
 import binarylane.config.sources as src
 from binarylane.config.options import OptionAttributes, OptionName
 from binarylane.config.repository import Repository, Source
+
+if TYPE_CHECKING:
+    from argparse import Namespace
+    from pathlib import Path
 
 
 class _Config(Repository, OptionAttributes):

@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from argparse import SUPPRESS
 from dataclasses import dataclass
 from enum import Enum
-from typing import ClassVar, List, NoReturn, Optional, Sequence, Type
+from typing import ClassVar, List, NoReturn, Sequence, Type
 from binarylane.pycompat.actions import BooleanOptionalAction
 
 from binarylane.config import DefaultConfig, UserConfig

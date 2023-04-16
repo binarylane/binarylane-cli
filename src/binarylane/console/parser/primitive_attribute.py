@@ -14,7 +14,6 @@ from binarylane.console.parser.attribute import Attribute
 NoneType = type(None)
 
 if TYPE_CHECKING:
-    from binarylane.console.parser.object_attribute import ObjectAttribute
     from binarylane.console.parser.parser import Parser
 
 logger = logging.getLogger(__name__)
