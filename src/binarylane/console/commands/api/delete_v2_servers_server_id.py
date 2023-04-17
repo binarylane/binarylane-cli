@@ -40,7 +40,8 @@ class Command(CommandRunner):
                 int,
                 required=True,
                 option_name=None,
-                description="""The ID of the server to be cancelled.""",
+                metavar="server",
+                description="""The ID or name of the server to be cancelled.""",
                 lookup=lookup_server_id,
             )
         )

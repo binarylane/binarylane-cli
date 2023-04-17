@@ -71,7 +71,8 @@ class Command(ListRunner):
                 int,
                 required=True,
                 option_name=None,
-                description="""The target server id.""",
+                metavar="server",
+                description="""The target server id or name.""",
                 lookup=lookup_server_id,
             )
         )

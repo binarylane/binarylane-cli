@@ -20,5 +20,6 @@ def add_descriptor(module_path: str, name: str, description: str) -> None:
 {% for endpoint in value.endpoints if endpoint.data['x-cli-command'] %}
 {% set _ = openapi.endpoints_by_name.__setitem__(endpoint.data['x-cli-command'], endpoint) %}
 add_descriptor('.commands.api.{{ python_identifier(endpoint.name) }}', '{{ endpoint.data['x-cli-command'] }}', '{{ endpoint.summary }}',)
+{% include "lookups.jinja" %}
 {% endfor %}
 {% endfor %}

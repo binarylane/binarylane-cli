@@ -51,6 +51,7 @@ class PrimitiveAttribute(Attribute):
         option_name: Optional[str],
         required: bool,
         description: Optional[str] = None,
+        metavar: Optional[str] = None,
         action: Optional[Type[argparse.Action]] = None,
         lookup: Optional[Lookup] = None,
     ) -> None:
@@ -72,7 +73,7 @@ class PrimitiveAttribute(Attribute):
         self._dest = attribute_name
         self._action = action
         self._lookup = lookup
-        self._metavar = (option_name or attribute_name).replace("-", "_").upper()
+        self._metavar = (metavar or option_name or attribute_name).replace("-", "_").upper()
 
     @property
     def usage(self) -> Optional[str]:

@@ -40,7 +40,8 @@ class Command(CommandRunner):
                 int,
                 required=True,
                 option_name=None,
-                description="""The ID of the server for which console URLs will be fetched.""",
+                metavar="server",
+                description="""The ID or name of the server for which console URLs will be fetched.""",
                 lookup=lookup_server_id,
             )
         )

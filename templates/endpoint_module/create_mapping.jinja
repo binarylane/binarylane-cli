@@ -8,17 +8,27 @@
         {# Check if parameter has a lookup command, and define handler if it does #}
         {% set lookup_endpoint = lookup_parameters.get(property.name) %}
         {% if lookup_endpoint %}
+        {% set lookup_entity = lookup_endpoint.data['x-cli-entity'] %}
         def lookup_{{ property.python_name }}(ref: str) -> Union[None, {{ property.get_type_string() }}]:
             return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
 
+        {% endif %}
+        {% if lookup_endpoint %}
         {% endif %}
         mapping.add(PrimitiveAttribute(
             "{{ property.python_name }}",
             {{ property.get_type_string() }},
             required = True,
             option_name = None,
+            {% if not lookup_endpoint %}
             {{ description_argument(property) }}
-            {% if lookup_endpoint %} lookup = lookup_{{ property.python_name }}, {% endif %}
+            {% else %}
+            metavar="{{ property.python_name.replace("_" + lookup_entity['id'], "") }}",
+            {{ description_argument(property)
+                .replace(" " + lookup_entity['id'].upper(), " " + lookup_entity['id'].upper() + " or " + lookup_entity['ref'])
+                .replace(" " + lookup_entity['id'], " " + lookup_entity['id'] + " or " + lookup_entity['ref']) }}
+            lookup = lookup_{{ property.python_name }},
+            {% endif %}
         ))
         {% endfor %}
 

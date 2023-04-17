@@ -46,7 +46,8 @@ class Command(ActionRunner):
                 int,
                 required=True,
                 option_name=None,
-                description="""The ID of the server for which the backup is to be uploaded.""",
+                metavar="server",
+                description="""The ID or name of the server for which the backup is to be uploaded.""",
                 lookup=lookup_server_id,
             )
         )

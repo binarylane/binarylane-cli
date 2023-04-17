@@ -39,7 +39,8 @@ class Command(CommandRunner):
                 int,
                 required=True,
                 option_name=None,
-                description="""The ID of the server to fetch.""",
+                metavar="server",
+                description="""The ID or name of the server to fetch.""",
                 lookup=lookup_server_id,
             )
         )

@@ -95,7 +95,8 @@ class Command(ListRunner):
                 int,
                 required=True,
                 option_name=None,
-                description="""The ID of the server for which snapshots should be listed.""",
+                metavar="server",
+                description="""The ID or name of the server for which snapshots should be listed.""",
                 lookup=lookup_server_id,
             )
         )

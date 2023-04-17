@@ -50,7 +50,8 @@ class Command(ActionRunner):
                 int,
                 required=True,
                 option_name=None,
-                description="""The ID of the server on which the action should be performed.""",
+                metavar="server",
+                description="""The ID or name of the server on which the action should be performed.""",
                 lookup=lookup_server_id,
             )
         )
