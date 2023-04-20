@@ -13,8 +13,6 @@
             return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
 
         {% endif %}
-        {% if lookup_endpoint %}
-        {% endif %}
         mapping.add(PrimitiveAttribute(
             "{{ property.python_name }}",
             {{ property.get_type_string() }},
