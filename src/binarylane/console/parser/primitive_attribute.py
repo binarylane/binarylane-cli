@@ -25,12 +25,20 @@ def is_primitive_type(type_: type) -> bool:
     return any(issubclass(type_, t) for t in PRIMITIVE_TYPES)
 
 
+class Lookup(typing.Protocol):
+    """Lookup is a function that accepts an entity reference (e.g. its name) and returns that entity's ID"""
+
+    def __call__(self, ref: str) -> Optional[int]:
+        ...
+
+
 class PrimitiveAttribute(Attribute):
     """Represents a strongly typed, command parameter"""
 
     _alternate_types: List[type]
     _dest: str
     _action: Optional[Type[argparse.Action]]
+    _lookup: Optional[Lookup]
     _metavar: str
     _default_value: object = UNSET
     _nargs: Optional[str]
@@ -43,7 +51,9 @@ class PrimitiveAttribute(Attribute):
         option_name: Optional[str],
         required: bool,
         description: Optional[str] = None,
+        metavar: Optional[str] = None,
         action: Optional[Type[argparse.Action]] = None,
+        lookup: Optional[Lookup] = None,
     ) -> None:
         # Partial construction needed to perform unboxing:
         self._nargs = None
@@ -62,7 +72,8 @@ class PrimitiveAttribute(Attribute):
 
         self._dest = attribute_name
         self._action = action
-        self._metavar = (option_name or attribute_name).replace("-", "_").upper()
+        self._lookup = lookup
+        self._metavar = (metavar or option_name or attribute_name).replace("-", "_").upper()
 
     @property
     def usage(self) -> Optional[str]:
@@ -115,7 +126,12 @@ class PrimitiveAttribute(Attribute):
         if self.description is None:
             self._unsupported("missing help", False)
 
-        parser.add_to_group(self.group_name or bool(self.required), self.name_or_flag, self.attribute_type, **kwargs)
+        # parser input type is changed to string if lookup is permitted
+        attribute_type = self.attribute_type
+        if self._lookup:
+            attribute_type = str
+
+        parser.add_to_group(self.group_name or bool(self.required), self.name_or_flag, attribute_type, **kwargs)
 
     def construct(self, _parser: Parser, parsed: argparse.Namespace) -> object:
         value: object = getattr(parsed, self._dest, self._default_value)
@@ -139,10 +155,29 @@ class PrimitiveAttribute(Attribute):
 
         return self._construct(value)
 
+    def lookup(self, value: str) -> object:
+        assert self._lookup is not None
+        try:
+            # See if provided value is already of correct type
+            return self.attribute_type(value)
+        except ValueError:
+            # If not, perform a lookup using the provided value
+            result = self._lookup(value)
+            if result is None:
+                # pylint: disable=raise-missing-from
+                raise argparse.ArgumentError(None, f"{self.attribute_name.upper()}: could not find '{value}'")
+            return result
+
     def _construct(self, value: object) -> object:
         if self.attribute_type is None:
             logger.warning("%s does not have a primitive type, assuming str", self.option_name)
             return value
+
+        # Perform lookup or convert to native type when required
+        if self._lookup:
+            # if we have a lookup, the parser was given attribute_type = str but type analyzer does not know that
+            assert isinstance(value, str)
+            value = self.lookup(value)
 
         # Ensure value is of correct type
         if not isinstance(value, self.attribute_type):

@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+{% set lookup_parameters = {} %}
+{% include "endpoint_module/lookups.jinja" %}
+
 {% if endpoint.json_body and endpoint.json_body.template.startswith('union_') %}
 {# endpoint_init.py.jinja has same check and will not generate a ModuleRunner #}
 # json_body unions are not implmemented

@@ -8,6 +8,8 @@ from binarylane.models.links import Links
 from binarylane.models.servers_response import ServersResponse
 from binarylane.types import UNSET, Unset
 
+from binarylane.console.util import create_client
+
 if TYPE_CHECKING:
     from binarylane.client import Client
 
@@ -79,6 +81,18 @@ class Command(ListRunner):
             "permalink": """A randomly generated two-word identifier assigned to servers in regions that support this feature.""",
             "attached_backup": """An object that provides details of any backup image currently attached to the server..""",
         }
+
+    def lookup(self, ref: str) -> Optional[int]:
+        status_code, received = self.request(create_client(self._context), CommandRequest())
+        if status_code != 200:
+            super().response(status_code, received)
+
+        assert isinstance(received, ServersResponse)
+        for item in received.servers:
+            if item.name == ref:
+                return item.id
+        else:
+            return None
 
     @property
     def reference_url(self) -> str:

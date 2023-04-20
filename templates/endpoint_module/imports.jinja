@@ -6,6 +6,7 @@ from http import HTTPStatus
 
 from binarylane.types import Response, UNSET, Unset
 from binarylane.models.links import Links
+from binarylane.console.util import create_client
 
 from binarylane.api.{{ endpoint.tag }}.{{ python_identifier(endpoint.name) }} import sync_detailed
 
@@ -40,3 +41,8 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 from binarylane.console.parser import Mapping, ListAttribute, ObjectAttribute, PrimitiveAttribute
+
+{# Import any command runners required to perform lookups #}
+{% for lookup_endpoint in lookup_parameters.values() %}
+import binarylane.console.commands.api.{{ python_identifier(lookup_endpoint.name) }} as api_{{ python_identifier(lookup_endpoint.name) }}
+{% endfor %}

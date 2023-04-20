@@ -12,6 +12,7 @@ from binarylane.types import UNSET, Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
 from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
@@ -32,13 +33,18 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
+        def lookup_server_id(ref: str) -> Union[None, int]:
+            return api_get_v2_servers.Command(self._context).lookup(ref)
+
         mapping.add(
             PrimitiveAttribute(
                 "server_id",
                 int,
                 required=True,
                 option_name=None,
-                description="""The target server id.""",
+                metavar="server",
+                description="""The target server id or name.""",
+                lookup=lookup_server_id,
             )
         )
 

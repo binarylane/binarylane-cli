@@ -41,3 +41,18 @@
             '{{ prop.name }}': """{{ prop.description }}""",
             {% endfor %}
         }
+
+    {% set entity = endpoint.data['x-cli-entity'] %}
+    {% if entity %}
+    def lookup(self, ref: str) -> Optional[int]:
+        status_code, received = self.request(create_client(self._context), CommandRequest())
+        if status_code != 200:
+            super().response(status_code, received)
+
+        assert isinstance(received, {{ response_class['type'].get_type_string() }})
+        for item in received.{{ response_class['property'].python_name }}:
+            if item.{{ entity['ref'] }} == ref:
+                return item.{{ entity['id'] }}
+        else:
+            return None
+    {% endif %}
