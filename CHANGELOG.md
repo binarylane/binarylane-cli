@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.16.0 (2023-04-21)
+
+### Features
+
+- allow use of server.name as server_id argument  (#11)
+
 ## v0.15.3 (2023-03-29)
 
 ### Fixes
