@@ -32,7 +32,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ steps.get_python_version.outputs.python_version }}-dependencies
       - name: Install Poetry
-        run: pip install poetry
+        run: pip install poetry poetry-plugin-export
 
       - name: Create Virtual Environment
         run: python -m venv .venv
