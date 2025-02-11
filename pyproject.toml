@@ -7,14 +7,11 @@ readme = "README.md"
 packages = [{include = "binarylane", from = "src"}, {include = "binarylane", from = "lib" }]
 
 [tool.poetry.dependencies]
-python = "^3.7.2"
+python = "^3.8.1"
 terminaltables = "^3.1.10"
 httpx = "^0.23.0"
 attrs = "^22.2.0"
 python-dateutil = "^2.8.2"
-"backports.cached-property" = { version = "^1.0.2", python = "<3.8" }
-typing-extensions = { version = "^4.0.0", python = "<3.8" }
-importlib-metadata = { version = "*", python = "<3.8" }
 
 [tool.poetry.scripts]
 bl = "binarylane.console.__main__:main"
@@ -32,15 +29,9 @@ binarylane-python-client = "^0.13.2a0"
 safety = "*"
 
 [tool.poetry.group.flake8.dependencies]
-flake8 = { version = "^6.0.0", python = ">=3.8.1" }
-flake8-type-checking = { version = "^2.4.0", python = ">=3.8.1" }
-flake8-pyproject = { version = "^1.2.3", python = ">=3.8.1" }
-
-[tool.poetry.group.flake8-37.dependencies]
-flake8 = { version = "^5.0.4", python = "<3.8.1" }
-# flake8-type-checking 1.0.3 supports python 3.7, but fails on our codebase
-# leaving it out is fine, since issues will be picked up when testing with 3.8 or later
-flake8-pyproject = { version = "^1.2.3", python = "<3.8.1" }
+flake8 = "^6.0.0"
+flake8-type-checking = "^2.4.0"
+flake8-pyproject = "^1.2.3"
 
 [tool.taskipy.tasks]
 generate = "python scripts/generate.py"
