@@ -22,16 +22,13 @@ class OptionAttributes(ABC):
     UNCONFIGURED_TOKEN: ClassVar[str] = "unconfigured"
 
     @abstractmethod
-    def get_option(self, name: OptionName) -> Optional[str]:
-        ...
+    def get_option(self, name: OptionName) -> Optional[str]: ...
 
     @abstractmethod
-    def required_option(self, name: OptionName) -> str:
-        ...
+    def required_option(self, name: OptionName) -> str: ...
 
     @abstractmethod
-    def add_option(self, name: OptionName, value: str) -> None:
-        ...
+    def add_option(self, name: OptionName, value: str) -> None: ...
 
     @staticmethod
     def to_bool(name: str) -> bool:

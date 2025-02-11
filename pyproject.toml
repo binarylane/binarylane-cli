@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "binarylane", from = "src"}, {include = "binarylane", from = "lib" }]
 
 [tool.poetry.dependencies]
-python = "^3.7.2"
+python = "^3.8"
 terminaltables = "^3.1.10"
 httpx = "^0.23.0"
 attrs = "^22.2.0"
