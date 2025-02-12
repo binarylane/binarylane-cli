@@ -27,7 +27,7 @@ jobs:
       - name: Run PyInstaller
         run: pyinstaller --name bl --onefile --copy-metadata binarylane-cli --collect-submodules binarylane src/binarylane/console/__main__.py
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: windows
           path: dist/*
