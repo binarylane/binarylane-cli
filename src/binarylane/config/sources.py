@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-import argparse
 import configparser
 import os
 import sys
 from abc import ABC
 from pathlib import Path
-from typing import ClassVar, Dict, Optional
+from typing import ClassVar, Dict, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import argparse
 
 
 class _SourceBase(ABC):

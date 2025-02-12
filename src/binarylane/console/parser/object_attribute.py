@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import argparse
 import logging
 from typing import TYPE_CHECKING, List, Optional, TypeVar
 
@@ -9,6 +8,7 @@ from binarylane.types import UNSET
 from binarylane.console.parser.attribute import Attribute
 
 if TYPE_CHECKING:
+    import argparse
     from binarylane.console.parser.parser import Parser
 
 logger = logging.getLogger(__name__)

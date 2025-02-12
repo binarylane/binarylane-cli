@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import argparse
 import logging
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING, ClassVar, List, Optional
@@ -8,6 +7,7 @@ from typing import TYPE_CHECKING, ClassVar, List, Optional
 logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
+    import argparse
     from binarylane.console.parser.object_attribute import ObjectAttribute
     from binarylane.console.parser.parser import Parser
 
