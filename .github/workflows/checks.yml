@@ -43,8 +43,8 @@ jobs:
       - name: Install Dependencies
         run: poetry install
 
-      - name: Run Black
-        run: poetry run task black --check
+      - name: Run format
+        run: poetry run task format --check
 
       - name: Run safety
         run: poetry export -f requirements.txt | poetry run safety check --bare --stdin

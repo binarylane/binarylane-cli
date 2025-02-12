@@ -1,4 +1,4 @@
-""" BooleanOptionalAction imported from 3.9 """
+"""BooleanOptionalAction imported from 3.9"""
 
 from __future__ import annotations
 
