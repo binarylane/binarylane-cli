@@ -28,22 +28,15 @@ binarylane-python-client = "^0.13.2a0"
 safety = "<3.0.0"
 ruff = "^0.9.6"
 
-[tool.poetry.group.pylint.dependencies]
-pylint = { version = "^3.3.4", python = ">=3.9" }
-
-[tool.poetry.group.pylint-38.dependencies]
-pylint = { version = "^2.15.2", python = "<3.9" }
-
 [tool.taskipy.tasks]
 generate = "python scripts/generate.py"
 black = "black ."
 isort = "isort ."
 mypy = "mypy ."
 ruff = "ruff check src"
-pylint = "pylint src"
 safety = "poetry export -f requirements.txt | safety check --bare --stdin"
 test = "pytest tests"
-check = "task isort && task black && task mypy && task ruff && task pylint && task test && task safety"
+check = "task isort && task black && task mypy && task ruff && task test && task safety"
 
 [tool.isort]
 py_version = 37
@@ -71,22 +64,6 @@ exclude = [
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "TC", "PL"]
 ignore = ["PLR"]
-
-[tool.pylint.format]
-max-line-length = 120
-ignore-paths = ['src/binarylane/console/commands/*/']
-
-[tool.pylint.messages_control]
-disable = [
-    "import-outside-toplevel",  # CLI programs need delayed import
-    "design",  # design checker is too opinionated
-    "fixme",  # FIXME: initial impl in progress
-
-    # Checkbox documentation is bad:
-    "missing-module-docstring",
-    "missing-class-docstring",
-    "missing-function-docstring",
-]
 
 [tool.mypy]
 disallow_any_generics = true
