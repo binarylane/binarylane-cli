@@ -24,8 +24,8 @@ class BooleanOptionalAction(argparse.Action):
             _option_strings.append(option_string)
 
             if option_string.startswith("--"):
-                option_string = "--no-" + option_string[2:]
-                _option_strings.append(option_string)
+                negative_option_string = "--no-" + option_string[2:]
+                _option_strings.append(negative_option_string)
 
         if help is not None and default is not None and default is not argparse.SUPPRESS:
             help += " (default: %(default)s)"

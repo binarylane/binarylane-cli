@@ -77,7 +77,8 @@ def _flatten(values: Sequence[Any], single_object: bool = False) -> List[str]:
     max_str = 80 if not single_object else 240
     trunc = "..."
 
-    for item in values:
+    for value in values:
+        item = value
         item_type = type(item)
         if item_type is list:
             if len(item) > max_list:
