@@ -13,10 +13,10 @@ class BooleanOptionalAction(argparse.Action):
         option_strings: Sequence[str],
         dest: str,
         default: Union[object, str, None] = None,
-        type: Union[Callable[[str], object], argparse.FileType, None] = None,  # pylint: disable=redefined-builtin
+        type: Union[Callable[[str], object], argparse.FileType, None] = None,
         choices: Union[Iterable[object], None] = None,
         required: bool = False,
-        help: Union[str, None] = None,  # pylint: disable=redefined-builtin
+        help: Union[str, None] = None,
         metavar: Union[str, Tuple[str, ...], None] = None,
     ) -> None:
         _option_strings = []

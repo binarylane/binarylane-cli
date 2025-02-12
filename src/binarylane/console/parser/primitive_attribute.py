@@ -163,7 +163,6 @@ class PrimitiveAttribute(Attribute):
             # If not, perform a lookup using the provided value
             result = self._lookup(value)
             if result is None:
-                # pylint: disable=raise-missing-from
                 raise argparse.ArgumentError(None, f"{self.attribute_name.upper()}: could not find '{value}'")
             return result
 
