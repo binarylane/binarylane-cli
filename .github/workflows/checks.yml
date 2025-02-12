@@ -55,9 +55,6 @@ jobs:
       - name: Run ruff
         run: poetry run task ruff
 
-      - name: Run ruff
-        run: poetry run task ruff
-
       - name: Run pytest
         run: poetry run task test
         env:
