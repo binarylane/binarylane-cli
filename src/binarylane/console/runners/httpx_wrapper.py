@@ -27,7 +27,6 @@ class HttpxWrapper(ABC):
     _httpx_request: Optional[Callable[..., httpx.Response]]
 
     def __enter__(self: WrapperT) -> WrapperT:
-        # pylint: disable=used-before-assignment
         self._httpx_request = httpx.request
         httpx.request = self.request
         return self
@@ -42,11 +41,10 @@ class HttpxWrapper(ABC):
     def __exit__(
         self, exc_type: Optional[type[BaseException]], exc_val: Optional[BaseException], exc_tb: Optional[TracebackType]
     ) -> None:
-        # pylint: disable=used-before-assignment
         httpx.request = self._httpx_request  # type: ignore
 
 
-class CurlCommand(HttpxWrapper):  # pylint: disable=too-few-public-methods
+class CurlCommand(HttpxWrapper):
     """Convert HTTP request to a curl command-line. The HTTP request is not performed."""
 
     shell: str
