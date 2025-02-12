@@ -27,16 +27,18 @@ pytest = "^7.2.0"
 absolufy-imports = "^0.3.1"
 binarylane-python-client = "^0.13.2a0"
 safety = "*"
+ruff = "^0.9.6"
 
 [tool.taskipy.tasks]
 generate = "python scripts/generate.py"
 black = "black ."
 isort = "isort ."
 mypy = "mypy ."
+ruff = "ruff check src"
 pylint = "pylint src"
 safety = "poetry export -f requirements.txt | safety check --bare --stdin"
 test = "pytest tests"
-check = "task isort && task black && task mypy && task pylint && task test && task safety"
+check = "task isort && task black && task mypy && task ruff && task pylint && task test && task safety"
 
 [tool.isort]
 py_version = 37
@@ -52,6 +54,17 @@ add_imports=["from __future__ import annotations"]
 [tool.black]
 line-length = 120
 target_version = ["py37"]
+
+[tool.ruff]
+# Always generate Python 3.8-compatible code.
+target-version = "py38"
+line-length = 120
+exclude = [
+    "api",  # generated command classes
+]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "TC"]
 
 [tool.pylint.format]
 max-line-length = 120
