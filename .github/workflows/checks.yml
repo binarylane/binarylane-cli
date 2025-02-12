@@ -58,6 +58,9 @@ jobs:
       - name: Run pylint
         run: poetry run task pylint
 
+      - name: Run ruff
+        run: poetry run task ruff
+
       - name: Run pytest
         run: poetry run task test
         env:
