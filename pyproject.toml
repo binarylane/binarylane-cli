@@ -29,17 +29,13 @@ ruff = "^0.9.6"
 
 [tool.taskipy.tasks]
 generate = "python scripts/generate.py"
-black = "black ."
+format = "ruff format ."
 isort = "ruff check --select I . --fix"
 mypy = "mypy ."
 ruff = "ruff check src"
 safety = "poetry export -f requirements.txt | safety check --bare --stdin"
 test = "pytest tests"
-check = "task isort && task black && task mypy && task ruff && task test && task safety"
-
-[tool.black]
-line-length = 120
-target_version = ["py37"]
+check = "task isort && task format && task mypy && task ruff && task test && task safety"
 
 [tool.ruff]
 # Always generate Python 3.8-compatible code.

@@ -76,9 +76,9 @@ class ListAttribute(ObjectAttribute):
         parser.add_group_help(title=self.title, description=self.description, entries=usage_descriptions)
 
         parser.add_keyword(self.keyword)
-        parser.add_argument(self.attribute_name, type=str, nargs=argparse.PARSER, help=argparse.SUPPRESS).required = (
-            False
-        )
+        parser.add_argument(
+            self.attribute_name, type=str, nargs=argparse.PARSER, help=argparse.SUPPRESS
+        ).required = False
 
     def _create_singlestore_action(self, **kwargs: Any) -> argparse.Action:
         action = SingleStoreAction(**kwargs)
