@@ -46,9 +46,6 @@ jobs:
       - name: Run Black
         run: poetry run task black --check
 
-      - name: Run isort
-        run: poetry run task isort --check
-
       - name: Run safety
         run: poetry export -f requirements.txt | poetry run safety check --bare --stdin
 
