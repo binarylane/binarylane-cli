@@ -57,10 +57,6 @@ def _parse_response(
         response_404 = ProblemDetails.from_dict(response.json())
 
         return response_404
-    if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
-        response_422 = ProblemDetails.from_dict(response.json())
-
-        return response_422
     if response.status_code == HTTPStatus.UNAUTHORIZED:
         response_401 = cast(Any, None)
         return response_401

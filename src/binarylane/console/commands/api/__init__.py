@@ -124,21 +124,6 @@ add_descriptor(
     "Delete an Existing Domain Record",
 )
 add_descriptor(
-    ".commands.api.get_v2_failover_ips_server_id",
-    "server failover-ip get",
-    "Fetch the Failover IPs for a Server",
-)
-add_descriptor(
-    ".commands.api.post_v2_failover_ips_server_id",
-    "server failover-ip update",
-    "Sets the List of Failover IPs that are Assigned to a Server",
-)
-add_descriptor(
-    ".commands.api.get_v2_failover_ips_server_id_available",
-    "server failover-ip available",
-    "Fetch a List of all Failover IPs that are Available to be Assigned to a Server",
-)
-add_descriptor(
     ".commands.api.get_v2_images",
     "image list",
     "List All Images",
@@ -246,7 +231,7 @@ add_descriptor(
 add_descriptor(
     ".commands.api.post_v2_reverse_names_ipv6",
     "server ipv6-ptr-ns update",
-    "Create New or Update Existing IPv6 Name Server Records",
+    "Create New or Update Existing Global IPv6 Name Server Records",
 )
 add_descriptor(
     ".commands.api.get_v2_samplesets_server_id_latest",

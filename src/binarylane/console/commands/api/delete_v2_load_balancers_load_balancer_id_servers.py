@@ -70,7 +70,6 @@ class Command(CommandRunner):
         # HTTPStatus.NO_CONTENT: Any
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
-        # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             load_balancer_id=request.load_balancer_id,

@@ -15,7 +15,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     json_body: DomainRecordRequest,
@@ -73,7 +73,7 @@ def _build_response(
 
 
 def sync_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     json_body: DomainRecordRequest,
@@ -81,7 +81,8 @@ def sync_detailed(
     """Create a New Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be created.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be created. Example: 5.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -109,7 +110,7 @@ def sync_detailed(
 
 
 def sync(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     json_body: DomainRecordRequest,
@@ -117,7 +118,8 @@ def sync(
     """Create a New Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be created.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be created. Example: 5.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -138,7 +140,7 @@ def sync(
 
 
 async def asyncio_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     json_body: DomainRecordRequest,
@@ -146,7 +148,8 @@ async def asyncio_detailed(
     """Create a New Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be created.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be created. Example: 5.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.
@@ -172,7 +175,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     json_body: DomainRecordRequest,
@@ -180,7 +183,8 @@ async def asyncio(
     """Create a New Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be created.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be created. Example: 5.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
             values, nulls to retain the existing values.

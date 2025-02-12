@@ -15,9 +15,9 @@ from binarylane.console.runners.command import CommandRunner
 
 
 class CommandRequest:
-    domain_name: str
+    domain_name: Union[int, str]
 
-    def __init__(self, domain_name: str) -> None:
+    def __init__(self, domain_name: Union[int, str]) -> None:
         self.domain_name = domain_name
 
 
@@ -32,10 +32,10 @@ class Command(CommandRunner):
         mapping.add(
             PrimitiveAttribute(
                 "domain_name",
-                str,
+                Union[int, str],
                 required=True,
                 option_name=None,
-                description="""The name of the domain to fetch.""",
+                description="""The name or domain ID of the domain to fetch.""",
             )
         )
 

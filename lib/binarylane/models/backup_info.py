@@ -26,8 +26,8 @@ class BackupInfo:
         offsite (bool): If this is true, an attempt to create an offsite copy was made. This does not mean that the
             offsite copy attempt was successful or that the copy still exists.
         locked (bool): If this is true the backup is locked and cannot be replaced.
-        iso (bool): If this is true the backup is an ISO image and cannot be restored. ISO images may only be attached
-            for use as a boot disk or an additional disk.
+        iso (bool): If this is true the backup is an ISO image and cannot be restored or downloaded. ISO images may only
+            be attached for use as a boot disk or an additional disk.
         backup_disks (List[BackupDisk]): A list of the individual disks that make up this backup.
     """
 

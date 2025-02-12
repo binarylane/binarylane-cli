@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Tuple, Union
 from binarylane.api.images.get_v2_images_image_id_download import sync_detailed
 from binarylane.models.image_download_response import ImageDownloadResponse
 from binarylane.models.problem_details import ProblemDetails
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 
 if TYPE_CHECKING:
     from binarylane.client import Client
@@ -49,10 +50,11 @@ class Command(CommandRunner):
         self,
         client: Client,
         request: object,
-    ) -> Tuple[HTTPStatus, Union[None, ImageDownloadResponse, ProblemDetails]]:
+    ) -> Tuple[HTTPStatus, Union[None, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]:
         assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ImageDownloadResponse
+        # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(

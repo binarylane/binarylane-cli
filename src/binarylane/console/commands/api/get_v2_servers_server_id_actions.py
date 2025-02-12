@@ -62,7 +62,7 @@ class Command(ListRunner):
             "resource_id": """The resource id of the resource (if any) associated with this action.""",
             "region": """The region (if any) of the resource associated with this action.""",
             "region_slug": """The region slug (if any) of the resource associated with this action.""",
-            "result_data": """Returned information from a completed action. For example: a successful completed 'ping' action will have the ping value in ms in this field.""",
+            "result_data": """Returned information from a completed action. For example: a successful completed 'uptime' action will have the uptime value in this field.""",
             "blocking_invoice_id": """If this Action is currently blocked by an invoice that requires payment this property will be set.""",
             "user_interaction_required": """If this is not null the action is waiting on a response from the user.""",
         }

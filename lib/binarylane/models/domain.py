@@ -13,6 +13,7 @@ T = TypeVar("T", bound="Domain")
 class Domain:
     """
     Attributes:
+        id (int): The ID of this domain.
         name (str): The name of the domain.
         current_nameservers (List[str]): The current authoritative name servers for this domain.
         zone_file (str): The zone file for the selected domain. If the DNS records for this domain are not managed
@@ -21,6 +22,7 @@ class Domain:
             this domain are not managed locally this will be what the TTL would be if the authority was delegated to us.
     """
 
+    id: int
     name: str
     current_nameservers: List[str]
     zone_file: str
@@ -28,6 +30,7 @@ class Domain:
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
+        id = self.id
         name = self.name
         current_nameservers = self.current_nameservers
 
@@ -38,6 +41,7 @@ class Domain:
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
+                "id": id,
                 "name": name,
                 "current_nameservers": current_nameservers,
                 "zone_file": zone_file,
@@ -51,6 +55,8 @@ class Domain:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
+        id = d.pop("id")
+
         name = d.pop("name")
 
         current_nameservers = cast(List[str], d.pop("current_nameservers"))
@@ -60,6 +66,7 @@ class Domain:
         ttl = d.pop("ttl", UNSET)
 
         domain = cls(
+            id=id,
             name=name,
             current_nameservers=current_nameservers,
             zone_file=zone_file,
