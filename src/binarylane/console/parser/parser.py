@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
     from binarylane.console.parser.object_attribute import Mapping
 
-    ArgumentGroup: TypeAlias = argparse._ArgumentGroup  # pylint: disable=protected-access
+    ArgumentGroup: TypeAlias = argparse._ArgumentGroup
 
 logger = logging.getLogger(__name__)
 
