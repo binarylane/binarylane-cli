@@ -39,7 +39,7 @@ class Action:
         region (Union[Unset, None, Region]): The region (if any) of the resource associated with this action.
         region_slug (Union[Unset, None, str]): The region slug (if any) of the resource associated with this action.
         result_data (Union[Unset, None, str]): Returned information from a completed action. For example: a successful
-            completed 'ping' action will have the ping value in ms in this field.
+            completed 'uptime' action will have the uptime value in this field.
         blocking_invoice_id (Union[Unset, None, int]): If this Action is currently blocked by an invoice that requires
             payment this property will be set.
         user_interaction_required (Union[Unset, None, UserInteractionRequired]): If this is not null the action is

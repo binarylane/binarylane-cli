@@ -10,7 +10,6 @@ from binarylane.models.forwarding_rule import ForwardingRule
 from binarylane.models.health_check import HealthCheck
 from binarylane.models.health_check_protocol import HealthCheckProtocol
 from binarylane.models.load_balancer_rule_protocol import LoadBalancerRuleProtocol
-from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import Unset
 
@@ -128,12 +127,11 @@ class Command(ActionLinkRunner):
         self,
         client: Client,
         request: object,
-    ) -> Tuple[HTTPStatus, Union[None, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
+    ) -> Tuple[HTTPStatus, Union[None, CreateLoadBalancerResponse, ValidationProblemDetails]]:
         assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: CreateLoadBalancerResponse
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
-        # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             client=client,

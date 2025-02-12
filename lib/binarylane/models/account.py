@@ -18,7 +18,9 @@ class Account:
         email (str): The email address registered for this account.
         email_verified (bool): Whether this account has been verified. Un-verified accounts are subject to some
             restrictions.
-        status (AccountStatus):
+        two_factor_authentication_enabled (bool): Whether this account has enabled two factor authentication.
+        status (AccountStatus): The status of this account.
+
             | Value | Description |
             | ----- | ----------- |
             | incomplete | An account that exists but is not ready for use. The most common reason for this is a lack of
@@ -35,6 +37,7 @@ class Account:
 
     email: str
     email_verified: bool
+    two_factor_authentication_enabled: bool
     status: AccountStatus
     tax_code: TaxCode
     configured_payment_methods: List[PaymentMethod]
@@ -43,6 +46,7 @@ class Account:
     def to_dict(self) -> Dict[str, Any]:
         email = self.email
         email_verified = self.email_verified
+        two_factor_authentication_enabled = self.two_factor_authentication_enabled
         status = self.status.value
 
         tax_code = self.tax_code.to_dict()
@@ -59,6 +63,7 @@ class Account:
             {
                 "email": email,
                 "email_verified": email_verified,
+                "two_factor_authentication_enabled": two_factor_authentication_enabled,
                 "status": status,
                 "tax_code": tax_code,
                 "configured_payment_methods": configured_payment_methods,
@@ -74,6 +79,8 @@ class Account:
 
         email_verified = d.pop("email_verified")
 
+        two_factor_authentication_enabled = d.pop("two_factor_authentication_enabled")
+
         status = AccountStatus(d.pop("status"))
 
         tax_code = TaxCode.from_dict(d.pop("tax_code"))
@@ -88,6 +95,7 @@ class Account:
         account = cls(
             email=email,
             email_verified=email_verified,
+            two_factor_authentication_enabled=two_factor_authentication_enabled,
             status=status,
             tax_code=tax_code,
             configured_payment_methods=configured_payment_methods,

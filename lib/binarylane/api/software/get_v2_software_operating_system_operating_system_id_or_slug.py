@@ -85,6 +85,11 @@ def sync_detailed(
 ) -> Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     """List All Available Software for an Existing Operating System
 
+     If any software for the operating system has a non null value for the group property, one (and only
+    one) of the software from each group must be selected.
+    There may be a software in each group with a licence_step_count value of -1 that may be selected to
+    indicate the software from that group is not required.
+
     Args:
         operating_system_id_or_slug (Union[int, str]): The ID or slug of the operating system for
             which available software should be listed. Example: 5.
@@ -123,6 +128,11 @@ def sync(
 ) -> Optional[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     """List All Available Software for an Existing Operating System
 
+     If any software for the operating system has a non null value for the group property, one (and only
+    one) of the software from each group must be selected.
+    There may be a software in each group with a licence_step_count value of -1 that may be selected to
+    indicate the software from that group is not required.
+
     Args:
         operating_system_id_or_slug (Union[int, str]): The ID or slug of the operating system for
             which available software should be listed. Example: 5.
@@ -153,6 +163,11 @@ async def asyncio_detailed(
     per_page: Union[Unset, None, int] = 20,
 ) -> Response[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     """List All Available Software for an Existing Operating System
+
+     If any software for the operating system has a non null value for the group property, one (and only
+    one) of the software from each group must be selected.
+    There may be a software in each group with a licence_step_count value of -1 that may be selected to
+    indicate the software from that group is not required.
 
     Args:
         operating_system_id_or_slug (Union[int, str]): The ID or slug of the operating system for
@@ -189,6 +204,11 @@ async def asyncio(
     per_page: Union[Unset, None, int] = 20,
 ) -> Optional[Union[ProblemDetails, SoftwaresResponse, ValidationProblemDetails]]:
     """List All Available Software for an Existing Operating System
+
+     If any software for the operating system has a non null value for the group property, one (and only
+    one) of the software from each group must be selected.
+    There may be a software in each group with a licence_step_count value of -1 that may be selected to
+    indicate the software from that group is not required.
 
     Args:
         operating_system_id_or_slug (Union[int, str]): The ID or slug of the operating system for

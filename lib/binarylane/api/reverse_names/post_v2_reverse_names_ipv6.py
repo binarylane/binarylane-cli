@@ -76,7 +76,7 @@ def sync_detailed(
     client: Client,
     json_body: ReverseNameserversRequest,
 ) -> Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
-    """Create New or Update Existing IPv6 Name Server Records
+    """Create New or Update Existing Global IPv6 Name Server Records
 
     Args:
         json_body (ReverseNameserversRequest):
@@ -107,7 +107,7 @@ def sync(
     client: Client,
     json_body: ReverseNameserversRequest,
 ) -> Optional[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
-    """Create New or Update Existing IPv6 Name Server Records
+    """Create New or Update Existing Global IPv6 Name Server Records
 
     Args:
         json_body (ReverseNameserversRequest):
@@ -131,7 +131,7 @@ async def asyncio_detailed(
     client: Client,
     json_body: ReverseNameserversRequest,
 ) -> Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
-    """Create New or Update Existing IPv6 Name Server Records
+    """Create New or Update Existing Global IPv6 Name Server Records
 
     Args:
         json_body (ReverseNameserversRequest):
@@ -160,7 +160,7 @@ async def asyncio(
     client: Client,
     json_body: ReverseNameserversRequest,
 ) -> Optional[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
-    """Create New or Update Existing IPv6 Name Server Records
+    """Create New or Update Existing Global IPv6 Name Server Records
 
     Args:
         json_body (ReverseNameserversRequest):

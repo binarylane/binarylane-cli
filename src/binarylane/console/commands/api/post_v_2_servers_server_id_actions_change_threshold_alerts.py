@@ -132,7 +132,6 @@ class Command(ActionRunner):
         # HTTPStatus.ACCEPTED: Any
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
-        # HTTPStatus.UNPROCESSABLE_ENTITY: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any
         page_response = sync_detailed(
             server_id=request.server_id,

@@ -9,6 +9,7 @@ from binarylane import errors
 from binarylane.client import Client
 from binarylane.models.image_download_response import ImageDownloadResponse
 from binarylane.models.problem_details import ProblemDetails
+from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import Response
 
 
@@ -33,11 +34,15 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Client, response: httpx.Response
-) -> Optional[Union[Any, ImageDownloadResponse, ProblemDetails]]:
+) -> Optional[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]:
     if response.status_code == HTTPStatus.OK:
         response_200 = ImageDownloadResponse.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.BAD_REQUEST:
+        response_400 = ValidationProblemDetails.from_dict(response.json())
+
+        return response_400
     if response.status_code == HTTPStatus.NOT_FOUND:
         response_404 = ProblemDetails.from_dict(response.json())
 
@@ -53,7 +58,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Client, response: httpx.Response
-) -> Response[Union[Any, ImageDownloadResponse, ProblemDetails]]:
+) -> Response[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -66,7 +71,7 @@ def sync_detailed(
     image_id: int,
     *,
     client: Client,
-) -> Response[Union[Any, ImageDownloadResponse, ProblemDetails]]:
+) -> Response[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]:
     """Download an Existing Image
 
      Only user created backup images are currently available for download.
@@ -79,7 +84,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, ImageDownloadResponse, ProblemDetails]]
+        Response[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
@@ -99,7 +104,7 @@ def sync(
     image_id: int,
     *,
     client: Client,
-) -> Optional[Union[Any, ImageDownloadResponse, ProblemDetails]]:
+) -> Optional[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]:
     """Download an Existing Image
 
      Only user created backup images are currently available for download.
@@ -112,7 +117,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, ImageDownloadResponse, ProblemDetails]]
+        Response[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]
     """
 
     return sync_detailed(
@@ -125,7 +130,7 @@ async def asyncio_detailed(
     image_id: int,
     *,
     client: Client,
-) -> Response[Union[Any, ImageDownloadResponse, ProblemDetails]]:
+) -> Response[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]:
     """Download an Existing Image
 
      Only user created backup images are currently available for download.
@@ -138,7 +143,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, ImageDownloadResponse, ProblemDetails]]
+        Response[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
@@ -156,7 +161,7 @@ async def asyncio(
     image_id: int,
     *,
     client: Client,
-) -> Optional[Union[Any, ImageDownloadResponse, ProblemDetails]]:
+) -> Optional[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]:
     """Download an Existing Image
 
      Only user created backup images are currently available for download.
@@ -169,7 +174,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, ImageDownloadResponse, ProblemDetails]]
+        Response[Union[Any, ImageDownloadResponse, ProblemDetails, ValidationProblemDetails]]
     """
 
     return (

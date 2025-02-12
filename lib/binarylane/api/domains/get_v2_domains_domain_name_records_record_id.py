@@ -13,7 +13,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -66,7 +66,7 @@ def _build_response(
 
 
 def sync_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -74,7 +74,8 @@ def sync_detailed(
     """Fetch an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be fetched.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be fetched. Example: 5.
         record_id (int): The ID of the record to fetch.
 
     Raises:
@@ -100,7 +101,7 @@ def sync_detailed(
 
 
 def sync(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -108,7 +109,8 @@ def sync(
     """Fetch an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be fetched.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be fetched. Example: 5.
         record_id (int): The ID of the record to fetch.
 
     Raises:
@@ -127,7 +129,7 @@ def sync(
 
 
 async def asyncio_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -135,7 +137,8 @@ async def asyncio_detailed(
     """Fetch an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be fetched.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be fetched. Example: 5.
         record_id (int): The ID of the record to fetch.
 
     Raises:
@@ -159,7 +162,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -167,7 +170,8 @@ async def asyncio(
     """Fetch an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be fetched.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be fetched. Example: 5.
         record_id (int): The ID of the record to fetch.
 
     Raises:

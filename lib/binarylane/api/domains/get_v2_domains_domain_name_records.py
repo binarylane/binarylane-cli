@@ -14,7 +14,7 @@ from binarylane.types import UNSET, Response, Unset
 
 
 def _get_kwargs(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     type: Union[Unset, None, DomainRecordType] = UNSET,
@@ -84,7 +84,7 @@ def _build_response(
 
 
 def sync_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     type: Union[Unset, None, DomainRecordType] = UNSET,
@@ -95,7 +95,8 @@ def sync_detailed(
     """List All Domain Records for a Domain
 
     Args:
-        domain_name (str): The domain name for which records should be listed.
+        domain_name (Union[int, str]): The domain name or domain ID for for which records should
+            be listed. Example: 5.
         type (Union[Unset, None, DomainRecordType]):
             | Value | Description |
             | ----- | ----------- |
@@ -140,7 +141,7 @@ def sync_detailed(
 
 
 def sync(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     type: Union[Unset, None, DomainRecordType] = UNSET,
@@ -151,7 +152,8 @@ def sync(
     """List All Domain Records for a Domain
 
     Args:
-        domain_name (str): The domain name for which records should be listed.
+        domain_name (Union[int, str]): The domain name or domain ID for for which records should
+            be listed. Example: 5.
         type (Union[Unset, None, DomainRecordType]):
             | Value | Description |
             | ----- | ----------- |
@@ -189,7 +191,7 @@ def sync(
 
 
 async def asyncio_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     type: Union[Unset, None, DomainRecordType] = UNSET,
@@ -200,7 +202,8 @@ async def asyncio_detailed(
     """List All Domain Records for a Domain
 
     Args:
-        domain_name (str): The domain name for which records should be listed.
+        domain_name (Union[int, str]): The domain name or domain ID for for which records should
+            be listed. Example: 5.
         type (Union[Unset, None, DomainRecordType]):
             | Value | Description |
             | ----- | ----------- |
@@ -243,7 +246,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
     type: Union[Unset, None, DomainRecordType] = UNSET,
@@ -254,7 +257,8 @@ async def asyncio(
     """List All Domain Records for a Domain
 
     Args:
-        domain_name (str): The domain name for which records should be listed.
+        domain_name (Union[int, str]): The domain name or domain ID for for which records should
+            be listed. Example: 5.
         type (Union[Unset, None, DomainRecordType]):
             | Value | Description |
             | ----- | ----------- |

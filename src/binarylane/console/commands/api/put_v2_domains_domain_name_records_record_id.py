@@ -19,11 +19,11 @@ from binarylane.console.runners.command import CommandRunner
 
 
 class CommandRequest:
-    domain_name: str
+    domain_name: Union[int, str]
     record_id: int
     json_body: DomainRecordRequest
 
-    def __init__(self, domain_name: str, record_id: int, json_body: DomainRecordRequest) -> None:
+    def __init__(self, domain_name: Union[int, str], record_id: int, json_body: DomainRecordRequest) -> None:
         self.domain_name = domain_name
         self.record_id = record_id
         self.json_body = json_body
@@ -40,10 +40,10 @@ class Command(CommandRunner):
         mapping.add(
             PrimitiveAttribute(
                 "domain_name",
-                str,
+                Union[int, str],
                 required=True,
                 option_name=None,
-                description="""The domain name for which the record should be updated.""",
+                description="""The domain name or domain ID for for which the record should be updated.""",
             )
         )
         mapping.add(

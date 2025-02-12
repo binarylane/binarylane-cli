@@ -15,7 +15,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -76,7 +76,7 @@ def _build_response(
 
 
 def sync_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -85,7 +85,8 @@ def sync_detailed(
     """Update an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be updated.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be updated. Example: 5.
         record_id (int): The ID of the record to update.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
@@ -115,7 +116,7 @@ def sync_detailed(
 
 
 def sync(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -124,7 +125,8 @@ def sync(
     """Update an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be updated.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be updated. Example: 5.
         record_id (int): The ID of the record to update.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
@@ -147,7 +149,7 @@ def sync(
 
 
 async def asyncio_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -156,7 +158,8 @@ async def asyncio_detailed(
     """Update an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be updated.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be updated. Example: 5.
         record_id (int): The ID of the record to update.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
@@ -184,7 +187,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -193,7 +196,8 @@ async def asyncio(
     """Update an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be updated.
+        domain_name (Union[int, str]): The domain name or domain ID for for which the record
+            should be updated. Example: 5.
         record_id (int): The ID of the record to update.
         json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
             values not provided will be retained. Provide empty strings to clear existing string
