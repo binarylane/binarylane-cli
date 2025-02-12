@@ -43,7 +43,6 @@ class ListAttribute(ObjectAttribute):
         option_name: Optional[str] = None,
         description: Optional[str] = None,
     ) -> None:
-        # pylint: disable=duplicate-code
         super().__init__(
             attribute_name,
             attribute_type,

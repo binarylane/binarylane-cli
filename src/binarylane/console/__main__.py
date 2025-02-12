@@ -18,7 +18,6 @@ def main() -> int:
         App().run(sys.argv[1:])
         return 0
 
-    # pylint: disable=broad-except
     except Exception as exc:
         logger.exception(exc)
         return -1
