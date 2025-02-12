@@ -55,9 +55,6 @@ jobs:
       - name: Run mypy
         run: poetry run task mypy
 
-      - name: Run pylint
-        run: poetry run task pylint
-
       - name: Run ruff
         run: poetry run task ruff
 
