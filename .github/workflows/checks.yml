@@ -62,3 +62,37 @@ jobs:
         run: poetry run task test
         env:
           TASKIPY: true
+
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install binarylane-cli
+        run: pip install .
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Run PyInstaller
+        run: pyinstaller --name bl --onefile --copy-metadata binarylane-cli --collect-submodules binarylane src/binarylane/console/__main__.py
+
+      - name: Install StaticX
+        run: pip install staticx
+
+      - name: Install patchelf
+        run: sudo apt install -y patchelf
+
+      - name: Run StaticX
+        run: staticx --strip --no-compress dist/bl dist/bl
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: linux-x64
+          path: dist/*
