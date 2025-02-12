@@ -10,8 +10,7 @@ if TYPE_CHECKING:
 
 
 class Source(Protocol):
-    def get(self, name: str) -> Optional[str]:
-        ...
+    def get(self, name: str) -> Optional[str]: ...
 
 
 T = TypeVar("T", bound=Source)

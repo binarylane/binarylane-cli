@@ -63,12 +63,10 @@ class Attribute(ABC):
         return self.parent.group_name if self.parent else None
 
     @abstractmethod
-    def configure(self, parser: Parser) -> None:
-        ...
+    def configure(self, parser: Parser) -> None: ...
 
     @abstractmethod
-    def construct(self, parser: Parser, parsed: argparse.Namespace) -> object:
-        ...
+    def construct(self, parser: Parser, parsed: argparse.Namespace) -> object: ...
 
     def _unsupported(self, message: str, error: bool = True) -> None:
         """Report that command parsing is not likely to work correctly"""
