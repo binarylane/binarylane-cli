@@ -31,7 +31,7 @@ class CommandHelpFormatter(argparse.HelpFormatter):
         self,
         usage: Optional[str],
         actions: Iterable[argparse.Action],
-        groups: Iterable[argparse._ArgumentGroup],
+        groups: Iterable[argparse._MutuallyExclusiveGroup],
         prefix: Optional[str] = None,
     ) -> None:
         actions = [argparse.Action(["OPTIONS"], "")] + [
