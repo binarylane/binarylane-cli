@@ -5,7 +5,7 @@ import os
 import sys
 from abc import ABC
 from pathlib import Path
-from typing import ClassVar, Dict, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar, Dict, Optional
 
 if TYPE_CHECKING:
     import argparse

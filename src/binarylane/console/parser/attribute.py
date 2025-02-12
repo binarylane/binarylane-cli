@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     import argparse
+
     from binarylane.console.parser.object_attribute import ObjectAttribute
     from binarylane.console.parser.parser import Parser
 

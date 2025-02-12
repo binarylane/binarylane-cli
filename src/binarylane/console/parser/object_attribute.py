@@ -9,6 +9,7 @@ from binarylane.console.parser.attribute import Attribute
 
 if TYPE_CHECKING:
     import argparse
+
     from binarylane.console.parser.parser import Parser
 
 logger = logging.getLogger(__name__)
