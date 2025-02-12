@@ -1,4 +1,5 @@
 """Generate updated API bindings and CLI commands from OpenAPI specification document"""
+
 from __future__ import annotations
 
 import re

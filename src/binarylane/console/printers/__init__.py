@@ -1,4 +1,5 @@
 """Printers provide different methods of formatting and displaying API responses"""
+
 from __future__ import annotations
 
 from enum import Enum

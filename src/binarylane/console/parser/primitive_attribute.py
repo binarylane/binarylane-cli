@@ -28,8 +28,7 @@ def is_primitive_type(type_: type) -> bool:
 class Lookup(typing.Protocol):
     """Lookup is a function that accepts an entity reference (e.g. its name) and returns that entity's ID"""
 
-    def __call__(self, ref: str) -> Optional[int]:
-        ...
+    def __call__(self, ref: str) -> Optional[int]: ...
 
 
 class PrimitiveAttribute(Attribute):

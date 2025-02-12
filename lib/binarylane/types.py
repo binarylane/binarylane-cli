@@ -1,4 +1,5 @@
 """ Contains some shared types for properties """
+
 from __future__ import annotations
 
 from http import HTTPStatus
