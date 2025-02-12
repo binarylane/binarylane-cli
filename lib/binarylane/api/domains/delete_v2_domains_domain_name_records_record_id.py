@@ -12,7 +12,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -60,7 +60,7 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 
 def sync_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -68,7 +68,8 @@ def sync_detailed(
     """Delete an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be deleted.
+        domain_name (Union[int, str]): The domain name or domain ID for which the record should be
+            deleted. Example: 5.
         record_id (int): The ID of the record to delete.
 
     Raises:
@@ -94,7 +95,7 @@ def sync_detailed(
 
 
 def sync(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -102,7 +103,8 @@ def sync(
     """Delete an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be deleted.
+        domain_name (Union[int, str]): The domain name or domain ID for which the record should be
+            deleted. Example: 5.
         record_id (int): The ID of the record to delete.
 
     Raises:
@@ -121,7 +123,7 @@ def sync(
 
 
 async def asyncio_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -129,7 +131,8 @@ async def asyncio_detailed(
     """Delete an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be deleted.
+        domain_name (Union[int, str]): The domain name or domain ID for which the record should be
+            deleted. Example: 5.
         record_id (int): The ID of the record to delete.
 
     Raises:
@@ -153,7 +156,7 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    domain_name: str,
+    domain_name: Union[int, str],
     record_id: int,
     *,
     client: Client,
@@ -161,7 +164,8 @@ async def asyncio(
     """Delete an Existing Domain Record
 
     Args:
-        domain_name (str): The domain name for which the record should be deleted.
+        domain_name (Union[int, str]): The domain name or domain ID for which the record should be
+            deleted. Example: 5.
         record_id (int): The ID of the record to delete.
 
     Raises:

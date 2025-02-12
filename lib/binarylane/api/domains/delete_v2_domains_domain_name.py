@@ -12,7 +12,7 @@ from binarylane.types import Response
 
 
 def _get_kwargs(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
 ) -> Dict[str, Any]:
@@ -57,14 +57,14 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 
 def sync_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
 ) -> Response[Union[Any, ProblemDetails]]:
     """Delete an Existing Domain
 
     Args:
-        domain_name (str): The name of the domain to delete.
+        domain_name (Union[int, str]): The name or domain ID of the domain to delete. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -88,14 +88,14 @@ def sync_detailed(
 
 
 def sync(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
 ) -> Optional[Union[Any, ProblemDetails]]:
     """Delete an Existing Domain
 
     Args:
-        domain_name (str): The name of the domain to delete.
+        domain_name (Union[int, str]): The name or domain ID of the domain to delete. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -112,14 +112,14 @@ def sync(
 
 
 async def asyncio_detailed(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
 ) -> Response[Union[Any, ProblemDetails]]:
     """Delete an Existing Domain
 
     Args:
-        domain_name (str): The name of the domain to delete.
+        domain_name (Union[int, str]): The name or domain ID of the domain to delete. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -141,14 +141,14 @@ async def asyncio_detailed(
 
 
 async def asyncio(
-    domain_name: str,
+    domain_name: Union[int, str],
     *,
     client: Client,
 ) -> Optional[Union[Any, ProblemDetails]]:
     """Delete an Existing Domain
 
     Args:
-        domain_name (str): The name of the domain to delete.
+        domain_name (Union[int, str]): The name or domain ID of the domain to delete. Example: 5.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

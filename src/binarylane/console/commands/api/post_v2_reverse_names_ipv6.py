@@ -39,7 +39,7 @@ class Command(ActionRunner):
                 List[str],
                 required=True,
                 option_name="reverse-nameservers",
-                description="""A list of all IPv6 reverse name servers for this server. Any existing reverse name servers that are omitted from the list will be removed from the server.""",
+                description="""A list of IPv6 reverse name servers for all IPv6 enabled servers. Any existing reverse name servers that are omitted from the list will be removed.""",
             )
         )
 

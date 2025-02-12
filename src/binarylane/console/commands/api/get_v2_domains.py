@@ -30,6 +30,7 @@ class Command(ListRunner):
     @property
     def default_format(self) -> List[str]:
         return [
+            "id",
             "name",
             "zone_file",
         ]
@@ -37,6 +38,7 @@ class Command(ListRunner):
     @property
     def fields(self) -> Dict[str, str]:
         return {
+            "id": """The ID of this domain.""",
             "name": """The name of the domain.""",
             "current_nameservers": """The current authoritative name servers for this domain.""",
             "zone_file": """The zone file for the selected domain. If the DNS records for this domain are not managed locally this is what the zone file would be if the authority was delegated to us.""",

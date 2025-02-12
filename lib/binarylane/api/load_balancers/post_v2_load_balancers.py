@@ -9,7 +9,6 @@ from binarylane import errors
 from binarylane.client import Client
 from binarylane.models.create_load_balancer_request import CreateLoadBalancerRequest
 from binarylane.models.create_load_balancer_response import CreateLoadBalancerResponse
-from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import Response
 
@@ -38,7 +37,7 @@ def _get_kwargs(
 
 def _parse_response(
     *, client: Client, response: httpx.Response
-) -> Optional[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
+) -> Optional[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]:
     if response.status_code == HTTPStatus.OK:
         response_200 = CreateLoadBalancerResponse.from_dict(response.json())
 
@@ -47,10 +46,6 @@ def _parse_response(
         response_400 = ValidationProblemDetails.from_dict(response.json())
 
         return response_400
-    if response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY:
-        response_422 = ProblemDetails.from_dict(response.json())
-
-        return response_422
     if response.status_code == HTTPStatus.UNAUTHORIZED:
         response_401 = cast(Any, None)
         return response_401
@@ -62,7 +57,7 @@ def _parse_response(
 
 def _build_response(
     *, client: Client, response: httpx.Response
-) -> Response[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
+) -> Response[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -75,7 +70,7 @@ def sync_detailed(
     *,
     client: Client,
     json_body: CreateLoadBalancerRequest,
-) -> Response[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
+) -> Response[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]:
     """Create a New Load Balancer
 
     Args:
@@ -86,7 +81,7 @@ def sync_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]
+        Response[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
@@ -106,7 +101,7 @@ def sync(
     *,
     client: Client,
     json_body: CreateLoadBalancerRequest,
-) -> Optional[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
+) -> Optional[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]:
     """Create a New Load Balancer
 
     Args:
@@ -117,7 +112,7 @@ def sync(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]
+        Response[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]
     """
 
     return sync_detailed(
@@ -130,7 +125,7 @@ async def asyncio_detailed(
     *,
     client: Client,
     json_body: CreateLoadBalancerRequest,
-) -> Response[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
+) -> Response[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]:
     """Create a New Load Balancer
 
     Args:
@@ -141,7 +136,7 @@ async def asyncio_detailed(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]
+        Response[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]
     """
 
     kwargs = _get_kwargs(
@@ -159,7 +154,7 @@ async def asyncio(
     *,
     client: Client,
     json_body: CreateLoadBalancerRequest,
-) -> Optional[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]:
+) -> Optional[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]:
     """Create a New Load Balancer
 
     Args:
@@ -170,7 +165,7 @@ async def asyncio(
         httpx.TimeoutException: If the request takes longer than Client.timeout.
 
     Returns:
-        Response[Union[Any, CreateLoadBalancerResponse, ProblemDetails, ValidationProblemDetails]]
+        Response[Union[Any, CreateLoadBalancerResponse, ValidationProblemDetails]]
     """
 
     return (

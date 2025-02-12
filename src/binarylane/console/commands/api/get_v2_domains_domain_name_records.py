@@ -18,11 +18,11 @@ from binarylane.console.runners.list import ListRunner
 
 
 class CommandRequest:
-    domain_name: str
+    domain_name: Union[int, str]
     type: Union[Unset, None, DomainRecordType] = UNSET
     name: Union[Unset, None, str] = UNSET
 
-    def __init__(self, domain_name: str) -> None:
+    def __init__(self, domain_name: Union[int, str]) -> None:
         self.domain_name = domain_name
 
 
@@ -83,10 +83,10 @@ class Command(ListRunner):
         mapping.add(
             PrimitiveAttribute(
                 "domain_name",
-                str,
+                Union[int, str],
                 required=True,
                 option_name=None,
-                description="""The domain name for which records should be listed.""",
+                description="""The domain name or domain ID for for which records should be listed.""",
             )
         )
 
