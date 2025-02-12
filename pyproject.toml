@@ -28,21 +28,15 @@ absolufy-imports = "^0.3.1"
 binarylane-python-client = "^0.13.2a0"
 safety = "*"
 
-[tool.poetry.group.flake8.dependencies]
-flake8 = "^6.0.0"
-flake8-type-checking = "^2.4.0"
-flake8-pyproject = "^1.2.3"
-
 [tool.taskipy.tasks]
 generate = "python scripts/generate.py"
 black = "black ."
-flake8 = "flake8 src"
 isort = "isort ."
 mypy = "mypy ."
 pylint = "pylint src"
 safety = "poetry export -f requirements.txt | safety check --bare --stdin"
 test = "pytest tests"
-check = "task isort && task black && task flake8 && task mypy && task pylint && task test && task safety"
+check = "task isort && task black && task mypy && task pylint && task test && task safety"
 
 [tool.isort]
 py_version = 37
@@ -83,15 +77,6 @@ strict_equality = true
 mypy_path = "lib:src"
 namespace_packages = true
 explicit_package_bases = true
-
-[tool.flake8]
-max-line-length = 120
-ignore = [
-    "E203",  # Whitespace before ':' - black and flake8 disagree on `foo[len(bar) :]`
-]
-exclude = [
-    "api",  # generated command classes
-]
 
 [tool.pyright]
 extraPaths = ["src", "lib"]
