@@ -32,7 +32,6 @@ class Command({{ response_class['name'] }}):
 {% if response_class.get('list') %}
 {% include "endpoint_module/list_runner.jinja" %}
 {% endif %}
-
     @property
     def reference_url(self) -> str:
         return "https://api.binarylane.com.au/reference/#tag/{{ endpoint.data["tags"][0] }}/paths/{{ endpoint.path.replace("/","~1").replace("{","%7B").replace("}","%7D") }}/{{ endpoint.method }}"
