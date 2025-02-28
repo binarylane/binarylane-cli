@@ -13,7 +13,7 @@ T = TypeVar("T", bound="Host")
 class Host:
     """
     Attributes:
-        display_name (str): The name for this host.
+        display_name (str): The name for this host. If this is a dedicated host this property will be empty.
         uptime_ms (Union[Unset, None, int]): The current uptime in milliseconds of this host.
         status_page (Union[Unset, None, str]): This is the URL of the status page of the host. This will normally only
             be set if the host is under maintenance.

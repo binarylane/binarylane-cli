@@ -21,6 +21,7 @@ from binarylane.models.change_network import ChangeNetwork
 from binarylane.models.change_offsite_backup_location import ChangeOffsiteBackupLocation
 from binarylane.models.change_partner import ChangePartner
 from binarylane.models.change_port_blocking import ChangePortBlocking
+from binarylane.models.change_region import ChangeRegion
 from binarylane.models.change_reverse_name import ChangeReverseName
 from binarylane.models.change_separate_private_network_interface import ChangeSeparatePrivateNetworkInterface
 from binarylane.models.change_source_and_destination_check import ChangeSourceAndDestinationCheck
@@ -72,6 +73,7 @@ def _get_kwargs(
         "ChangeOffsiteBackupLocation",
         "ChangePartner",
         "ChangePortBlocking",
+        "ChangeRegion",
         "ChangeReverseName",
         "ChangeSeparatePrivateNetworkInterface",
         "ChangeSourceAndDestinationCheck",
@@ -146,6 +148,9 @@ def _get_kwargs(
         json_json_body = json_body.to_dict()
 
     elif isinstance(json_body, ChangePortBlocking):
+        json_json_body = json_body.to_dict()
+
+    elif isinstance(json_body, ChangeRegion):
         json_json_body = json_body.to_dict()
 
     elif isinstance(json_body, ChangeReverseName):
@@ -298,6 +303,7 @@ def sync_detailed(
         "ChangeOffsiteBackupLocation",
         "ChangePartner",
         "ChangePortBlocking",
+        "ChangeRegion",
         "ChangeReverseName",
         "ChangeSeparatePrivateNetworkInterface",
         "ChangeSourceAndDestinationCheck",
@@ -342,7 +348,7 @@ def sync_detailed(
             'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
             'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
             'ChangeNetwork', 'ChangeOffsiteBackupLocation', 'ChangePartner', 'ChangePortBlocking',
-            'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
+            'ChangeRegion', 'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
             'ChangeSourceAndDestinationCheck', 'ChangeThresholdAlerts', 'ChangeVpcIpv4',
             'CloneUsingBackup', 'DeleteDisk', 'DetachBackup', 'DisableBackups', 'DisableSelinux',
             'EnableBackups', 'EnableIpv6', 'IsRunning', 'PasswordReset', 'Ping', 'PowerCycle',
@@ -389,6 +395,7 @@ def sync(
         "ChangeOffsiteBackupLocation",
         "ChangePartner",
         "ChangePortBlocking",
+        "ChangeRegion",
         "ChangeReverseName",
         "ChangeSeparatePrivateNetworkInterface",
         "ChangeSourceAndDestinationCheck",
@@ -433,7 +440,7 @@ def sync(
             'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
             'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
             'ChangeNetwork', 'ChangeOffsiteBackupLocation', 'ChangePartner', 'ChangePortBlocking',
-            'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
+            'ChangeRegion', 'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
             'ChangeSourceAndDestinationCheck', 'ChangeThresholdAlerts', 'ChangeVpcIpv4',
             'CloneUsingBackup', 'DeleteDisk', 'DetachBackup', 'DisableBackups', 'DisableSelinux',
             'EnableBackups', 'EnableIpv6', 'IsRunning', 'PasswordReset', 'Ping', 'PowerCycle',
@@ -473,6 +480,7 @@ async def asyncio_detailed(
         "ChangeOffsiteBackupLocation",
         "ChangePartner",
         "ChangePortBlocking",
+        "ChangeRegion",
         "ChangeReverseName",
         "ChangeSeparatePrivateNetworkInterface",
         "ChangeSourceAndDestinationCheck",
@@ -517,7 +525,7 @@ async def asyncio_detailed(
             'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
             'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
             'ChangeNetwork', 'ChangeOffsiteBackupLocation', 'ChangePartner', 'ChangePortBlocking',
-            'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
+            'ChangeRegion', 'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
             'ChangeSourceAndDestinationCheck', 'ChangeThresholdAlerts', 'ChangeVpcIpv4',
             'CloneUsingBackup', 'DeleteDisk', 'DetachBackup', 'DisableBackups', 'DisableSelinux',
             'EnableBackups', 'EnableIpv6', 'IsRunning', 'PasswordReset', 'Ping', 'PowerCycle',
@@ -562,6 +570,7 @@ async def asyncio(
         "ChangeOffsiteBackupLocation",
         "ChangePartner",
         "ChangePortBlocking",
+        "ChangeRegion",
         "ChangeReverseName",
         "ChangeSeparatePrivateNetworkInterface",
         "ChangeSourceAndDestinationCheck",
@@ -606,7 +615,7 @@ async def asyncio(
             'ChangeAdvancedFirewallRules', 'ChangeBackupSchedule', 'ChangeIpv6',
             'ChangeIpv6ReverseNameservers', 'ChangeKernel', 'ChangeManageOffsiteBackupCopies',
             'ChangeNetwork', 'ChangeOffsiteBackupLocation', 'ChangePartner', 'ChangePortBlocking',
-            'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
+            'ChangeRegion', 'ChangeReverseName', 'ChangeSeparatePrivateNetworkInterface',
             'ChangeSourceAndDestinationCheck', 'ChangeThresholdAlerts', 'ChangeVpcIpv4',
             'CloneUsingBackup', 'DeleteDisk', 'DetachBackup', 'DisableBackups', 'DisableSelinux',
             'EnableBackups', 'EnableIpv6', 'IsRunning', 'PasswordReset', 'Ping', 'PowerCycle',

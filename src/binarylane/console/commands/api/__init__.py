@@ -374,6 +374,11 @@ add_descriptor(
     "Add, Update or Remove a Partner Server for a Server",
 )
 add_descriptor(
+    ".commands.api.post_v_2_servers_server_id_actions_change_region",
+    "server action change-region",
+    "Change the Region of a Server",
+)
+add_descriptor(
     ".commands.api.post_v_2_servers_server_id_actions_disable_selinux",
     "server action disable-selinux",
     "Disable SE Linux for a Server",

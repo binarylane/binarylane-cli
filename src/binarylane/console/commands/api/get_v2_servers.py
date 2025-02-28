@@ -4,11 +4,10 @@ from http import HTTPStatus
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.servers.get_v2_servers import sync_detailed
+from binarylane.console.util import create_client
 from binarylane.models.links import Links
 from binarylane.models.servers_response import ServersResponse
 from binarylane.types import UNSET, Unset
-
-from binarylane.console.util import create_client
 
 if TYPE_CHECKING:
     from binarylane.client import Client

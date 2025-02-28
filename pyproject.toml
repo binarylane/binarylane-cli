@@ -69,6 +69,10 @@ explicit_package_bases = true
 [tool.pyright]
 extraPaths = ["src", "lib"]
 
+# Required by binarylane-openapi-client
+[tool.black]
+line-length = 120
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
