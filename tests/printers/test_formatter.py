@@ -93,3 +93,9 @@ def test_format_networks_v4_and_v6(servers_response: ServersResponse) -> None:
         Network(ip_address="value4", type=NetworkType.PUBLIC),
     ]
     assert formatter.format_response(servers_response, False, ["networks"]) == [["ipv4\nipv6"]]
+
+
+# ActionLinkRunner when used with --async will print the action ID
+def test_format_int() -> None:
+    assert formatter.format_response(12345, True) == [[formatter.DEFAULT_HEADING], ["12345"]]
+    assert formatter.format_response(12345, False) == [["12345"]]

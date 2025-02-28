@@ -10,4 +10,7 @@ class JsonPrinter(Printer):
     """Output an API response as 'raw' JSON"""
 
     def print(self, response: Any, fields: Optional[List[str]] = None) -> None:
-        print(json.dumps(response.to_dict()))
+        print(self.format_response(response))
+
+    def format_response(self, response: Any) -> str:
+        return json.dumps(response.to_dict() if hasattr(response, "to_dict") else response)
