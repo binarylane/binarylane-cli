@@ -33,7 +33,9 @@ def format_response(response: Any, show_header: bool, fields: Optional[List[str]
     if isinstance(response, str):
         data = [[DEFAULT_HEADING]] if show_header else []
         data += [[response]]
-
+    elif isinstance(response, int):
+        data = [[DEFAULT_HEADING]] if show_header else []
+        data += [[str(response)]]
     else:
         data = [["name", "value"]] if show_header else []
         data += [_flatten(item, True) for item in response.to_dict().items()]
