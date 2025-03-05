@@ -4,7 +4,7 @@ import logging
 import shutil
 import sys
 import time
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Tuple
 
 from binarylane.console.runners.command import CommandRunner
 
@@ -51,17 +51,14 @@ class ActionRunner(CommandRunner):
         blanks = " " * (shutil.get_terminal_size().columns - 1)
         print(f"\r{blanks}\r{progress}", end="", file=sys.stderr)
 
-    def response(self, status_code: int, received: Any) -> None:
-        # If async is requested, use standard handler
-        if self._async:
-            super().response(status_code, received)
-            return
+    def wait_for_action(self, status_code: int, received: Any) -> Tuple[int, Any]:
+        """While received is an ActionResponse, show progress and wait for the action to complete"""
 
         from binarylane.api.actions.get_v2_actions_action_id import sync_detailed
         from binarylane.models.action_response import ActionResponse
 
         # FIXME: Extract _get_action(id: int) -> Tuple[int, Any] method so that derived class can call that instead
-        # Derived class may provide an Action ID directly:
+        # Caller may provide an Action ID directly:
         if isinstance(received, int):
             response = sync_detailed(received, client=self._client)
             status_code, received = response.status_code, response.parsed
@@ -81,6 +78,16 @@ class ActionRunner(CommandRunner):
             time.sleep(5)
             response = sync_detailed(received.action.id, client=self._client)
             status_code, received = response.status_code, response.parsed
+
+        return status_code, received
+
+    def response(self, status_code: int, received: Any) -> None:
+        # If async is requested, use standard handler
+        if self._async:
+            super().response(status_code, received)
+            return
+
+        status_code, received = self.wait_for_action(status_code, received)
 
         # Action has now completed (or errored), process final response
         super().response(status_code, received)
