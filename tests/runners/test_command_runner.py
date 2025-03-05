@@ -1,18 +1,22 @@
 from __future__ import annotations
 
-from http import HTTPStatus
-from typing import Tuple
+from typing import TYPE_CHECKING, Tuple
 
 import pytest
-from _pytest.capture import CaptureFixture
 
-from binarylane.client import Client
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from tests.runner import TypeRunner
 
-from binarylane.console.parser import Mapping, Namespace
+from binarylane.console.parser import Mapping
 from binarylane.console.runners import command
+
+if TYPE_CHECKING:
+    from http import HTTPStatus
+
+    from _pytest.capture import CaptureFixture
+
+    from binarylane.client import Client
 
 
 class CommandRunner(command.CommandRunner):

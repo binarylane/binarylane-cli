@@ -1,15 +1,18 @@
 from __future__ import annotations
 
-from http import HTTPStatus
-from typing import Tuple
+from typing import TYPE_CHECKING, Tuple
 
-from pytest import CaptureFixture
-
-from binarylane.client import Client
 from tests.runner import TypeRunner
 
 from binarylane.console.parser.object_attribute import Mapping
 from binarylane.console.runners import action
+
+if TYPE_CHECKING:
+    from http import HTTPStatus
+
+    from pytest import CaptureFixture
+
+    from binarylane.client import Client
 
 
 class ActionRunner(action.ActionRunner):

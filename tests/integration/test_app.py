@@ -1,9 +1,13 @@
 from __future__ import annotations
 
-import pytest
-from _pytest.capture import CaptureFixture
+from typing import TYPE_CHECKING
 
-from tests.integration.conftest import App, AppWithContext
+import pytest
+
+if TYPE_CHECKING:
+    from _pytest.capture import CaptureFixture
+
+    from tests.integration.conftest import App, AppWithContext
 
 
 def test_app_program_name(app: App, capsys: CaptureFixture[str]) -> None:

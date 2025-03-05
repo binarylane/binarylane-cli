@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import TYPE_CHECKING, Any, Dict, List
 
 from tests.models.network import Network
 from tests.models.network_type import NetworkType
-from tests.models.servers_response import ServersResponse
 
 from binarylane.console.printers import formatter
+
+if TYPE_CHECKING:
+    from tests.models.servers_response import ServersResponse
 
 
 def test_format_str() -> None:

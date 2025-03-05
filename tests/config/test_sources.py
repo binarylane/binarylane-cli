@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
-from typing import MutableMapping
+from typing import TYPE_CHECKING, MutableMapping
 
 from binarylane.config import OptionName
 from binarylane.config.sources import CommandlineSource, DefaultSource, EnvironmentSource, FileSource, RuntimeSource
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def test_commandline_get() -> None:

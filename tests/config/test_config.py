@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
-from typing import MutableMapping
+from typing import TYPE_CHECKING, MutableMapping
 
 import pytest
 
 from binarylane.config import DefaultConfig, OptionName, UserConfig
 from binarylane.config.sources import CommandlineSource, DefaultSource, EnvironmentSource, FileSource
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def test_default_values() -> None:

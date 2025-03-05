@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from http import HTTPStatus
-from typing import Dict, List, Tuple
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 import pytest
-
-from binarylane.client import Client
 
 from binarylane.console.parser import Mapping
 from binarylane.console.runners import Context
 from binarylane.console.runners import list as list_runner
+
+if TYPE_CHECKING:
+    from http import HTTPStatus
+
+    from binarylane.client import Client
 
 
 class ListRunner(list_runner.ListRunner):

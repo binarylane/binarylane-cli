@@ -52,7 +52,7 @@ def test_single_value_enum_does_not_require_configuration() -> None:
     assert parser.parse([]).mapped_object.to_dict() == {"type": "ping"}
 
     # It is not a valid
-    with pytest.raises(ArgumentError) as exc:
+    with pytest.raises(ArgumentError):
         parser.parse(["--type", "ping"])
 
 
