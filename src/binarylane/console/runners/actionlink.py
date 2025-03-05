@@ -19,7 +19,7 @@ class ActionLinkRunner(ActionRunner):
         # Show action progress on stdout
         if not self._async:
             action_id = links.actions[0].id
-            super().response(status_code, action_id)
+            self.wait_for_action(status_code, action_id)
 
         # Print the 'other' object (e.g. server) from the response
         self._printer.print(received)
