@@ -16,8 +16,10 @@ class ActionLinkRunner(ActionRunner):
             super().response(status_code, received)
             return
 
-        action_id = links.actions[0].id
-        super().response(status_code, action_id)
+        # Show action progress on stdout
+        if not self._async:
+            action_id = links.actions[0].id
+            super().response(status_code, action_id)
 
         # Print the 'other' object (e.g. server) from the response
         self._printer.print(received)
