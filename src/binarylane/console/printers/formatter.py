@@ -14,6 +14,7 @@ DEFAULT_HEADING = "response"
 def format_response(response: Any, show_header: bool, fields: Optional[List[str]] = None) -> List[List[str]]:
     """Convert structured response object into a 'table' (where the length of each inner list is the same)"""
 
+    action_id: Optional[int] = _get_action_id(response)
     response = _extract_primary(response)
 
     if isinstance(response, list):
@@ -39,6 +40,10 @@ def format_response(response: Any, show_header: bool, fields: Optional[List[str]
     else:
         data = [["name", "value"]] if show_header else []
         data += [_flatten(item, True) for item in response.to_dict().items()]
+
+    # If response contained an action ID, prepend it to the formatted data
+    if action_id:
+        data.insert(1 if show_header else 0, ["action_id", str(action_id)])
 
     return data
 
@@ -127,3 +132,18 @@ def _flatten_dict(item: Dict[str, Any], single_object: bool) -> str:
 
     # Generic handler
     return "<object>" if not single_object else "\n".join([f"{key}: {value}" for key, value in item.items()])
+
+
+def _get_action_id(response: Any) -> Optional[int]:
+    """Return response.links.actions[0].id or None"""
+
+    if not (links := getattr(response, "links", None)):
+        return None
+
+    # Most responses do not contain action links, so import is delayed
+    from binarylane.models.actions_links import ActionsLinks
+
+    if not isinstance(links, ActionsLinks) or not links.actions:
+        return None
+
+    return links.actions[0].id if links.actions[0] else None

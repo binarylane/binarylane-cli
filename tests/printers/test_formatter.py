@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, List
 
+from binarylane.models.action_link import ActionLink
+from binarylane.models.actions_links import ActionsLinks
+from tests.models.create_server_response import CreateServerResponse
 from tests.models.network import Network
 from tests.models.network_type import NetworkType
 
@@ -99,3 +102,14 @@ def test_format_networks_v4_and_v6(servers_response: ServersResponse) -> None:
 def test_format_int() -> None:
     assert formatter.format_response(12345, True) == [[formatter.DEFAULT_HEADING], ["12345"]]
     assert formatter.format_response(12345, False) == [["12345"]]
+
+
+def test_format_action_link(servers_response: ServersResponse) -> None:
+    action_link = ActionLink(12345, "create", "https://api.example.com/v2/actions/12345")
+    response = CreateServerResponse(servers_response.servers[0], ActionsLinks([action_link]))
+    assert formatter.format_response(response, True)[:4] == [
+        ["name", "value"],
+        ["action_id", "12345"],
+        ["id", "1"],
+        ["name", "test"],
+    ]
