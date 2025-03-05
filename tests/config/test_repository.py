@@ -1,13 +1,15 @@
 from __future__ import annotations
 
 from argparse import Namespace
-from pathlib import Path
-from typing import MutableMapping, Optional
+from typing import TYPE_CHECKING, MutableMapping, Optional
 
 import pytest
 
 from binarylane.config import OptionName, Repository
 from binarylane.config.sources import CommandlineSource, DefaultSource, EnvironmentSource, FileSource, RuntimeSource
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def test_init_default_source() -> None:

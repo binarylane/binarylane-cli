@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 from pytest import CaptureFixture
 
-from tests.integration.conftest import App
-
 from binarylane.console.metadata import program_description
+
+if TYPE_CHECKING:
+    from tests.integration.conftest import App
 
 
 def test_app_root_help(app: App, capsys: CaptureFixture[str]) -> None:

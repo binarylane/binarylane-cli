@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
-from _pytest.capture import CaptureFixture
 
 from binarylane.models.meta import Meta
 from binarylane.models.route_entry import RouteEntry
@@ -12,6 +13,9 @@ from binarylane.console.commands.api import get_v2_vpcs as vpc_list
 from binarylane.console.commands.api import get_v2_vpcs_vpc_id as vpc_get
 from binarylane.console.runners.command import CommandRunner
 from binarylane.console.runners.list import ListRunner
+
+if TYPE_CHECKING:
+    from _pytest.capture import CaptureFixture
 
 
 @pytest.fixture
