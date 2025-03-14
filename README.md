@@ -388,7 +388,7 @@ is currently **0**, which indicates that each new release of the `bl` program ma
 contain changes to its interface that are not backwards-compatible with
 previous releases such as:
 
- - Command names may change, or moved within the command tree
+ - Command names may change, or be moved within the command tree
  - Parameter names may change, or be removed entirely
  - Available field names may change, or be removed entirely
  - Default set of displayed fields displayed in output may change
