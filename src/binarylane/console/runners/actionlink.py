@@ -8,6 +8,10 @@ from binarylane.console.runners.action import ActionRunner
 class ActionLinkRunner(ActionRunner):
     """ActionLinkRunner handles command responses with an optional action ID attached"""
 
+    @property
+    def _default_output(self) -> str:
+        return "table"
+
     def response(self, status_code: int, received: Any) -> None:
         from binarylane.models.actions_links import ActionsLinks
 

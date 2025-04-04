@@ -8,7 +8,7 @@ from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 
 from binarylane.console.printers import Printer, PrinterType, create_printer
-from binarylane.console.runners import ExitCode, Runner
+from binarylane.console.runners import Context, ExitCode, Runner
 from binarylane.console.runners.httpx_wrapper import CurlCommand
 from binarylane.console.util import create_client
 
@@ -32,8 +32,16 @@ class CommandRunner(Runner):
     _client: AuthenticatedClient
 
     _print_curl: Optional[bool]
-    _output: str = _DEFAULT_OUTPUT
+    _output: str
     _header: bool = _DEFAULT_HEADER
+
+    def __init__(self, context: Context) -> None:
+        super().__init__(context)
+        self._output = self._default_output
+
+    @property
+    def _default_output(self) -> str:
+        return _DEFAULT_OUTPUT
 
     @abstractmethod
     def create_mapping(self) -> Mapping:
@@ -57,7 +65,7 @@ class CommandRunner(Runner):
         parser.add_argument(
             "--output",
             dest="runner_output",
-            default=_DEFAULT_OUTPUT,
+            default=self._default_output,
             metavar="OUTPUT",
             choices=printers,
             help='Desired output format [%(choices)s] (default: "%(default)s")',

@@ -21,6 +21,10 @@ class ActionRunner(CommandRunner):
     _async: bool = False
     _quiet: bool = False
 
+    @property
+    def _default_output(self) -> str:
+        return "none"
+
     def configure(self, parser: Parser) -> None:
         super().configure(parser)
 
@@ -71,7 +75,7 @@ class ActionRunner(CommandRunner):
 
             # Check if action has completed
             if received.action.completed_at:
-                self._progress(f"{received.action.status}.\n")
+                self._progress(f"{received.action.type}: {received.action.result_data or received.action.status}\n")
                 break
 
             # Wait and then refresh action response

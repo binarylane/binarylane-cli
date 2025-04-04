@@ -5,6 +5,7 @@ from __future__ import annotations
 from enum import Enum
 
 from binarylane.console.printers.json_printer import JsonPrinter
+from binarylane.console.printers.none_printer import NonePrinter
 from binarylane.console.printers.plain_printer import PlainPrinter
 from binarylane.console.printers.printer import Printer
 from binarylane.console.printers.table_printer import TablePrinter
@@ -23,6 +24,7 @@ class PrinterType(Enum):
     TABLE = TablePrinter
     TSV = TsvPrinter
     JSON = JsonPrinter
+    NONE = NonePrinter
 
 
 def create_printer(name: str) -> Printer:
