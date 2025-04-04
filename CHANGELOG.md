@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## v0.19.0 (2025-04-04)
+
+### Bug Fixes
+
+- output action properties at completion of command runner (#62)
+- resolve exception when action ID is passed to printer formatter
+
+### Features
+
+- include action_id in formatted output of response containing ActionLink
+
 ## v0.18.0 (2025-02-28)
 
 ## v0.17.0 (2025-02-12)
