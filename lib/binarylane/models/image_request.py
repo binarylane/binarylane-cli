@@ -16,7 +16,8 @@ class ImageRequest:
         name (Union[Unset, None, str]): Optional: a new display name for this image. Do not provide to leave the display
             name unchanged, submit an empty string to clear the display name.
         locked (Union[Unset, None, bool]): Optional: you may choose to lock an individual backup in which case we will
-            not update that backup until you unlock it. Do not provide to leave the locked status unchanged.
+            not update that backup until you unlock it. Do not provide to leave the locked status unchanged. You may not
+            lock or unlock a temporary backup or a backup that is attached to a server.
     """
 
     name: Union[Unset, None, str] = UNSET

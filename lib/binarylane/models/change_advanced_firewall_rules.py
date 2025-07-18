@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Type, TypeVar
 
 import attr
 
-from binarylane.models.advanced_firewall_rule import AdvancedFirewallRule
+from binarylane.models.advanced_firewall_rule_request import AdvancedFirewallRuleRequest
 from binarylane.models.change_advanced_firewall_rules_type import ChangeAdvancedFirewallRulesType
 
 T = TypeVar("T", bound="ChangeAdvancedFirewallRules")
@@ -16,12 +16,12 @@ class ChangeAdvancedFirewallRules:
 
     Attributes:
         type (ChangeAdvancedFirewallRulesType):
-        firewall_rules (List[AdvancedFirewallRule]): A list of rules for the server. NB: that any existing rules that
-            are not included will be removed. Submit an empty list to clear all rules.
+        firewall_rules (List[AdvancedFirewallRuleRequest]): A list of rules for the server. NB: that any existing rules
+            that are not included will be removed. Submit an empty list to clear all rules.
     """
 
     type: ChangeAdvancedFirewallRulesType
-    firewall_rules: List[AdvancedFirewallRule]
+    firewall_rules: List[AdvancedFirewallRuleRequest]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -52,7 +52,7 @@ class ChangeAdvancedFirewallRules:
         firewall_rules = []
         _firewall_rules = d.pop("firewall_rules")
         for firewall_rules_item_data in _firewall_rules:
-            firewall_rules_item = AdvancedFirewallRule.from_dict(firewall_rules_item_data)
+            firewall_rules_item = AdvancedFirewallRuleRequest.from_dict(firewall_rules_item_data)
 
             firewall_rules.append(firewall_rules_item)
 

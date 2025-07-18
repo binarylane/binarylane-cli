@@ -62,7 +62,7 @@ class Command(CommandRunner):
                 Union[Unset, None, bool],
                 required=False,
                 option_name="locked",
-                description="""Optional: you may choose to lock an individual backup in which case we will not update that backup until you unlock it. Do not provide to leave the locked status unchanged.""",
+                description="""Optional: you may choose to lock an individual backup in which case we will not update that backup until you unlock it. Do not provide to leave the locked status unchanged. You may not lock or unlock a temporary backup or a backup that is attached to a server.""",
             )
         )
 

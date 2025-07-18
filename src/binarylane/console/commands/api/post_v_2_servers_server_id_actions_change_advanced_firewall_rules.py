@@ -7,9 +7,9 @@ from binarylane.api.server_actions.post_v_2_servers_server_id_actions_change_adv
     sync_detailed,
 )
 from binarylane.models.action_response import ActionResponse
-from binarylane.models.advanced_firewall_rule import AdvancedFirewallRule
 from binarylane.models.advanced_firewall_rule_action import AdvancedFirewallRuleAction
 from binarylane.models.advanced_firewall_rule_protocol import AdvancedFirewallRuleProtocol
+from binarylane.models.advanced_firewall_rule_request import AdvancedFirewallRuleRequest
 from binarylane.models.change_advanced_firewall_rules import ChangeAdvancedFirewallRules
 from binarylane.models.change_advanced_firewall_rules_type import ChangeAdvancedFirewallRulesType
 from binarylane.models.problem_details import ProblemDetails
@@ -67,17 +67,17 @@ class Command(ActionRunner):
             )
         )
 
-        json_body_advanced_firewall_rule = json_body.add(
+        json_body_advanced_firewall_rule_request = json_body.add(
             ListAttribute(
                 "firewall_rules",
-                AdvancedFirewallRule,
+                AdvancedFirewallRuleRequest,
                 required=True,
                 option_name="firewall-rules",
                 description="""A list of rules for the server. NB: that any existing rules that are not included will be removed. Submit an empty list to clear all rules.""",
             )
         )
 
-        json_body_advanced_firewall_rule.add(
+        json_body_advanced_firewall_rule_request.add(
             PrimitiveAttribute(
                 "source_addresses",
                 List[str],
@@ -87,7 +87,7 @@ class Command(ActionRunner):
             )
         )
 
-        json_body_advanced_firewall_rule.add(
+        json_body_advanced_firewall_rule_request.add(
             PrimitiveAttribute(
                 "destination_addresses",
                 List[str],
@@ -97,7 +97,7 @@ class Command(ActionRunner):
             )
         )
 
-        json_body_advanced_firewall_rule.add(
+        json_body_advanced_firewall_rule_request.add(
             PrimitiveAttribute(
                 "protocol",
                 AdvancedFirewallRuleProtocol,
@@ -116,7 +116,7 @@ class Command(ActionRunner):
             )
         )
 
-        json_body_advanced_firewall_rule.add(
+        json_body_advanced_firewall_rule_request.add(
             PrimitiveAttribute(
                 "action",
                 AdvancedFirewallRuleAction,
@@ -133,7 +133,7 @@ class Command(ActionRunner):
             )
         )
 
-        json_body_advanced_firewall_rule.add(
+        json_body_advanced_firewall_rule_request.add(
             PrimitiveAttribute(
                 "destination_ports",
                 Union[Unset, None, List[str]],
@@ -143,7 +143,7 @@ class Command(ActionRunner):
             )
         )
 
-        json_body_advanced_firewall_rule.add(
+        json_body_advanced_firewall_rule_request.add(
             PrimitiveAttribute(
                 "description",
                 Union[Unset, None, str],
