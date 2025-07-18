@@ -103,7 +103,16 @@ class Command(ActionRunner):
                 AdvancedFirewallRuleProtocol,
                 required=True,
                 option_name="protocol",
-                description="""The protocol to match for this rule.""",
+                description="""The protocol to match for this rule.
+
+| Value | Description |
+| ----- | ----------- |
+| all | This rule will match any protocol. |
+| icmp | This rule will match ICMP traffic only. |
+| tcp | This rule will match TCP traffic only. |
+| udp | This rule will match UDP traffic only. |
+
+""",
             )
         )
 
@@ -113,7 +122,14 @@ class Command(ActionRunner):
                 AdvancedFirewallRuleAction,
                 required=True,
                 option_name="action",
-                description="""The action to take when there is a match on this rule.""",
+                description="""The action to take when there is a match on this rule.
+
+| Value | Description |
+| ----- | ----------- |
+| drop | Traffic matching this rule will be dropped. |
+| accept | Traffic matching this rule will be accepted. |
+
+""",
             )
         )
 

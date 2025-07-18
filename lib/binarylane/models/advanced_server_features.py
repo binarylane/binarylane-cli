@@ -34,6 +34,18 @@ class AdvancedServerFeatures:
         machine_type (Union[Unset, None, VmMachineType]): The machine_type (corresponding to a KVM version) used for
             this server.
             A null value indicates automatic selection of the best KVM machine type supported by the host node.
+
+            | Value | Description |
+            | ----- | ----------- |
+            | pc_i440fx_1point5 | PC i440FX 1.5 |
+            | pc_i440fx_2point11 | PC i440FX 2.11 |
+            | pc_i440fx_4point1 | PC i440FX 4.1 |
+            | pc_i440fx_4point2 | PC i440FX 4.2 |
+            | pc_i440fx_5point0 | PC i440FX 5.0 |
+            | pc_i440fx_5point1 | PC i440FX 5.1 |
+            | pc_i440fx_7point2 | PC i440FX 7.2 |
+            | pc_i440fx_8point2 | PC i440FX 8.2 |
+
     """
 
     video_device: VideoDevice

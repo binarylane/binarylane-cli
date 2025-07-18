@@ -53,7 +53,18 @@ class Command(ListRunner):
             "started_at": """The timestamp in ISO8601 format of when processing of this action started.""",
             "progress": """Information about the current progress of the action. Some actions are divided into 'steps' and this may also contain information about the current and completed steps.""",
             "completed_at": """The timestamp in ISO8601 format of when processing of this action completed. If this value is null the action is currently in progress.""",
-            "resource_type": """The resource type (if any) associated with this action.""",
+            "resource_type": """The resource type (if any) associated with this action.
+
+| Value | Description |
+| ----- | ----------- |
+| server | Server |
+| load-balancer | Load Balancer |
+| ssh-key | SSH Key |
+| vpc | Virtual Private Network |
+| image | Backup or Operating System Image |
+| registered-domain-name | Registered Domain Name |
+
+""",
             "resource_id": """The resource id of the resource (if any) associated with this action.""",
             "region": """The region (if any) of the resource associated with this action.""",
             "region_slug": """The region slug (if any) of the resource associated with this action.""",

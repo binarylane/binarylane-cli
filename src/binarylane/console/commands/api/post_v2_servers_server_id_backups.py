@@ -60,7 +60,16 @@ class Command(ActionRunner):
                 BackupReplacementStrategy,
                 required=True,
                 option_name="replacement-strategy",
-                description="""The strategy for selecting which backup to replace (if any).""",
+                description="""The strategy for selecting which backup to replace (if any).
+
+| Value | Description |
+| ----- | ----------- |
+| none | Do not replace any existing backup: use a free slot of the provided backup type. If there are no free slots an error will occur. |
+| specified | Replace the specific backup id provided. |
+| oldest | Use any free slots of the provided backup type, and if there are no free slots replace the oldest unlocked and un-attached backup of the provided backup type. |
+| newest | Use any free slots of the provided backup type, and if there are no free slots replace the newest unlocked and un-attached backup of the provided backup type. |
+
+""",
             )
         )
 
@@ -80,7 +89,16 @@ class Command(ActionRunner):
                 Union[Unset, None, BackupSlot],
                 required=False,
                 option_name="backup-type",
-                description="""If replacement_strategy is anything other than 'specified', this must be provided.""",
+                description="""If replacement_strategy is anything other than 'specified', this must be provided.
+
+| Value | Description |
+| ----- | ----------- |
+| daily | A backup which is scheduled to be taken each day. |
+| weekly | A backup which is scheduled to be taken each week. |
+| monthly | A backup which is scheduled to be taken each month. |
+| temporary | A backup which is created on demand and only retained for a maximum of seven days. |
+
+""",
             )
         )
 

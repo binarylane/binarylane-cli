@@ -101,7 +101,20 @@ class Command(ActionRunner):
                 Union[Unset, None, VmMachineType],
                 required=False,
                 option_name="machine-type",
-                description="""Do not provide or set to null to keep existing machine type.""",
+                description="""Do not provide or set to null to keep existing machine type.
+
+| Value | Description |
+| ----- | ----------- |
+| pc_i440fx_1point5 | PC i440FX 1.5 |
+| pc_i440fx_2point11 | PC i440FX 2.11 |
+| pc_i440fx_4point1 | PC i440FX 4.1 |
+| pc_i440fx_4point2 | PC i440FX 4.2 |
+| pc_i440fx_5point0 | PC i440FX 5.0 |
+| pc_i440fx_5point1 | PC i440FX 5.1 |
+| pc_i440fx_7point2 | PC i440FX 7.2 |
+| pc_i440fx_8point2 | PC i440FX 8.2 |
+
+""",
             )
         )
 
@@ -121,7 +134,16 @@ class Command(ActionRunner):
                 Union[Unset, None, VideoDevice],
                 required=False,
                 option_name="video-device",
-                description="""Do not provide or set to null to keep existing video device.""",
+                description="""Do not provide or set to null to keep existing video device.
+
+| Value | Description |
+| ----- | ----------- |
+| cirrus-logic | Cirrus Logic GD5446 |
+| standard | Standard VGA with VESA 2.0 extensions |
+| virtio | Virtio VGA (800x600) |
+| virtio-wide | Virtio VGA (1600x900) |
+
+""",
             )
         )
 

@@ -17,6 +17,19 @@ class UpdateDomainRecordRequest:
 
         Attributes:
             type (Union[Unset, None, DomainRecordType]): The type of the DNS record.
+
+                | Value | Description |
+                | ----- | ----------- |
+                | A | Map an IPv4 address to a hostname. |
+                | AAAA | Map an IPv6 address to a hostname. |
+                | CAA | Restrict which certificate authorities are permitted to issue certificates for a domain. |
+                | CNAME | Define an alias for your canonical hostname. |
+                | MX | Define the mail exchanges that handle mail for the domain. |
+                | NS | Define the nameservers that manage the domain. |
+                | SOA | The Start of Authority record for the zone. |
+                | SRV | Specify a server by hostname and port to handle a service or services. |
+                | TXT | Define a string of text that is associated with a hostname. |
+
             name (Union[Unset, None, str]): The subdomain for this record. Use @ for records on the domain itself, and * to
                 create a wildcard record.
             data (Union[Unset, None, str]): A general data field that has different functions depending on the record type.
