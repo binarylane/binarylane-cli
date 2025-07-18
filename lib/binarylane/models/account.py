@@ -33,6 +33,8 @@ class Account:
         tax_code (TaxCode): The tax code that currently applies to transactions for this account.
         configured_payment_methods (List[PaymentMethod]): The payment methods that are configured (available) for this
             account.
+        additional_ipv4_limit (int): The maximum additional IPv4 addresses this account may assign across all servers.
+            You may contact support to request this limit be increased.
     """
 
     email: str
@@ -41,6 +43,7 @@ class Account:
     status: AccountStatus
     tax_code: TaxCode
     configured_payment_methods: List[PaymentMethod]
+    additional_ipv4_limit: int
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -57,6 +60,8 @@ class Account:
 
             configured_payment_methods.append(configured_payment_methods_item)
 
+        additional_ipv4_limit = self.additional_ipv4_limit
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
@@ -67,6 +72,7 @@ class Account:
                 "status": status,
                 "tax_code": tax_code,
                 "configured_payment_methods": configured_payment_methods,
+                "additional_ipv4_limit": additional_ipv4_limit,
             }
         )
 
@@ -92,6 +98,8 @@ class Account:
 
             configured_payment_methods.append(configured_payment_methods_item)
 
+        additional_ipv4_limit = d.pop("additional_ipv4_limit")
+
         account = cls(
             email=email,
             email_verified=email_verified,
@@ -99,6 +107,7 @@ class Account:
             status=status,
             tax_code=tax_code,
             configured_payment_methods=configured_payment_methods,
+            additional_ipv4_limit=additional_ipv4_limit,
         )
 
         account.additional_properties = d
