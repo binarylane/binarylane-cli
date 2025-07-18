@@ -15,6 +15,12 @@ class ForwardingRule:
     Attributes:
         entry_protocol (LoadBalancerRuleProtocol): The protocol that traffic must match for this load balancer to
             forward traffic according to this rule.
+
+            | Value | Description |
+            | ----- | ----------- |
+            | http | The load balancer will forward HTTP traffic that matches this rule. |
+            | https | The load balancer will forward HTTPS traffic that matches this rule. |
+
     """
 
     entry_protocol: LoadBalancerRuleProtocol

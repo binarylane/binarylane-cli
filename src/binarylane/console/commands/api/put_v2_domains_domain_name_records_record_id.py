@@ -64,7 +64,21 @@ class Command(CommandRunner):
                 Union[Unset, None, DomainRecordType],
                 required=False,
                 option_name="type",
-                description="""The type of the DNS record.""",
+                description="""The type of the DNS record.
+
+| Value | Description |
+| ----- | ----------- |
+| A | Map an IPv4 address to a hostname. |
+| AAAA | Map an IPv6 address to a hostname. |
+| CAA | Restrict which certificate authorities are permitted to issue certificates for a domain. |
+| CNAME | Define an alias for your canonical hostname. |
+| MX | Define the mail exchanges that handle mail for the domain. |
+| NS | Define the nameservers that manage the domain. |
+| SOA | The Start of Authority record for the zone. |
+| SRV | Specify a server by hostname and port to handle a service or services. |
+| TXT | Define a string of text that is associated with a hostname. |
+
+""",
             )
         )
 

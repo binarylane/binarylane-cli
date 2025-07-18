@@ -62,7 +62,14 @@ class Command(CommandRunner):
                 LoadBalancerRuleProtocol,
                 required=True,
                 option_name="entry-protocol",
-                description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.""",
+                description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.
+
+| Value | Description |
+| ----- | ----------- |
+| http | The load balancer will forward HTTP traffic that matches this rule. |
+| https | The load balancer will forward HTTPS traffic that matches this rule. |
+
+""",
             )
         )
 

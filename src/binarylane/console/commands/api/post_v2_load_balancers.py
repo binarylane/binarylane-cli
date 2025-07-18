@@ -63,7 +63,14 @@ class Command(ActionLinkRunner):
                 LoadBalancerRuleProtocol,
                 required=True,
                 option_name="entry-protocol",
-                description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.""",
+                description="""The protocol that traffic must match for this load balancer to forward traffic according to this rule.
+
+| Value | Description |
+| ----- | ----------- |
+| http | The load balancer will forward HTTP traffic that matches this rule. |
+| https | The load balancer will forward HTTPS traffic that matches this rule. |
+
+""",
             )
         )
 
@@ -83,7 +90,15 @@ class Command(ActionLinkRunner):
                 Union[Unset, None, HealthCheckProtocol],
                 required=False,
                 option_name="protocol",
-                description="""Leave null to accept the default HTTP protocol.""",
+                description="""Leave null to accept the default HTTP protocol.
+
+| Value | Description |
+| ----- | ----------- |
+| http | The health check will be performed via HTTP. |
+| https | The health check will be performed via HTTPS. |
+| both | The health check will be performed via both HTTP and HTTPS. Failing a health check on one protocol will remove the server from the pool of servers only for that protocol. |
+
+""",
             )
         )
 

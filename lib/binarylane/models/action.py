@@ -35,6 +35,16 @@ class Action:
         completed_at (Union[Unset, None, datetime.datetime]): The timestamp in ISO8601 format of when processing of this
             action completed. If this value is null the action is currently in progress.
         resource_type (Union[Unset, None, ResourceType]): The resource type (if any) associated with this action.
+
+            | Value | Description |
+            | ----- | ----------- |
+            | server | Server |
+            | load-balancer | Load Balancer |
+            | ssh-key | SSH Key |
+            | vpc | Virtual Private Network |
+            | image | Backup or Operating System Image |
+            | registered-domain-name | Registered Domain Name |
+
         resource_id (Union[Unset, None, int]): The resource id of the resource (if any) associated with this action.
         region (Union[Unset, None, Region]): The region (if any) of the resource associated with this action.
         region_slug (Union[Unset, None, str]): The region slug (if any) of the resource associated with this action.
