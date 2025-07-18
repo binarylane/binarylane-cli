@@ -83,9 +83,7 @@ def sync_detailed(
     Args:
         domain_name (Union[int, str]): The domain name or domain ID for for which the record
             should be created. Example: 5.
-        json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
-            values not provided will be retained. Provide empty strings to clear existing string
-            values, nulls to retain the existing values.
+        json_body (DomainRecordRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -120,9 +118,7 @@ def sync(
     Args:
         domain_name (Union[int, str]): The domain name or domain ID for for which the record
             should be created. Example: 5.
-        json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
-            values not provided will be retained. Provide empty strings to clear existing string
-            values, nulls to retain the existing values.
+        json_body (DomainRecordRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -150,9 +146,7 @@ async def asyncio_detailed(
     Args:
         domain_name (Union[int, str]): The domain name or domain ID for for which the record
             should be created. Example: 5.
-        json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
-            values not provided will be retained. Provide empty strings to clear existing string
-            values, nulls to retain the existing values.
+        json_body (DomainRecordRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -185,9 +179,7 @@ async def asyncio(
     Args:
         domain_name (Union[int, str]): The domain name or domain ID for for which the record
             should be created. Example: 5.
-        json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
-            values not provided will be retained. Provide empty strings to clear existing string
-            values, nulls to retain the existing values.
+        json_body (DomainRecordRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

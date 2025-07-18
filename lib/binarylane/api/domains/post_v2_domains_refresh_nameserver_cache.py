@@ -7,17 +7,21 @@ import httpx
 
 from binarylane import errors
 from binarylane.client import Client
+from binarylane.models.domain_refresh_request import DomainRefreshRequest
 from binarylane.types import Response
 
 
 def _get_kwargs(
     *,
     client: Client,
+    json_body: DomainRefreshRequest,
 ) -> Dict[str, Any]:
     url = "{}/v2/domains/refresh_nameserver_cache".format(client.base_url)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
+
+    json_json_body = json_body.to_dict()
 
     return {
         "method": "post",
@@ -25,6 +29,7 @@ def _get_kwargs(
         "headers": headers,
         "cookies": cookies,
         "timeout": client.get_timeout(),
+        "json": json_json_body,
     }
 
 
@@ -51,11 +56,15 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Any
 def sync_detailed(
     *,
     client: Client,
+    json_body: DomainRefreshRequest,
 ) -> Response[Any]:
     """Refresh Cached Nameserver Domain Records
 
      The nameservers for domains are cached. If you have recently altered the nameservers for a managed
     domain you may need to refresh the cached domain records.
+
+    Args:
+        json_body (DomainRefreshRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -67,6 +76,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         client=client,
+        json_body=json_body,
     )
 
     response = httpx.request(
@@ -80,11 +90,15 @@ def sync_detailed(
 async def asyncio_detailed(
     *,
     client: Client,
+    json_body: DomainRefreshRequest,
 ) -> Response[Any]:
     """Refresh Cached Nameserver Domain Records
 
      The nameservers for domains are cached. If you have recently altered the nameservers for a managed
     domain you may need to refresh the cached domain records.
+
+    Args:
+        json_body (DomainRefreshRequest):
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -96,6 +110,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         client=client,
+        json_body=json_body,
     )
 
     async with httpx.AsyncClient(verify=client.verify_ssl) as _client:

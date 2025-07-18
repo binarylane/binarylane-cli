@@ -7,9 +7,9 @@ import httpx
 
 from binarylane import errors
 from binarylane.client import Client
-from binarylane.models.domain_record_request import DomainRecordRequest
 from binarylane.models.domain_record_response import DomainRecordResponse
 from binarylane.models.problem_details import ProblemDetails
+from binarylane.models.update_domain_record_request import UpdateDomainRecordRequest
 from binarylane.models.validation_problem_details import ValidationProblemDetails
 from binarylane.types import Response
 
@@ -19,7 +19,7 @@ def _get_kwargs(
     record_id: int,
     *,
     client: Client,
-    json_body: DomainRecordRequest,
+    json_body: UpdateDomainRecordRequest,
 ) -> Dict[str, Any]:
     url = "{}/v2/domains/{domain_name}/records/{record_id}".format(
         client.base_url, domain_name=domain_name, record_id=record_id
@@ -80,7 +80,7 @@ def sync_detailed(
     record_id: int,
     *,
     client: Client,
-    json_body: DomainRecordRequest,
+    json_body: UpdateDomainRecordRequest,
 ) -> Response[Union[Any, DomainRecordResponse, ProblemDetails, ValidationProblemDetails]]:
     """Update an Existing Domain Record
 
@@ -88,9 +88,8 @@ def sync_detailed(
         domain_name (Union[int, str]): The domain name or domain ID for for which the record
             should be updated. Example: 5.
         record_id (int): The ID of the record to update.
-        json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
-            values not provided will be retained. Provide empty strings to clear existing string
-            values, nulls to retain the existing values.
+        json_body (UpdateDomainRecordRequest): Any values not provided will be retained. Provide
+            empty strings to clear existing string values, nulls to retain the existing values.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -120,7 +119,7 @@ def sync(
     record_id: int,
     *,
     client: Client,
-    json_body: DomainRecordRequest,
+    json_body: UpdateDomainRecordRequest,
 ) -> Optional[Union[Any, DomainRecordResponse, ProblemDetails, ValidationProblemDetails]]:
     """Update an Existing Domain Record
 
@@ -128,9 +127,8 @@ def sync(
         domain_name (Union[int, str]): The domain name or domain ID for for which the record
             should be updated. Example: 5.
         record_id (int): The ID of the record to update.
-        json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
-            values not provided will be retained. Provide empty strings to clear existing string
-            values, nulls to retain the existing values.
+        json_body (UpdateDomainRecordRequest): Any values not provided will be retained. Provide
+            empty strings to clear existing string values, nulls to retain the existing values.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -153,7 +151,7 @@ async def asyncio_detailed(
     record_id: int,
     *,
     client: Client,
-    json_body: DomainRecordRequest,
+    json_body: UpdateDomainRecordRequest,
 ) -> Response[Union[Any, DomainRecordResponse, ProblemDetails, ValidationProblemDetails]]:
     """Update an Existing Domain Record
 
@@ -161,9 +159,8 @@ async def asyncio_detailed(
         domain_name (Union[int, str]): The domain name or domain ID for for which the record
             should be updated. Example: 5.
         record_id (int): The ID of the record to update.
-        json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
-            values not provided will be retained. Provide empty strings to clear existing string
-            values, nulls to retain the existing values.
+        json_body (UpdateDomainRecordRequest): Any values not provided will be retained. Provide
+            empty strings to clear existing string values, nulls to retain the existing values.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.
@@ -191,7 +188,7 @@ async def asyncio(
     record_id: int,
     *,
     client: Client,
-    json_body: DomainRecordRequest,
+    json_body: UpdateDomainRecordRequest,
 ) -> Optional[Union[Any, DomainRecordResponse, ProblemDetails, ValidationProblemDetails]]:
     """Update an Existing Domain Record
 
@@ -199,9 +196,8 @@ async def asyncio(
         domain_name (Union[int, str]): The domain name or domain ID for for which the record
             should be updated. Example: 5.
         record_id (int): The ID of the record to update.
-        json_body (DomainRecordRequest): If this is used to update an existing DomainRecord any
-            values not provided will be retained. Provide empty strings to clear existing string
-            values, nulls to retain the existing values.
+        json_body (UpdateDomainRecordRequest): Any values not provided will be retained. Provide
+            empty strings to clear existing string values, nulls to retain the existing values.
 
     Raises:
         errors.UnexpectedStatus: If the server returns an undocumented status code and Client.raise_on_unexpected_status is True.

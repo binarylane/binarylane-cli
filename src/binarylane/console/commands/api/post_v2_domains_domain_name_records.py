@@ -52,8 +52,8 @@ class Command(CommandRunner):
         json_body.add(
             PrimitiveAttribute(
                 "type",
-                Union[Unset, None, DomainRecordType],
-                required=False,
+                DomainRecordType,
+                required=True,
                 option_name="type",
                 description="""The type of the DNS record.""",
             )
@@ -62,8 +62,8 @@ class Command(CommandRunner):
         json_body.add(
             PrimitiveAttribute(
                 "name",
-                Union[Unset, None, str],
-                required=False,
+                str,
+                required=True,
                 option_name="name",
                 description="""The subdomain for this record. Use @ for records on the domain itself, and * to create a wildcard record.""",
             )
@@ -72,8 +72,8 @@ class Command(CommandRunner):
         json_body.add(
             PrimitiveAttribute(
                 "data",
-                Union[Unset, None, str],
-                required=False,
+                str,
+                required=True,
                 option_name="data",
                 description="""A general data field that has different functions depending on the record type.""",
             )
