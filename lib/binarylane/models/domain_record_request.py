@@ -33,7 +33,8 @@ class DomainRecordRequest:
         data (str): A general data field that has different functions depending on the record type.
         priority (Union[Unset, None, int]): A priority value that is only relevant for SRV and MX records.
         port (Union[Unset, None, int]): A port value that is only relevant for SRV records.
-        ttl (Union[Unset, None, int]): This value is the time to live for the record, in seconds.
+        ttl (Union[Unset, None, int]): This value is the time to live for the record, in seconds. The default and only
+            supported value is 3600. Leave null to accept this default.
         weight (Union[Unset, None, int]): The weight value that is only relevant for SRV records.
         flags (Union[Unset, None, int]): An unsigned integer between 0-255 that is only relevant for CAA records.
         tag (Union[Unset, None, str]): A parameter tag that is only relevant for CAA records.

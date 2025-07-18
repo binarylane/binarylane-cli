@@ -119,7 +119,7 @@ class Command(CommandRunner):
                 Union[Unset, None, int],
                 required=False,
                 option_name="ttl",
-                description="""This value is the time to live for the record, in seconds.""",
+                description="""This value is the time to live for the record, in seconds. The default and only supported value is 3600. Leave null to accept this default.""",
             )
         )
 
