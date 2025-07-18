@@ -1,0 +1,47 @@
+{% macro add_primitive(property, argument, lookup_entity) %}
+    add(PrimitiveAttribute(
+        "{{ property.python_name }}",
+        {{ property.get_type_string() }},
+        required = {{ property.required if not argument else True }},
+        {{ option_name(property if not argument else None) }}
+        {% if not lookup_entity %}
+        {{ description_argument(property) }}
+        {% else %}
+        metavar="{{ property.python_name.replace("_" + lookup_entity['id'], "") }}",
+        {{ description_argument(property)
+            .replace(" " + lookup_entity['id'].upper(), " " + lookup_entity['id'].upper() + " or " + lookup_entity['ref'])
+            .replace(" " + lookup_entity['id'], " " + lookup_entity['id'] + " or " + lookup_entity['ref']) }}
+        lookup = lookup_{{ property.python_name }},
+        {% endif %}
+    ))
+{%- endmacro %}
+
+{% macro add_list(property) %}
+    add(ListAttribute(
+        "{{ property.python_name }}",
+        {{ property.inner_property.get_type_string(no_optional=True) }},
+        required={{ property.required }},
+        {{ option_name(property) }}
+        {{ description_argument(property) }}
+    ))
+{% endmacro %}
+
+{% macro add_object(property, description_property) %}
+    add(ObjectAttribute(
+        "{{ property.python_name }}",
+        {{ property.get_type_string(no_optional=True) }},
+        {{ option_name(property) }}
+        required = {{ property.required }},
+        {{ description_argument(description_property) }}
+    ))
+{% endmacro %}
+
+{% macro description_argument(prop) %}
+    {% if prop.description %}
+        description="""{{ prop.description.replace("    ","") }}""",
+    {% endif %}
+{% endmacro %}
+
+{% macro option_name(prop) %}
+    option_name = {{ '"' + prop.name.replace('_','-') + '"' if prop else None }},
+{% endmacro %}
