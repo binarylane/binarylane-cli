@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from binarylane.client import Client
 
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
+import binarylane.console.commands.api.get_v2_vpcs as api_get_v2_vpcs
 from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.action import ActionRunner
 
@@ -62,13 +63,18 @@ class Command(ActionRunner):
             )
         )
 
+        def lookup_vpc_id(ref: str) -> Union[None, int]:
+            return api_get_v2_vpcs.Command(self._context).lookup(ref)
+
         json_body.add(
             PrimitiveAttribute(
                 "vpc_id",
                 Union[Unset, None, int],
                 required=False,
-                option_name="vpc-id",
+                option_name=("vpc", "vpc-id"),
+                metavar="vpc",
                 description="""If this is null the server will be moved into the default public network for the server's region.""",
+                lookup=lookup_vpc_id,
             )
         )
 

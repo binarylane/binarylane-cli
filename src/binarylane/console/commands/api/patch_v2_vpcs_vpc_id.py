@@ -14,6 +14,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.api.get_v2_vpcs as api_get_v2_vpcs
 from binarylane.console.parser import ListAttribute, Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
@@ -35,13 +36,18 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
+        def lookup_vpc_id(ref: str) -> Union[None, int]:
+            return api_get_v2_vpcs.Command(self._context).lookup(ref)
+
         mapping.add(
             PrimitiveAttribute(
                 "vpc_id",
                 int,
                 required=True,
                 option_name=None,
-                description="""The target vpc id.""",
+                metavar="vpc",
+                description="""The target vpc id or name.""",
+                lookup=lookup_vpc_id,
             )
         )
 

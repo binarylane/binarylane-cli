@@ -8,13 +8,17 @@ available in OpenAPI Specification published by BinaryLane.
 
 {# Map of attribute name to command that can resolve attribute reference. #}
 {% set lookup_map = {
+    "load_balancer_id": "load-balancer list",
     "server_id": "server list",
+    "vpc_id": "vpc list",
 } %}
 
 {# Map of command to {id,ref} obect specifying the attributes within
 x-cli-command's response that provide the reference (input) and id (output). #}
 {% set entity_map = {
+    "load-balancer list": {"id": "id", "ref": "name"},
     "server list": {"id": "id", "ref": "name"},
+    "vpc list": {"id": "id", "ref": "name"},
 } %}
 
 {# Add x-cli-lookup to attributes that support lookup. #}

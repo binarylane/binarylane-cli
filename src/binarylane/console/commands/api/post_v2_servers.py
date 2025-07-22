@@ -14,6 +14,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.api.get_v2_vpcs as api_get_v2_vpcs
 from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute, PrimitiveAttribute
 from binarylane.console.runners.actionlink import ActionLinkRunner
 
@@ -95,13 +96,18 @@ class Command(ActionLinkRunner):
             )
         )
 
+        def lookup_vpc_id(ref: str) -> Union[None, int]:
+            return api_get_v2_vpcs.Command(self._context).lookup(ref)
+
         json_body.add(
             PrimitiveAttribute(
                 "vpc_id",
                 Union[Unset, None, int],
                 required=False,
-                option_name="vpc-id",
+                option_name=("vpc", "vpc-id"),
+                metavar="vpc",
                 description="""Leave null to use default (public) network for the selected region.""",
+                lookup=lookup_vpc_id,
             )
         )
 

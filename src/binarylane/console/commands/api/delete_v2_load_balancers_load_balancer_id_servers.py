@@ -11,6 +11,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.api.get_v2_load_balancers as api_get_v2_load_balancers
 import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
 from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
@@ -33,13 +34,18 @@ class Command(CommandRunner):
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
 
+        def lookup_load_balancer_id(ref: str) -> Union[None, int]:
+            return api_get_v2_load_balancers.Command(self._context).lookup(ref)
+
         mapping.add(
             PrimitiveAttribute(
                 "load_balancer_id",
                 int,
                 required=True,
                 option_name=None,
-                description="""The ID of the load balancer for which servers should be removed.""",
+                metavar="load_balancer",
+                description="""The ID or name of the load balancer for which servers should be removed.""",
+                lookup=lookup_load_balancer_id,
             )
         )
 
