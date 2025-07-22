@@ -1,15 +1,15 @@
 {% macro add_lookup(property) %}
-        {% set lookup_endpoint = lookup_parameters.get(property.name) %}
-        {% set lookup_entity = lookup_endpoint.data["x-cli-entity"] if lookup_endpoint %}
-        {% set lookup_type = property.get_instance_type_string() %}
-        {% if lookup_type == 'list' %}
-        {% set lookup_type = property.inner_property.get_instance_type_string() %}
-        {% endif %}
-        {% if lookup_endpoint -%}
+    {% set lookup_endpoint = lookup_parameters.get(property.name) %}
+    {% set lookup_entity = lookup_endpoint.data["x-cli-entity"] if lookup_endpoint %}
+    {% set lookup_type = property.get_instance_type_string() %}
+    {% if lookup_type == 'list' %}
+    {% set lookup_type = property.inner_property.get_instance_type_string() %}
+    {% endif %}
+    {% if lookup_endpoint -%}
         def {{ lookup_function(property, lookup_entity.id) }}(ref: str) -> Union[None, {{ lookup_type }}]:
             return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
 
-        {% endif %}
+    {% endif %}
 {% endmacro %}
 
 {% macro add_primitive(property, argument) %}
@@ -74,20 +74,20 @@
 
 {% macro lookup_function(property, entity_id) %}
 {% filter trim %}
-{% set suffix = "_" + entity_id %}
-{# Normalize property.python_name of "server"/"server_id"/"server_ids" to "server_id" #}
-lookup_{{ property.python_name.removesuffix(suffix+"s").removesuffix(suffix) }}{{ suffix }}
+    {% set suffix = "_" + entity_id %}
+    {# Normalize property.python_name of "server"/"server_id"/"server_ids" to "server_id" #}
+    lookup_{{ property.python_name.removesuffix(suffix+"s").removesuffix(suffix) }}{{ suffix }}
 {% endfilter %}
 {% endmacro %}
 
 {% macro remove_suffix(value, suffix) %}
 {% filter trim %}
-{% if value.endswith(suffix + "s") %}
-{{ value.removesuffix(suffix + "s") }}s
-{% elif value.endswith(suffix) %}
-{{ value.removesuffix(suffix) }}
-{% else %}
-{{ value }}
-{% endif %}
+    {% if value.endswith(suffix + "s") %}
+        {{ value.removesuffix(suffix + "s") }}s
+    {% elif value.endswith(suffix) %}
+        {{ value.removesuffix(suffix) }}
+    {% else %}
+        {{ value }}
+    {% endif %}
 {% endfilter %}
 {% endmacro %}
