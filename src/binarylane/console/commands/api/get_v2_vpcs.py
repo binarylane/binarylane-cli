@@ -4,6 +4,7 @@ from http import HTTPStatus
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.vpcs.get_v2_vpcs import sync_detailed
+from binarylane.console.util import create_client
 from binarylane.models.links import Links
 from binarylane.models.vpcs_response import VpcsResponse
 
@@ -41,6 +42,18 @@ class Command(ListRunner):
             "ip_range": """The IPv4 range for this VPC in CIDR format.""",
             "route_entries": """The route entries that control how network traffic is directed through the VPC environment.""",
         }
+
+    def lookup(self, ref: str) -> Optional[int]:
+        status_code, received = self.request(create_client(self._context), CommandRequest())
+        if status_code != 200:
+            super().response(status_code, received)
+
+        assert isinstance(received, VpcsResponse)
+        for item in received.vpcs:
+            if item.name == ref:
+                return item.id
+        else:
+            return None
 
     @property
     def reference_url(self) -> str:

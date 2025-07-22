@@ -4,6 +4,7 @@ from http import HTTPStatus
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 from binarylane.api.load_balancers.get_v2_load_balancers import sync_detailed
+from binarylane.console.util import create_client
 from binarylane.models.links import Links
 from binarylane.models.load_balancers_response import LoadBalancersResponse
 
@@ -54,6 +55,18 @@ class Command(ListRunner):
             "server_ids": """The server IDs of the servers that are currently in the load balancer pool (regardless of their current 'health').""",
             "region": """The region the load balancer is located in. If this value is null the load balancer is an 'AnyCast' load balancer.""",
         }
+
+    def lookup(self, ref: str) -> Optional[int]:
+        status_code, received = self.request(create_client(self._context), CommandRequest())
+        if status_code != 200:
+            super().response(status_code, received)
+
+        assert isinstance(received, LoadBalancersResponse)
+        for item in received.load_balancers:
+            if item.name == ref:
+                return item.id
+        else:
+            return None
 
     @property
     def reference_url(self) -> str:
