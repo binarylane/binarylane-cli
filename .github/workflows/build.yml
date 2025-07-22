@@ -40,6 +40,12 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/poetry.lock
+            **/pyproject.toml
+            **/uv.lock
 
       - name: Create static binary
         run: >
