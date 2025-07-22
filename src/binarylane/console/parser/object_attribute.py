@@ -72,11 +72,10 @@ class ObjectAttribute(Attribute):
         existing_arguments = parser.argument_names
 
         # If any argument names for this class conflict with existing names, prefix all the argument names
-        if any(arg for arg in self.attributes if arg.name_or_flag in existing_arguments):
+        if any(arg for arg in self.attributes if any(opt for opt in arg.name_or_flag if opt in existing_arguments)):
             self._unsupported("Prefixing option names", False)
             for arg in self.attributes:
-                if arg.option_name:
-                    arg.option_name = f"{self.attribute_name.replace('_', '-')}-{arg.option_name}"
+                arg.option_names = [f"{self.attribute_name.replace('_', '-')}-{opt}" for opt in arg.option_names]
 
         group = self.group_name
         if group:
@@ -97,7 +96,9 @@ class ObjectAttribute(Attribute):
         # If there are required attributes for the class constructor
         if init_kwargs:
             # See if any were not provided a value
-            missing = [attr.name_or_flag for attr in self.init_attributes if init_kwargs[attr.attribute_name] is UNSET]
+            missing = [
+                attr.name_or_flag[0] for attr in self.init_attributes if init_kwargs[attr.attribute_name] is UNSET
+            ]
 
             # If one or more required attributes did not receive a value:
             if missing:

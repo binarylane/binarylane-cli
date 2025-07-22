@@ -133,7 +133,8 @@ class Parser(argparse.ArgumentParser):
         del self._groups[group_name]
         self._action_groups = [g for g in self._action_groups if g.title != group_name]
 
-    def add_to_group(self, group_name: Union[str, bool], name_or_flag: str, type_: type, **kwargs: Any) -> None:
+    def add_to_group(self, group_name: Union[str, bool], names: Sequence[str], type_: type, **kwargs: Any) -> None:
+        name_or_flag, *aliases = names
         self._argument_names.append(name_or_flag)
 
         if isinstance(group_name, bool):
@@ -150,4 +151,8 @@ class Parser(argparse.ArgumentParser):
             del kwargs["required"]
 
         logger.debug("add_argument %s (%s) - %s", name_or_flag, type_, repr(kwargs))
-        group.add_argument(name_or_flag, type=type_, **kwargs)
+
+        action = group.add_argument(*names, type=type_, **kwargs)
+        # Do not show option aliases in help output
+        if aliases:
+            action.option_strings = [name_or_flag]

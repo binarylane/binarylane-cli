@@ -1,18 +1,13 @@
-{% import "endpoint_module/attributes.jinja" as attributes %}
+{% import "endpoint_module/attributes.jinja" as attributes with context %}
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
         {% if (req_parameters + opt_parameters) %}
 
         {% for property in endpoint.path_parameters.values() %}
-        {# Check if parameter has a lookup command, and define handler if it does #}
-        {% set lookup_endpoint = lookup_parameters.get(property.name) %}
-        {% if lookup_endpoint %}
-        {% set lookup_entity = lookup_endpoint.data['x-cli-entity'] %}
-        def lookup_{{ property.python_name }}(ref: str) -> Union[None, {{ property.get_type_string() }}]:
-            return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
-
-        {% endif %}
-        mapping.{{ attributes.add_primitive(property, True, lookup_entity if lookup_endpoint else None) }}
+        {{ attributes.add_lookup(property) }}
+        {% endfor %}
+        {% for property in endpoint.path_parameters.values() %}
+        mapping.{{ attributes.add_primitive(property, True) }}
         {% endfor %}
 
         {% if endpoint.json_body %}
@@ -34,6 +29,7 @@
         {{ add_object_to_parser(subparser, openapi.models_by_class[property.class_info]) }}
         {% else %}
 
+        {{ attributes.add_lookup(property) }}
         {{ parser }}.{{ attributes.add_primitive(property) }}
         {% endif %}
         {% endfor %}

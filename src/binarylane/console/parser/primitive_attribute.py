@@ -4,7 +4,7 @@ import argparse
 import logging
 from datetime import datetime
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Type, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Type, Union
 from binarylane.pycompat import actions, typing
 
 from binarylane.types import UNSET, Unset
@@ -47,7 +47,7 @@ class PrimitiveAttribute(Attribute):
         attribute_name: str,
         attribute_type_hint: object,
         *,
-        option_name: Optional[str],
+        option_name: Union[Sequence[str], str, None],
         required: bool,
         description: Optional[str] = None,
         metavar: Optional[str] = None,
@@ -72,7 +72,7 @@ class PrimitiveAttribute(Attribute):
         self._dest = attribute_name
         self._action = action
         self._lookup = lookup
-        self._metavar = (metavar or option_name or attribute_name).replace("-", "_").upper()
+        self._metavar = (metavar or self.option_name or attribute_name).replace("-", "_").upper()
 
     @property
     def usage(self) -> Optional[str]:

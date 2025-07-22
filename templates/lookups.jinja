@@ -1,17 +1,42 @@
-{# TODO: implement lookups via OpenAPI spec metadata #}
+{% filter trim %}{# Discard whitespace #}
+
+{# ---
+This template synthesises "x-cli-lookup" and "x-cli-entity" extension properties
+on path parameter and request schema definitions as the required data is not
+available in OpenAPI Specification published by BinaryLane.
+--- #}
+
+{# Map of attribute name to command that can resolve attribute reference. #}
 {% set lookup_map = {
     "server_id": "server list",
 } %}
+
+{# Map of command to {id,ref} obect specifying the attributes within
+x-cli-command's response that provide the reference (input) and id (output). #}
 {% set entity_map = {
     "server list": {"id": "id", "ref": "name"},
 } %}
+
+{# Add x-cli-lookup to attributes that support lookup. #}
 {% for parameter_name in lookup_map %}
-{% for param in (endpoint.data.parameters or []) if param.param_in == "path" and param.name == parameter_name %}
-{% set _ = param.__setattr__("x-cli-lookup", lookup_map[parameter_name]) %}
+
+    {# Examine path parameters #}
+    {% for param in (endpoint.data.parameters or []) if param.param_in == "path" and param.name == parameter_name %}
+        {% set _ = param.__setattr__("x-cli-lookup", lookup_map[parameter_name]) %}
+    {% endfor %}
+
+    {# Examine request body schema #}
+    {% if endpoint.json_body and endpoint.json_body.get_instance_type_string() != 'list' %}
+        {% for name, prop in openapi.models_by_class[endpoint.json_body.class_info].data.properties.items() if name in ["%s","%ss"] | map("format", parameter_name) %}
+            {% set _ = prop.__setattr__("x-cli-lookup", lookup_map[parameter_name]) %}
+        {% endfor %}
+    {% endif %}
+
 {% endfor %}
+
+{# Add x-cli-entity if endpoint is is used to perform lookups. #}
+{% for command_name in entity_map if endpoint.data["x-cli-command"] == command_name %}
+    {% set _ = endpoint.data.__setattr__("x-cli-entity", entity_map[command_name]) %}
 {% endfor %}
-{% for command_name in entity_map %}
-{% if endpoint.data["x-cli-command"] == command_name %}
-{% set _ = endpoint.data.__setattr__("x-cli-entity", entity_map[command_name]) %}
-{% endif %}
-{% endfor %}
+
+{% endfilter %}
