@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v0.20.0 (2025-07-22)
+
+### Features
+
+- add x-cli-lookup attribute to load-balancer and vpc (#69)
+- support x-cli-lookup attribute on request body properties (#68)
+
 ## v0.19.0 (2025-04-04)
 
 ### Bug Fixes
