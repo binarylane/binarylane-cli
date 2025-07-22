@@ -1,0 +1,93 @@
+{% macro add_lookup(property) %}
+    {% set lookup_endpoint = lookup_parameters.get(property.name) %}
+    {% set lookup_entity = lookup_endpoint.data["x-cli-entity"] if lookup_endpoint %}
+    {% set lookup_type = property.get_instance_type_string() %}
+    {% if lookup_type == 'list' %}
+    {% set lookup_type = property.inner_property.get_instance_type_string() %}
+    {% endif %}
+    {% if lookup_endpoint -%}
+        def {{ lookup_function(property, lookup_entity.id) }}(ref: str) -> Union[None, {{ lookup_type }}]:
+            return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
+
+    {% endif %}
+{% endmacro %}
+
+{% macro add_primitive(property, argument) %}
+    add(PrimitiveAttribute(
+        "{{ property.python_name }}",
+        {{ property.get_type_string() }},
+        required = {{ property.required if not argument else True }},
+        {% set lookup_endpoint = lookup_parameters.get(property.name) %}
+        {% set lookup_entity = lookup_endpoint.data["x-cli-entity"] if lookup_endpoint %}
+        {% if not lookup_endpoint %}
+        {{ option_name(property if not argument else None) }}
+        {{ description_argument(property) }}
+        {% else %}
+        {% set option_name = property.name.replace('_','-') %}
+        {% set entity_id = lookup_entity['id'] %}
+        {% if argument %}
+        option_name = None,
+        {% elif option_name.endswith("-" + entity_id) or option_name.endswith("-" + entity_id + "s") %}
+        option_name = ("{{ remove_suffix(option_name, "-" + entity_id) }}", "{{ option_name }}"),
+        {% else %}
+        option_name = "{{ option_name }}",
+        {% endif %}
+        {% set entity_ref = lookup_entity['ref'] %}
+        metavar="{{ remove_suffix(property.python_name, "_" + entity_id) }}",
+        {{ description_argument(property)
+            .replace(" " + entity_id.upper(), " " + entity_id.upper() + " or " + entity_ref)
+            .replace(" " + entity_id, " " + entity_id + " or " + entity_ref) }}
+        lookup = {{ lookup_function(property, entity_id )}}
+        {% endif %}
+    ))
+{%- endmacro %}
+
+{% macro add_list(property) %}
+    add(ListAttribute(
+        "{{ property.python_name }}",
+        {{ property.inner_property.get_type_string(no_optional=True) }},
+        required={{ property.required }},
+        {{ option_name(property) }}
+        {{ description_argument(property) }}
+    ))
+{% endmacro %}
+
+{% macro add_object(property, description_property) %}
+    add(ObjectAttribute(
+        "{{ property.python_name }}",
+        {{ property.get_type_string(no_optional=True) }},
+        {{ option_name(property) }}
+        required = {{ property.required }},
+        {{ description_argument(description_property) }}
+    ))
+{% endmacro %}
+
+{% macro description_argument(prop) %}
+    {% if prop.description %}
+        description="""{{ prop.description.replace("    ","") }}""",
+    {% endif %}
+{% endmacro %}
+
+{% macro option_name(prop) %}
+    option_name = {{ '"' + prop.name.replace('_','-') + '"' if prop else None }},
+{% endmacro %}
+
+{% macro lookup_function(property, entity_id) %}
+{% filter trim %}
+    {% set suffix = "_" + entity_id %}
+    {# Normalize property.python_name of "server"/"server_id"/"server_ids" to "server_id" #}
+    lookup_{{ property.python_name.removesuffix(suffix+"s").removesuffix(suffix) }}{{ suffix }}
+{% endfilter %}
+{% endmacro %}
+
+{% macro remove_suffix(value, suffix) %}
+{% filter trim %}
+    {% if value.endswith(suffix + "s") %}
+        {{ value.removesuffix(suffix + "s") }}s
+    {% elif value.endswith(suffix) %}
+        {{ value.removesuffix(suffix) }}
+    {% else %}
+        {{ value }}
+    {% endif %}
+{% endfilter %}
+{% endmacro %}

@@ -16,6 +16,7 @@ from binarylane.types import Unset
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
 from binarylane.console.parser import ListAttribute, Mapping, ObjectAttribute, PrimitiveAttribute
 from binarylane.console.runners.actionlink import ActionLinkRunner
 
@@ -112,13 +113,18 @@ class Command(ActionLinkRunner):
             )
         )
 
+        def lookup_server_id(ref: str) -> Union[None, int]:
+            return api_get_v2_servers.Command(self._context).lookup(ref)
+
         json_body.add(
             PrimitiveAttribute(
                 "server_ids",
                 Union[Unset, None, List[int]],
                 required=False,
-                option_name="server-ids",
-                description="""A list of server IDs to assign to this load balancer.""",
+                option_name=("servers", "server-ids"),
+                metavar="servers",
+                description="""A list of server ID or names to assign to this load balancer.""",
+                lookup=lookup_server_id,
             )
         )
 

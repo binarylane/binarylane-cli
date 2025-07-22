@@ -11,6 +11,7 @@ from binarylane.models.validation_problem_details import ValidationProblemDetail
 if TYPE_CHECKING:
     from binarylane.client import Client
 
+import binarylane.console.commands.api.get_v2_servers as api_get_v2_servers
 from binarylane.console.parser import Mapping, PrimitiveAttribute
 from binarylane.console.runners.command import CommandRunner
 
@@ -44,13 +45,18 @@ class Command(CommandRunner):
 
         json_body = mapping.add_json_body(ServerIdsRequest)
 
+        def lookup_server_id(ref: str) -> Union[None, int]:
+            return api_get_v2_servers.Command(self._context).lookup(ref)
+
         json_body.add(
             PrimitiveAttribute(
                 "server_ids",
                 List[int],
                 required=True,
-                option_name="server-ids",
-                description="""A list of server IDs.""",
+                option_name=("servers", "server-ids"),
+                metavar="servers",
+                description="""A list of server ID or names.""",
+                lookup=lookup_server_id,
             )
         )
 

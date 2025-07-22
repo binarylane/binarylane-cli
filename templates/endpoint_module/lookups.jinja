@@ -1,11 +1,19 @@
+{% filter trim %}{# Discard whitespace #}
+{# Populate dictionary of parameter -> lookup endpoint for attributes with x-cli-lookup #}
 
-{# Create a dictionary of path parameter -> endpoint (defined in endpoint_module.py.jinja due to jinja scope behaviour) #}
-{% for property in endpoint.path_parameters.values() %}
-{% for param in endpoint.data.parameters if param.param_in == 'path' and property.name == param.name and param['x-cli-lookup'] %}
-{% set lookup_endpoint = openapi.endpoints_by_name.get(param['x-cli-lookup']) %}
-{% if not lookup_endpoint %}
-{{ fail('lookup command not found', param['x-cli-lookup']) }}
+{# Examine path parameters #}
+{% for param in endpoint.data.parameters or [] if param['x-cli-lookup'] %}
+    {% set _ = lookup_parameters.__setitem__(param.name, openapi.endpoints_by_name.get(param['x-cli-lookup'])) %}
+{% endfor %}
+
+{# Examine request body schema, if any #}
+{% if endpoint.json_body and endpoint.json_body.get_instance_type_string() != 'list' %}
+    {% set model = openapi.models_by_class[endpoint.json_body.class_info] %}
+    {% if model and model.data %}
+        {% for name, prop in model.data.properties.items() if prop['x-cli-lookup'] %}
+            {% set _ = lookup_parameters.__setitem__(name, openapi.endpoints_by_name.get(prop['x-cli-lookup'])) %}
+        {% endfor %}
+    {% endif %}
 {% endif %}
-{% set _ = lookup_parameters.__setitem__(property.name, lookup_endpoint) %}
-{% endfor %}
-{% endfor %}
+
+{% endfilter %}

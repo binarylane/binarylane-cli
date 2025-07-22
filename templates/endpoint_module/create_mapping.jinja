@@ -1,33 +1,13 @@
+{% import "endpoint_module/attributes.jinja" as attributes with context %}
     def create_mapping(self) -> Mapping:
         mapping = Mapping(CommandRequest)
         {% if (req_parameters + opt_parameters) %}
-        {% macro description_argument(prop) %}{% if prop.description %}description="""{{ prop.description.replace("    ","") }}""",{% endif %}{% endmacro %}
-        {% macro option_name(prop) %}option_name = "{{ prop.name.replace('_','-') }}",{% endmacro %}
 
         {% for property in endpoint.path_parameters.values() %}
-        {# Check if parameter has a lookup command, and define handler if it does #}
-        {% set lookup_endpoint = lookup_parameters.get(property.name) %}
-        {% if lookup_endpoint %}
-        {% set lookup_entity = lookup_endpoint.data['x-cli-entity'] %}
-        def lookup_{{ property.python_name }}(ref: str) -> Union[None, {{ property.get_type_string() }}]:
-            return api_{{ python_identifier(lookup_endpoint.name) }}.Command(self._context).lookup(ref)
-
-        {% endif %}
-        mapping.add(PrimitiveAttribute(
-            "{{ property.python_name }}",
-            {{ property.get_type_string() }},
-            required = True,
-            option_name = None,
-            {% if not lookup_endpoint %}
-            {{ description_argument(property) }}
-            {% else %}
-            metavar="{{ property.python_name.replace("_" + lookup_entity['id'], "") }}",
-            {{ description_argument(property)
-                .replace(" " + lookup_entity['id'].upper(), " " + lookup_entity['id'].upper() + " or " + lookup_entity['ref'])
-                .replace(" " + lookup_entity['id'], " " + lookup_entity['id'] + " or " + lookup_entity['ref']) }}
-            lookup = lookup_{{ property.python_name }},
-            {% endif %}
-        ))
+        {{ attributes.add_lookup(property) }}
+        {% endfor %}
+        {% for property in endpoint.path_parameters.values() %}
+        mapping.{{ attributes.add_primitive(property, True) }}
         {% endfor %}
 
         {% if endpoint.json_body %}
@@ -40,34 +20,17 @@
         {% if property.get_instance_type_string() == "list" and property.inner_property.class_info in openapi.models_by_class %}
         {% set subparser = parser + "_" + property.inner_property.class_info.module_name %}
 
-        {{ subparser }} = {{ parser }}.add(ListAttribute(
-            "{{ property.python_name }}",
-            {{ property.inner_property.get_type_string(no_optional=True) }},
-            required={{ property.required }},
-            {{ option_name(property) }}
-            {{ description_argument(property) }}
-        ))
+        {{ subparser }} = {{ parser }}.{{ attributes.add_list(property) }}
         {{ add_object_to_parser(subparser, openapi.models_by_class[property.inner_property.class_info]) }}
         {% elif property.class_info in openapi.models_by_class %}
         {% set subparser = parser + "_" + property.class_info.module_name %}
 
-        {{ subparser }} = {{ parser }}.add(ObjectAttribute(
-            "{{ property.python_name }}",
-            {{ property.get_type_string(no_optional=True) }},
-            {{ option_name(property) }}
-            required = {{ property.required }},
-            {{ description_argument(prop.data.properties[property.name]) }}
-        ))
+        {{ subparser }} = {{ parser }}.{{ attributes.add_object(property, prop.data.properties[property.name]) }}
         {{ add_object_to_parser(subparser, openapi.models_by_class[property.class_info]) }}
         {% else %}
 
-        {{ parser }}.add(PrimitiveAttribute(
-            "{{ property.python_name }}",
-            {{ property.get_type_string() }},
-            required={{ property.required }},
-            {{ option_name(property) }}
-            {{ description_argument(property) }}
-        ))
+        {{ attributes.add_lookup(property) }}
+        {{ parser }}.{{ attributes.add_primitive(property) }}
         {% endif %}
         {% endfor %}
         {% endmacro %}
@@ -82,13 +45,7 @@
 
         {% if endpoint.query_parameters %}
         {% for property in endpoint.query_parameters.values() if property.name not in ('page', 'per_page') %}
-        mapping.add(PrimitiveAttribute(
-            "{{ property.python_name }}",
-            {{ property.get_type_string() }},
-            required={{ property.required }},
-            {{ option_name(property) }}
-            {{ description_argument(property) }}
-        ))
+        mapping.{{ attributes.add_primitive(property) }}
         {% endfor %}
         {% endif %}
         {% endif %}

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, ClassVar, List, Optional
+from typing import TYPE_CHECKING, ClassVar, List, Optional, Sequence, Union
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class Attribute(ABC):
     init: bool
     # if required is True, this attribute is mandatory in the command-line parsing sense
     required: bool
-    option_name: Optional[str]
+    option_names: List[str]
     description: Optional[str]
 
     def __init__(
@@ -32,14 +32,14 @@ class Attribute(ABC):
         attribute_type: type,
         *,
         required: bool,
-        option_name: Optional[str],
+        option_name: Union[str, Sequence[str], None],
         description: Optional[str],
     ) -> None:
         self.attribute_name = attribute_name
         self.attribute_type = attribute_type
         self.init = required
         self.required = required
-        self.option_name = option_name
+        self.option_names = [option_name] if isinstance(option_name, str) else list(option_name) if option_name else []
         self.description = description
 
     @property
@@ -51,8 +51,14 @@ class Attribute(ABC):
         return None
 
     @property
-    def name_or_flag(self) -> str:
-        return f"--{self.option_name}" if self.option_name else self.attribute_name
+    def option_name(self) -> Optional[str]:
+        return self.option_names[0] if self.option_names else None
+
+    @property
+    def name_or_flag(self) -> Sequence[str]:
+        if not self.option_names:
+            return [self.attribute_name]
+        return [f"--{opt}" for opt in self.option_names]
 
     @property
     def attributes(self) -> List[Attribute]:
