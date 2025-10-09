@@ -7,10 +7,42 @@ from typing import ClassVar, Optional
 
 
 class OptionName(str, Enum):
+    # Existing API options
     API_URL = "api-url"
     API_TOKEN = "api-token"
     API_DEVELOPMENT = "api-development"
     CONFIG_SECTION = "context"
+
+    # Output preferences
+    OUTPUT_FORMAT = "output-format"
+    SHOW_HEADER = "show-header"
+
+    # Per-command format preferences
+    FORMAT_IMAGES = "format-images"
+    FORMAT_SERVERS = "format-servers"
+    FORMAT_DOMAINS = "format-domains"
+    FORMAT_VPCS = "format-vpcs"
+    FORMAT_LOAD_BALANCERS = "format-load-balancers"
+    FORMAT_SSH_KEYS = "format-ssh-keys"
+    FORMAT_ACTIONS = "format-actions"
+    FORMAT_SIZES = "format-sizes"
+    FORMAT_REGIONS = "format-regions"
+    FORMAT_INVOICES = "format-invoices"
+    FORMAT_SOFTWARE = "format-software"
+
+    # Server creation defaults
+    DEFAULT_REGION = "default-region"
+    DEFAULT_SIZE = "default-size"
+    DEFAULT_IMAGE = "default-image"
+    DEFAULT_BACKUPS = "default-backups"
+    DEFAULT_SSH_KEYS = "default-ssh-keys"
+    DEFAULT_USER_DATA = "default-user-data"
+    DEFAULT_PORT_BLOCKING = "default-port-blocking"
+    DEFAULT_PASSWORD = "default-password"
+    DEFAULT_VPC = "default-vpc"
+
+    # Terminal settings
+    TERMINAL_WIDTH = "terminal-width"
 
     def __str__(self) -> str:
         return self.value
@@ -89,3 +121,112 @@ class OptionAttributes(ABC):
     @property
     def config_section(self) -> str:
         return self.required_option(OptionName.CONFIG_SECTION)
+
+    # Output preference properties
+
+    @property
+    def output_format(self) -> Optional[str]:
+        return self.get_option(OptionName.OUTPUT_FORMAT)
+
+    @property
+    def show_header(self) -> Optional[bool]:
+        value = self.get_option(OptionName.SHOW_HEADER)
+        return self.to_bool(value) if value else None
+
+    # Per-command format preference properties
+
+    @property
+    def format_images(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_IMAGES)
+
+    @property
+    def format_servers(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_SERVERS)
+
+    @property
+    def format_domains(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_DOMAINS)
+
+    @property
+    def format_vpcs(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_VPCS)
+
+    @property
+    def format_load_balancers(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_LOAD_BALANCERS)
+
+    @property
+    def format_ssh_keys(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_SSH_KEYS)
+
+    @property
+    def format_actions(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_ACTIONS)
+
+    @property
+    def format_sizes(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_SIZES)
+
+    @property
+    def format_regions(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_REGIONS)
+
+    @property
+    def format_invoices(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_INVOICES)
+
+    @property
+    def format_software(self) -> Optional[str]:
+        return self.get_option(OptionName.FORMAT_SOFTWARE)
+
+    # Server creation default properties
+
+    @property
+    def default_region(self) -> Optional[str]:
+        return self.get_option(OptionName.DEFAULT_REGION)
+
+    @property
+    def default_size(self) -> Optional[str]:
+        return self.get_option(OptionName.DEFAULT_SIZE)
+
+    @property
+    def default_image(self) -> Optional[str]:
+        return self.get_option(OptionName.DEFAULT_IMAGE)
+
+    @property
+    def default_backups(self) -> Optional[bool]:
+        value = self.get_option(OptionName.DEFAULT_BACKUPS)
+        return self.to_bool(value) if value else None
+
+    @property
+    def default_ssh_keys(self) -> Optional[str]:
+        return self.get_option(OptionName.DEFAULT_SSH_KEYS)
+
+    @property
+    def default_user_data(self) -> Optional[str]:
+        return self.get_option(OptionName.DEFAULT_USER_DATA)
+
+    @property
+    def default_port_blocking(self) -> Optional[bool]:
+        value = self.get_option(OptionName.DEFAULT_PORT_BLOCKING)
+        return self.to_bool(value) if value else None
+
+    @property
+    def default_password(self) -> Optional[str]:
+        return self.get_option(OptionName.DEFAULT_PASSWORD)
+
+    @property
+    def default_vpc(self) -> Optional[str]:
+        return self.get_option(OptionName.DEFAULT_VPC)
+
+    # Terminal setting properties
+
+    @property
+    def terminal_width(self) -> Optional[int]:
+        value = self.get_option(OptionName.TERMINAL_WIDTH)
+        if value and value.lower() != "auto":
+            try:
+                return int(value)
+            except ValueError:
+                return None
+        return None
