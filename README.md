@@ -16,6 +16,7 @@ Available Commands:
     domain              Access domain commands
     image               Access image commands
     load-balancer       Access load-balancer commands
+    preferences         Manage user preferences
     region              Access region commands
     server              Access server commands
     size                Access size commands
@@ -79,7 +80,7 @@ $ bl
 
 usage: bl [OPTIONS] COMMAND
 
-bl is a command-line interface for the binaryLane API
+bl is a command-line interface for the BinaryLane API
 
 Options:
   --help                Display available commands and descriptions
@@ -87,10 +88,11 @@ Options:
 Available Commands:
     account             Access account commands
     action              Access action commands
-    configure           Configure access to binaryLane API
+    configure           Configure access to BinaryLane API
     domain              Access domain commands
     image               Access image commands
     load-balancer       Access load-balancer commands
+    preferences         Manage user preferences
     region              Access region commands
     server              Access server commands
     size                Access size commands
@@ -160,7 +162,7 @@ Server creation is provided by the `bl server create` command. Use `--help` to
 view all arguments and parameters:
 
 ```
-$ bl server list --help
+$ bl server create --help
 usage: bl server create [OPTIONS] --size SIZE --image IMAGE --region REGION [PARAMETERS]
 
 Create a new server.
@@ -352,6 +354,41 @@ soon as the BinaryLane API accepts the requested command. To do so, include the
 ```
 $ bl server create --size std-min --image ubuntu-22.04-lts --region syd --async
 ```
+
+## Preferences
+
+Store commonly used options to streamline your workflow:
+
+```bash
+# Set default region, size, and image for server creation
+bl preferences set default-region syd
+bl preferences set default-size std-min
+bl preferences set default-image ubuntu-24.04
+
+# Now create servers more quickly
+bl server create --name myserver
+# Region, size, and image will use your preferences
+```
+
+**Terminal Settings**
+
+- `terminal-width` - Set terminal width for help text (numeric value, or null for auto-detection)
+
+Example:
+```bash
+bl preferences set terminal-width 120
+```
+
+### Priority
+
+Preferences provide defaults that can always be overridden:
+
+1. Command-line arguments (highest priority)
+2. Environment variables
+3. Preferences (`bl preferences set`)
+4. Built-in defaults (lowest priority)
+
+See [PREFERENCES.md](PREFERENCES.md) for complete documentation.
 
 ### Configuration file
 
