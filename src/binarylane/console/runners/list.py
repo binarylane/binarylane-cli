@@ -3,7 +3,7 @@ from __future__ import annotations
 import fnmatch
 import re
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from binarylane.console.runners.command import CommandRunner
 
@@ -28,8 +28,43 @@ class ListRunner(CommandRunner):
     def fields(self) -> Dict[str, str]:
         """Map of field name: description for all available fields"""
 
+    def _get_config_format(self) -> Optional[str]:
+        """Get format preference from config based on command name"""
+        # Map command patterns to config properties
+        # This could be more sophisticated, but explicit mapping is clearer
+        command_name = self._context.name.lower()
+
+        if "image" in command_name:
+            return self._context.format_images
+        elif "server" in command_name and "list" in command_name:
+            return self._context.format_servers
+        elif "domain" in command_name:
+            return self._context.format_domains
+        elif "vpc" in command_name:
+            return self._context.format_vpcs
+        elif "load-balancer" in command_name:
+            return self._context.format_load_balancers
+        elif "ssh-key" in command_name:
+            return self._context.format_ssh_keys
+        elif "action" in command_name:
+            return self._context.format_actions
+        elif "size" in command_name:
+            return self._context.format_sizes
+        elif "region" in command_name:
+            return self._context.format_regions
+        elif "invoice" in command_name:
+            return self._context.format_invoices
+        elif "software" in command_name:
+            return self._context.format_software
+
+        return None
+
     def configure(self, parser: Parser) -> None:
         super().configure(parser)
+
+        # Use config format as default if available
+        config_format = self._get_config_format()
+        default_format = config_format if config_format else ",".join(self.default_format)
 
         parser.add_group_help(title="Available fields", entries=self.fields)
         parser.add_argument(
@@ -38,7 +73,7 @@ class ListRunner(CommandRunner):
             help='Comma-separated list of fields to display. Wildcards are supported: \
                 e.g. --format "*" will display all fields. (default: "%(default)s")',
             metavar="FIELD,...",
-            default=",".join(self.default_format),
+            default=default_format,
         )
         parser.add_argument(
             "-1",
