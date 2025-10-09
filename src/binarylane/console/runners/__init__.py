@@ -69,7 +69,7 @@ class Runner(ABC):
     _parser: Parser
 
     def __init__(self, context: Context) -> None:
-        self._parser = Parser(context.prog, context.description)
+        self._parser = Parser(context.prog, context.description, context=context)
         self._parser.add_argument("--help", help=self.HELP_DESCRIPTION, action="help")
 
         self._context = context
