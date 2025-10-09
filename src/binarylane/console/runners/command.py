@@ -37,7 +37,10 @@ class CommandRunner(Runner):
 
     def __init__(self, context: Context) -> None:
         super().__init__(context)
-        self._output = self._default_output
+        # Apply config defaults, can be overridden by CLI args
+        self._output = context.output_format or self._default_output
+        if context.show_header is not None:
+            self._header = context.show_header
 
     @property
     def _default_output(self) -> str:

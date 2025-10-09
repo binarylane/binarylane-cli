@@ -32,13 +32,17 @@ class Parser(argparse.ArgumentParser):
     _keywords: List[str]
     _groups: Dict[str, ArgumentGroup]
     _dest_counter: int = 0
+    _context: Optional[Any] = None  # Optional Context to access terminal width config
 
     # Optional callback on completion of argument parsing, but prior to constructing mapped_object
     on_parse_args: Callable[[Namespace], None] = staticmethod(lambda _: None)  # type: ignore
 
-    def __init__(self, prog: str, description: Optional[str] = None, epilog: Optional[str] = None) -> None:
+    def __init__(
+        self, prog: str, description: Optional[str] = None, epilog: Optional[str] = None, context: Optional[Any] = None
+    ) -> None:
         super().__init__(prog=prog, description=description, epilog=epilog, add_help=False, allow_abbrev=False)
 
+        self._context = context
         self._groups = {
             "required=True": self.add_argument_group(title="Arguments"),
             "required=False": self.add_argument_group(title="Parameters"),
@@ -48,9 +52,18 @@ class Parser(argparse.ArgumentParser):
         self._keywords = []
 
     def _get_formatter(self) -> HelpFormatter:
-        # argparse defaults to 70 when terminal size is unavailable, which is rather narrow
-        size = shutil.get_terminal_size((80, 25))
-        return CommandHelpFormatter(self.prog, width=size.columns - 2)
+        # Check if user configured a specific width
+        config_width = getattr(self._context, "terminal_width", None) if self._context else None
+
+        if config_width:
+            # User specified exact width in config
+            width = config_width
+        else:
+            # Auto-detect terminal width with fallback to 80
+            size = shutil.get_terminal_size((80, 25))
+            width = size.columns
+
+        return CommandHelpFormatter(self.prog, width=width - 2)
 
     @property
     def argument_names(self) -> List[str]:

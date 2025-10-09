@@ -51,6 +51,49 @@ class UserConfig(_Config):
             str(self.api_development).lower() if self.api_development != default.api_development else None
         )
 
+        # Output preferences - only save if explicitly set
+        if self.output_format:
+            config_options[OptionName.OUTPUT_FORMAT] = self.output_format
+        if self.show_header is not None:
+            config_options[OptionName.SHOW_HEADER] = str(self.show_header).lower()
+
+        # Per-command format preferences
+        for opt in [
+            OptionName.FORMAT_IMAGES,
+            OptionName.FORMAT_SERVERS,
+            OptionName.FORMAT_DOMAINS,
+            OptionName.FORMAT_VPCS,
+            OptionName.FORMAT_LOAD_BALANCERS,
+            OptionName.FORMAT_SSH_KEYS,
+        ]:
+            value = self.get_option(opt)
+            if value:
+                config_options[opt] = value
+
+        # Server creation defaults
+        for opt in [
+            OptionName.DEFAULT_REGION,
+            OptionName.DEFAULT_SIZE,
+            OptionName.DEFAULT_IMAGE,
+            OptionName.DEFAULT_SSH_KEYS,
+            OptionName.DEFAULT_USER_DATA,
+            OptionName.DEFAULT_PASSWORD,
+            OptionName.DEFAULT_VPC,
+        ]:
+            value = self.get_option(opt)
+            if value:
+                config_options[opt] = value
+
+        # Boolean defaults
+        if self.default_backups is not None:
+            config_options[OptionName.DEFAULT_BACKUPS] = str(self.default_backups).lower()
+        if self.default_port_blocking is not None:
+            config_options[OptionName.DEFAULT_PORT_BLOCKING] = str(self.default_port_blocking).lower()
+
+        # Terminal settings
+        if self.terminal_width:
+            config_options[OptionName.TERMINAL_WIDTH] = str(self.terminal_width)
+
         # Write configuration to disk
         file = self.get_source(src.FileSource)
         file.save(config_options)
