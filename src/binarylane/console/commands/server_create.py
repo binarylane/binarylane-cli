@@ -37,6 +37,15 @@ class Command(post_v2_servers.Command):
         if "--region" not in modified_args and ctx.default_region:
             modified_args.extend(["--region", ctx.default_region])
 
+        # Inject boolean flags if not already provided
+        if "--backups" not in modified_args and "--no-backups" not in modified_args:
+            if ctx.default_backups is not None:
+                modified_args.append("--backups" if ctx.default_backups else "--no-backups")
+
+        if "--port-blocking" not in modified_args and "--no-port-blocking" not in modified_args:
+            if ctx.default_port_blocking is not None:
+                modified_args.append("--port-blocking" if ctx.default_port_blocking else "--no-port-blocking")
+
         super().run(modified_args)
 
     def request(
@@ -50,9 +59,7 @@ class Command(post_v2_servers.Command):
         ctx = self._context
 
         # Optional parameters with config defaults
-        if isinstance(getattr(body, "backups", Unset), type(Unset)):
-            if ctx.default_backups is not None:
-                body.backups = ctx.default_backups
+        # Note: backups and port_blocking are now handled as CLI args in run()
 
         if isinstance(getattr(body, "ssh_keys", Unset), type(Unset)):
             if ctx.default_ssh_keys:
@@ -61,10 +68,6 @@ class Command(post_v2_servers.Command):
         if isinstance(getattr(body, "user_data", Unset), type(Unset)):
             if ctx.default_user_data:
                 body.user_data = ctx.default_user_data
-
-        if isinstance(getattr(body, "port_blocking", Unset), type(Unset)):
-            if ctx.default_port_blocking is not None:
-                body.port_blocking = ctx.default_port_blocking
 
         if isinstance(getattr(body, "password", Unset), type(Unset)):
             if ctx.default_password:

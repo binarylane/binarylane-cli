@@ -348,9 +348,15 @@ class Command(Runner):
         for option, flag in preference_map:
             value = self._context.get_option(option)
             if value is not None:
-                # Handle boolean values
+                # Handle boolean values - convert to --flag or --no-flag format
                 if option in (OptionName.DEFAULT_BACKUPS, OptionName.DEFAULT_PORT_BLOCKING):
-                    args.append(f"{flag} {value}")
+                    bool_value = value.lower() in ("true", "1", "yes", "on")
+                    if bool_value:
+                        args.append(flag)
+                    else:
+                        # Convert --backups to --no-backups, --port-blocking to --no-port-blocking
+                        no_flag = flag.replace("--", "--no-", 1)
+                        args.append(no_flag)
                 else:
                     args.append(f"{flag} {value}")
 
