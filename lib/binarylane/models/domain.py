@@ -17,7 +17,8 @@ class Domain:
         name (str): The name of the domain.
         current_nameservers (List[str]): The current authoritative name servers for this domain.
         zone_file (str): The zone file for the selected domain. If the DNS records for this domain are not managed
-            locally this is what the zone file would be if the authority was delegated to us.
+            locally this is what the zone file would be if the authority was delegated to us. The serial is will always be 0
+            rather than the correct value.
         ttl (Union[Unset, None, int]): The time to live for records in this domain in seconds. If the DNS records for
             this domain are not managed locally this will be what the TTL would be if the authority was delegated to us.
     """

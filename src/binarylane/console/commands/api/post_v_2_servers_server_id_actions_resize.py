@@ -282,7 +282,7 @@ Submit an empty array to disable deployment of default keys.""",
                 ChangeLicenses,
                 option_name="change-licenses",
                 required=False,
-                description="""This may be left null to keep the current licenses for the server. If this is provided any licenses that are not included will be removed.""",
+                description="""This may be left null to keep the current licenses for the server. If this is provided any licenses that are not included will be removed. Any licences that are invalid will be removed regardless, see the documentation for `servers/{server_id}/software` for more information.""",
             )
         )
 

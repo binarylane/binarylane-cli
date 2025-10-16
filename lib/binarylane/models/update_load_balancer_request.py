@@ -4,8 +4,8 @@ from typing import Any, Dict, List, Type, TypeVar, Union, cast
 
 import attr
 
-from binarylane.models.forwarding_rule import ForwardingRule
-from binarylane.models.health_check import HealthCheck
+from binarylane.models.forwarding_rule_request import ForwardingRuleRequest
+from binarylane.models.health_check_request import HealthCheckRequest
 from binarylane.types import UNSET, Unset
 
 T = TypeVar("T", bound="UpdateLoadBalancerRequest")
@@ -16,17 +16,17 @@ class UpdateLoadBalancerRequest:
     """
     Attributes:
         name (str): The hostname of the load balancer.
-        forwarding_rules (Union[Unset, None, List[ForwardingRule]]): The rules that control which traffic the load
-            balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.
-        health_check (Union[Unset, None, HealthCheck]): The rules that determine which servers are considered 'healthy'
-            and in the server pool for the load balancer. Leave this null to accept appropriate defaults based on the
-            forwarding_rules.
+        forwarding_rules (Union[Unset, None, List[ForwardingRuleRequest]]): The rules that control which traffic the
+            load balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.
+        health_check (Union[Unset, None, HealthCheckRequest]): The rules that determine which servers are considered
+            'healthy' and in the server pool for the load balancer. Leave this null to accept appropriate defaults based on
+            the forwarding_rules.
         server_ids (Union[Unset, None, List[int]]): A list of server IDs to assign to this load balancer.
     """
 
     name: str
-    forwarding_rules: Union[Unset, None, List[ForwardingRule]] = UNSET
-    health_check: Union[Unset, None, HealthCheck] = UNSET
+    forwarding_rules: Union[Unset, None, List[ForwardingRuleRequest]] = UNSET
+    health_check: Union[Unset, None, HealthCheckRequest] = UNSET
     server_ids: Union[Unset, None, List[int]] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
@@ -78,18 +78,18 @@ class UpdateLoadBalancerRequest:
         forwarding_rules = []
         _forwarding_rules = d.pop("forwarding_rules", UNSET)
         for forwarding_rules_item_data in _forwarding_rules or []:
-            forwarding_rules_item = ForwardingRule.from_dict(forwarding_rules_item_data)
+            forwarding_rules_item = ForwardingRuleRequest.from_dict(forwarding_rules_item_data)
 
             forwarding_rules.append(forwarding_rules_item)
 
         _health_check = d.pop("health_check", UNSET)
-        health_check: Union[Unset, None, HealthCheck]
+        health_check: Union[Unset, None, HealthCheckRequest]
         if _health_check is None:
             health_check = None
         elif isinstance(_health_check, Unset):
             health_check = UNSET
         else:
-            health_check = HealthCheck.from_dict(_health_check)
+            health_check = HealthCheckRequest.from_dict(_health_check)
 
         server_ids = cast(List[int], d.pop("server_ids", UNSET))
 

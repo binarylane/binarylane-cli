@@ -34,6 +34,7 @@ class Command(ListRunner):
     def default_format(self) -> List[str]:
         return [
             "licence_count",
+            "incompatible",
         ]
 
     @property
@@ -41,6 +42,9 @@ class Command(ListRunner):
         return {
             "software": """The currently licensed software.""",
             "licence_count": """The current licence count for the software.""",
+            "incompatible": """Software that is incompatible with the server will be automatically removed at the next plan change.
+Servers may have incompatible software due to changes made by support. Software is not incompatible merely because it is disabled;
+disabled software may be retained by servers that already have it, incompatible software will be removed.""",
         }
 
     @property

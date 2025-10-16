@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Type, TypeVar
 
 import attr
 
-from binarylane.models.forwarding_rule import ForwardingRule
+from binarylane.models.forwarding_rule_request import ForwardingRuleRequest
 
 T = TypeVar("T", bound="ForwardingRulesRequest")
 
@@ -13,11 +13,11 @@ T = TypeVar("T", bound="ForwardingRulesRequest")
 class ForwardingRulesRequest:
     """
     Attributes:
-        forwarding_rules (List[ForwardingRule]): The rules that control which traffic the load balancer will forward to
-            servers in the pool.
+        forwarding_rules (List[ForwardingRuleRequest]): The rules that control which traffic the load balancer will
+            forward to servers in the pool.
     """
 
-    forwarding_rules: List[ForwardingRule]
+    forwarding_rules: List[ForwardingRuleRequest]
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -43,7 +43,7 @@ class ForwardingRulesRequest:
         forwarding_rules = []
         _forwarding_rules = d.pop("forwarding_rules")
         for forwarding_rules_item_data in _forwarding_rules:
-            forwarding_rules_item = ForwardingRule.from_dict(forwarding_rules_item_data)
+            forwarding_rules_item = ForwardingRuleRequest.from_dict(forwarding_rules_item_data)
 
             forwarding_rules.append(forwarding_rules_item)
 

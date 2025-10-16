@@ -4,7 +4,7 @@ from http import HTTPStatus
 from typing import TYPE_CHECKING, Tuple, Union
 
 from binarylane.api.load_balancers.post_v2_load_balancers_load_balancer_id_forwarding_rules import sync_detailed
-from binarylane.models.forwarding_rule import ForwardingRule
+from binarylane.models.forwarding_rule_request import ForwardingRuleRequest
 from binarylane.models.forwarding_rules_request import ForwardingRulesRequest
 from binarylane.models.load_balancer_rule_protocol import LoadBalancerRuleProtocol
 from binarylane.models.problem_details import ProblemDetails
@@ -52,17 +52,17 @@ class Command(CommandRunner):
 
         json_body = mapping.add_json_body(ForwardingRulesRequest)
 
-        json_body_forwarding_rule = json_body.add(
+        json_body_forwarding_rule_request = json_body.add(
             ListAttribute(
                 "forwarding_rules",
-                ForwardingRule,
+                ForwardingRuleRequest,
                 required=True,
                 option_name="forwarding-rules",
                 description="""The rules that control which traffic the load balancer will forward to servers in the pool.""",
             )
         )
 
-        json_body_forwarding_rule.add(
+        json_body_forwarding_rule_request.add(
             PrimitiveAttribute(
                 "entry_protocol",
                 LoadBalancerRuleProtocol,

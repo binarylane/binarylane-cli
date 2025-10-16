@@ -22,7 +22,8 @@ class LoadBalancer:
         id (int): The ID of the load balancer.
         name (str): The hostname of the load balancer.
         ip (str): The IPv4 address of the load balancer.
-        status (LoadBalancerStatus):
+        status (LoadBalancerStatus): The current status of the load balancer.
+
             | Value | Description |
             | ----- | ----------- |
             | new | The load balancer is currently being built and is not ready to accept connections. |

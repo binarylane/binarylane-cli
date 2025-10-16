@@ -1,19 +1,20 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Type, TypeVar
+from typing import Any, Dict, List, Type, TypeVar, Union
 
 import attr
 
 from binarylane.models.health_check_protocol import HealthCheckProtocol
+from binarylane.types import UNSET, Unset
 
-T = TypeVar("T", bound="HealthCheck")
+T = TypeVar("T", bound="HealthCheckRequest")
 
 
 @attr.s(auto_attribs=True)
-class HealthCheck:
+class HealthCheckRequest:
     """
     Attributes:
-        protocol (HealthCheckProtocol): The protocol used for the health check.
+        protocol (Union[Unset, None, HealthCheckProtocol]): Leave null to accept the default HTTP protocol.
 
             | Value | Description |
             | ----- | ----------- |
@@ -22,43 +23,51 @@ class HealthCheck:
             | both | The health check will be performed via both HTTP and HTTPS. Failing a health check on one protocol will
             remove the server from the pool of servers only for that protocol. |
 
-        path (str): The path to the health check endpoint.
+        path (Union[Unset, None, str]): Leave null to accept the default '/' path.
     """
 
-    protocol: HealthCheckProtocol
-    path: str
+    protocol: Union[Unset, None, HealthCheckProtocol] = UNSET
+    path: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        protocol = self.protocol.value
+        protocol: Union[Unset, None, str] = UNSET
+        if not isinstance(self.protocol, Unset):
+            protocol = self.protocol.value if self.protocol else None
 
         path = self.path
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
-        field_dict.update(
-            {
-                "protocol": protocol,
-                "path": path,
-            }
-        )
+        field_dict.update({})
+        if protocol is not UNSET:
+            field_dict["protocol"] = protocol
+        if path is not UNSET:
+            field_dict["path"] = path
 
         return field_dict
 
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        protocol = HealthCheckProtocol(d.pop("protocol"))
+        _protocol = d.pop("protocol", UNSET)
+        protocol: Union[Unset, None, HealthCheckProtocol]
+        if _protocol is None:
+            protocol = None
+        elif isinstance(_protocol, Unset):
+            protocol = UNSET
+        else:
+            protocol = HealthCheckProtocol(_protocol)
 
-        path = d.pop("path")
+        path = d.pop("path", UNSET)
 
-        health_check = cls(
+        health_check_request = cls(
             protocol=protocol,
             path=path,
         )
 
-        health_check.additional_properties = d
-        return health_check
+        health_check_request.additional_properties = d
+        return health_check_request
 
     @property
     def additional_keys(self) -> List[str]:
