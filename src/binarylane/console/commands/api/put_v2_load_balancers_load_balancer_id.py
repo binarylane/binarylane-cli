@@ -4,9 +4,9 @@ from http import HTTPStatus
 from typing import TYPE_CHECKING, List, Tuple, Union
 
 from binarylane.api.load_balancers.put_v2_load_balancers_load_balancer_id import sync_detailed
-from binarylane.models.forwarding_rule import ForwardingRule
-from binarylane.models.health_check import HealthCheck
+from binarylane.models.forwarding_rule_request import ForwardingRuleRequest
 from binarylane.models.health_check_protocol import HealthCheckProtocol
+from binarylane.models.health_check_request import HealthCheckRequest
 from binarylane.models.load_balancer_rule_protocol import LoadBalancerRuleProtocol
 from binarylane.models.problem_details import ProblemDetails
 from binarylane.models.update_load_balancer_request import UpdateLoadBalancerRequest
@@ -67,17 +67,17 @@ class Command(CommandRunner):
             )
         )
 
-        json_body_forwarding_rule = json_body.add(
+        json_body_forwarding_rule_request = json_body.add(
             ListAttribute(
                 "forwarding_rules",
-                ForwardingRule,
+                ForwardingRuleRequest,
                 required=False,
                 option_name="forwarding-rules",
                 description="""The rules that control which traffic the load balancer will forward to servers in the pool. Leave null to accept a default "HTTP" only forwarding rule.""",
             )
         )
 
-        json_body_forwarding_rule.add(
+        json_body_forwarding_rule_request.add(
             PrimitiveAttribute(
                 "entry_protocol",
                 LoadBalancerRuleProtocol,
@@ -94,17 +94,17 @@ class Command(CommandRunner):
             )
         )
 
-        json_body_health_check = json_body.add(
+        json_body_health_check_request = json_body.add(
             ObjectAttribute(
                 "health_check",
-                HealthCheck,
+                HealthCheckRequest,
                 option_name="health-check",
                 required=False,
                 description="""The rules that determine which servers are considered 'healthy' and in the server pool for the load balancer. Leave this null to accept appropriate defaults based on the forwarding_rules.""",
             )
         )
 
-        json_body_health_check.add(
+        json_body_health_check_request.add(
             PrimitiveAttribute(
                 "protocol",
                 Union[Unset, None, HealthCheckProtocol],
@@ -122,7 +122,7 @@ class Command(CommandRunner):
             )
         )
 
-        json_body_health_check.add(
+        json_body_health_check_request.add(
             PrimitiveAttribute(
                 "path",
                 Union[Unset, None, str],

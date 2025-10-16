@@ -41,7 +41,7 @@ class Command(ListRunner):
             "id": """The ID of this domain.""",
             "name": """The name of the domain.""",
             "current_nameservers": """The current authoritative name servers for this domain.""",
-            "zone_file": """The zone file for the selected domain. If the DNS records for this domain are not managed locally this is what the zone file would be if the authority was delegated to us.""",
+            "zone_file": """The zone file for the selected domain. If the DNS records for this domain are not managed locally this is what the zone file would be if the authority was delegated to us. The serial is will always be 0 rather than the correct value.""",
             "ttl": """The time to live for records in this domain in seconds. If the DNS records for this domain are not managed locally this will be what the TTL would be if the authority was delegated to us.""",
         }
 

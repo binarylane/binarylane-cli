@@ -22,7 +22,7 @@
             assert isinstance(request, CommandRequest)
 
             {% for response_type in endpoint.responses %}
-            # {{ response_type.status_code }}: {{ response_type.prop.get_type_string() }}
+            # {{ response_type.status_code.__class__.__name__ }}.{{ response_type.status_code.name }}: {{ response_type.prop.get_type_string() }}
             {% endfor %}
             {% if paginated %}
             page = 0

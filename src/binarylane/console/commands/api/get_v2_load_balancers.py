@@ -41,7 +41,8 @@ class Command(ListRunner):
             "id": """The ID of the load balancer.""",
             "name": """The hostname of the load balancer.""",
             "ip": """The IPv4 address of the load balancer.""",
-            "status": """
+            "status": """The current status of the load balancer.
+
 | Value | Description |
 | ----- | ----------- |
 | new | The load balancer is currently being built and is not ready to accept connections. |

@@ -4,42 +4,36 @@ from typing import Any, Dict, List, Type, TypeVar
 
 import attr
 
-from binarylane.models.health_check_protocol import HealthCheckProtocol
+from binarylane.models.load_balancer_rule_protocol import LoadBalancerRuleProtocol
 
-T = TypeVar("T", bound="HealthCheck")
+T = TypeVar("T", bound="ForwardingRuleRequest")
 
 
 @attr.s(auto_attribs=True)
-class HealthCheck:
+class ForwardingRuleRequest:
     """
     Attributes:
-        protocol (HealthCheckProtocol): The protocol used for the health check.
+        entry_protocol (LoadBalancerRuleProtocol): The protocol that traffic must match for this load balancer to
+            forward traffic according to this rule.
 
             | Value | Description |
             | ----- | ----------- |
-            | http | The health check will be performed via HTTP. |
-            | https | The health check will be performed via HTTPS. |
-            | both | The health check will be performed via both HTTP and HTTPS. Failing a health check on one protocol will
-            remove the server from the pool of servers only for that protocol. |
+            | http | The load balancer will forward HTTP traffic that matches this rule. |
+            | https | The load balancer will forward HTTPS traffic that matches this rule. |
 
-        path (str): The path to the health check endpoint.
     """
 
-    protocol: HealthCheckProtocol
-    path: str
+    entry_protocol: LoadBalancerRuleProtocol
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        protocol = self.protocol.value
-
-        path = self.path
+        entry_protocol = self.entry_protocol.value
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
             {
-                "protocol": protocol,
-                "path": path,
+                "entry_protocol": entry_protocol,
             }
         )
 
@@ -48,17 +42,14 @@ class HealthCheck:
     @classmethod
     def from_dict(cls: Type[T], src_dict: Dict[str, Any]) -> T:
         d = src_dict.copy()
-        protocol = HealthCheckProtocol(d.pop("protocol"))
+        entry_protocol = LoadBalancerRuleProtocol(d.pop("entry_protocol"))
 
-        path = d.pop("path")
-
-        health_check = cls(
-            protocol=protocol,
-            path=path,
+        forwarding_rule_request = cls(
+            entry_protocol=entry_protocol,
         )
 
-        health_check.additional_properties = d
-        return health_check
+        forwarding_rule_request.additional_properties = d
+        return forwarding_rule_request
 
     @property
     def additional_keys(self) -> List[str]:

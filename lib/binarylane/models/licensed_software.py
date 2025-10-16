@@ -15,16 +15,23 @@ class LicensedSoftware:
     Attributes:
         software (Software): The currently licensed software.
         licence_count (int): The current licence count for the software.
+        incompatible (bool): Software that is incompatible with the server will be automatically removed at the next
+            plan change.
+            Servers may have incompatible software due to changes made by support. Software is not incompatible merely
+            because it is disabled;
+            disabled software may be retained by servers that already have it, incompatible software will be removed.
     """
 
     software: Software
     licence_count: int
+    incompatible: bool
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         software = self.software.to_dict()
 
         licence_count = self.licence_count
+        incompatible = self.incompatible
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -32,6 +39,7 @@ class LicensedSoftware:
             {
                 "software": software,
                 "licence_count": licence_count,
+                "incompatible": incompatible,
             }
         )
 
@@ -44,9 +52,12 @@ class LicensedSoftware:
 
         licence_count = d.pop("licence_count")
 
+        incompatible = d.pop("incompatible")
+
         licensed_software = cls(
             software=software,
             licence_count=licence_count,
+            incompatible=incompatible,
         )
 
         licensed_software.additional_properties = d

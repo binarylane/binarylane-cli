@@ -29,7 +29,8 @@ class Resize:
             server. If this is provided the server disks will be destroyed and the server will be rebuilt from the selected
             image.
         change_licenses (Union[Unset, None, ChangeLicenses]): This may be left null to keep the current licenses for the
-            server. If this is provided any licenses that are not included will be removed.
+            server. If this is provided any licenses that are not included will be removed. Any licences that are invalid
+            will be removed regardless, see the documentation for `servers/{server_id}/software` for more information.
         pre_action_backup (Union[Unset, None, TakeBackup]): Specify this to create a backup before any actions are
             taken, or leave null to skip.
     """
