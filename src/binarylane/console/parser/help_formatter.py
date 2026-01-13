@@ -27,6 +27,14 @@ class CommandHelpFormatter(argparse.HelpFormatter):
 
         return [text for text in text.splitlines() for text in textwrap.wrap(text, width)]
 
+    def _get_help_string(self, action: argparse.Action) -> str:
+        """Escape help text for argparse.
+
+        Argparse uses %-formatting for help strings, so literal % must be escaped as %%
+        while %(...)s needs to be left as-is.
+        """
+        return (super()._get_help_string(action) or "").replace("%", "%%").replace("%%(", "%(")
+
     def add_usage(
         self,
         usage: Optional[str],
