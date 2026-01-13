@@ -108,9 +108,9 @@ class CommandRunner(Runner):
         if status_code == 401:
             self.error(ExitCode.TOKEN, 'Unable to authenticate with API - please run "bl configure" to get started.')
 
-        # If no response is available, report an API error (unless it is `204 No Content`)
+        # If no response is available, report an API error (unless it is `202 Accepted` or `204 No Content`)
         if received is None:
-            if status_code != 204:
+            if status_code not in (202, 204):
                 self.error(ExitCode.API, f"HTTP {status_code}")
             return
 

@@ -100,6 +100,16 @@ def test_response_handles_nocontent(capsys: CaptureFixture[str]) -> None:
     assert captured.err == "" and captured.out == ""
 
 
+def test_response_handles_accepted(capsys: CaptureFixture[str]) -> None:
+    """HTTP 202 Accepted with no body should not be treated as an error."""
+    runner = TypeRunner(CommandRunner)
+
+    runner.test.response(202, None)
+
+    captured = capsys.readouterr()
+    assert captured.err == "" and captured.out == ""
+
+
 def test_response_handles_ok(capsys: CaptureFixture[str]) -> None:
     runner = TypeRunner(CommandRunner)
 
