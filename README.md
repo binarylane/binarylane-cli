@@ -79,7 +79,7 @@ $ bl
 
 usage: bl [OPTIONS] COMMAND
 
-bl is a command-line interface for the binaryLane API
+bl is a command-line interface for the BinaryLane API
 
 Options:
   --help                Display available commands and descriptions
@@ -87,7 +87,7 @@ Options:
 Available Commands:
     account             Access account commands
     action              Access action commands
-    configure           Configure access to binaryLane API
+    configure           Configure access to BinaryLane API
     domain              Access domain commands
     image               Access image commands
     load-balancer       Access load-balancer commands
@@ -160,7 +160,7 @@ Server creation is provided by the `bl server create` command. Use `--help` to
 view all arguments and parameters:
 
 ```
-$ bl server list --help
+$ bl server create --help
 usage: bl server create [OPTIONS] --size SIZE --image IMAGE --region REGION [PARAMETERS]
 
 Create a new server.
@@ -198,7 +198,7 @@ Parameters:
 ```
 
 In the help displayed by `bl`, **Arguments** are required and **Parameters**
-are optional. For the `bl server list` command `--size SIZE`, `--image IMAGE`,
+are optional. For the `bl server create` command `--size SIZE`, `--image IMAGE`,
 and `--region REGION` are required. A list of available choices for each can be
 displayed by running:
 
@@ -212,7 +212,7 @@ For example, to create a minimum-sized Ubuntu 22.04 LTS server in Sydney using
 SSH public key authentication:
 
 ```
-$ bl server create --size std-min --image ubuntu-22.04-lts --region syd
+$ bl server create --size std-min --image ubuntu-22.04 --region syd
 completed.
 ┌───────────────────────────┬─────────────────────────────────────────────────────────────────────────────────────┐
 │ name                      │ value                                                                               │
@@ -225,7 +225,7 @@ completed.
 │ created_at                │ 2023-01-20T02:02:32+00:00                                                           │
 │ status                    │ new                                                                                 │
 │ region                    │ Sydney                                                                              │
-│ image                     │ 20.04 LTS                                                                           │
+│ image                     │ 22.04 LTS                                                                           │
 │ size                      │ std-min                                                                             │
 │ size_slug                 │ std-min                                                                             │
 │ networks                  │ v4: [{'ip_address': '175.45.180.1',  'type': 'public', 'netmask': '255.255.255.0... │
@@ -245,7 +245,7 @@ For example, to create a server per the previous example with password
 authentication:
 
 ```
-$ bl server create --size std-min --image ubuntu-22.04-lts --region syd --password 'qq7s6GYZgbiVG3'
+$ bl server create --size std-min --image ubuntu-22.04 --region syd --password 'qq7s6GYZgbiVG3'
 ```
 
 Upon completion, the root password for the server in this example would be `qq7s6GYZgbiVG3`.
@@ -350,7 +350,7 @@ soon as the BinaryLane API accepts the requested command. To do so, include the
 `--async` option in the command invocation. For example:
 
 ```
-$ bl server create --size std-min --image ubuntu-22.04-lts --region syd --async
+$ bl server create --size std-min --image ubuntu-22.04 --region syd --async
 ```
 
 ### Configuration file
