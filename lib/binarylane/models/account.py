@@ -18,7 +18,7 @@ class Account:
         email (str): The email address registered for this account.
         email_verified (bool): Whether this account has been verified. Un-verified accounts are subject to some
             restrictions.
-        two_factor_authentication_enabled (bool): Whether this account has enabled two factor authentication.
+        two_factor_authentication_enabled (bool): Whether this account has enabled app-based two factor authentication.
         status (AccountStatus): The status of this account.
 
             | Value | Description |

@@ -24,6 +24,9 @@ class CreateServerRequest:
             Options.daily_backups will override this value if provided. Setting this to false has no effect.
         ipv6 (Union[Unset, None, bool]): If true this will enable IPv6 for this server.
         vpc_id (Union[Unset, None, int]): Leave null to use default (public) network for the selected region.
+        vpc_ipv4_address (Union[Unset, None, str]): If provided this will be the Ipv4 address for the server's private
+            VPC network adapter. If this is null an unused Ipv4 address will be assigned. This field is only valid when
+            VpcId is provided.
         ssh_keys (Union[Unset, None, List[Union[int, str]]]): This may be either the SSH keys Ids or fingerprints. If
             this is null or not provided any SSH keys that have been marked as default will be deployed (if the operating
             system supports SSH keys). Submit an empty array to disable deployment of default keys.
@@ -46,6 +49,7 @@ class CreateServerRequest:
     backups: Union[Unset, None, bool] = UNSET
     ipv6: Union[Unset, None, bool] = UNSET
     vpc_id: Union[Unset, None, int] = UNSET
+    vpc_ipv4_address: Union[Unset, None, str] = UNSET
     ssh_keys: Union[Unset, None, List[Union[int, str]]] = UNSET
     options: Union[Unset, None, SizeOptionsRequest] = UNSET
     licenses: Union[Unset, None, List[License]] = UNSET
@@ -65,6 +69,7 @@ class CreateServerRequest:
         backups = self.backups
         ipv6 = self.ipv6
         vpc_id = self.vpc_id
+        vpc_ipv4_address = self.vpc_ipv4_address
         ssh_keys: Union[Unset, None, List[Union[int, str]]] = UNSET
         if not isinstance(self.ssh_keys, Unset):
             if self.ssh_keys is None:
@@ -114,6 +119,8 @@ class CreateServerRequest:
             field_dict["ipv6"] = ipv6
         if vpc_id is not UNSET:
             field_dict["vpc_id"] = vpc_id
+        if vpc_ipv4_address is not UNSET:
+            field_dict["vpc_ipv4_address"] = vpc_ipv4_address
         if ssh_keys is not UNSET:
             field_dict["ssh_keys"] = ssh_keys
         if options is not UNSET:
@@ -148,6 +155,8 @@ class CreateServerRequest:
         ipv6 = d.pop("ipv6", UNSET)
 
         vpc_id = d.pop("vpc_id", UNSET)
+
+        vpc_ipv4_address = d.pop("vpc_ipv4_address", UNSET)
 
         ssh_keys = []
         _ssh_keys = d.pop("ssh_keys", UNSET)
@@ -190,6 +199,7 @@ class CreateServerRequest:
             backups=backups,
             ipv6=ipv6,
             vpc_id=vpc_id,
+            vpc_ipv4_address=vpc_ipv4_address,
             ssh_keys=ssh_keys,
             options=options,
             licenses=licenses,
