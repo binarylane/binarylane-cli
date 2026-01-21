@@ -37,3 +37,14 @@ def test_required_argument_help(app: App, capsys: CaptureFixture[str]) -> None:
     captured = capsys.readouterr()
     assert "\nArguments:\n" in captured.out
     assert "\nParameters:\n" in captured.out
+
+
+def test_help_with_percent_in_description(app: App, capsys: CaptureFixture[str]) -> None:
+    # Help text containing "100%" should not cause argparse format string errors
+    # The % character must be escaped as %% to prevent interpretation as format specifier
+    with pytest.raises(SystemExit):
+        app.run(["server", "alert", "get", "--help"])
+
+    captured = capsys.readouterr()
+    assert "usage: bl server alert get" in captured.out
+    assert "100%" in captured.out
