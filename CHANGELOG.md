@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## v0.20.1 (2026-01-21)
+
+### Bug Fixes
+
+- escape percent signs in argparse help text (#76)
+- treat HTTP 202 Accepted as valid response (#75)
+
 ## v0.20.0 (2025-07-22)
 
 ### Features
