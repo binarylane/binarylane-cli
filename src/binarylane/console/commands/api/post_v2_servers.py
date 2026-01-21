@@ -113,6 +113,16 @@ class Command(ActionLinkRunner):
 
         json_body.add(
             PrimitiveAttribute(
+                "vpc_ipv4_address",
+                Union[Unset, None, str],
+                required=False,
+                option_name="vpc-ipv4-address",
+                description="""If provided this will be the Ipv4 address for the server's private VPC network adapter. If this is null an unused Ipv4 address will be assigned. This field is only valid when VpcId is provided.""",
+            )
+        )
+
+        json_body.add(
+            PrimitiveAttribute(
                 "ssh_keys",
                 Union[Unset, None, List[Union[int, str]]],
                 required=False,
