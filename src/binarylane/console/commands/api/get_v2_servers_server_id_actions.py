@@ -56,6 +56,8 @@ class Command(ListRunner):
 """,
             "type": """The type of this action.""",
             "started_at": """The timestamp in ISO8601 format of when processing of this action started.""",
+            "title": """A short display name for the action.""",
+            "reason": """A user-friendly explanation of what is happening.""",
             "progress": """Information about the current progress of the action. Some actions are divided into 'steps' and this may also contain information about the current and completed steps.""",
             "completed_at": """The timestamp in ISO8601 format of when processing of this action completed. If this value is null the action is currently in progress.""",
             "resource_type": """The resource type (if any) associated with this action.

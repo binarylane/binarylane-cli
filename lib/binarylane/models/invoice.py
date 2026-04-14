@@ -32,7 +32,10 @@ class Invoice:
             this may identify the service, otherwise it will be the account reference.
         payment_failure_count (Union[Unset, None, int]): If this is included it indicates the number of failed attempts
             at processing payment for this invoice that have occurred.
-        invoice_download_url (Union[Unset, None, str]): The download URL for the rendered version of the invoice.
+        invoice_download_url (Union[Unset, None, str]): The download URL for the PDF version of the invoice. This URL
+            expires 24 hours after it is generated.
+        invoice_view_url (Union[Unset, None, str]): The URL for the HTML rendered version of the invoice. This URL
+            expires 24 hours after it is generated.
     """
 
     invoice_id: int
@@ -49,6 +52,7 @@ class Invoice:
     reference: Union[Unset, None, str] = UNSET
     payment_failure_count: Union[Unset, None, int] = UNSET
     invoice_download_url: Union[Unset, None, str] = UNSET
+    invoice_view_url: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,6 +79,7 @@ class Invoice:
         reference = self.reference
         payment_failure_count = self.payment_failure_count
         invoice_download_url = self.invoice_download_url
+        invoice_view_url = self.invoice_view_url
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -99,6 +104,8 @@ class Invoice:
             field_dict["payment_failure_count"] = payment_failure_count
         if invoice_download_url is not UNSET:
             field_dict["invoice_download_url"] = invoice_download_url
+        if invoice_view_url is not UNSET:
+            field_dict["invoice_view_url"] = invoice_view_url
 
         return field_dict
 
@@ -138,6 +145,8 @@ class Invoice:
 
         invoice_download_url = d.pop("invoice_download_url", UNSET)
 
+        invoice_view_url = d.pop("invoice_view_url", UNSET)
+
         invoice = cls(
             invoice_id=invoice_id,
             invoice_number=invoice_number,
@@ -153,6 +162,7 @@ class Invoice:
             reference=reference,
             payment_failure_count=payment_failure_count,
             invoice_download_url=invoice_download_url,
+            invoice_view_url=invoice_view_url,
         )
 
         invoice.additional_properties = d
