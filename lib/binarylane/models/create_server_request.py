@@ -38,6 +38,8 @@ class CreateServerRequest:
         port_blocking (Union[Unset, None, bool]): Port blocking of outgoing connections for email, SSH and Remote
             Desktop (TCP ports 22, 25, and 3389) is enabled by default for all new servers. If this is false port blocking
             will be disabled. Disabling port blocking is only available to reviewed accounts.
+        separate_private_network_interface (Union[Unset, None, bool]): If true this will enable a separate private
+            network interface for the server. This is only available for servers in a VPC.
         password (Union[Unset, None, str]): If this is provided the default remote user account's password will be set
             to this value. If this is null a random password will be generated and emailed to the account email address.
     """
@@ -55,6 +57,7 @@ class CreateServerRequest:
     licenses: Union[Unset, None, List[License]] = UNSET
     user_data: Union[Unset, None, str] = UNSET
     port_blocking: Union[Unset, None, bool] = UNSET
+    separate_private_network_interface: Union[Unset, None, bool] = UNSET
     password: Union[Unset, None, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
@@ -100,6 +103,7 @@ class CreateServerRequest:
 
         user_data = self.user_data
         port_blocking = self.port_blocking
+        separate_private_network_interface = self.separate_private_network_interface
         password = self.password
 
         field_dict: Dict[str, Any] = {}
@@ -131,6 +135,8 @@ class CreateServerRequest:
             field_dict["user_data"] = user_data
         if port_blocking is not UNSET:
             field_dict["port_blocking"] = port_blocking
+        if separate_private_network_interface is not UNSET:
+            field_dict["separate_private_network_interface"] = separate_private_network_interface
         if password is not UNSET:
             field_dict["password"] = password
 
@@ -189,6 +195,8 @@ class CreateServerRequest:
 
         port_blocking = d.pop("port_blocking", UNSET)
 
+        separate_private_network_interface = d.pop("separate_private_network_interface", UNSET)
+
         password = d.pop("password", UNSET)
 
         create_server_request = cls(
@@ -205,6 +213,7 @@ class CreateServerRequest:
             licenses=licenses,
             user_data=user_data,
             port_blocking=port_blocking,
+            separate_private_network_interface=separate_private_network_interface,
             password=password,
         )
 

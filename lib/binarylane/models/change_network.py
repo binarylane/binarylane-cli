@@ -16,8 +16,8 @@ class ChangeNetwork:
 
     Attributes:
         type (ChangeNetworkType):
-        vpc_id (Union[Unset, None, int]): If this is null the server will be moved into the default public network for
-            the server's region.
+        vpc_id (Union[Unset, None, int]): If this is null the server will be moved into the public network for the
+            server's region.
     """
 
     type: ChangeNetworkType

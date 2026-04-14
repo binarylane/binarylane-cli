@@ -21,7 +21,8 @@ class SizeOptions:
             disk_cost_per_additional_gigabyte (float): The additional cost per GB per month for additional storage space.
             memory_max (int): The maximum memory in MB permitted on this size.
             memory_cost_per_additional_megabyte (float): The additional cost per MB per month for additional memory.
-            transfer_max (float): The maximum transfer in TB permitted for this size.
+            transfer_max (float): The maximum transfer in TB permitted for this size. If this is the same as Size.Transfer
+                no additional transfer is supported.
             transfer_cost_per_additional_gigabyte (float): The additional cost per GB per month for additional included
                 transfer.
             ipv4_addresses_max (int): The maximum number of IPv4 addresses permitted on this size.

@@ -236,7 +236,7 @@ Valid values for sizes that do not provide a value for options.restricted_storag
 If specified this is the absolute value, not just the additional transfer above what is included in the size.
 Leave null to accept the default for the size if this is a new server or a resize to a different base size, or to keep the current value if this a resize with the same base size but different options.
 
-Valid values (when converted to GB by multiplying the value provided by 1024):
+Valid values (when converted to GB by multiplying the value provided by 1000):
 - must be a multiple of 5GB
 - &gt; 30GB must be a multiple of 10
 - &gt; 200GB must be a multiple of 100
@@ -291,6 +291,16 @@ Valid values (when converted to GB by multiplying the value provided by 1024):
                 required=False,
                 option_name="port-blocking",
                 description="""Port blocking of outgoing connections for email, SSH and Remote Desktop (TCP ports 22, 25, and 3389) is enabled by default for all new servers. If this is false port blocking will be disabled. Disabling port blocking is only available to reviewed accounts.""",
+            )
+        )
+
+        json_body.add(
+            PrimitiveAttribute(
+                "separate_private_network_interface",
+                Union[Unset, None, bool],
+                required=False,
+                option_name="separate-private-network-interface",
+                description="""If true this will enable a separate private network interface for the server. This is only available for servers in a VPC.""",
             )
         )
 
