@@ -55,7 +55,8 @@ class Command(ListRunner):
             "invoice_items": """The individual items that make up invoice.""",
             "reference": """The reference for this invoice. If this invoice is for a single service this may identify the service, otherwise it will be the account reference.""",
             "payment_failure_count": """If this is included it indicates the number of failed attempts at processing payment for this invoice that have occurred.""",
-            "invoice_download_url": """The download URL for the rendered version of the invoice.""",
+            "invoice_download_url": """The download URL for the PDF version of the invoice. This URL expires 24 hours after it is generated.""",
+            "invoice_view_url": """The URL for the HTML rendered version of the invoice. This URL expires 24 hours after it is generated.""",
         }
 
     @property

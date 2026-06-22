@@ -83,8 +83,8 @@ def sync_detailed(
 ) -> Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     """Move a Server to an Existing Network
 
-     This is used to move a server either to an already defined virtual private cloud, or the default
-    public network in the server's region.
+     This is used to move a server either to an already defined virtual private cloud, or the public
+    network for the server's region.
 
     Args:
         server_id (int): The ID of the server on which the action should be performed.
@@ -120,8 +120,8 @@ def sync(
 ) -> Optional[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     """Move a Server to an Existing Network
 
-     This is used to move a server either to an already defined virtual private cloud, or the default
-    public network in the server's region.
+     This is used to move a server either to an already defined virtual private cloud, or the public
+    network for the server's region.
 
     Args:
         server_id (int): The ID of the server on which the action should be performed.
@@ -150,8 +150,8 @@ async def asyncio_detailed(
 ) -> Response[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     """Move a Server to an Existing Network
 
-     This is used to move a server either to an already defined virtual private cloud, or the default
-    public network in the server's region.
+     This is used to move a server either to an already defined virtual private cloud, or the public
+    network for the server's region.
 
     Args:
         server_id (int): The ID of the server on which the action should be performed.
@@ -185,8 +185,8 @@ async def asyncio(
 ) -> Optional[Union[ActionResponse, Any, ProblemDetails, ValidationProblemDetails]]:
     """Move a Server to an Existing Network
 
-     This is used to move a server either to an already defined virtual private cloud, or the default
-    public network in the server's region.
+     This is used to move a server either to an already defined virtual private cloud, or the public
+    network for the server's region.
 
     Args:
         server_id (int): The ID of the server on which the action should be performed.

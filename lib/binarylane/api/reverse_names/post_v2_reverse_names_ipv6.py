@@ -43,6 +43,9 @@ def _parse_response(
         response_200 = ActionResponse.from_dict(response.json())
 
         return response_200
+    if response.status_code == HTTPStatus.NO_CONTENT:
+        response_204 = cast(Any, None)
+        return response_204
     if response.status_code == HTTPStatus.BAD_REQUEST:
         response_400 = ValidationProblemDetails.from_dict(response.json())
 

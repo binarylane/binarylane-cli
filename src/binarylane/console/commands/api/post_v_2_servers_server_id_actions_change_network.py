@@ -73,7 +73,7 @@ class Command(ActionRunner):
                 required=False,
                 option_name=("vpc", "vpc-id"),
                 metavar="vpc",
-                description="""If this is null the server will be moved into the default public network for the server's region.""",
+                description="""If this is null the server will be moved into the public network for the server's region.""",
                 lookup=lookup_vpc_id,
             )
         )
