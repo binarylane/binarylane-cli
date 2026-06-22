@@ -90,6 +90,7 @@ class Command(ActionRunner):
 | data-transfer-used | The alert is based off the percentage of your monthly data transfer limit. |
 | storage-used | The alert is based off the disk space consumed as a percentage of your total disk space. If the server runs out of disk space programs may fail to execute or be unable to create new files, or the server may become unresponsive. |
 | memory-used | The alert is based off the virtual memory consumed as a percentage of your physical memory. Virtual memory includes the swap file so the percentage may exceed 100% indicating that the server has run out of physical memory and is relying on swap space, which will generally cause poor performance. |
+| locked-backup-slots | The alert is based off the percentage of scheduled backup slots (daily, weekly, monthly) occupied by locked backups. When all slots are locked, automated backups cannot proceed. |
 
 """,
             )

@@ -20,6 +20,8 @@ class Networks:
         recent_ddos (bool): If this is true this server has been the target of a recent DDOS attack. An email will have
             been sent to your email address when the DDOS was detected (and if it has ended, when it ended) with more
             details.
+        mac_address (str): The MAC address of this server's primary network interface. Customers may need this for ARP
+            entries, DHCP reservations on a VPC, or MAC-based licensing.
         separate_private_network_interface (Union[Unset, None, bool]): Whether a separate private network interface is
             provided for the server's VPC traffic.
         source_and_destination_check (Union[Unset, None, bool]): If enabled, this server is only able to send and
@@ -32,6 +34,7 @@ class Networks:
     v6: List[Network]
     port_blocking: bool
     recent_ddos: bool
+    mac_address: str
     separate_private_network_interface: Union[Unset, None, bool] = UNSET
     source_and_destination_check: Union[Unset, None, bool] = UNSET
     ipv6_reverse_nameservers: Union[Unset, None, List[str]] = UNSET
@@ -52,6 +55,7 @@ class Networks:
 
         port_blocking = self.port_blocking
         recent_ddos = self.recent_ddos
+        mac_address = self.mac_address
         separate_private_network_interface = self.separate_private_network_interface
         source_and_destination_check = self.source_and_destination_check
         ipv6_reverse_nameservers: Union[Unset, None, List[str]] = UNSET
@@ -69,6 +73,7 @@ class Networks:
                 "v6": v6,
                 "port_blocking": port_blocking,
                 "recent_ddos": recent_ddos,
+                "mac_address": mac_address,
             }
         )
         if separate_private_network_interface is not UNSET:
@@ -101,6 +106,8 @@ class Networks:
 
         recent_ddos = d.pop("recent_ddos")
 
+        mac_address = d.pop("mac_address")
+
         separate_private_network_interface = d.pop("separate_private_network_interface", UNSET)
 
         source_and_destination_check = d.pop("source_and_destination_check", UNSET)
@@ -112,6 +119,7 @@ class Networks:
             v6=v6,
             port_blocking=port_blocking,
             recent_ddos=recent_ddos,
+            mac_address=mac_address,
             separate_private_network_interface=separate_private_network_interface,
             source_and_destination_check=source_and_destination_check,
             ipv6_reverse_nameservers=ipv6_reverse_nameservers,

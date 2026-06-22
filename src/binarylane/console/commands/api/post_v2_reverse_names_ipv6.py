@@ -57,6 +57,7 @@ class Command(ActionRunner):
         assert isinstance(request, CommandRequest)
 
         # HTTPStatus.OK: ActionResponse
+        # HTTPStatus.NO_CONTENT: Any
         # HTTPStatus.BAD_REQUEST: ValidationProblemDetails
         # HTTPStatus.NOT_FOUND: ProblemDetails
         # HTTPStatus.UNAUTHORIZED: Any

@@ -11,6 +11,7 @@ class ThresholdAlertType(str, Enum):
     DATA_TRANSFER_USED = "data-transfer-used"
     STORAGE_USED = "storage-used"
     MEMORY_USED = "memory-used"
+    LOCKED_BACKUP_SLOTS = "locked-backup-slots"
 
     def __str__(self) -> str:
         return str(self.value)

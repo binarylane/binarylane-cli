@@ -44,6 +44,7 @@ class AdvancedServerFeatures:
             | pc_i440fx_5point0 | PC i440FX 5.0 |
             | pc_i440fx_5point1 | PC i440FX 5.1 |
             | pc_i440fx_7point2 | PC i440FX 7.2 |
+            | pc_i440fx_7point2point1 | PC i440FX 7.2.1 |
             | pc_i440fx_8point2 | PC i440FX 8.2 |
 
     """

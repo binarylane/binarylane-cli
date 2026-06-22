@@ -30,6 +30,8 @@ class Action:
 
         type (str): The type of this action.
         started_at (datetime.datetime): The timestamp in ISO8601 format of when processing of this action started.
+        title (str): A short display name for the action.
+        reason (str): A user-friendly explanation of what is happening.
         progress (ActionProgress): Information about the current progress of the action. Some actions are divided into
             'steps' and this may also contain information about the current and completed steps.
         completed_at (Union[Unset, None, datetime.datetime]): The timestamp in ISO8601 format of when processing of this
@@ -60,6 +62,8 @@ class Action:
     status: ActionStatus
     type: str
     started_at: datetime.datetime
+    title: str
+    reason: str
     progress: ActionProgress
     completed_at: Union[Unset, None, datetime.datetime] = UNSET
     resource_type: Union[Unset, None, ResourceType] = UNSET
@@ -78,6 +82,8 @@ class Action:
         type = self.type
         started_at = self.started_at.isoformat()
 
+        title = self.title
+        reason = self.reason
         progress = self.progress.to_dict()
 
         completed_at: Union[Unset, None, str] = UNSET
@@ -110,6 +116,8 @@ class Action:
                 "status": status,
                 "type": type,
                 "started_at": started_at,
+                "title": title,
+                "reason": reason,
                 "progress": progress,
             }
         )
@@ -142,6 +150,10 @@ class Action:
         type = d.pop("type")
 
         started_at = isoparse(d.pop("started_at"))
+
+        title = d.pop("title")
+
+        reason = d.pop("reason")
 
         progress = ActionProgress.from_dict(d.pop("progress"))
 
@@ -194,6 +206,8 @@ class Action:
             status=status,
             type=type,
             started_at=started_at,
+            title=title,
+            reason=reason,
             progress=progress,
             completed_at=completed_at,
             resource_type=resource_type,

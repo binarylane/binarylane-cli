@@ -71,6 +71,8 @@ class Server:
             that support this feature.
         attached_backup (Union[Unset, None, AttachedBackup]): An object that provides details of any backup image
             currently attached to the server..
+        is_under_maintenance (Union[Unset, None, bool]): If true, this server is currently under maintenance and most
+            actions will not be available. If this is null the status was not checked.
     """
 
     id: int
@@ -101,6 +103,7 @@ class Server:
     partner_id: Union[Unset, None, int] = UNSET
     permalink: Union[Unset, None, str] = UNSET
     attached_backup: Union[Unset, None, AttachedBackup] = UNSET
+    is_under_maintenance: Union[Unset, None, bool] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -164,6 +167,8 @@ class Server:
         if not isinstance(self.attached_backup, Unset):
             attached_backup = self.attached_backup.to_dict() if self.attached_backup else None
 
+        is_under_maintenance = self.is_under_maintenance
+
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update(
@@ -206,6 +211,8 @@ class Server:
             field_dict["permalink"] = permalink
         if attached_backup is not UNSET:
             field_dict["attached_backup"] = attached_backup
+        if is_under_maintenance is not UNSET:
+            field_dict["is_under_maintenance"] = is_under_maintenance
 
         return field_dict
 
@@ -308,6 +315,8 @@ class Server:
         else:
             attached_backup = AttachedBackup.from_dict(_attached_backup)
 
+        is_under_maintenance = d.pop("is_under_maintenance", UNSET)
+
         server = cls(
             id=id,
             name=name,
@@ -337,6 +346,7 @@ class Server:
             partner_id=partner_id,
             permalink=permalink,
             attached_backup=attached_backup,
+            is_under_maintenance=is_under_maintenance,
         )
 
         server.additional_properties = d

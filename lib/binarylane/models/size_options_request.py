@@ -49,7 +49,7 @@ class SizeOptionsRequest:
             Leave null to accept the default for the size if this is a new server or a resize to a different base size, or
             to keep the current value if this a resize with the same base size but different options.
 
-            Valid values (when converted to GB by multiplying the value provided by 1024):
+            Valid values (when converted to GB by multiplying the value provided by 1000):
             - must be a multiple of 5GB
             - &gt; 30GB must be a multiple of 10
             - &gt; 200GB must be a multiple of 100

@@ -33,6 +33,8 @@ class ThresholdAlertRequest:
             | memory-used | The alert is based off the virtual memory consumed as a percentage of your physical memory.
             Virtual memory includes the swap file so the percentage may exceed 100% indicating that the server has run out
             of physical memory and is relying on swap space, which will generally cause poor performance. |
+            | locked-backup-slots | The alert is based off the percentage of scheduled backup slots (daily, weekly, monthly)
+            occupied by locked backups. When all slots are locked, automated backups cannot proceed. |
 
         enabled (Union[Unset, None, bool]): Do not provide or leave null to keep existing status.
         value (Union[Unset, None, int]): Do not provide or leave null to keep existing value.

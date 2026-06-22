@@ -79,6 +79,7 @@ class Command(ListRunner):
             "partner_id": """The server ID of the partner of this server, if one has been assigned.""",
             "permalink": """A randomly generated two-word identifier assigned to servers in regions that support this feature.""",
             "attached_backup": """An object that provides details of any backup image currently attached to the server..""",
+            "is_under_maintenance": """If true, this server is currently under maintenance and most actions will not be available. If this is null the status was not checked.""",
         }
 
     def lookup(self, ref: str) -> Optional[int]:

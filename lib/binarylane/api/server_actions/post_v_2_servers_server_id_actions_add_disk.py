@@ -86,6 +86,7 @@ def sync_detailed(
      This is used to add an additional disk in unallocated storage space.
     This does not alter the total disk space available to your server: to add additional disk space for
     your server use the 'Resize' action.
+    **This action may require the server to be rebooted.**
 
 
     Args:
@@ -125,6 +126,7 @@ def sync(
      This is used to add an additional disk in unallocated storage space.
     This does not alter the total disk space available to your server: to add additional disk space for
     your server use the 'Resize' action.
+    **This action may require the server to be rebooted.**
 
 
     Args:
@@ -157,6 +159,7 @@ async def asyncio_detailed(
      This is used to add an additional disk in unallocated storage space.
     This does not alter the total disk space available to your server: to add additional disk space for
     your server use the 'Resize' action.
+    **This action may require the server to be rebooted.**
 
 
     Args:
@@ -194,6 +197,7 @@ async def asyncio(
      This is used to add an additional disk in unallocated storage space.
     This does not alter the total disk space available to your server: to add additional disk space for
     your server use the 'Resize' action.
+    **This action may require the server to be rebooted.**
 
 
     Args:

@@ -85,6 +85,7 @@ def sync_detailed(
 
      This is used to delete a disk added using the 'AddDisk' action.
     **NB: This is a destructive operation and no further confirmation will be requested.**
+    **This action may require the server to be rebooted.**
 
 
     Args:
@@ -123,6 +124,7 @@ def sync(
 
      This is used to delete a disk added using the 'AddDisk' action.
     **NB: This is a destructive operation and no further confirmation will be requested.**
+    **This action may require the server to be rebooted.**
 
 
     Args:
@@ -154,6 +156,7 @@ async def asyncio_detailed(
 
      This is used to delete a disk added using the 'AddDisk' action.
     **NB: This is a destructive operation and no further confirmation will be requested.**
+    **This action may require the server to be rebooted.**
 
 
     Args:
@@ -190,6 +193,7 @@ async def asyncio(
 
      This is used to delete a disk added using the 'AddDisk' action.
     **NB: This is a destructive operation and no further confirmation will be requested.**
+    **This action may require the server to be rebooted.**
 
 
     Args:
