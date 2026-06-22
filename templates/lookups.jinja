@@ -1,46 +1,49 @@
 {% filter trim %}{# Discard whitespace #}
 
 {# ---
-This template synthesises "x-cli-lookup" and "x-cli-entity" extension properties
-on path parameter and request schema definitions as the required data is not
-available in OpenAPI Specification published by BinaryLane.
+This template reads x-cli-entity-lookup, x-cli-entity-list, and x-cli-entity-ref
+extension properties from the OpenAPI specification and adapts them to the
+"x-cli-lookup" and "x-cli-entity" format used by downstream templates.
 --- #}
 
-{# Map of attribute name to command that can resolve attribute reference. #}
-{% set lookup_map = {
-    "load_balancer_id": "load-balancer list",
-    "server_id": "server list",
-    "vpc_id": "vpc list",
-} %}
-
-{# Map of command to {id,ref} obect specifying the attributes within
-x-cli-command's response that provide the reference (input) and id (output). #}
-{% set entity_map = {
-    "load-balancer list": {"id": "id", "ref": "name"},
-    "server list": {"id": "id", "ref": "name"},
-    "vpc list": {"id": "id", "ref": "name"},
-} %}
-
-{# Add x-cli-lookup to attributes that support lookup. #}
-{% for parameter_name in lookup_map %}
-
-    {# Examine path parameters #}
-    {% for param in (endpoint.data.parameters or []) if param.param_in == "path" and param.name == parameter_name %}
-        {% set _ = param.__setattr__("x-cli-lookup", lookup_map[parameter_name]) %}
-    {% endfor %}
-
-    {# Examine request body schema #}
-    {% if endpoint.json_body and endpoint.json_body.get_instance_type_string() != 'list' %}
-        {% for name, prop in openapi.models_by_class[endpoint.json_body.class_info].data.properties.items() if name in ["%s","%ss"] | map("format", parameter_name) %}
-            {% set _ = prop.__setattr__("x-cli-lookup", lookup_map[parameter_name]) %}
+{# Build global lookup map on first invocation by scanning all endpoints. #}
+{% if openapi.cli_entity_lookup_map is not defined %}
+    {% set _ = openapi.__setattr__("cli_entity_lookup_map", {}) %}
+    {% for tag_key, tag_value in endpoint_collections_by_tag | dictsort %}
+        {% for ep in tag_value.endpoints if ep.data["x-cli-command"] %}
+            {% for param in (ep.data.parameters or []) if param.param_in == "path" and param["x-cli-entity-lookup"] %}
+                {% set _ = openapi.cli_entity_lookup_map.__setitem__(param.name, param["x-cli-entity-lookup"]) %}
+            {% endfor %}
         {% endfor %}
-    {% endif %}
+    {% endfor %}
+{% endif %}
 
+{# Copy x-cli-entity-lookup to x-cli-lookup on path parameters. #}
+{% for param in (endpoint.data.parameters or []) if param.param_in == "path" and param["x-cli-entity-lookup"] %}
+    {% set _ = param.__setattr__("x-cli-lookup", param["x-cli-entity-lookup"]) %}
 {% endfor %}
 
-{# Add x-cli-entity if endpoint is is used to perform lookups. #}
-{% for command_name in entity_map if endpoint.data["x-cli-command"] == command_name %}
-    {% set _ = endpoint.data.__setattr__("x-cli-entity", entity_map[command_name]) %}
+{# Copy x-cli-entity-lookup to x-cli-lookup on matching request body properties. #}
+{% if endpoint.json_body and endpoint.json_body.get_instance_type_string() != 'list' %}
+    {% for name, prop in openapi.models_by_class[endpoint.json_body.class_info].data.properties.items() %}
+        {% for parameter_name, lookup_command in openapi.cli_entity_lookup_map.items() if name in ["%s","%ss"] | map("format", parameter_name) %}
+            {% set _ = prop.__setattr__("x-cli-lookup", lookup_command) %}
+        {% endfor %}
+    {% endfor %}
+{% endif %}
+
+{# Build x-cli-entity on list endpoints from x-cli-entity-list and x-cli-entity-ref. #}
+{% for response_type in endpoint.responses if response_type.status_code == 200 and response_type.prop.class_info %}
+    {% set response_model = openapi.models_by_class[response_type.prop.class_info] %}
+    {% if response_model.data["x-cli-entity-list"] %}
+        {% set list_prop_name = response_model.data["x-cli-entity-list"] %}
+        {% for prop in response_type.prop.required_properties if prop.name == list_prop_name and prop.inner_property.class_info %}
+            {% set entity_model = openapi.models_by_class[prop.inner_property.class_info] %}
+            {% if entity_model.data["x-cli-entity-ref"] %}
+                {% set _ = endpoint.data.__setattr__("x-cli-entity", {"id": "id", "ref": entity_model.data["x-cli-entity-ref"]}) %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 {% endfor %}
 
 {% endfilter %}
